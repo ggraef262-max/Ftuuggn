@@ -202,7 +202,7 @@ Sound.SoundId = "rbxassetid://82845990304289";
 Sound:Play();
 
 game.Players.LocalPlayer.Character.Humanoid.Health = 0
-wait(0.1)
+wait(0.0)
 game.StarterGui:SetCore("SendNotification", {
     Title = "Everlast ";
     Text = "-شڪراً على الانتضار-"; -- ARAB TEAM
@@ -292,6 +292,7 @@ InfoTab:AddSection({ "معلومات السكربت" })
 InfoTab:AddParagraph({ "المالك / المطور:", "DBLACK (" })
 InfoTab:AddParagraph({ "فريق:", "R, المطور DBLACK" })
 InfoTab:AddParagraph({ ":", "Everlast HUB " })
+InfoTab:AddParagraph({ "كلام من المطور", "اطلبو اشياء لي اضافتها للتواصل تلي " })
 InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
 InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
 InfoTab:AddButton({": ", function()
