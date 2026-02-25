@@ -201,7 +201,7 @@ local Sound = Instance.new("Sound", game:GetService("SoundService"));
 Sound.SoundId = "rbxassetid://82845990304289";
 Sound:Play();
 
-game.Players.LocalPlayer.Character.Humanoid.Health = 100
+game.Players.LocalPlayer.Character.Humanoid.Health = 0
 wait(0.1)
 game.StarterGui:SetCore("SendNotification", {
     Title = "Everlast ";
@@ -229,7 +229,7 @@ local args = {
     [2] = Color3.fromRGB(255, 215, 0), -- Amarelo
 }
 
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/DBLACKh/refs/heads/main/Dblack"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Raef%20skan"))()
 local Window = redzlib:MakeWindow({
     Title = "  Everlast HUB",
     SubTitle ="                           |  1.9V",
@@ -245,7 +245,7 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/DBLACKh/refs/heads/main/Dblack"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Raef%20skan"))()
 
 local Window = redzlib:MakeWindow({
     Title = "Everlast HUB",
@@ -262,7 +262,7 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/DBLACKh/refs/heads/main/Dblack"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Raef%20skan"))()
 local Window = redzlib:MakeWindow({
     Title = "Everlast HUB",
     SubTitle = "                       |  1.2V",
