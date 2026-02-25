@@ -7412,318 +7412,258 @@ UniversalTab:AddButton({
     end,
 })
 
-local BrookhavenHairTab = Window:MakeTab({"💇 بروكهافن - شعر وملابس", "shirt"})
+local ControlTab = Window:MakeTab({"تحكم بي شخصيه", "user"})
 
--- قسم الشعر
-local HairSection = BrookhavenHairTab:AddSection({
-    Name = "💇 تسريحات الشعر"
-})
+local Player = game.Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
--- قائمة تسريحات الشعر المتاحة في بروكهافن
-local hairs = {
-    {"شعر قصير (كلاسيك)", "ClassicShort"},
-    {"شعر طويل مموج", "LongWavy"},
-    {"شعر ذهبي طويل", "LongBlonde"},
-    {"شعر مضفور (ضفائر)", "Braided"},
-    {"شعر رجالي قصير", "MensShort"},
-    {"شعر كيرلي", "Curly"},
-    {"شعر على شكل ذيل حصان", "Ponytail"},
-    {"شعر أملس طويل", "StraightLong"},
-    {"شعر بني قصير", "BrownShort"},
-    {"شعر أسود طويل", "BlackLong"},
-    {"شعر أحمر طويل", "RedLong"},
-    {"شعر أزرق قصير", "BlueShort"},
-    {"شعر وردي", "PinkHair"},
-    {"شعر أرجواني", "PurpleHair"},
-    {"شعر أشقر طويل", "BlondeLong"},
-    {"شعر سموكي", "SmokeyHair"},
-    {"شعر جانبي", "SidePart"},
-    {"شعر مرفوع", "Pompadour"},
-    {"شعر مهمل", "MessyHair"},
-    {"شعر ناعم طويل", "SoftLong"}
+-- متغيرات التحكم
+getgenv().SpeedEnabled = false
+getgenv().NoclipEnabled = false
+getgenv().InfJumpEnabled = false
+getgenv().GPSEnabled = false
+getgenv().FlyEnabled = false
+getgenv().AnimationsEnabled = false
+
+-- قائمة الانميشنات
+local animations = {
+    {"رقص 1", "http://www.roblox.com/asset/?id=507770966"},
+    {"رقص 2", "http://www.roblox.com/asset/?id=507771019"},
+    {"رقص 3", "http://www.roblox.com/asset/?id=507771073"},
+    {"رقص 4", "http://www.roblox.com/asset/?id=507771127"},
+    {"رقص 5", "http://www.roblox.com/asset/?id=507771185"},
+    {"رقص 6", "http://www.roblox.com/asset/?id=507771239"},
+    {"رقص 7", "http://www.roblox.com/asset/?id=507771293"},
+    {"رقص 8", "http://www.roblox.com/asset/?id=507771344"},
+    {"رقص 9", "http://www.roblox.com/asset/?id=507771395"},
+    {"رقص 10", "http://www.roblox.com/asset/?id=507771446"},
+    {"رقص 11", "http://www.roblox.com/asset/?id=507771498"},
+    {"رقص 12", "http://www.roblox.com/asset/?id=507771549"},
+    {"رقص 13", "http://www.roblox.com/asset/?id=507771600"},
+    {"رقص 14", "http://www.roblox.com/asset/?id=507771654"},
+    {"رقص 15", "http://www.roblox.com/asset/?id=507771703"},
+    {"رقص 16", "http://www.roblox.com/asset/?id=507771760"},
+    {"رقص 17", "http://www.roblox.com/asset/?id=507771815"},
+    {"رقص 18", "http://www.roblox.com/asset/?id=507771867"},
+    {"رقص 19", "http://www.roblox.com/asset/?id=507771915"},
+    {"رقص 20", "http://www.roblox.com/asset/?id=507771967"},
+    {"رقص 21", "http://www.roblox.com/asset/?id=507772018"},
+    {"رقص 22", "http://www.roblox.com/asset/?id=507772072"},
+    {"رقص 23", "http://www.roblox.com/asset/?id=507772124"},
+    {"رقص 24", "http://www.roblox.com/asset/?id=507772178"},
+    {"رقص 25", "http://www.roblox.com/asset/?id=507772233"}
 }
 
--- إنشاء أزرار الشعر
-for i, hairData in ipairs(hairs) do
-    BrookhavenHairTab:AddButton({
-        Name = hairData[1],
-        Callback = function()
-            local args = {
-                [1] = "ChangeHair",
-                [2] = hairData[2]
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeLook"):InvokeServer(unpack(args))
+-- قسم السرعة
+local SpeedSection = ControlTab:AddSection({
+    Name = "السرعه"
+})
+
+ControlTab:AddToggle({
+    Name = "تفعيل السرعه",
+    Default = false,
+    Callback = function(state)
+        getgenv().SpeedEnabled = state
+        if state then
+            Humanoid.WalkSpeed = 100
+        else
+            Humanoid.WalkSpeed = 16
+        end
+    end
+})
+
+ControlTab:AddSlider({
+    Name = "تحديد السرعه",
+    Min = 16,
+    Max = 500,
+    Default = 100,
+    Callback = function(value)
+        if getgenv().SpeedEnabled then
+            Humanoid.WalkSpeed = value
+        end
+    end
+})
+
+-- قسم اختراق الجدار
+local NoclipSection = ControlTab:AddSection({
+    Name = "اختراق جدار"
+})
+
+ControlTab:AddToggle({
+    Name = "تفعيل اختراق الجدار",
+    Default = false,
+    Callback = function(state)
+        getgenv().NoclipEnabled = state
+        if state then
+            RunService.Stepped:Connect(function()
+                if getgenv().NoclipEnabled and Player.Character then
+                    for _, part in pairs(Player.Character:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- قسم القفز المتتالي
+local JumpSection = ControlTab:AddSection({
+    Name = "قفز متتالي"
+})
+
+ControlTab:AddToggle({
+    Name = "تفعيل القفز المتتالي",
+    Default = false,
+    Callback = function(state)
+        getgenv().InfJumpEnabled = state
+        if state then
+            UserInputService.JumpRequest:Connect(function()
+                if getgenv().InfJumpEnabled and Humanoid then
+                    Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        end
+    end
+})
+
+ControlTab:AddSlider({
+    Name = "قوة القفز",
+    Min = 50,
+    Max = 500,
+    Default = 100,
+    Callback = function(value)
+        Humanoid.JumpPower = value
+    end
+})
+
+-- قسم GPS
+local GPSSection = ControlTab:AddSection({
+    Name = "GPS"
+})
+
+ControlTab:AddToggle({
+    Name = "تفعيل GPS",
+    Default = false,
+    Callback = function(state)
+        getgenv().GPSEnabled = state
+        if state then
+            -- اظهار المسافات للاعبين
+            while getgenv().GPSEnabled do
+                wait(0.1)
+                for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+                    if otherPlayer ~= Player and otherPlayer.Character and otherPlayer.Character.HumanoidRootPart then
+                        local distance = (Player.Character.HumanoidRootPart.Position - otherPlayer.Character.HumanoidRootPart.Position).Magnitude
+                        print(otherPlayer.Name .. " - المسافة: " .. math.floor(distance))
+                    end
+                end
+            end
+        end
+    end
+})
+
+-- قسم الطيران
+local FlySection = ControlTab:AddSection({
+    Name = "طيران"
+})
+
+ControlTab:AddToggle({
+    Name = "تفعيل الطيران",
+    Default = false,
+    Callback = function(state)
+        getgenv().FlyEnabled = state
+        if state then
+            local bodyVelocity = Instance.new("BodyVelocity")
+            bodyVelocity.Velocity = Vector3.new(0, 50, 0)
+            bodyVelocity.Parent = Player.Character.HumanoidRootPart
             
-            -- إشعار
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "✨ بروكهافن",
-                Text = "تم تغيير الشعر إلى: " .. hairData[1],
-                Duration = 2
-            })
+            UserInputService.InputBegan:Connect(function(input)
+                if getgenv().FlyEnabled and input.KeyCode == Enum.KeyCode.Space then
+                    bodyVelocity.Velocity = Vector3.new(0, 100, 0)
+                end
+            end)
+            
+            UserInputService.InputEnded:Connect(function(input)
+                if getgenv().FlyEnabled and input.KeyCode == Enum.KeyCode.Space then
+                    bodyVelocity.Velocity = Vector3.new(0, 50, 0)
+                end
+            end)
+        else
+            if Player.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
+                Player.Character.HumanoidRootPart.BodyVelocity:Destroy()
+            end
+        end
+    end
+})
+
+-- قسم الانميشنات
+local AnimationSection = ControlTab:AddSection({
+    Name = "انميشنات"
+})
+
+ControlTab:AddToggle({
+    Name = "تفعيل الانميشنات",
+    Default = false,
+    Callback = function(state)
+        getgenv().AnimationsEnabled = state
+    end
+})
+
+-- اضافة ازرار الانميشنات
+for i, anim in ipairs(animations) do
+    ControlTab:AddButton({
+        Name = anim[1],
+        Callback = function()
+            if getgenv().AnimationsEnabled then
+                local animTrack = Humanoid:LoadAnimation(Instance.new("Animation"))
+                animTrack.Animation.AnimationId = anim[2]
+                animTrack:Play()
+                
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "انميشن",
+                    Text = "جاري تشغيل " .. anim[1],
+                    Duration = 2
+                })
+            else
+                game:GetService("StarterGui"):SetCore("SendNotification", {
+                    Title = "خطا",
+                    Text = "يجب تفعيل الانميشنات اولا",
+                    Duration = 2
+                })
+            end
         end
     })
 end
 
--- قسم الملابس
-local ClothesSection = BrookhavenHairTab:AddSection({
-    Name = "👕 الملابس"
+-- قسم ايقاف الكل
+local StopSection = ControlTab:AddSection({
+    Name = "تحكم"
 })
 
--- قائمة الملابس العلوية
-local tops = {
-    {"قميص أبيض", "WhiteShirt"},
-    {"قميص أسود", "BlackShirt"},
-    {"تيشيرت أحمر", "RedTShirt"},
-    {"بلوفر أزرق", "BlueHoodie"},
-    {"جاكيت جينز", "DenimJacket"},
-    {"تيشيرت رياضي", "SportsShirt"},
-    {"قميص رسمي", "FormalShirt"},
-    {"سترة صوف", "Sweater"},
-    {"قميص بأزرار", "ButtonUp"},
-    {"بلوزة وردية", "PinkBlouse"},
-    {"تيشيرت أخضر", "GreenShirt"},
-    {"جاكيت جلدي", "LeatherJacket"},
-    {"هودي رمادي", "GrayHoodie"},
-    {"قميص كحلي", "NavyShirt"},
-    {"بلوفر بني", "BrownSweater"}
-}
-
-BrookhavenHairTab:AddButton({
-    Name = "الملابس العلوية (توب)",
+ControlTab:AddButton({
+    Name = "ايقاف كل شيء",
     Callback = function()
-        -- قائمة منسدلة لاختيار القميص
-        local dropdown = {}
-        for i, top in ipairs(tops) do
-            dropdown[top[1]] = function()
-                local args = {
-                    [1] = "ChangeShirt",
-                    [2] = top[2]
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeLook"):InvokeServer(unpack(args))
-                
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "👕 بروكهافن",
-                    Text = "تم تغيير القميص إلى: " .. top[1],
-                    Duration = 2
-                })
-            end
+        getgenv().SpeedEnabled = false
+        getgenv().NoclipEnabled = false
+        getgenv().InfJumpEnabled = false
+        getgenv().GPSEnabled = false
+        getgenv().FlyEnabled = false
+        getgenv().AnimationsEnabled = false
+        
+        Humanoid.WalkSpeed = 16
+        Humanoid.JumpPower = 50
+        
+        if Player.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
+            Player.Character.HumanoidRootPart.BodyVelocity:Destroy()
         end
-        
-        -- عرض القائمة
-        Window:MakeDropdown(dropdown)
-    end
-})
-
--- قائمة البناطيل
-local pants = {
-    {"بنطلون جينز", "Jeans"},
-    {"بنطلون أسود", "BlackPants"},
-    {"شورت كحلي", "NavyShorts"},
-    {"بنطلون رياضي", "Sweatpants"},
-    {"تنورة قصيرة", "Skirt"},
-    {"بنطلون رمادي", "GrayPants"},
-    {"بنطلون بيج", "BeigePants"},
-    {"شورت جينز", "JeanShorts"},
-    {"بنطلون كاجوال", "CasualPants"},
-    {"ليقنز أسود", "BlackLeggings"},
-    {"بنطلون بني", "BrownPants"},
-    {"شورت رياضي", "SportShorts"},
-    {"بنطلون رسمي", "FormalPants"},
-    {"جينز أزرق فاتح", "LightJeans"},
-    {"بنطلون أخضر", "GreenPants"}
-}
-
-BrookhavenHairTab:AddButton({
-    Name = "البناطيل",
-    Callback = function()
-        local dropdown = {}
-        for i, pant in ipairs(pants) do
-            dropdown[pant[1]] = function()
-                local args = {
-                    [1] = "ChangePants",
-                    [2] = pant[2]
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeLook"):InvokeServer(unpack(args))
-                
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "👖 بروكهافن",
-                    Text = "تم تغيير البنطلون إلى: " .. pant[1],
-                    Duration = 2
-                })
-            end
-        end
-        Window:MakeDropdown(dropdown)
-    end
-})
-
--- قسم الأحذية
-local ShoesSection = BrookhavenHairTab:AddSection({
-    Name = "👟 الأحذية"
-})
-
-local shoes = {
-    {"حذاء رياضي أبيض", "WhiteSneakers"},
-    {"حذاء رياضي أسود", "BlackSneakers"},
-    {"جزمة جلد بني", "BrownBoots"},
-    {"صنادل", "Sandals"},
-    {"كعب عالي", "Heels"},
-    {"حذاء رياضي أحمر", "RedSneakers"},
-    {"شباشب", "Slippers"},
-    {"حذاء رسمي", "FormalShoes"},
-    {"جزمة سوداء", "BlackBoots"},
-    {"حذاء رياضي أزرق", "BlueSneakers"},
-    {"حذاء تنس", "TennisShoes"},
-    {"فلاط", "Flats"},
-    {"حذاء كاجوال", "CasualShoes"},
-    {"جزمة جلد سوداء", "BlackLeatherBoots"},
-    {"حذاء رياضي وردي", "PinkSneakers"}
-}
-
-BrookhavenHairTab:AddButton({
-    Name = "تغيير الأحذية",
-    Callback = function()
-        local dropdown = {}
-        for i, shoe in ipairs(shoes) do
-            dropdown[shoe[1]] = function()
-                local args = {
-                    [1] = "ChangeShoes",
-                    [2] = shoe[2]
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeLook"):InvokeServer(unpack(args))
-                
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "👟 بروكهافن",
-                    Text = "تم تغيير الحذاء إلى: " .. shoe[1],
-                    Duration = 2
-                })
-            end
-        end
-        Window:MakeDropdown(dropdown)
-    end
-})
-
--- قسم الإكسسوارات
-local AccessoriesSection = BrookhavenHairTab:AddSection({
-    Name = "🕶️ الإكسسوارات"
-})
-
-local accessories = {
-    {"نظارة شمسية", "Sunglasses"},
-    {"قبعة بيسبول", "BaseballCap"},
-    {"طاقية", "Beanie"},
-    {"تاج", "Crown"},
-    {"نظارة طبية", "Glasses"},
-    {"سلسال", "Necklace"},
-    {"ساعة", "Watch"},
-    {"أساور", "Bracelets"},
-    {"حقيبة يد", "Handbag"},
-    {"وشاح", "Scarf"},
-    {"قبعة رعاة البقر", "CowboyHat"},
-    {"عقال", "Headband"},
-    {"أقراط", "Earrings"},
-    {"ربطة عنق", "Tie"},
-    {"حزام", "Belt"}
-}
-
-BrookhavenHairTab:AddButton({
-    Name = "إكسسوارات",
-    Callback = function()
-        local dropdown = {}
-        for i, acc in ipairs(accessories) do
-            dropdown[acc[1]] = function()
-                local args = {
-                    [1] = "ChangeAccessory",
-                    [2] = acc[2]
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeLook"):InvokeServer(unpack(args))
-                
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "🕶️ بروكهافن",
-                    Text = "تم إضافة: " .. acc[1],
-                    Duration = 2
-                })
-            end
-        end
-        Window:MakeDropdown(dropdown)
-    end
-})
-
--- قسم إضافي للشعر الملون
-local ColorHairSection = BrookhavenHairTab:AddSection({
-    Name = "🎨 صبغات الشعر"
-})
-
-local hairColors = {
-    {"أسود", "Black"},
-    {"بني", "Brown"},
-    {"أشقر", "Blonde"},
-    {"أحمر", "Red"},
-    {"أزرق", "Blue"},
-    {"أخضر", "Green"},
-    {"وردي", "Pink"},
-    {"أرجواني", "Purple"},
-    {"رمادي", "Gray"},
-    {"ذهبي", "Gold"},
-    {"فضي", "Silver"},
-    {"برتقالي", "Orange"},
-    {"كحلي", "Navy"},
-    {"بني فاتح", "LightBrown"},
-    {"بني غامق", "DarkBrown"}
-}
-
-BrookhavenHairTab:AddButton({
-    Name = "تغيير لون الشعر",
-    Callback = function()
-        local dropdown = {}
-        for i, color in ipairs(hairColors) do
-            dropdown[color[1]] = function()
-                local args = {
-                    [1] = "ChangeHairColor",
-                    [2] = color[2]
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeLook"):InvokeServer(unpack(args))
-                
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "🎨 بروكهافن",
-                    Text = "تم صبغ الشعر إلى: " .. color[1],
-                    Duration = 2
-                })
-            end
-        end
-        Window:MakeDropdown(dropdown)
-    end
-})
-
--- زر لإطلالة عشوائية
-BrookhavenHairTab:AddButton({
-    Name = "🎲 إطلالة عشوائية",
-    Callback = function()
-        -- اختيار عشوائي من القوائم
-        local randomHair = hairs[math.random(1, #hairs)]
-        local randomTop = tops[math.random(1, #tops)]
-        local randomPants = pants[math.random(1, #pants)]
-        local randomShoes = shoes[math.random(1, #shoes)]
-        local randomColor = hairColors[math.random(1, #hairColors)]
-        
-        -- تطبيق الإطلالة العشوائية
-        local argsHair = {[1] = "ChangeHair", [2] = randomHair[2]}
-        game:GetService("ReplicatedStorage").Remotes.ChangeLook:InvokeServer(unpack(argsHair))
-        
-        local argsTop = {[1] = "ChangeShirt", [2] = randomTop[2]}
-        game:GetService("ReplicatedStorage").Remotes.ChangeLook:InvokeServer(unpack(argsTop))
-        
-        local argsPants = {[1] = "ChangePants", [2] = randomPants[2]}
-        game:GetService("ReplicatedStorage").Remotes.ChangeLook:InvokeServer(unpack(argsPants))
-        
-        local argsShoes = {[1] = "ChangeShoes", [2] = randomShoes[2]}
-        game:GetService("ReplicatedStorage").Remotes.ChangeLook:InvokeServer(unpack(argsShoes))
-        
-        local argsColor = {[1] = "ChangeHairColor", [2] = randomColor[2]}
-        game:GetService("ReplicatedStorage").Remotes.ChangeLook:InvokeServer(unpack(argsColor))
         
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "🎲 إطلالة عشوائية",
-            Text = "تم تطبيق إطلالة جديدة!",
+            Title = "تحكم",
+            Text = "تم ايقاف كل الخيارات",
             Duration = 3
         })
     end
