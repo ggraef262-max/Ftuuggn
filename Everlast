@@ -7090,222 +7090,294 @@ local Section = UniversalTab:AddSection({
 })
 
 -- متغيرات عامة للتحكم في حالة المضادات
-getgenv().AntiFlungEnabled = true
-getgenv().AntiBangEnabled = false
+getgenv().AntiFlungEnabled = false
 getgenv().AntiSitEnabled = false
-getgenv().AntiVoidEnabled = true
-getgenv().AntiToolsEnabled = true
+getgenv().AntiVoidEnabled = false
+getgenv().AntiToolsEnabled = false
+getgenv().AntiKickEnabled = false
 
--- دالة لتفعيل/تعطيل المضادات مع تحديث واجهة المستخدم
-local function updateButtonState(button, state, onText, offText)
-    if state then
-        button.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- أخضر
-        button.Text = onText
-    else
-        button.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- أحمر
-        button.Text = offText
+-- متغيرات لتخزين الحلقات
+getgenv().AntiFlungLoop = nil
+getgenv().AntiSitLoop = nil
+getgenv().AntiVoidLoop = nil
+getgenv().AntiToolsLoop = nil
+getgenv().AntiKickLoop = nil
+
+-- دالة لإيقاف حلقة معينة
+local function stopLoop(loopName)
+    if getgenv()[loopName] then
+        getgenv()[loopName] = nil
     end
 end
 
--- زر لمضاد الفلنق (تم تطويره)
-UniversalTab:AddButton({
+-- زر تشغيل/إيقاف لمضاد الفلنق (تم تطويره)
+UniversalTab:AddToggle({
     Name = "مضاد فلنق",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
-    end,
-})
-
--- زر لمضاد البانج (مع إضافة واجهة مستخدم)
-UniversalTab:AddButton({
-    Name = "مضاد بانج متطور",
-    Callback = function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
+    Default = false,
+    Callback = function(state)
+        getgenv().AntiFlungEnabled = state
         
-        -- إضافة إشعار تفعيل
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "مضاد بانج",
-            Text = "تم تفعيل مضاد البانج المتطور",
-            Duration = 3
-        })
-    end,
+        if state then
+            -- تشغيل مضاد الفلنق
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
+            
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "مضاد فلنق",
+                Text = "تم تفعيل مضاد الفلنق",
+                Duration = 2
+            })
+        else
+            -- إيقاف مضاد الفلنق
+            getgenv().AntiFlungEnabled = false
+            stopLoop("AntiFlungLoop")
+            
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "مضاد فلنق",
+                Text = "تم إيقاف مضاد الفلنق",
+                Duration = 2
+            })
+        end
+    end
 })
 
--- زر لمضاد الجلوس (تم تطويره)
-UniversalTab:AddButton({
-    Name = "مضاد جلوس متطور",
-    Callback = function()
-        local AntiSitScript = [[
-            -- مضاد جلوس متطور
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            local humanoid = character:WaitForChild("Humanoid")
+-- زر تشغيل/إيقاف لمضاد الجلوس (تم تطويره)
+UniversalTab:AddToggle({
+    Name = "مضاد جلوس",
+    Default = false,
+    Callback = function(state)
+        getgenv().AntiSitEnabled = state
+        
+        if state then
+            -- تشغيل مضاد الجلوس
+            local AntiSitScript = [[
+                -- مضاد جلوس متطور
+                local player = game.Players.LocalPlayer
+                local character = player.Character or player.CharacterAdded:Wait()
+                local humanoid = character:WaitForChild("Humanoid")
+                
+                -- مراقبة حالة الجلوس
+                getgenv().AntiSitLoop = game:GetService("RunService").Heartbeat:Connect(function()
+                    if getgenv().AntiSitEnabled and humanoid and humanoid.Sit then
+                        humanoid.Sit = false
+                    end
+                end)
+                
+                -- عند تغيير الشخصية
+                player.CharacterAdded:Connect(function(char)
+                    wait(0.5)
+                    humanoid = char:WaitForChild("Humanoid")
+                end)
+            ]]
             
-            -- مراقبة حالة الجلوس
-            humanoid.Running:Connect(function(speed)
-                if humanoid.Sit then
-                    humanoid.Sit = false
-                end
-            end)
-            
-            humanoid.Jumping:Connect(function()
-                if humanoid.Sit then
-                    humanoid.Sit = false
-                end
-            end)
-            
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if humanoid and humanoid.Sit then
-                    humanoid.Sit = false
-                end
-            end)
+            loadstring(AntiSitScript)()
             
             game:GetService("StarterGui"):SetCore("SendNotification", {
                 Title = "مضاد جلوس",
                 Text = "تم تفعيل مضاد الجلوس",
                 Duration = 2
             })
-        ]]
-        
-        loadstring(AntiSitScript)()
-    end,
+        else
+            -- إيقاف مضاد الجلوس
+            stopLoop("AntiSitLoop")
+            
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "مضاد جلوس",
+                Text = "تم إيقاف مضاد الجلوس",
+                Duration = 2
+            })
+        end
+    end
 })
 
--- زر مضاد السقوط في الفراغ (Anti-Void)
-UniversalTab:AddButton({
+-- زر تشغيل/إيقاف لمضاد السقوط في الفراغ
+UniversalTab:AddToggle({
     Name = "مضاد الفراغ",
-    Callback = function()
-        local AntiVoidScript = [[
-            -- مضاد السقوط في الفراغ
-            local player = game.Players.LocalPlayer
-            local lastPosition = nil
-            local fallCheckTimer = 0
-            
-            player.CharacterAdded:Connect(function(char)
-                wait(0.5)
-                lastPosition = char.HumanoidRootPart.Position
-            end)
-            
-            game:GetService("RunService").Heartbeat:Connect(function(dt)
-                fallCheckTimer = fallCheckTimer + dt
+    Default = false,
+    Callback = function(state)
+        getgenv().AntiVoidEnabled = state
+        
+        if state then
+            -- تشغيل مضاد الفراغ
+            local AntiVoidScript = [[
+                -- مضاد السقوط في الفراغ
+                local player = game.Players.LocalPlayer
+                local lastPosition = nil
+                local fallCheckTimer = 0
                 
-                if fallCheckTimer >= 0.5 then
-                    fallCheckTimer = 0
+                getgenv().AntiVoidLoop = game:GetService("RunService").Heartbeat:Connect(function(dt)
+                    if not getgenv().AntiVoidEnabled then return end
                     
-                    local char = player.Character
-                    if char and char.Humanoid and char.Humanoid.Health > 0 then
-                        local root = char:FindFirstChild("HumanoidRootPart")
-                        if root then
-                            -- إذا كان تحت مستوى معين، أعد اللاعب إلى آخر موقع آمن
-                            if root.Position.Y < -50 then
-                                root.CFrame = lastPosition and CFrame.new(lastPosition) or CFrame.new(0, 10, 0)
-                                char.Humanoid.Health = char.Humanoid.Health
-                            else
-                                lastPosition = root.Position
+                    fallCheckTimer = fallCheckTimer + dt
+                    
+                    if fallCheckTimer >= 0.5 then
+                        fallCheckTimer = 0
+                        
+                        local char = player.Character
+                        if char and char.Humanoid and char.Humanoid.Health > 0 then
+                            local root = char:FindFirstChild("HumanoidRootPart")
+                            if root then
+                                -- إذا كان تحت مستوى معين، أعد اللاعب إلى آخر موقع آمن
+                                if root.Position.Y < -50 then
+                                    root.CFrame = lastPosition and CFrame.new(lastPosition) or CFrame.new(0, 10, 0)
+                                    char.Humanoid.Health = char.Humanoid.Health
+                                else
+                                    lastPosition = root.Position
+                                end
                             end
                         end
                     end
-                end
-            end)
+                end)
+            ]]
+            
+            loadstring(AntiVoidScript)()
             
             game:GetService("StarterGui"):SetCore("SendNotification", {
                 Title = "مضاد فراغ",
                 Text = "تم تفعيل مضاد السقوط في الفراغ",
-                Duration = 3
+                Duration = 2
             })
-        ]]
-        
-        loadstring(AntiVoidScript)()
-    end,
+        else
+            -- إيقاف مضاد الفراغ
+            stopLoop("AntiVoidLoop")
+            
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "مضاد فراغ",
+                Text = "تم إيقاف مضاد السقوط في الفراغ",
+                Duration = 2
+            })
+        end
+    end
 })
 
--- زر مضاد سرقة الأدوات
-UniversalTab:AddButton({
+-- زر تشغيل/إيقاف لمضاد سرقة الأدوات
+UniversalTab:AddToggle({
     Name = "مضاد سرقة الأدوات",
-    Callback = function()
-        local AntiToolsScript = [[
-            -- مضاد سرقة الأدوات
-            local player = game.Players.LocalPlayer
-            local backpack = player:WaitForChild("Backpack")
-            
-            -- حماية الأدوات في الظهر
-            backpack.ChildAdded:Connect(function(tool)
-                if tool:IsA("Tool") then
-                    tool.Equipped:Connect(function()
-                        tool.Parent = player.Character
-                    end)
-                end
-            end)
-            
-            -- حماية الأدوات في الشخصية
-            player.CharacterAdded:Connect(function(char)
-                wait(1)
-                for _, tool in ipairs(char:GetChildren()) do
-                    if tool:IsA("Tool") then
-                        tool.Unequipped:Connect(function()
-                            tool.Parent = backpack
+    Default = false,
+    Callback = function(state)
+        getgenv().AntiToolsEnabled = state
+        
+        if state then
+            -- تشغيل مضاد سرقة الأدوات
+            local AntiToolsScript = [[
+                -- مضاد سرقة الأدوات
+                local player = game.Players.LocalPlayer
+                local backpack = player:WaitForChild("Backpack")
+                
+                -- حماية الأدوات في الظهر
+                backpack.ChildAdded:Connect(function(tool)
+                    if tool:IsA("Tool") and getgenv().AntiToolsEnabled then
+                        tool.Equipped:Connect(function()
+                            tool.Parent = player.Character
                         end)
                     end
-                end
-            end)
+                end)
+                
+                -- حماية الأدوات في الشخصية
+                player.CharacterAdded:Connect(function(char)
+                    wait(1)
+                    for _, tool in ipairs(char:GetChildren()) do
+                        if tool:IsA("Tool") and getgenv().AntiToolsEnabled then
+                            tool.Unequipped:Connect(function()
+                                tool.Parent = backpack
+                            end)
+                        end
+                    end
+                end)
+            ]]
+            
+            loadstring(AntiToolsScript)()
             
             game:GetService("StarterGui"):SetCore("SendNotification", {
                 Title = "مضاد سرقة",
                 Text = "تم تفعيل حماية الأدوات",
-                Duration = 3
+                Duration = 2
             })
-        ]]
-        
-        loadstring(AntiToolsScript)()
-    end,
+        else
+            -- إيقاف مضاد سرقة الأدوات
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "مضاد سرقة",
+                Text = "تم إيقاف حماية الأدوات",
+                Duration = 2
+            })
+        end
+    end
 })
 
--- زر مضاد الكيك (حماية من الطرد)
-UniversalTab:AddButton({
+-- زر تشغيل/إيقاف لمضاد الكيك
+UniversalTab:AddToggle({
     Name = "مضاد كيك تجريبي",
-    Callback = function()
-        local AntiKickScript = [[
-            -- مضاد كيك تجريبي
-            local oldNameCall = nil
-            oldNameCall = hookmetamethod(game, "__namecall", function(self, ...)
-                local args = {...}
-                local method = getnamecallmethod()
-                
-                if method == "Kick" then
-                    game:GetService("StarterGui"):SetCore("SendNotification", {
-                        Title = "تحذير",
-                        Text = "تم منع محاولة طردك",
-                        Duration = 3
-                    })
-                    return nil
-                end
-                
-                return oldNameCall(self, ...)
-            end)
+    Default = false,
+    Callback = function(state)
+        getgenv().AntiKickEnabled = state
+        
+        if state then
+            -- تشغيل مضاد الكيك
+            local AntiKickScript = [[
+                -- مضاد كيك تجريبي
+                local oldNameCall = nil
+                oldNameCall = hookmetamethod(game, "__namecall", function(self, ...)
+                    local args = {...}
+                    local method = getnamecallmethod()
+                    
+                    if method == "Kick" and getgenv().AntiKickEnabled then
+                        game:GetService("StarterGui"):SetCore("SendNotification", {
+                            Title = "تحذير",
+                            Text = "تم منع محاولة طردك",
+                            Duration = 3
+                        })
+                        return nil
+                    end
+                    
+                    return oldNameCall(self, ...)
+                end)
+            ]]
+            
+            loadstring(AntiKickScript)()
             
             game:GetService("StarterGui"):SetCore("SendNotification", {
                 Title = "مضاد كيك",
                 Text = "تم تفعيل الحماية من الطرد (تجريبي)",
-                Duration = 3
+                Duration = 2
             })
-        ]]
-        
-        loadstring(AntiKickScript)()
+        else
+            -- إيقاف مضاد الكيك
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "مضاد كيك",
+                Text = "تم إيقاف الحماية من الطرد",
+                Duration = 2
+            })
+        end
+    end
+})
+
+-- زر مضاد البانج (كما هو بدون تغيير)
+UniversalTab:AddButton({
+    Name = "مضاد بانج",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
     end,
 })
 
--- قسم إضافي للتحكم في المضادات
+-- قسم إضافي للتحكم السريع
 local ControlSection = UniversalTab:AddSection({
-    Name = "التحكم في المضادات"
+    Name = "التحكم السريع"
 })
 
 UniversalTab:AddButton({
     Name = "إيقاف جميع المضادات",
     Callback = function()
         getgenv().AntiFlungEnabled = false
-        getgenv().AntiBangEnabled = false
         getgenv().AntiSitEnabled = false
         getgenv().AntiVoidEnabled = false
         getgenv().AntiToolsEnabled = false
+        getgenv().AntiKickEnabled = false
+        
+        -- إيقاف جميع الحلقات
+        stopLoop("AntiFlungLoop")
+        stopLoop("AntiSitLoop")
+        stopLoop("AntiVoidLoop")
+        stopLoop("AntiToolsLoop")
+        stopLoop("AntiKickLoop")
         
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "مضادات",
@@ -7318,15 +7390,11 @@ UniversalTab:AddButton({
 UniversalTab:AddButton({
     Name = "تفعيل جميع المضادات",
     Callback = function()
-        getgenv().AntiFlungEnabled = true
-        getgenv().AntiBangEnabled = true
-        getgenv().AntiSitEnabled = true
-        getgenv().AntiVoidEnabled = true
-        getgenv().AntiToolsEnabled = true
-        
+        -- ملاحظة: هذا سيفعل جميع المضادات دفعة واحدة
+        -- لكن كل مضاد سيعمل بشكل منفصل حسب إعداداته
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "مضادات",
-            Text = "تم تفعيل جميع المضادات",
+            Text = "يمكنك تفعيل كل مضاد على حدة من الأزرار أعلاه",
             Duration = 3
         })
     end,
