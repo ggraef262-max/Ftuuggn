@@ -148,7 +148,7 @@ TweenService:Create(portal, TweenInfo.new(0.3), {
     Size = UDim2.fromScale(0.5, 0.5)
 }):Play()
 
--- ====== تشغيل الرابط الجديد تلقائياً ======
+-- ====== تشغيل الرابط المطلوب تلقائياً ======
 task.wait(0.5)
 
 -- إخفاء واجهة اللودر
@@ -167,9 +167,9 @@ TweenService:Create(barBack, TweenInfo.new(0.5), {
 
 task.wait(0.5)
 
--- الرابط الجديد من rawscripts.net
+-- الرابط المطلوب: https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Normal
 local success, err = pcall(function()
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-EVERLAST-121810"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Normal"))()
 end)
 
 if not success then
