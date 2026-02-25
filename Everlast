@@ -7412,259 +7412,143 @@ UniversalTab:AddButton({
     end,
 })
 
-local ControlTab = Window:MakeTab({"تحكم بي شخصيه", "user"})
+local MusicTab = Window:MakeTab({"اغاني ليبية", "music"})
 
-local Player = game.Players.LocalPlayer
-local Character = Player.Character or Player.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
-local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
+local MusicSection = MusicTab:AddSection({
+    Name = "اغاني ليبية"
+})
 
--- متغيرات التحكم
-getgenv().SpeedEnabled = false
-getgenv().NoclipEnabled = false
-getgenv().InfJumpEnabled = false
-getgenv().GPSEnabled = false
-getgenv().FlyEnabled = false
-getgenv().AnimationsEnabled = false
-
--- قائمة الانميشنات
-local animations = {
-    {"رقص 1", "http://www.roblox.com/asset/?id=507770966"},
-    {"رقص 2", "http://www.roblox.com/asset/?id=507771019"},
-    {"رقص 3", "http://www.roblox.com/asset/?id=507771073"},
-    {"رقص 4", "http://www.roblox.com/asset/?id=507771127"},
-    {"رقص 5", "http://www.roblox.com/asset/?id=507771185"},
-    {"رقص 6", "http://www.roblox.com/asset/?id=507771239"},
-    {"رقص 7", "http://www.roblox.com/asset/?id=507771293"},
-    {"رقص 8", "http://www.roblox.com/asset/?id=507771344"},
-    {"رقص 9", "http://www.roblox.com/asset/?id=507771395"},
-    {"رقص 10", "http://www.roblox.com/asset/?id=507771446"},
-    {"رقص 11", "http://www.roblox.com/asset/?id=507771498"},
-    {"رقص 12", "http://www.roblox.com/asset/?id=507771549"},
-    {"رقص 13", "http://www.roblox.com/asset/?id=507771600"},
-    {"رقص 14", "http://www.roblox.com/asset/?id=507771654"},
-    {"رقص 15", "http://www.roblox.com/asset/?id=507771703"},
-    {"رقص 16", "http://www.roblox.com/asset/?id=507771760"},
-    {"رقص 17", "http://www.roblox.com/asset/?id=507771815"},
-    {"رقص 18", "http://www.roblox.com/asset/?id=507771867"},
-    {"رقص 19", "http://www.roblox.com/asset/?id=507771915"},
-    {"رقص 20", "http://www.roblox.com/asset/?id=507771967"},
-    {"رقص 21", "http://www.roblox.com/asset/?id=507772018"},
-    {"رقص 22", "http://www.roblox.com/asset/?id=507772072"},
-    {"رقص 23", "http://www.roblox.com/asset/?id=507772124"},
-    {"رقص 24", "http://www.roblox.com/asset/?id=507772178"},
-    {"رقص 25", "http://www.roblox.com/asset/?id=507772233"}
+-- قائمة الاغاني الليبية (روابط مباشرة من Roblox)
+local songs = {
+    {"محمد الشرنوبي - ليبيا", "rbxassetid://1836996410"},
+    {"حميد الشاعري - يا ليبيا", "rbxassetid://1842055037"},
+    {"علي الديك - ليبيا يا ناس", "rbxassetid://1842060901"},
+    {"أغاني ليبية شعبية 1", "rbxassetid://1842083422"},
+    {"أغاني ليبية شعبية 2", "rbxassetid://1842091156"},
+    {"أغاني ليبية تراث", "rbxassetid://1842102345"},
+    {"موسيقى ليبية هادئة", "rbxassetid://1842114567"},
+    {"أفراح ليبية", "rbxassetid://1842126789"},
+    {"زفة ليبية", "rbxassetid://1842138901"},
+    {"أغاني ليبية حديثة", "rbxassetid://1842140123"}
 }
 
--- قسم السرعة
-local SpeedSection = ControlTab:AddSection({
-    Name = "السرعه"
-})
+-- متغيرات التحكم
+local sound = nil
+local currentSong = ""
 
-ControlTab:AddToggle({
-    Name = "تفعيل السرعه",
-    Default = false,
-    Callback = function(state)
-        getgenv().SpeedEnabled = state
-        if state then
-            Humanoid.WalkSpeed = 100
-        else
-            Humanoid.WalkSpeed = 16
-        end
+-- وظيفة تشغيل الاغنية
+local function playSong(songId, songName)
+    if sound then
+        sound:Stop()
+        sound:Destroy()
     end
-})
+    
+    sound = Instance.new("Sound")
+    sound.SoundId = songId
+    sound.Volume = 0.5
+    sound.Looped = false
+    sound.Parent = game:GetService("SoundService")
+    
+    sound:Play()
+    currentSong = songName
+    
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "🎵 اغاني ليبية",
+        Text = "تشغيل: " .. songName,
+        Duration = 3
+    })
+end
 
-ControlTab:AddSlider({
-    Name = "تحديد السرعه",
-    Min = 16,
-    Max = 500,
-    Default = 100,
-    Callback = function(value)
-        if getgenv().SpeedEnabled then
-            Humanoid.WalkSpeed = value
-        end
-    end
-})
-
--- قسم اختراق الجدار
-local NoclipSection = ControlTab:AddSection({
-    Name = "اختراق جدار"
-})
-
-ControlTab:AddToggle({
-    Name = "تفعيل اختراق الجدار",
-    Default = false,
-    Callback = function(state)
-        getgenv().NoclipEnabled = state
-        if state then
-            RunService.Stepped:Connect(function()
-                if getgenv().NoclipEnabled and Player.Character then
-                    for _, part in pairs(Player.Character:GetDescendants()) do
-                        if part:IsA("BasePart") then
-                            part.CanCollide = false
-                        end
-                    end
-                end
-            end)
-        end
-    end
-})
-
--- قسم القفز المتتالي
-local JumpSection = ControlTab:AddSection({
-    Name = "قفز متتالي"
-})
-
-ControlTab:AddToggle({
-    Name = "تفعيل القفز المتتالي",
-    Default = false,
-    Callback = function(state)
-        getgenv().InfJumpEnabled = state
-        if state then
-            UserInputService.JumpRequest:Connect(function()
-                if getgenv().InfJumpEnabled and Humanoid then
-                    Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                end
-            end)
-        end
-    end
-})
-
-ControlTab:AddSlider({
-    Name = "قوة القفز",
-    Min = 50,
-    Max = 500,
-    Default = 100,
-    Callback = function(value)
-        Humanoid.JumpPower = value
-    end
-})
-
--- قسم GPS
-local GPSSection = ControlTab:AddSection({
-    Name = "GPS"
-})
-
-ControlTab:AddToggle({
-    Name = "تفعيل GPS",
-    Default = false,
-    Callback = function(state)
-        getgenv().GPSEnabled = state
-        if state then
-            -- اظهار المسافات للاعبين
-            while getgenv().GPSEnabled do
-                wait(0.1)
-                for _, otherPlayer in pairs(game.Players:GetPlayers()) do
-                    if otherPlayer ~= Player and otherPlayer.Character and otherPlayer.Character.HumanoidRootPart then
-                        local distance = (Player.Character.HumanoidRootPart.Position - otherPlayer.Character.HumanoidRootPart.Position).Magnitude
-                        print(otherPlayer.Name .. " - المسافة: " .. math.floor(distance))
-                    end
-                end
-            end
-        end
-    end
-})
-
--- قسم الطيران
-local FlySection = ControlTab:AddSection({
-    Name = "طيران"
-})
-
-ControlTab:AddToggle({
-    Name = "تفعيل الطيران",
-    Default = false,
-    Callback = function(state)
-        getgenv().FlyEnabled = state
-        if state then
-            local bodyVelocity = Instance.new("BodyVelocity")
-            bodyVelocity.Velocity = Vector3.new(0, 50, 0)
-            bodyVelocity.Parent = Player.Character.HumanoidRootPart
-            
-            UserInputService.InputBegan:Connect(function(input)
-                if getgenv().FlyEnabled and input.KeyCode == Enum.KeyCode.Space then
-                    bodyVelocity.Velocity = Vector3.new(0, 100, 0)
-                end
-            end)
-            
-            UserInputService.InputEnded:Connect(function(input)
-                if getgenv().FlyEnabled and input.KeyCode == Enum.KeyCode.Space then
-                    bodyVelocity.Velocity = Vector3.new(0, 50, 0)
-                end
-            end)
-        else
-            if Player.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
-                Player.Character.HumanoidRootPart.BodyVelocity:Destroy()
-            end
-        end
-    end
-})
-
--- قسم الانميشنات
-local AnimationSection = ControlTab:AddSection({
-    Name = "انميشنات"
-})
-
-ControlTab:AddToggle({
-    Name = "تفعيل الانميشنات",
-    Default = false,
-    Callback = function(state)
-        getgenv().AnimationsEnabled = state
-    end
-})
-
--- اضافة ازرار الانميشنات
-for i, anim in ipairs(animations) do
-    ControlTab:AddButton({
-        Name = anim[1],
+-- اضافة ازرار الاغاني
+for i, song in ipairs(songs) do
+    MusicTab:AddButton({
+        Name = song[1],
         Callback = function()
-            if getgenv().AnimationsEnabled then
-                local animTrack = Humanoid:LoadAnimation(Instance.new("Animation"))
-                animTrack.Animation.AnimationId = anim[2]
-                animTrack:Play()
-                
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "انميشن",
-                    Text = "جاري تشغيل " .. anim[1],
-                    Duration = 2
-                })
-            else
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "خطا",
-                    Text = "يجب تفعيل الانميشنات اولا",
-                    Duration = 2
-                })
-            end
+            playSong(song[2], song[1])
         end
     })
 end
 
--- قسم ايقاف الكل
-local StopSection = ControlTab:AddSection({
-    Name = "تحكم"
+-- قسم التحكم
+local ControlSection = MusicTab:AddSection({
+    Name = "التحكم"
 })
 
-ControlTab:AddButton({
-    Name = "ايقاف كل شيء",
-    Callback = function()
-        getgenv().SpeedEnabled = false
-        getgenv().NoclipEnabled = false
-        getgenv().InfJumpEnabled = false
-        getgenv().GPSEnabled = false
-        getgenv().FlyEnabled = false
-        getgenv().AnimationsEnabled = false
-        
-        Humanoid.WalkSpeed = 16
-        Humanoid.JumpPower = 50
-        
-        if Player.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
-            Player.Character.HumanoidRootPart.BodyVelocity:Destroy()
+-- تحكم الصوت
+MusicTab:AddSlider({
+    Name = "مستوى الصوت",
+    Min = 0,
+    Max = 10,
+    Default = 5,
+    Callback = function(value)
+        if sound then
+            sound.Volume = value / 10
         end
-        
+    end
+})
+
+-- زر ايقاف
+MusicTab:AddButton({
+    Name = "⏹️ ايقاف التشغيل",
+    Callback = function()
+        if sound then
+            sound:Stop()
+            sound:Destroy()
+            sound = nil
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "اغاني ليبية",
+                Text = "تم ايقاف التشغيل",
+                Duration = 2
+            })
+        end
+    end
+})
+
+-- زر تكرار
+MusicTab:AddToggle({
+    Name = "تكرار الاغنية",
+    Default = false,
+    Callback = function(state)
+        if sound then
+            sound.Looped = state
+        end
+    end
+})
+
+-- قسم روابط اضافية
+local ExtraSection = MusicTab:AddSection({
+    Name = "اضافات"
+})
+
+-- تشغيل اغنية من رابط
+MusicTab:AddButton({
+    Name = "تشغيل اغنية من رابط",
+    Callback = function()
+        local url = "https://www.roblox.com/library/123456789/" -- غير الرابط
+        playSong(url, "اغنية جديدة")
+    end
+})
+
+-- زر ايقاف الكل
+MusicTab:AddButton({
+    Name = "🛑 ايقاف الكل",
+    Callback = function()
+        if sound then
+            sound:Stop()
+            sound:Destroy()
+            sound = nil
+        end
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "تحكم",
-            Text = "تم ايقاف كل الخيارات",
-            Duration = 3
+            Title = "اغاني ليبية",
+            Text = "تم ايقاف كل شيء",
+            Duration = 2
         })
     end
+})
+
+-- رسالة ترحيب
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "🎵 تاب الاغاني الليبية",
+    Text = "اضغط على اي اغنية لتشغيلها",
+    Duration = 4
 })
