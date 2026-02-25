@@ -7410,5 +7410,3 @@ UniversalTab:AddButton({
         })
     end,
 })
-
-local UniversalTab = Window:MakeTab({"صبر جميل", "plane"})
