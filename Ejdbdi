@@ -1,0 +1,191 @@
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
+local SoundService = game:GetService("SoundService")
+local Lighting = game:GetService("Lighting")
+
+-- ====== المؤثرات ======
+local blur = Instance.new("BlurEffect", Lighting)
+blur.Size = 24
+blur.Enabled = true
+
+-- ====== الصوت ======
+local sound = Instance.new("Sound", SoundService)
+sound.SoundId = "rbxassetid://9120380935"
+sound.Volume = 2
+sound.Looped = true
+sound:Play()
+
+local completeSound = Instance.new("Sound", SoundService)
+completeSound.SoundId = "rbxassetid://2769978781"
+completeSound.Volume = 4
+completeSound.Looped = false
+
+-- ====== الواجهة ======
+local gui = Instance.new("ScreenGui", CoreGui)
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.Name = "EverlastLoader"
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- ====== خلفية سوداء ======
+local bg = Instance.new("Frame", gui)
+bg.Size = UDim2.fromScale(1, 1)
+bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+bg.BackgroundTransparency = 0.3
+bg.BorderSizePixel = 0
+
+-- ====== البوابة ======
+local portal = Instance.new("ImageLabel", bg)
+portal.Size = UDim2.fromScale(0.5, 0.5)
+portal.Position = UDim2.fromScale(0.5, 0.5)
+portal.AnchorPoint = Vector2.new(0.5, 0.5)
+portal.BackgroundTransparency = 1
+portal.Image = "rbxassetid://6031108404"
+portal.ImageColor3 = Color3.fromRGB(0, 255, 0)
+portal.ImageTransparency = 0.3
+portal.ZIndex = 2
+
+local portalGlow = Instance.new("ImageLabel", bg)
+portalGlow.Size = UDim2.fromScale(0.7, 0.7)
+portalGlow.Position = UDim2.fromScale(0.5, 0.5)
+portalGlow.AnchorPoint = Vector2.new(0.5, 0.5)
+portalGlow.BackgroundTransparency = 1
+portalGlow.Image = "rbxassetid://5025766859"
+portalGlow.ImageColor3 = Color3.fromRGB(0, 255, 0)
+portalGlow.ImageTransparency = 0.7
+portalGlow.ZIndex = 1
+
+-- ====== الاسم ======
+local nameLabel = Instance.new("TextLabel", bg)
+nameLabel.Size = UDim2.fromScale(0.6, 0.15)
+nameLabel.Position = UDim2.fromScale(0.5, 0.4)
+nameLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+nameLabel.BackgroundTransparency = 1
+nameLabel.Text = "EVERLAST"
+nameLabel.Font = Enum.Font.GothamBlack
+nameLabel.TextSize = 60
+nameLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+nameLabel.TextTransparency = 0
+nameLabel.ZIndex = 3
+
+local nameStroke = Instance.new("UIStroke", nameLabel)
+nameStroke.Thickness = 2
+nameStroke.Color = Color3.fromRGB(255, 255, 255)
+nameStroke.Transparency = 0.4
+
+-- ====== شريط التحميل ======
+local barBack = Instance.new("Frame", bg)
+barBack.Size = UDim2.fromScale(0.5, 0.02)
+barBack.Position = UDim2.fromScale(0.5, 0.55)
+barBack.AnchorPoint = Vector2.new(0.5, 0.5)
+barBack.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+barBack.BorderSizePixel = 0
+barBack.ZIndex = 3
+barBack.ClipsDescendants = true
+
+local barCorner = Instance.new("UICorner", barBack)
+barCorner.CornerRadius = UDim.new(1, 0)
+
+local bar = Instance.new("Frame", barBack)
+bar.Size = UDim2.fromScale(0, 1)
+bar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+bar.BorderSizePixel = 0
+
+local barCorner2 = Instance.new("UICorner", bar)
+barCorner2.CornerRadius = UDim.new(1, 0)
+
+-- ====== النسبة المئوية ======
+local percentLabel = Instance.new("TextLabel", bg)
+percentLabel.Size = UDim2.fromScale(0.3, 0.05)
+percentLabel.Position = UDim2.fromScale(0.5, 0.6)
+percentLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+percentLabel.BackgroundTransparency = 1
+percentLabel.Text = "0%"
+percentLabel.Font = Enum.Font.GothamBold
+percentLabel.TextSize = 24
+percentLabel.TextColor3 = Color3.fromRGB(150, 255, 150)
+percentLabel.ZIndex = 3
+
+-- ====== حركة البوابة ======
+RunService.RenderStepped:Connect(function()
+    portal.Rotation = portal.Rotation + 0.2
+    portalGlow.Rotation = portalGlow.Rotation - 0.1
+    portalGlow.ImageTransparency = 0.6 + math.sin(tick() * 2) * 0.1
+end)
+
+-- ====== تسلسل التحميل ======
+task.wait(0.5)
+
+-- تحريك الاسم
+TweenService:Create(nameLabel, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    Position = UDim2.fromScale(0.5, 0.4)
+}):Play()
+
+-- شريط التحميل
+for i = 1, 100 do
+    TweenService:Create(bar, TweenInfo.new(0.02, Enum.EasingStyle.Linear), {
+        Size = UDim2.fromScale(i/100, 1)
+    }):Play()
+    
+    percentLabel.Text = i.."%"
+    portal.ImageTransparency = 0.2 + (math.sin(i/5) * 0.1)
+    
+    task.wait(0.02) -- 2 ثانية فقط
+end
+
+-- صوت الاكتمال
+completeSound:Play()
+percentLabel.Text = "100% - جاري التشغيل..."
+
+-- تأثير نهائي
+TweenService:Create(portal, TweenInfo.new(0.3), {
+    Size = UDim2.fromScale(0.7, 0.7),
+    ImageTransparency = 0
+}):Play()
+task.wait(0.1)
+TweenService:Create(portal, TweenInfo.new(0.3), {
+    Size = UDim2.fromScale(0.5, 0.5)
+}):Play()
+
+-- ====== تشغيل الرابط الجديد تلقائياً ======
+task.wait(0.5)
+
+-- إخفاء واجهة اللودر
+TweenService:Create(bg, TweenInfo.new(0.5), {
+    BackgroundTransparency = 1
+}):Play()
+TweenService:Create(portal, TweenInfo.new(0.5), {
+    ImageTransparency = 1
+}):Play()
+TweenService:Create(nameLabel, TweenInfo.new(0.5), {
+    TextTransparency = 1
+}):Play()
+TweenService:Create(barBack, TweenInfo.new(0.5), {
+    BackgroundTransparency = 1
+}):Play()
+
+task.wait(0.5)
+
+-- الرابط الجديد من rawscripts.net
+local success, err = pcall(function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-EVERLAST-121810"))()
+end)
+
+if not success then
+    warn("خطأ في تحميل السكربت: " .. tostring(err))
+    percentLabel.Text = "خطأ في التحميل"
+    percentLabel.Visible = true
+    task.wait(2)
+end
+
+-- إخفاء الصوت وتنظيف الواجهة
+TweenService:Create(sound, TweenInfo.new(1), {
+    Volume = 0
+}):Play()
+task.wait(1)
+
+blur:Destroy()
+sound:Destroy()
+completeSound:Destroy()
+gui:Destroy()
