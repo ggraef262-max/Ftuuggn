@@ -307,140 +307,97 @@ InfoTab:AddButton({
     end
 }) 
 
-local Window = -- (ضع تعريف النافذة الرئيسية هنا)
+local UniversalTab = Window:MakeTab({"سكربتات متنوعة", "plane"})
 
-local AntiTab = Window:MakeTab({
-    Name = "مضادات V1",
-    Icon = "rbxassetid://6034818398"
+-- Seção para Scripts Universais
+Section = UniversalTab:AddSection({
+    Name = "سكربتات مفيدة"
 })
 
-AntiTab:AddSection({
-    Name = "مضادات الكشف"
-})
-
-AntiTab:AddToggle({
-    Name = "مضاد الادمن",
-    Default = true,
-    Callback = function(Value)
-        if Value then
-            game:GetService("RunService"):Set3dRenderingEnabled(false)
-        else
-            game:GetService("RunService"):Set3dRenderingEnabled(true)
-        end
-    end
-})
-
-AntiTab:AddToggle({
-    Name = "مضاد التسجيل",
-    Default = true,
-    Callback = function(Value)
-        if Value then
-            for _, v in pairs(game.CoreGui:GetDescendants()) do
-                if v:IsA("Frame") or v:IsA("ScreenGui") then
-                    v.Visible = false
-                end
-            end
-        end
-    end
-})
-
-AntiTab:AddSection({
-    Name = "مضادات الحظر"
-})
-
-AntiTab:AddToggle({
-    Name = "مضاد الحظر",
-    Default = true,
-    Callback = function(Value)
-        if Value then
-            local oldKick = game.Players.LocalPlayer.Kick
-            game.Players.LocalPlayer.Kick = function() end
-        end
-    end
-})
-
-AntiTab:AddToggle({
-    Name = "مضاد الطرد",
-    Default = true,
-    Callback = function(Value)
-        if Value then
-            local Players = game:GetService("Players")
-            Players.LocalPlayer.OnTeleport:Connect(function()
-                return true
-            end)
-        end
-    end
-})
-
-AntiTab:AddSection({
-    Name = "مضادات التبليغ"
-})
-
-AntiTab:AddToggle({
-    Name = "مضاد التبليغ",
-    Default = true,
-    Callback = function(Value)
-        if Value then
-            for _, v in pairs(game.CoreGui:GetDescendants()) do
-                if v.Name == "ReportButton" or v.Name == "ReportAbuse" then
-                    v:Destroy()
-                end
-            end
-        end
-    end
-})
-
-AntiTab:AddToggle({
-    Name = "مضاد السبام",
-    Default = true,
-    Callback = function(Value)
-        if Value then
-            game:GetService("Chat").ChatMessage:Connect(function()
-                return false
-            end)
-        end
-    end
-})
-
-AntiTab:AddSection({
-    Name = "حماية متقدمة"
-})
-
-AntiTab:AddToggle({
-    Name = "تنبيه الادمن",
-    Default = true,
-    Callback = function(Value)
-        if Value then
-            spawn(function()
-                while wait(3) do
-                    for _, player in pairs(game.Players:GetPlayers()) do
-                        if player:GetRankInGroup(1) > 0 then
-                            game:GetService("StarterGui"):SetCore("SendNotification", {
-                                Title = "تحذير",
-                                Text = "ادمن في السيرفر!",
-                                Duration = 2
-                            })
-                        end
-                    end
-                end
-            end)
-        end
-    end
-})
-
-AntiTab:AddButton({
-    Name = "تفعيل الكل",
+-- Botão para ShiftLock
+UniversalTab:AddButton({
+    Name = "سكربت قفل",
     Callback = function()
-        print("تم تفعيل جميع المضادات")
+        loadstring(game:HttpGet("https://pastebin.com/raw/N2tiHgyv"))()
     end
 })
 
-AntiTab:AddButton({
-    Name = "تعطيل الكل",
+UniversalTab:AddButton({
+  Name = "سكربـت الـرقـصـات",
+  Callback = function()
+    -- line: [0, 0] id: 126
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Baseplate-Fe-All-Emote-7386"))()
+  end,
+})
+
+UniversalTab:AddButton({
+  Name = "سكربـت الـرحـمة",
+  Callback = function()
+    -- line: [0, 0] id: 120
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/n0kc/AtomicHub/main/Map-Al-Biout.lua"))()
+  end,
+})
+
+UniversalTab:AddButton({
+  Name = "سكربـت طـيـران السيارة",
+  Callback = function()
+    -- line: [0, 0] id: 28
+    loadstring(game:HttpGet("https://abre.ai/fly-gui"))()
+  end,
+})
+
+-- Botão para Ghost Hub
+UniversalTab:AddButton({
+    Name = "Ghost Hub سكربت الشبح",
     Callback = function()
-        print("تم تعطيل جميع المضادات")
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-GhostHub-16534"))()
     end
 })
 
-AntiTab:AddLabel("حالة الحماية: مفعلة")
-AntiTab:AddLabel("نسبة الامان: 98%")
+-- Botão para Infinite Yield
+UniversalTab:AddButton({
+    Name = "InfiniteYield - ادمن انفنتي",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+})
+
+-- Botão para Fly Gui
+UniversalTab:AddButton({
+    Name = "طيران",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Fly"))()
+    end
+})
+
+-- Botão para Nameless Admin 
+UniversalTab:AddButton({
+    Name = "Namelesسكربت ادمن",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source"))()
+    end
+})
+
+
+UniversalTab:AddButton({
+    Name = "تحكم بالسيارات",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md", true))()
+    end
+})
+
+
+UniversalTab:AddButton({
+   Name = "سـكربـت ضـرب  +18",
+   Callback = function()
+       loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+   end
+})
+
+
+UniversalTab:AddButton({
+   Name = "سـكـربـت حـضـن",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/martinng5/martin/refs/heads/main/martin.lua.txt"))()
+   end
+})
