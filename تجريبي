@@ -413,196 +413,141 @@ local UniversalTab = Window:MakeTab({"مضادات سكربتات من صنعي 
 local antiFlangEnabled = false
 local antiBangEnabled = false
 local antiSitEnabled = false
+local antiJumpEnabled = false
+local antiSpeedEnabled = false
+local antiTPEnabled = false
+local antiKickEnabled = false
 
--- دالة لإيقاف جميع الحمايات
-local function disableAllProtections()
+-- Connections للتوقف لاحقاً
+local connections = {}
+
+-- دالة إيقاف جميع الحمايات
+local function stopAllProtections()
     antiFlangEnabled = false
     antiBangEnabled = false
     antiSitEnabled = false
+    antiJumpEnabled = false
+    antiSpeedEnabled = false
+    antiTPEnabled = false
+    antiKickEnabled = false
+    
+    -- قطع جميع الاتصالات
+    for i, connection in pairs(connections) do
+        if connection then
+            pcall(function() connection:Disconnect() end)
+        end
+    end
+    connections = {}
+    
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "⏹️ تم الإيقاف",
+        Text = "تم إيقاف جميع الحمايات",
+        Icon = "rbxassetid://6031086328",
+        Duration = 3
+    })
 end
 
--- قسم الحمايات الرئيسي
-Section = UniversalTab:AddSection({
-    Name = "مضادات سكربتات من صنعي"
-})
-
--- زر مضاد فلنق ON/OFF
-UniversalTab:AddButton({
-    Name = "تشغيل مضاد فلنق",
-    Info = "مضاد سكربت فلنق V1",
-    Callback = function()
-        if not antiFlangEnabled then
-            antiFlangEnabled = true
-            local success, err = pcall(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
-            end)
-            if success then
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "✅ تم التفعيل",
-                    Text = "مضاد فلنق يعمل الآن",
-                    Icon = "rbxassetid://6031086328",
-                    Duration = 3
-                })
-            else
-                antiFlangEnabled = false
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "❌ خطأ",
-                    Text = "فشل تحميل مضاد فلنق",
-                    Icon = "rbxassetid://6031086328",
-                    Duration = 3
-                })
-            end
-        else
-            antiFlangEnabled = false
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "⏹️ تم الإيقاف",
-                Text = "تم إيقاف مضاد فلنق",
-                Icon = "rbxassetid://6031086328",
-                Duration = 3
-            })
-        end
-    end,
-})
-
--- زر إيقاف مضاد فلنق
-UniversalTab:AddButton({
-    Name = "إيقاف مضاد فلنق",
-    Callback = function()
-        antiFlangEnabled = false
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "⏹️ تم الإيقاف",
-            Text = "تم إيقاف مضاد فلنق",
-            Icon = "rbxassetid://6031086328",
-            Duration = 2
-        })
-    end,
-})
-
--- زر مضاد بانج (بدون تغيير كما طلبت)
-UniversalTab:AddButton({
-    Name = "مضاد بانج",
-    Callback = function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "✅ تم التفعيل",
-            Text = "مضاد بانج يعمل الآن",
-            Icon = "rbxassetid://6031086328",
-            Duration = 3
-        })
-    end,
-})
-
--- زر مضاد جلوس ON/OFF
-UniversalTab:AddButton({
-    Name = "تشغيل مضاد جلوس",
-    Info = "مضاد سكربت الجلوس V1",
-    Callback = function()
-        if not antiSitEnabled then
-            antiSitEnabled = true
-            local success, err = pcall(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Jlos"))()
-            end)
-            if success then
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "✅ تم التفعيل",
-                    Text = "مضاد جلوس يعمل الآن",
-                    Icon = "rbxassetid://6031086328",
-                    Duration = 3
-                })
-            else
-                antiSitEnabled = false
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "❌ خطأ",
-                    Text = "فشل تحميل مضاد جلوس",
-                    Icon = "rbxassetid://6031086328",
-                    Duration = 3
-                })
-            end
-        else
-            antiSitEnabled = false
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "⏹️ تم الإيقاف",
-                Text = "تم إيقاف مضاد جلوس",
-                Icon = "rbxassetid://6031086328",
-                Duration = 3
-            })
-        end
-    end,
-})
-
--- زر إيقاف مضاد جلوس
-UniversalTab:AddButton({
-    Name = "إيقاف مضاد جلوس",
-    Callback = function()
-        antiSitEnabled = false
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "⏹️ تم الإيقاف",
-            Text = "تم إيقاف مضاد جلوس",
-            Icon = "rbxassetid://6031086328",
-            Duration = 2
-        })
-    end,
-})
-
--- قسم الحماية المتقدمة
-Section2 = UniversalTab:AddSection({
-    Name = "حمايات إضافية مطورة"
-})
-
--- مضاد جامبر محسن
-UniversalTab:AddButton({
-    Name = "تشغيل مضاد جامبر",
-    Info = "حماية من سكربتات القفز",
-    Callback = function()
-        local antiJump = game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(char)
+-- دالة تفعيل جميع الحمايات
+local function startAllProtections()
+    -- مضاد فلنق المدمج
+    local function antiFlang()
+        local player = game:GetService("Players").LocalPlayer
+        connections.antiFlang = player.CharacterAdded:Connect(function(char)
+            wait(0.5)
             local humanoid = char:WaitForChild("Humanoid")
-            humanoid.JumpPower = 50
-            humanoid.JumpHeight = 7.2
+            -- حماية من سكربتات الطيران
+            humanoid:GetPropertyChangedSignal("PlatformStand"):Connect(function()
+                if humanoid.PlatformStand then
+                    humanoid.PlatformStand = false
+                end
+            end)
         end)
+    end
+    
+    -- مضاد بانج المدمج (محسن)
+    local function antiBang()
+        local mt = getrawmetatable(game)
+        local oldNamecall = mt.__namecall
+        setreadonly(mt, false)
         
-        _G.AntiJump = antiJump
-        
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "✅ تم التفعيل",
-            Text = "مضاد جامبر يعمل الآن",
-            Icon = "rbxassetid://6031086328",
-            Duration = 3
-        })
-    end,
-})
-
--- مضاد سبيد محسن
-UniversalTab:AddButton({
-    Name = "تشغيل مضاد سبيد",
-    Info = "حماية من سكربتات السرعة",
-    Callback = function()
-        local antiSpeed = game:GetService("RunService").Stepped:Connect(function()
+        connections.antiBang = game:GetService("RunService").Stepped:Connect(function()
             local player = game:GetService("Players").LocalPlayer
-            if player.Character and player.Character:FindFirstChild("Humanoid") then
-                local humanoid = player.Character.Humanoid
-                if humanoid.WalkSpeed > 16 then
-                    humanoid.WalkSpeed = 16
+            if player and player.Character then
+                local humanoid = player.Character:FindFirstChild("Humanoid")
+                if humanoid and humanoid.Health <= 0 then
+                    humanoid.Health = 100
                 end
             end
         end)
         
-        _G.AntiSpeed = antiSpeed
+        -- منع الضرر
+        mt.__namecall = newcclosure(function(self, ...)
+            local args = {...}
+            local method = getnamecallmethod()
+            
+            if method == "TakeDamage" or method == "Damage" then
+                return nil -- منع الضرر
+            end
+            
+            return oldNamecall(self, ...)
+        end)
         
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "✅ تم التفعيل",
-            Text = "مضاد سبيد يعمل الآن",
-            Icon = "rbxassetid://6031086328",
-            Duration = 3
-        })
-    end,
-})
-
--- مضاد تيليبورت محسن
-UniversalTab:AddButton({
-    Name = "تشغيل مضاد تيليبورت",
-    Info = "حماية من سكربتات النقل",
-    Callback = function()
-        local antiTP = game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(char)
+        setreadonly(mt, true)
+    end
+    
+    -- مضاد جلوس المدمج
+    local function antiSit()
+        local player = game:GetService("Players").LocalPlayer
+        connections.antiSit = game:GetService("RunService").Stepped:Connect(function()
+            if player and player.Character then
+                local humanoid = player.Character:FindFirstChild("Humanoid")
+                if humanoid and humanoid.Sit then
+                    humanoid.Sit = false
+                end
+            end
+        end)
+    end
+    
+    -- مضاد جامبر المدمج
+    local function antiJump()
+        local player = game:GetService("Players").LocalPlayer
+        connections.antiJump = player.CharacterAdded:Connect(function(char)
+            local humanoid = char:WaitForChild("Humanoid")
+            humanoid.JumpPower = 50
+            humanoid.JumpHeight = 7.2
+            
+            -- منع تغيير خصائص القفز
+            humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
+                if humanoid.JumpPower > 50 then
+                    humanoid.JumpPower = 50
+                end
+            end)
+            
+            humanoid:GetPropertyChangedSignal("JumpHeight"):Connect(function()
+                if humanoid.JumpHeight > 7.2 then
+                    humanoid.JumpHeight = 7.2
+                end
+            end)
+        end)
+    end
+    
+    -- مضاد سبيد المدمج
+    local function antiSpeed()
+        local player = game:GetService("Players").LocalPlayer
+        connections.antiSpeed = game:GetService("RunService").Stepped:Connect(function()
+            if player and player.Character then
+                local humanoid = player.Character:FindFirstChild("Humanoid")
+                if humanoid and humanoid.WalkSpeed > 16 then
+                    humanoid.WalkSpeed = 16
+                end
+            end
+        end)
+    end
+    
+    -- مضاد تيليبورت المدمج
+    local function antiTeleport()
+        local player = game:GetService("Players").LocalPlayer
+        connections.antiTeleport = player.CharacterAdded:Connect(function(char)
             local rootPart = char:WaitForChild("HumanoidRootPart")
             local lastPosition = rootPart.Position
             
@@ -613,116 +558,181 @@ UniversalTab:AddButton({
                 lastPosition = rootPart.Position
             end)
         end)
-        
-        _G.AntiTP = antiTP
-        
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "✅ تم التفعيل",
-            Text = "مضاد تيليبورت يعمل الآن",
-            Icon = "rbxassetid://6031086328",
-            Duration = 3
-        })
-    end,
-})
-
--- حماية شاملة
-Section3 = UniversalTab:AddSection({
-    Name = "حماية شاملة وتحكم"
-})
-
--- زر إيقاف جميع الحمايات
-UniversalTab:AddButton({
-    Name = "إيقاف جميع الحمايات",
-    Info = "إيقاف كل الحمايات النشطة",
-    Callback = function()
-        disableAllProtections()
-        
-        -- إيقاف الاتصالات النشطة
-        if _G.AntiJump then
-            _G.AntiJump:Disconnect()
-            _G.AntiJump = nil
-        end
-        if _G.AntiSpeed then
-            _G.AntiSpeed:Disconnect()
-            _G.AntiSpeed = nil
-        end
-        if _G.AntiTP then
-            _G.AntiTP:Disconnect()
-            _G.AntiTP = nil
-        end
-        
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "⏹️ تم الإيقاف",
-            Text = "تم إيقاف جميع الحمايات",
-            Icon = "rbxassetid://6031086328",
-            Duration = 3
-        })
-    end,
-})
-
--- مضاد كيك محسن
-UniversalTab:AddButton({
-    Name = "تشغيل مضاد كيك",
-    Info = "حماية من الطرد من السيرفر",
-    Callback = function()
+    end
+    
+    -- مضاد كيك المدمج
+    local function antiKick()
         local mt = getrawmetatable(game)
-        local old = mt.__namecall
+        local oldNamecall = mt.__namecall
         setreadonly(mt, false)
         
         mt.__namecall = newcclosure(function(self, ...)
-            local args = {...}
             local method = getnamecallmethod()
             
             if method == "Kick" then
-                return nil
+                return nil -- منع الطرد
             end
             
-            return old(self, ...)
+            return oldNamecall(self, ...)
         end)
         
         setreadonly(mt, true)
-        
+    end
+    
+    -- تشغيل جميع الحمايات
+    pcall(antiFlang)
+    pcall(antiBang)
+    pcall(antiSit)
+    pcall(antiJump)
+    pcall(antiSpeed)
+    pcall(antiTeleport)
+    pcall(antiKick)
+    
+    -- تعيين المتغيرات
+    antiFlangEnabled = true
+    antiBangEnabled = true
+    antiSitEnabled = true
+    antiJumpEnabled = true
+    antiSpeedEnabled = true
+    antiTPEnabled = true
+    antiKickEnabled = true
+    
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "✅ تم التفعيل",
+        Text = "جميع الحمايات تعمل الآن",
+        Icon = "rbxassetid://6031086328",
+        Duration = 3
+    })
+end
+
+-- قسم الحمايات
+Section = UniversalTab:AddSection({
+    Name = "مضادات سكربتات مدمجة V2"
+})
+
+-- زر تشغيل/إيقاف جميع الحمايات (Toggle)
+local allProtectionsButton = UniversalTab:AddButton({
+    Name = "تشغيل جميع الحمايات",
+    Info = "ضغطة واحدة تشغل كل الحمايات",
+    Callback = function()
+        if antiFlangEnabled or antiBangEnabled or antiSitEnabled then
+            -- إذا كان أي حماية شغالة، نوقف الكل
+            stopAllProtections()
+            allProtectionsButton:Set("Name", "تشغيل جميع الحمايات")
+        else
+            -- إذا الكل موقف، نشغل الكل
+            startAllProtections()
+            allProtectionsButton:Set("Name", "إيقاف جميع الحمايات")
+        end
+    end,
+})
+
+-- حمايات فردية (اختيارية)
+Section2 = UniversalTab:AddSection({
+    Name = "حمايات منفصلة (اختياري)"
+})
+
+-- مضاد فلنق منفصل
+UniversalTab:AddButton({
+    Name = "تشغيل/إيقاف مضاد فلنق",
+    Info = "حماية من سكربتات الطيران",
+    Callback = function()
+        antiFlangEnabled = not antiFlangEnabled
+        if antiFlangEnabled then
+            -- كود مضاد فلنق المدمج هنا
+            local player = game:GetService("Players").LocalPlayer
+            connections.antiFlang = player.CharacterAdded:Connect(function(char)
+                wait(0.5)
+                local humanoid = char:WaitForChild("Humanoid")
+                humanoid:GetPropertyChangedSignal("PlatformStand"):Connect(function()
+                    if humanoid.PlatformStand then
+                        humanoid.PlatformStand = false
+                    end
+                end)
+            end)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ تم التفعيل",
+                Text = "مضاد فلنق يعمل",
+                Duration = 2
+            })
+        else
+            if connections.antiFlang then
+                connections.antiFlang:Disconnect()
+                connections.antiFlang = nil
+            end
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "⏹️ تم الإيقاف",
+                Text = "مضاد فلنق متوقف",
+                Duration = 2
+            })
+        end
+    end,
+})
+
+-- مضاد جلوس منفصل
+UniversalTab:AddButton({
+    Name = "تشغيل/إيقاف مضاد جلوس",
+    Info = "حماية من سكربتات الجلوس",
+    Callback = function()
+        antiSitEnabled = not antiSitEnabled
+        if antiSitEnabled then
+            local player = game:GetService("Players").LocalPlayer
+            connections.antiSit = game:GetService("RunService").Stepped:Connect(function()
+                if player and player.Character then
+                    local humanoid = player.Character:FindFirstChild("Humanoid")
+                    if humanoid and humanoid.Sit then
+                        humanoid.Sit = false
+                    end
+                end
+            end)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ تم التفعيل",
+                Text = "مضاد جلوس يعمل",
+                Duration = 2
+            })
+        else
+            if connections.antiSit then
+                connections.antiSit:Disconnect()
+                connections.antiSit = nil
+            end
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "⏹️ تم الإيقاف",
+                Text = "مضاد جلوس متوقف",
+                Duration = 2
+            })
+        end
+    end,
+})
+
+-- مضاد بانج (يبقى كما هو إذا أردت)
+UniversalTab:AddButton({
+    Name = "مضاد بانج",
+    Info = "تحميل من الرابط الخارجي",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "✅ تم التفعيل",
-            Text = "مضاد كيك يعمل الآن",
-            Icon = "rbxassetid://6031086328",
-            Duration = 3
+            Text = "مضاد بانج يعمل",
+            Duration = 2
         })
     end,
 })
 
 -- قسم قيد التطوير
-Section4 = UniversalTab:AddSection({
+Section3 = UniversalTab:AddSection({
     Name = "قيد التطوير"
 })
 
--- الزر قيد التطوير الأصلي
 UniversalTab:AddButton({
     Name = "قيد تطوير",
     Callback = function()
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "🚧 قيد التطوير",
             Text = "هذه الميزة قيد التطوير",
-            Icon = "rbxassetid://6031086328",
             Duration = 2
         })
     end,
 })
-
--- حماية شاملة V2 (قيد التطوير)
-UniversalTab:AddButton({
-    Name = "حماية شاملة V2",
-    Info = "قيد التطوير - قريباً",
-    Callback = function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "🚧 قيد التطوير",
-            Text = "حماية شاملة V2 قيد التطوير",
-            Icon = "rbxassetid://6031086328",
-            Duration = 2
-        })
-    end,
-})
-
 -- رسالة تأكيد
 game.StarterGui:SetCore("SendNotification", {
     Title = "Everlast HUB",
