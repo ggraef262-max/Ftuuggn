@@ -1,0 +1,40 @@
+local tool = Instance.new("Tool")
+tool.Name = "Invisibility Tool"
+tool.RequiresHandle = false -- بدون مقبض
+
+local localScript = Instance.new("LocalScript")
+localScript.Parent = tool
+
+-- هذا هو محتوى الـ LocalScript بنفس الأسلوب
+table.insert({}, function() 
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local usrinput = game:GetService("UserInputService")
+    local isActive = false
+
+    tool.Equipped:Connect(function()
+        print("أداة التخفي مجهزة!")
+        usrinput.TouchTapInWorld:Connect(function()
+            if not isActive then
+                isActive = true
+                -- إخفاء أجزاء الشخصية (بنفس أسلوب جعل الـ Handle شفافاً في سكربتك)
+                for _, part in pairs(character:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.Transparency = 1
+                    end
+                end
+                wait(3) -- الانتظار لـ 3 ثواني
+                -- إظهارها مجدداً
+                for _, part in pairs(character:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.Transparency = 0
+                    end
+                end
+                isActive = false
+            end
+        end)
+    end)
+end)
+
+tool.Parent = game.Players.LocalPlayer.Backpack
