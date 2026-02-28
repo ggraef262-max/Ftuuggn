@@ -7339,7 +7339,7 @@ local HeadsAndLegsTab = MakeTab({Name = "الـرؤوس و الارجـل"})
 local BodiesTab = MakeTab({Name = "الاجـسـام"})
 local CodesTab = MakeTab({Name = "اكـواد مـلابـس"})
 
--- متغير للـ Remote (للتحقق من وجوده)
+-- متغير للـ Remote
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Remotes = ReplicatedStorage:WaitForChild("Remotes", 9e9)
 local WearRemote = Remotes:WaitForChild("Wear", 9e9)
@@ -7349,7 +7349,6 @@ local ChangeCharacterRemote = Remotes:WaitForChild("ChangeCharacterBody", 9e9)
 -- التبويب الأول: الرؤوس والأرجل
 --======================================
 
--- أزرار الرؤوس
 AddButton(HeadsAndLegsTab, {
     Name = "رأس روبـوت",
     Callback = function()
@@ -7385,7 +7384,7 @@ AddButton(HeadsAndLegsTab, {
     end
 })
 
-AddSection(HeadsAndLegsTab, {"الارجـل"})
+AddSection(HeadsAndLegsTab, "الارجـل")
 
 AddButton(HeadsAndLegsTab, {
     Name = "رجـل مـقـطـوعـة لـلـبـنـات",
@@ -7397,7 +7396,7 @@ AddButton(HeadsAndLegsTab, {
                 [3] = 75159926897589,
                 [4] = 139607718,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7414,7 +7413,7 @@ AddButton(HeadsAndLegsTab, {
                 [3] = 1,
                 [4] = 139607718,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7431,7 +7430,7 @@ AddButton(HeadsAndLegsTab, {
                 [3] = 1,
                 [4] = 17500249989,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7448,7 +7447,7 @@ AddButton(HeadsAndLegsTab, {
                 [3] = 1,
                 [4] = 14547162578,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7465,7 +7464,7 @@ AddButton(HeadsAndLegsTab, {
                 [3] = 1,
                 [4] = 3230472745,
                 [5] = 3230470862,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7476,7 +7475,7 @@ AddButton(HeadsAndLegsTab, {
 -- التبويب الثاني: الأجسام
 --======================================
 
-AddSection(BodiesTab, {"اجـسـام الـبـنـات"})
+AddSection(BodiesTab, "اجـسـام الـبـنـات")
 
 AddButton(BodiesTab, {
     Name = "جـسـم بـنـت 1",
@@ -7488,7 +7487,7 @@ AddButton(BodiesTab, {
                 [3] = 75159926897589,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7505,7 +7504,7 @@ AddButton(BodiesTab, {
                 [3] = 75159926897589,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7522,7 +7521,7 @@ AddButton(BodiesTab, {
                 [3] = 75159926897589,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7539,7 +7538,7 @@ AddButton(BodiesTab, {
                 [3] = 14854350451,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7556,7 +7555,7 @@ AddButton(BodiesTab, {
                 [3] = 111571034664628,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7573,7 +7572,7 @@ AddButton(BodiesTab, {
                 [3] = 18839824132,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7590,7 +7589,7 @@ AddButton(BodiesTab, {
                 [3] = 16214251181,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7607,7 +7606,7 @@ AddButton(BodiesTab, {
                 [3] = 15539008680,
                 [4] = 15539008795,
                 [5] = 15539011945,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7624,14 +7623,14 @@ AddButton(BodiesTab, {
                 [3] = 14861801452,
                 [4] = 14861800627,
                 [5] = 14861801454,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
     end
 })
 
-AddSection(BodiesTab, {"اجـسـام الـولـد"})
+AddSection(BodiesTab, "اجـسـام الـولـد")
 
 AddButton(BodiesTab, {
     Name = "جـسـم ولـد 1",
@@ -7643,7 +7642,7 @@ AddButton(BodiesTab, {
                 [3] = 1,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7660,7 +7659,7 @@ AddButton(BodiesTab, {
                 [3] = 115905570886697,
                 [4] = 1,
                 [5] = 1,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7677,7 +7676,7 @@ AddButton(BodiesTab, {
                 [3] = 27112052,
                 [4] = 27112068,
                 [5] = 27112056,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7694,7 +7693,7 @@ AddButton(BodiesTab, {
                 [3] = 27112052,
                 [4] = 3230472745,
                 [5] = 3230470862,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7711,14 +7710,14 @@ AddButton(BodiesTab, {
                 [3] = 18178775725,
                 [4] = 18178777453,
                 [5] = 18178775695,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
     end
 })
 
-AddSection(BodiesTab, {"اجـسـام الـقـزم"})
+AddSection(BodiesTab, "اجـسـام الـقـزم")
 
 AddButton(BodiesTab, {
     Name = "جـسـم قـزم",
@@ -7730,7 +7729,7 @@ AddButton(BodiesTab, {
                 [3] = 14579959191,
                 [4] = 14579959249,
                 [5] = 14579963667,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7747,7 +7746,7 @@ AddButton(BodiesTab, {
                 [3] = 116607813654019,
                 [4] = 138966229804486,
                 [5] = 128961183894053,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7764,7 +7763,7 @@ AddButton(BodiesTab, {
                 [3] = 112849465115864,
                 [4] = 78321005147549,
                 [5] = 106586789635639,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7781,7 +7780,7 @@ AddButton(BodiesTab, {
                 [3] = 123471958406889,
                 [4] = 117042768644173,
                 [5] = 131948590344338,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7798,7 +7797,7 @@ AddButton(BodiesTab, {
                 [3] = 15282063615,
                 [4] = 14538400463,
                 [5] = 14538400387,
-                [6] = 1,
+                [6] = 1
             }
         }
         ChangeCharacterRemote:InvokeServer(unpack(args))
@@ -7809,7 +7808,7 @@ AddButton(BodiesTab, {
 -- التبويب الثالث: أكواد ملابس
 --======================================
 
-AddSection(CodesTab, {"اكـمام الـيد"})
+AddSection(CodesTab, "اكـمام الـيد")
 
 AddButton(CodesTab, {
     Name = "قـفازات يد اسود مخطط",
@@ -7923,7 +7922,7 @@ AddButton(CodesTab, {
     end
 })
 
-AddSection(CodesTab, {"اكـمام الرجـل"})
+AddSection(CodesTab, "اكـمام الرجـل")
 
 AddButton(CodesTab, {
     Name = "حـذاء الـشيطـان زهري",
@@ -8012,7 +8011,7 @@ AddButton(CodesTab, {
 AddButton(CodesTab, {
     Name = "حـذاء قـصـير 5",
     Callback = function()
-        WearRemote:InvokeServer(14338742287)  -- مكرر لكن زي ماهو موجود
+        WearRemote:InvokeServer(14338742287)
     end
 })
 
@@ -8051,7 +8050,7 @@ AddButton(CodesTab, {
     end
 })
 
-AddSection(CodesTab, {"اشـياء للـيـد"})
+AddSection(CodesTab, "اشـياء للـيـد")
 
 AddButton(CodesTab, {
     Name = "ورد اسـود",
@@ -8116,7 +8115,7 @@ AddButton(CodesTab, {
     end
 })
 
-AddSection(CodesTab, {"الاشـواك"})
+AddSection(CodesTab, "الاشـواك")
 
 AddButton(CodesTab, {
     Name = "شـوك 1",
@@ -8160,7 +8159,7 @@ AddButton(CodesTab, {
     end
 })
 
-AddSection(CodesTab, {"مـلابـس كـيـوت "})
+AddSection(CodesTab, "مـلابـس كـيـوت ")
 
 AddButton(CodesTab, {
     Name = "لـبـس كـيـوت 1",
@@ -8196,3 +8195,4 @@ AddButton(CodesTab, {
         WearRemote:InvokeServer(93303265717630)
     end
 })
+
