@@ -7081,38 +7081,46 @@ function startAutoUnban()
     end
 end
 
-local UniversalTab = Window:MakeTab({" مضادات سكربتات من صنعيV1", "plane"})
+local UniversalTab = Window:MakeTab({"مضاذات V1", "plane"})
 
 -- Seção para Scripts Universais
 Section = UniversalTab:AddSection({
-    Name = " مضادات سكربتات من صنعي"
+    Name = "مضاذات من صنعي"
 })
 
-UniversalTab:AddButton({
+UniversalTab:AddToggle({
   Name = "مضاد فلنق",
-  Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
+  Callback = function(Value)
+    if Value then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
+    end
   end,
 })
 
-UniversalTab:AddButton({
+UniversalTab:AddToggle({
   Name = "مضاد بانج",
-  Callback = function()
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
+  Callback = function(Value)
+    if Value then
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
+    end
   end,
 })
 
-UniversalTab:AddButton({
+UniversalTab:AddToggle({
   Name = "مضاد جلوس",
-  Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Jlos"))()
+  Callback = function(Value)
+    if Value then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Jlos"))()
+    end
   end,
 })
 
-UniversalTab:AddButton({
-  Name = " قيد تطوير",
-  Callback = function()
-    loadstring(game:HttpGet(""))()
+UniversalTab:AddToggle({
+  Name = "مضاد آيم (Anti Aim)",
+  Callback = function(Value)
+    if Value then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Robozalo/Roblox/main/AntiAim.lua"))()
+    end
   end,
 })
 
@@ -7131,16 +7139,3 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
 })
 
 
-local UniversalTab = Window:MakeTab({"ادوات", "plane"})
-
--- Seção para Scripts Universais
-Section = UniversalTab:AddSection({
-    Name = "ادوات"
-})
-
-UniversalTab:AddButton({
-  Name = "الاختفاء",
-  Callback = function()
-loadstring(game:HttpGet(('https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/T7fe'),true))()
- end,
-})
