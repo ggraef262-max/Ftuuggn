@@ -262,7 +262,8 @@ pcall(function()
 end)
 
 -- تحميل الـ UI مرة واحدة فقط
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/NEMERO"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/EVERLAST2.lua"))()
+
 
 local Window = redzlib:MakeWindow({
     Title = "Everlast HUB",
