@@ -7087,29 +7087,31 @@ Section = UniversalTab:AddSection({
     Name = "مضاذات من صنعي"
 })
 
+-- متغيرات للتحكم في الحلقات
+local loops = {}
+local players = game:GetService("Players")
+local player = players.LocalPlayer
+local runService = game:GetService("RunService")
+local userInputService = game:GetService("UserInputService")
+
 UniversalTab:AddToggle({
   Name = "مضاد فلنق",
   Callback = function(Value)
+    loops["Flung"] = Value
     if Value then
-        -- مضاد فلنق (مدمج)
-        local player = game:GetService("Players").LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        
-        -- حماية من الفلنق
         spawn(function()
-            while Value do
-                wait(1)
-                if character and character:FindFirstChild("Humanoid") then
-                    character.Humanoid.WalkSpeed = 16
-                    character.Humanoid.JumpPower = 50
-                end
+            while loops["Flung"] do
+                wait(0.5) -- تقليل وقت الانتظار لتقليل الـ Lag
+                pcall(function()
+                    local character = player.Character
+                    if character and character:FindFirstChild("Humanoid") then
+                        character.Humanoid.WalkSpeed = 16
+                        character.Humanoid.JumpPower = 50
+                        character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+                    end
+                end)
             end
         end)
-        
-        -- منع دفع اللاعب
-        if character:FindFirstChild("HumanoidRootPart") then
-            character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-        end
     end
   end,
 })
@@ -7117,8 +7119,23 @@ UniversalTab:AddToggle({
 UniversalTab:AddToggle({
   Name = "مضاد بانج",
   Callback = function(Value)
+    loops["Bang"] = Value
     if Value then
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
+        spawn(function()
+            while loops["Bang"] do
+                wait(0.2) -- تقليل وقت الانتظار
+                pcall(function()
+                    -- منع الطرد
+                    local camera = workspace.CurrentCamera
+                    if camera and camera.CameraSubject and camera.CameraSubject.Parent == nil then
+                        local char = player.Character
+                        if char and char:FindFirstChild("Humanoid") then
+                            camera.CameraSubject = char.Humanoid
+                        end
+                    end
+                end)
+            end
+        end)
     end
   end,
 })
@@ -7126,16 +7143,13 @@ UniversalTab:AddToggle({
 UniversalTab:AddToggle({
   Name = "مضاد جلوس",
   Callback = function(Value)
+    loops["Sit"] = Value
     if Value then
-        -- مضاد جلوس (مدمج)
-        local player = game:GetService("Players").LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        
-        -- منع الجلوس القسري
         spawn(function()
-            while Value do
-                wait(0.1)
+            while loops["Sit"] do
+                wait(0.2)
                 pcall(function()
+                    local character = player.Character
                     if character and character:FindFirstChild("Humanoid") then
                         if character.Humanoid.Sit then
                             character.Humanoid.Sit = false
@@ -7145,13 +7159,20 @@ UniversalTab:AddToggle({
             end
         end)
         
-        -- حماية مستمرة من الجلوس
-        character.Humanoid.Changed:Connect(function(prop)
-            if Value and prop == "Sit" and character.Humanoid.Sit == true then
-                wait(0.1)
-                character.Humanoid.Sit = false
+        -- حماية مستمرة من الجلوس بدون Lag
+        if player.Character then
+            local character = player.Character
+            if character:FindFirstChild("Humanoid") then
+                character.Humanoid.Changed:Connect(function(prop)
+                    if loops["Sit"] and prop == "Sit" and character.Humanoid.Sit == true then
+                        wait(0.1)
+                        pcall(function()
+                            character.Humanoid.Sit = false
+                        end)
+                    end
+                end)
             end
-        end)
+        end
     end
   end,
 })
@@ -7159,31 +7180,17 @@ UniversalTab:AddToggle({
 UniversalTab:AddToggle({
   Name = "مضاد آيم (Anti Aim)",
   Callback = function(Value)
+    loops["AntiAim"] = Value
     if Value then
-        -- مضاد آيم (مدمج) - حماية من التصويب التلقائي
-        local player = game:GetService("Players").LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        
-        -- تشويش على الـ Aimbot
         spawn(function()
-            while Value do
-                wait(0.05)
+            while loops["AntiAim"] do
+                wait(0.1) -- وقت معتدل لتشويش الـ Aimbot بدون Lag
                 pcall(function()
+                    local character = player.Character
                     if character and character:FindFirstChild("HumanoidRootPart") then
-                        -- تحريك عشوائي بسيط لتشويش الـ Aimbot
-                        character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(math.random(-2,2)/10, 0, math.random(-2,2)/10)
+                        -- تشويش عشوائي خفيف
+                        character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(math.random(-1,1)/20, 0, math.random(-1,1)/20)
                     end
-                end)
-            end
-        end)
-        
-        -- إخفاء الاسم الحقيقي للاعب (صعوبة التعرف عليه)
-        spawn(function()
-            while Value do
-                wait(1)
-                pcall(function()
-                    player.DisplayName = string.rep(" ", 10)
-                    player.Name = string.rep(" ", 10)
                 end)
             end
         end)
@@ -7191,11 +7198,127 @@ UniversalTab:AddToggle({
   end,
 })
 
--- حماية عند تغيير الشخصية
-game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(newChar)
+-- مضاد لاق (Anti Lag) جديد
+UniversalTab:AddToggle({
+  Name = "مضاد لاق (Anti Lag)",
+  Callback = function(Value)
+    loops["AntiLag"] = Value
+    if Value then
+        spawn(function()
+            while loops["AntiLag"] do
+                wait(0.5)
+                pcall(function()
+                    -- تقليل جودة الرسومات مؤقتاً
+                    if userInputService and userInputService.UserGameSettings then
+                        local settings = userInputService.UserGameSettings
+                        settings.MasterVolume = 0.5 -- تقليل الصوت
+                    end
+                    
+                    -- تنظيف الذاكرة
+                    collectgarbage()
+                    
+                    -- تحسين أداء اللعبة
+                    if workspace and workspace.CurrentCamera then
+                        workspace.CurrentCamera.FieldOfView = 70 -- تقليل مجال الرؤية قليلاً
+                    end
+                    
+                    -- إيقاف المؤثرات الزائدة
+                    local lighting = game:GetService("Lighting")
+                    lighting.GlobalShadows = false
+                    lighting.FogEnd = 100000
+                end)
+            end
+        end)
+        
+        -- تحسين الأداء المستمر
+        spawn(function()
+            while loops["AntiLag"] do
+                wait(2)
+                pcall(function()
+                    -- إيقاف الأجزاء البعيدة عن اللاعب
+                    local character = player.Character
+                    if character and character:FindFirstChild("HumanoidRootPart") then
+                        local rootPos = character.HumanoidRootPart.Position
+                        for _, part in ipairs(workspace:GetDescendants()) do
+                            if part:IsA("BasePart") and part.Transparency == 0 then
+                                if (part.Position - rootPos).Magnitude > 200 then
+                                    part.Transparency = 0.8 -- تخفيف عرض الأجزاء البعيدة
+                                end
+                            end
+                        end
+                    end
+                end)
+            end
+        end)
+    else
+        -- إعادة الإعدادات عند إيقاف مضاد الـ Lag
+        pcall(function()
+            local lighting = game:GetService("Lighting")
+            lighting.GlobalShadows = true
+            if userInputService and userInputService.UserGameSettings then
+                userInputService.UserGameSettings.MasterVolume = 1
+            end
+        end)
+    end
+  end,
+})
+
+-- نظام ذكي لإيقاف الحلقات عند تغيير الشخصية
+player.CharacterAdded:Connect(function(newChar)
     wait(1)
-    -- يمكن إعادة تطبيق الحمايات هنا
+    -- إعادة تفعيل الحمايات إذا كانت مفعلة
+    for name, value in pairs(loops) do
+        if value then
+            loops[name] = true
+        end
+    end
 end)
+
+-- تنظيف الحلقات عند إغلاق اللعبة
+game:GetService("CoreGui").ChildRemoved:Connect(function()
+    for name, _ in pairs(loops) do
+        loops[name] = false
+    end
+end)
+
+-- تحسين إضافي: مضاد لاق للرسومات
+UniversalTab:AddToggle({
+  Name = "وضع الأداء العالي (Boost FPS)",
+  Callback = function(Value)
+    loops["BoostFPS"] = Value
+    if Value then
+        spawn(function()
+            while loops["BoostFPS"] do
+                wait(1)
+                pcall(function()
+                    -- تعطيل التأثيرات البصرية
+                    local lighting = game:GetService("Lighting")
+                    lighting.Brightness = 1
+                    lighting.ColorShift_Bottom = Color3.new(0, 0, 0)
+                    lighting.ColorShift_Top = Color3.new(0, 0, 0)
+                    lighting.EnvironmentDiffuseScale = 0
+                    lighting.EnvironmentSpecularScale = 0
+                    
+                    -- إخفاء الأجزاء غير الضرورية
+                    for _, v in ipairs(workspace:GetDescendants()) do
+                        if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") then
+                            v.Enabled = false
+                        end
+                    end
+                end)
+            end
+        end)
+    else
+        -- إعادة التأثيرات عند الإيقاف
+        pcall(function()
+            local lighting = game:GetService("Lighting")
+            lighting.Brightness = 2
+            lighting.EnvironmentDiffuseScale = 1
+            lighting.EnvironmentSpecularScale = 1
+        end)
+    end
+  end
+})
 
 local UniversalTab = Window:MakeTab({"ادوات", "plane"})
 
