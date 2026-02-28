@@ -8196,5 +8196,3 @@ AddButton(CodesTab, {
         WearRemote:InvokeServer(93303265717630)
     end
 })
-
-print("✅ تم تحميل جميع الأزرار بنجاح!")
