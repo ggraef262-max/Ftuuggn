@@ -7080,7 +7080,6 @@ function startAutoUnban()
         task.wait(1)
     end
 end
-
 local UniversalTab = Window:MakeTab({"مضاذات V1", "plane"})
 
 -- Seção para Scripts Universais
@@ -7092,7 +7091,25 @@ UniversalTab:AddToggle({
   Name = "مضاد فلنق",
   Callback = function(Value)
     if Value then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
+        -- مضاد فلنق (مدمج)
+        local player = game:GetService("Players").LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        
+        -- حماية من الفلنق
+        spawn(function()
+            while Value do
+                wait(1)
+                if character and character:FindFirstChild("Humanoid") then
+                    character.Humanoid.WalkSpeed = 16
+                    character.Humanoid.JumpPower = 50
+                end
+            end
+        end)
+        
+        -- منع دفع اللاعب
+        if character:FindFirstChild("HumanoidRootPart") then
+            character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+        end
     end
   end,
 })
@@ -7101,7 +7118,31 @@ UniversalTab:AddToggle({
   Name = "مضاد بانج",
   Callback = function(Value)
     if Value then
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
+        -- مضاد بانج (مدمج)
+        local player = game:GetService("Players").LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        
+        -- حماية من البانج (الطرد)
+        spawn(function()
+            while Value do
+                wait(0.1)
+                pcall(function()
+                    -- منع الطرد
+                    local Camera = workspace.CurrentCamera
+                    if Camera and Camera.CameraSubject and Camera.CameraSubject.Parent == nil then
+                        Camera.CameraSubject = character.Humanoid
+                    end
+                end)
+            end
+        end)
+        
+        -- حماية إضافية
+        player.OnTeleport:Connect(function()
+            if Value then
+                wait(0.5)
+                player:LoadCharacter()
+            end
+        end)
     end
   end,
 })
@@ -7110,7 +7151,31 @@ UniversalTab:AddToggle({
   Name = "مضاد جلوس",
   Callback = function(Value)
     if Value then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Jlos"))()
+        -- مضاد جلوس (مدمج)
+        local player = game:GetService("Players").LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        
+        -- منع الجلوس القسري
+        spawn(function()
+            while Value do
+                wait(0.1)
+                pcall(function()
+                    if character and character:FindFirstChild("Humanoid") then
+                        if character.Humanoid.Sit then
+                            character.Humanoid.Sit = false
+                        end
+                    end
+                end)
+            end
+        end)
+        
+        -- حماية مستمرة من الجلوس
+        character.Humanoid.Changed:Connect(function(prop)
+            if Value and prop == "Sit" and character.Humanoid.Sit == true then
+                wait(0.1)
+                character.Humanoid.Sit = false
+            end
+        end)
     end
   end,
 })
@@ -7119,10 +7184,42 @@ UniversalTab:AddToggle({
   Name = "مضاد آيم (Anti Aim)",
   Callback = function(Value)
     if Value then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Robozalo/Roblox/main/AntiAim.lua"))()
+        -- مضاد آيم (مدمج) - حماية من التصويب التلقائي
+        local player = game:GetService("Players").LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        
+        -- تشويش على الـ Aimbot
+        spawn(function()
+            while Value do
+                wait(0.05)
+                pcall(function()
+                    if character and character:FindFirstChild("HumanoidRootPart") then
+                        -- تحريك عشوائي بسيط لتشويش الـ Aimbot
+                        character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(math.random(-2,2)/10, 0, math.random(-2,2)/10)
+                    end
+                end)
+            end
+        end)
+        
+        -- إخفاء الاسم الحقيقي للاعب (صعوبة التعرف عليه)
+        spawn(function()
+            while Value do
+                wait(1)
+                pcall(function()
+                    player.DisplayName = string.rep(" ", 10)
+                    player.Name = string.rep(" ", 10)
+                end)
+            end
+        end)
     end
   end,
 })
+
+-- حماية عند تغيير الشخصية
+game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(newChar)
+    wait(1)
+    -- يمكن إعادة تطبيق الحمايات هنا
+end)
 
 local UniversalTab = Window:MakeTab({"ادوات", "plane"})
 
