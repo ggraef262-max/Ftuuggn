@@ -7334,4 +7334,867 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
+-- تعريف التبويبات بأسماء مختلفة
+local HeadsAndLegsTab = MakeTab({Name = "الـرؤوس و الارجـل"})
+local BodiesTab = MakeTab({Name = "الاجـسـام"})
+local CodesTab = MakeTab({Name = "اكـواد مـلابـس"})
 
+-- متغير للـ Remote (للتحقق من وجوده)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = ReplicatedStorage:WaitForChild("Remotes", 9e9)
+local WearRemote = Remotes:WaitForChild("Wear", 9e9)
+local ChangeCharacterRemote = Remotes:WaitForChild("ChangeCharacterBody", 9e9)
+
+--======================================
+-- التبويب الأول: الرؤوس والأرجل
+--======================================
+
+-- أزرار الرؤوس
+AddButton(HeadsAndLegsTab, {
+    Name = "رأس روبـوت",
+    Callback = function()
+        WearRemote:InvokeServer(3210773801)
+    end
+})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رأس بـنـت كـيـوت",
+    Callback = function()
+        WearRemote:InvokeServer(140991)
+    end
+})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رأس مـخـفـي",
+    Callback = function()
+        WearRemote:InvokeServer(134082579)
+    end
+})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رأس كـوبـي | رول",
+    Callback = function()
+        WearRemote:InvokeServer(746767604)
+    end
+})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رأس عـيـون زرقـاء",
+    Callback = function()
+        WearRemote:InvokeServer(16580493236)
+    end
+})
+
+AddSection(HeadsAndLegsTab, {"الارجـل"})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رجـل مـقـطـوعـة لـلـبـنـات",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 96491916349570,
+                [2] = 76683091425509,
+                [3] = 75159926897589,
+                [4] = 139607718,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رجـل مـقـطـوعـة لـلـولـد",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 1,
+                [2] = 1,
+                [3] = 1,
+                [4] = 139607718,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رجـل حـديـديـة",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 1,
+                [2] = 1,
+                [3] = 1,
+                [4] = 17500249989,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رجـل الـعـضـم الـرصـاصـي",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 1,
+                [2] = 1,
+                [3] = 1,
+                [4] = 14547162578,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(HeadsAndLegsTab, {
+    Name = "رجـل رول",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 1,
+                [2] = 1,
+                [3] = 1,
+                [4] = 3230472745,
+                [5] = 3230470862,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+--======================================
+-- التبويب الثاني: الأجسام
+--======================================
+
+AddSection(BodiesTab, {"اجـسـام الـبـنـات"})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 1",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 96491916349570,
+                [2] = 76683091425509,
+                [3] = 75159926897589,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 2",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 74302534603111,
+                [2] = 76683091425509,
+                [3] = 75159926897589,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 3",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 124754866635882,
+                [2] = 76683091425509,
+                [3] = 75159926897589,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 4",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 96491916349570,
+                [2] = 14854350570,
+                [3] = 14854350451,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 5",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 101577365085156,
+                [2] = 121017849910260,
+                [3] = 111571034664628,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 6",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 18839824113,
+                [2] = 18839824209,
+                [3] = 18839824132,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 7",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 16214246112,
+                [2] = 76683091425509,
+                [3] = 16214251181,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 8",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 15539008532,
+                [2] = 15539008875,
+                [3] = 15539008680,
+                [4] = 15539008795,
+                [5] = 15539011945,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم بـنـت 9",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 14861800638,
+                [2] = 14861800626,
+                [3] = 14861801452,
+                [4] = 14861800627,
+                [5] = 14861801454,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddSection(BodiesTab, {"اجـسـام الـولـد"})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم ولـد 1",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 17754346388,
+                [2] = 1,
+                [3] = 1,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم ولـد 2",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 92757812011061,
+                [2] = 99519402284266,
+                [3] = 115905570886697,
+                [4] = 1,
+                [5] = 1,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم ولـد كـوبـي",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 86499666,
+                [2] = 27112039,
+                [3] = 27112052,
+                [4] = 27112068,
+                [5] = 27112056,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم ولـد رول",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 27112025,
+                [2] = 27112039,
+                [3] = 27112052,
+                [4] = 3230472745,
+                [5] = 3230470862,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم ولـد مـعـضـل",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 18178775358,
+                [2] = 18178775182,
+                [3] = 18178775725,
+                [4] = 18178777453,
+                [5] = 18178775695,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddSection(BodiesTab, {"اجـسـام الـقـزم"})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم قـزم",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 14579958702,
+                [2] = 14579959062,
+                [3] = 14579959191,
+                [4] = 14579959249,
+                [5] = 14579963667,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم قـزم مـتـوسـط",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 77813057823038,
+                [2] = 135110043370135,
+                [3] = 116607813654019,
+                [4] = 138966229804486,
+                [5] = 128961183894053,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم قـزم صـغـيـر",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 120973199097564,
+                [2] = 118345433416023,
+                [3] = 112849465115864,
+                [4] = 78321005147549,
+                [5] = 106586789635639,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم قـزم الـمـربـع",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 126267841602936,
+                [2] = 77530451194918,
+                [3] = 123471958406889,
+                [4] = 117042768644173,
+                [5] = 131948590344338,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+AddButton(BodiesTab, {
+    Name = "جـسـم قـزم بـنـت",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 15282063616,
+                [2] = 15282063632,
+                [3] = 15282063615,
+                [4] = 14538400463,
+                [5] = 14538400387,
+                [6] = 1,
+            }
+        }
+        ChangeCharacterRemote:InvokeServer(unpack(args))
+    end
+})
+
+--======================================
+-- التبويب الثالث: أكواد ملابس
+--======================================
+
+AddSection(CodesTab, {"اكـمام الـيد"})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد اسود مخطط",
+    Callback = function()
+        WearRemote:InvokeServer(9239689111)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "سـتـرة اسـود",
+    Callback = function()
+        WearRemote:InvokeServer(89892588488089)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "سـتـرة زهـري كـيـوت ",
+    Callback = function()
+        WearRemote:InvokeServer(99429391843259)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد اسود عـادي 1",
+    Callback = function()
+        WearRemote:InvokeServer(10789914680)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد اسود عـادي 2",
+    Callback = function()
+        WearRemote:InvokeServer(11363898043)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد اسود عـادي 3",
+    Callback = function()
+        WearRemote:InvokeServer(10791180072)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد ابـيـض مزخرف ",
+    Callback = function()
+        WearRemote:InvokeServer(10871965173)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد زهري",
+    Callback = function()
+        WearRemote:InvokeServer(10789939838)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد احـمـر",
+    Callback = function()
+        WearRemote:InvokeServer(12379676852)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "اضـافـر اسـود",
+    Callback = function()
+        WearRemote:InvokeServer(12825022709)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد قـصـير 1",
+    Callback = function()
+        WearRemote:InvokeServer(12483105503)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد قـصـير 2",
+    Callback = function()
+        WearRemote:InvokeServer(12483109504)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد قـصـير 3",
+    Callback = function()
+        WearRemote:InvokeServer(11613796964)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد قـصـير 4",
+    Callback = function()
+        WearRemote:InvokeServer(10954568687)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد قـصـير 5",
+    Callback = function()
+        WearRemote:InvokeServer(11679250718)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "قـفازات يد قـصـير 6",
+    Callback = function()
+        WearRemote:InvokeServer(11182924874)
+    end
+})
+
+AddSection(CodesTab, {"اكـمام الرجـل"})
+
+AddButton(CodesTab, {
+    Name = "حـذاء الـشيطـان زهري",
+    Callback = function()
+        WearRemote:InvokeServer(14388006902)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء الـشيطـان احـمـر",
+    Callback = function()
+        WearRemote:InvokeServer(14388019333)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء الـشيطـان ابـيض",
+    Callback = function()
+        WearRemote:InvokeServer(14387999337)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء الـشيطـان اسـود",
+    Callback = function()
+        WearRemote:InvokeServer(14388004031)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء طـويل اسـود",
+    Callback = function()
+        WearRemote:InvokeServer(11433864064)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء طـويل ابـيض",
+    Callback = function()
+        WearRemote:InvokeServer(11111279400)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء طـويل ابـيض و احـمر",
+    Callback = function()
+        WearRemote:InvokeServer(11708887517)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء الـقـرش الاسـود",
+    Callback = function()
+        WearRemote:InvokeServer(13463375063)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 1",
+    Callback = function()
+        WearRemote:InvokeServer(11856087406)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 2",
+    Callback = function()
+        WearRemote:InvokeServer(14388001192)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 3",
+    Callback = function()
+        WearRemote:InvokeServer(12453321203)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 4",
+    Callback = function()
+        WearRemote:InvokeServer(14338742287)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 5",
+    Callback = function()
+        WearRemote:InvokeServer(14338742287)  -- مكرر لكن زي ماهو موجود
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 6",
+    Callback = function()
+        WearRemote:InvokeServer(12296189693)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 7",
+    Callback = function()
+        WearRemote:InvokeServer(14338732820)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 8",
+    Callback = function()
+        WearRemote:InvokeServer(14338735628)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 9",
+    Callback = function()
+        WearRemote:InvokeServer(14338738380)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "حـذاء قـصـير 10",
+    Callback = function()
+        WearRemote:InvokeServer(14338744418)
+    end
+})
+
+AddSection(CodesTab, {"اشـياء للـيـد"})
+
+AddButton(CodesTab, {
+    Name = "ورد اسـود",
+    Callback = function()
+        WearRemote:InvokeServer(12465465333)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "ورد ابـيض",
+    Callback = function()
+        WearRemote:InvokeServer(12465472210)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "ورد احـمـر",
+    Callback = function()
+        WearRemote:InvokeServer(12465376206)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "ورد احـمـر و ابـيض",
+    Callback = function()
+        WearRemote:InvokeServer(1246535644)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "ورد زهـري",
+    Callback = function()
+        WearRemote:InvokeServer(1246547853)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "ورد سـمـائـي",
+    Callback = function()
+        WearRemote:InvokeServer(12465483807)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "دب ابـيض",
+    Callback = function()
+        WearRemote:InvokeServer(12156704614)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "دب ابـيض و اسـود",
+    Callback = function()
+        WearRemote:InvokeServer(12157590166)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "مسـدس مـاء لعـبة",
+    Callback = function()
+        WearRemote:InvokeServer(13135818072)
+    end
+})
+
+AddSection(CodesTab, {"الاشـواك"})
+
+AddButton(CodesTab, {
+    Name = "شـوك 1",
+    Callback = function()
+        WearRemote:InvokeServer(13463287248)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "شـوك 2",
+    Callback = function()
+        WearRemote:InvokeServer(3463272877)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "شـوك 3",
+    Callback = function()
+        WearRemote:InvokeServer(13463272877)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "شـوك 4",
+    Callback = function()
+        WearRemote:InvokeServer(13463355223)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "شـوك 5",
+    Callback = function()
+        WearRemote:InvokeServer(3463292395)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "شـوك 6",
+    Callback = function()
+        WearRemote:InvokeServer(13463290106)
+    end
+})
+
+AddSection(CodesTab, {"مـلابـس كـيـوت "})
+
+AddButton(CodesTab, {
+    Name = "لـبـس كـيـوت 1",
+    Callback = function()
+        WearRemote:InvokeServer(84110484978046)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "لـبـس كـيـوت 2",
+    Callback = function()
+        WearRemote:InvokeServer(75698084918608)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "لـبـس كـيـوت 3",
+    Callback = function()
+        WearRemote:InvokeServer(79220663432789)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "لـبـس كـيـوت 4",
+    Callback = function()
+        WearRemote:InvokeServer(78061398976556)
+    end
+})
+
+AddButton(CodesTab, {
+    Name = "لـبـس كـيـوت 5",
+    Callback = function()
+        WearRemote:InvokeServer(93303265717630)
+    end
+})
+
+print("✅ تم تحميل جميع الأزرار بنجاح!")
