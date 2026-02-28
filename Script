@@ -7337,15 +7337,12 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
 local Main = MakeTab({Name = "الـرؤوس و الارجـل"})
 
 AddButton(Main, {
-  Name = "رأس روبـوت",
-  Callback = function()
-  wait(0.1)
-  local args = {
-    [1] = 3210773801;
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("Wear", 9e9):InvokeServer(unpack(args))
-end
+    Name = "رأس روبـوت",
+    Callback = function()
+        wait(0.1)
+        local args = {
+            [1] = 3210773801
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("Wear", 9e9):InvokeServer(unpack(args))
+    end
 })
-
-
