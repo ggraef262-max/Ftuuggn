@@ -7118,31 +7118,7 @@ UniversalTab:AddToggle({
   Name = "مضاد بانج",
   Callback = function(Value)
     if Value then
-        -- مضاد بانج (مدمج)
-        local player = game:GetService("Players").LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        
-        -- حماية من البانج (الطرد)
-        spawn(function()
-            while Value do
-                wait(0.1)
-                pcall(function()
-                    -- منع الطرد
-                    local Camera = workspace.CurrentCamera
-                    if Camera and Camera.CameraSubject and Camera.CameraSubject.Parent == nil then
-                        Camera.CameraSubject = character.Humanoid
-                    end
-                end)
-            end
-        end)
-        
-        -- حماية إضافية
-        player.OnTeleport:Connect(function()
-            if Value then
-                wait(0.5)
-                player:LoadCharacter()
-            end
-        end)
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
     end
   end,
 })
