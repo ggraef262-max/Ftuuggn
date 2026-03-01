@@ -201,7 +201,7 @@ local Sound = Instance.new("Sound", game:GetService("SoundService"));
 Sound.SoundId = "rbxassetid://82845990304289";
 Sound:Play();
 
-game.Players.LocalPlayer.Character.Humanoid.Health = 100
+game.Players.LocalPlayer.Character.Humanoid.Health = 0
 wait(0.1)
 game.StarterGui:SetCore("SendNotification", {
     Title = "Clock7 ";
@@ -292,7 +292,6 @@ InfoTab:AddSection({ "معلومات السكربت" })
 InfoTab:AddParagraph({ "المالك / المطور:", "DBLACK (" })
 InfoTab:AddParagraph({ "فريق:", "R, المطور DBLACK" })
 InfoTab:AddParagraph({ ":", "Clock7 HUB " })
-InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
 InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
 InfoTab:AddButton({": ", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/muskarnu/Projects/main/DemoNtr.txt"))()
