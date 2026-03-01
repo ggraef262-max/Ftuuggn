@@ -11,7 +11,7 @@ local v2 = {
     LoaderData = {
         Name = shared.LoaderTitle or "A Loader",
         Colors = shared.LoaderColors or {
-            Main = Color3.fromRGB(127, 255, 0),
+            Main = Color3.fromRGB(184, 115, 5),
             Topic = Color3.fromRGB(0, 0, 0),
             Title = Color3.fromRGB(255, 255, 255),
             LoaderBackground = Color3.fromRGB(0, 0, 0),
@@ -212,7 +212,7 @@ game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayNam
 
 local args = {
     [1] = "PickingRPNameColor",
-    [2] = Color3.fromRGB(127, 255, 0), -- Amarelo
+    [2] = Color3.fromRGB(184, 115, 5), -- Amarelo
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
@@ -226,7 +226,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTe
 
 local args = {
     [1] = "PickingRPBioColor",
-    [2] = Color3.fromRGB(255, 215, 0), -- Amarelo
+    [2] = Color3.fromRGB(184, 115, 5), -- Amarelo
 }
 
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/NEMERO"))()
@@ -255,7 +255,7 @@ local Window = redzlib:MakeWindow({
 
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxassetid://113646902595327",
+        Image = "rbxassetid://126865658241127",
         BackgroundTransparency = 15
     },
     Corner = {
@@ -271,7 +271,7 @@ local Window = redzlib:MakeWindow({
 
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxassetid://113646902595327",
+        Image = "rbxassetid://126865658241127",
         BackgroundTransparency = 15
     },
     Corner = {
@@ -285,7 +285,7 @@ local InfoTab = Window:MakeTab({ Title = "حـقوق", Icon = "rbxassetid://1136
 InfoTab:AddDiscordInvite({
     Name = " مـطور DBLACK",
     Description = "تليجرام",
-    Logo = "rbxassetid://113646902595327",
+    Logo = "rbxassetid://126865658241127",
     Invite = "https://t.me/dblack9920",
 })
 InfoTab:AddSection({ "معلومات السكربت" })
