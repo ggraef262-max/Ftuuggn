@@ -42,7 +42,7 @@ portal.Position = UDim2.fromScale(0.5, 0.5)
 portal.AnchorPoint = Vector2.new(0.5, 0.5)
 portal.BackgroundTransparency = 1
 portal.Image = "rbxassetid://126865658241127"
-portal.ImageColor3 = Color3.fromRGB(0, 255, 0)
+portal.ImageColor3 = Color3.fromRGB(184, 115, 51)
 portal.ImageTransparency = 0.3
 portal.ZIndex = 2
 
@@ -52,7 +52,7 @@ portalGlow.Position = UDim2.fromScale(0.5, 0.5)
 portalGlow.AnchorPoint = Vector2.new(0.5, 0.5)
 portalGlow.BackgroundTransparency = 1
 portalGlow.Image = "rbxassetid://5025766859"
-portalGlow.ImageColor3 = Color3.fromRGB(0, 255, 0)
+portalGlow.ImageColor3 = Color3.fromRGB(184, 115, 51)
 portalGlow.ImageTransparency = 0.7
 portalGlow.ZIndex = 1
 
@@ -65,7 +65,7 @@ nameLabel.BackgroundTransparency = 1
 nameLabel.Text = "CLOCK 7"
 nameLabel.Font = Enum.Font.GothamBlack
 nameLabel.TextSize = 60
-nameLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+nameLabel.TextColor3 = Color3.fromRGB(184, 115, 51)
 nameLabel.TextTransparency = 0
 nameLabel.ZIndex = 3
 
