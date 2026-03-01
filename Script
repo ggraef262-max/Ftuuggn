@@ -204,11 +204,11 @@ Sound:Play();
 game.Players.LocalPlayer.Character.Humanoid.Health = 0
 wait(0.1)
 game.StarterGui:SetCore("SendNotification", {
-    Title = "Clock7 ";
+    Title = "Clock7 HUB",
     Text = "-شڪراً على الانتضار-"; -- ARAB TEAM
     Duration = 5;
 })
-game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "  | Everlast       HUB  |  ")
+game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "  | CLOCK 7    HUB  |  ")
 
 local args = {
     [1] = "PickingRPNameColor",
@@ -279,7 +279,7 @@ Window:AddMinimizeButton({
     }
 })
 
-local InfoTab = Window:MakeTab({ Title = "حـقوق", Icon = "rbxassetid://113646902595327" })
+local InfoTab = Window:MakeTab({ Title = "حـقوق", Icon = "rbxassetid://126865658241127" })
 
 
 InfoTab:AddDiscordInvite({
