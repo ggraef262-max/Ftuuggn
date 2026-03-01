@@ -7078,7 +7078,8 @@ function startAutoUnban()
         end)
         task.wait(1)
     end
-end
+end,
+})
 
 local UniversalTab = Window:MakeTab({"ادوات", "plane"})
 
