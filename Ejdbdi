@@ -167,9 +167,9 @@ TweenService:Create(barBack, TweenInfo.new(0.5), {
 
 task.wait(0.5)
 
--- الرابط المطلوب: https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Normal
+-- الرابط المطلوب: https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Script
 local success, err = pcall(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Normal"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Script"))()
 end)
 
 if not success then
