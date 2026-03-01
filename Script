@@ -1,6 +1,6 @@
 --TS7 was here.
 -- ////////////
-shared.LoaderTitle = "Everlast  HUB";
+shared.LoaderTitle = "Clock7  HUB";
 shared.LoaderKeyFrames = {
     [1] = {
         2,
@@ -204,7 +204,7 @@ Sound:Play();
 game.Players.LocalPlayer.Character.Humanoid.Health = 100
 wait(0.1)
 game.StarterGui:SetCore("SendNotification", {
-    Title = "Everlast ";
+    Title = "Clock7 ";
     Text = "-شڪراً على الانتضار-"; -- ARAB TEAM
     Duration = 5;
 })
@@ -219,7 +219,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eCo
 
 local args = {
     [1] = "RolePlayBio",
-    [2] ="  | Everlast      HUB  |  "
+    [2] ="  | Clock7      HUB  |  "
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
@@ -231,9 +231,9 @@ local args = {
 
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/NEMERO"))()
 local Window = redzlib:MakeWindow({
-    Title = "  Everlast HUB",
+    Title = "  Clock7 HUB",
     SubTitle ="                           |  1.9V",
-    SaveFolder = "قيد التطوير"
+    SaveFolder = "تم التطوير"
 })
 
 Window:AddMinimizeButton({
@@ -248,7 +248,7 @@ Window:AddMinimizeButton({
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/NEMERO"))()
 
 local Window = redzlib:MakeWindow({
-    Title = "Everlast HUB",
+    Title = "Clock7 HUB",
     SubTitle = "                       |  1.9V",
     SaveFolder = "قيد التطوير"
 })
@@ -264,9 +264,9 @@ Window:AddMinimizeButton({
 })
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/NEMERO"))()
 local Window = redzlib:MakeWindow({
-    Title = "Everlast HUB",
+    Title = "Clock7 HUB",
     SubTitle = "                       |  1.2V",
-    SaveFolder = "قيد التطوير"
+    SaveFolder = "تم التطوير"
 })
 
 Window:AddMinimizeButton({
@@ -291,7 +291,7 @@ InfoTab:AddDiscordInvite({
 InfoTab:AddSection({ "معلومات السكربت" })
 InfoTab:AddParagraph({ "المالك / المطور:", "DBLACK (" })
 InfoTab:AddParagraph({ "فريق:", "R, المطور DBLACK" })
-InfoTab:AddParagraph({ ":", "Everlast HUB " })
+InfoTab:AddParagraph({ ":", "Clock7 HUB " })
 InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
 InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
 InfoTab:AddButton({": ", function()
