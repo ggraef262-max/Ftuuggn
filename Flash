@@ -1,11 +1,3 @@
-local success, config = pcall(function() 
-    return loadstring(game:HttpGet("https://pastebin.com/raw/4tLkL6KP"))() 
-end)
-
-if not success or (config and config.Status == "False") then 
-    return 
-end
-
 local MarketplaceService = game:GetService("MarketplaceService")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
@@ -17,41 +9,52 @@ local Player = Players.LocalPlayer
 local PlayerMouse = Player:GetMouse()
 
 local redzlib = {
-Themes = {
-    Darker = {
-        ["Color Hub 1"] = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(120, 0, 255)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(90, 0, 200)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(60, 0, 150))
-        }),
-        ["Color Hub 2"] = Color3.fromRGB(120, 0, 255),
-        ["Color Stroke"] = Color3.fromRGB(160, 100, 255),
-        ["Color Theme"] = Color3.fromRGB(15, 15, 15),
-        ["Color Text"] = Color3.fromRGB(255, 255, 255),
-        ["Color Dark Text"] = Color3.fromRGB(180, 150, 255)
-    },
-    Dark = {  
-        ["Color Hub 1"] = ColorSequence.new({  
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(130, 0, 255)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(100, 0, 220)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(130, 0, 255))  
-        }),  
-        ["Color Hub 2"] = Color3.fromRGB(130, 0, 255),  
-        ["Color Stroke"] = Color3.fromRGB(170, 120, 255),  
-        ["Color Theme"] = Color3.fromRGB(10, 10, 10),  
-        ["Color Text"] = Color3.fromRGB(255, 255, 255),  
-        ["Color Dark Text"] = Color3.fromRGB(190, 160, 255)  
-    },
-},
-
+ Themes = {
+  Darker = {
+   ["Color Hub 1"] = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 10, 10)),
+    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(20, 20, 20)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(10, 10, 10))
+   }),
+   ["Color Hub 2"] = Color3.fromRGB(127, 255, 0),
+   ["Color Stroke"] = Color3.fromRGB(30, 30, 30),
+   ["Color Theme"] = Color3.fromRGB(40, 40, 40),
+   ["Color Text"] = Color3.fromRGB(40, 40, 40),
+   ["Color Dark Text"] = Color3.fromRGB(40, 40, 40)
+  },
+  Dark = {
+   ["Color Hub 1"] = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(127, 255, 0)),
+    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(25, 25, 25)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(15, 15, 15))
+   }),
+   ["Color Hub 2"] = Color3.fromRGB(127, 255, 0),
+   ["Color Stroke"] = Color3.fromRGB(127, 255, 0),
+   ["Color Theme"] = Color3.fromRGB(127, 255, 0),
+   ["Color Text"] = Color3.fromRGB(240, 240, 240),
+   ["Color Dark Text"] = Color3.fromRGB(40, 40, 40)
+  },
+  Purple = {
+   ["Color Hub 1"] = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(15, 5, 20)),
+    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(25, 10, 35)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(15, 5, 20))
+   }),
+   ["Color Hub 2"] = Color3.fromRGB(127, 255, 0),
+   ["Color Stroke"] = Color3.fromRGB(60, 20, 90),
+   ["Color Theme"] = Color3.fromRGB(180, 100, 255),
+   ["Color Text"] = Color3.fromRGB(40, 40, 40),
+   ["Color Dark Text"] = Color3.fromRGB(150, 120, 170)
+  }
+ },
 	Info = {
-		Version = "1.2.0"
+		Version = "1.1.0"
 	},
 	Save = {
-    UISize = {550, 380},
-    TabSize = 160,
-    Theme = "Dark"   -- بدل "Darker"
- },
+		UISize = {460, 280},
+		TabSize = 145,
+		Theme = "Darker"
+	},
 	Settings = {},
 	Connection = {},
 	Instances = {},
@@ -60,8 +63,9 @@ Themes = {
 	Flags = {},
 	Tabs = {},
 	Icons = (function()
+	  -- ايقونات التابات
 		return {
-		    ["accessibility"] = "rbxassetid://10709751939",
+			["accessibility"] = "rbxassetid://10709751939",
 			["activity"] = "rbxassetid://10709752035",
 			["airvent"] = "rbxassetid://10709752131",
 			["airplay"] = "rbxassetid://10709752254",
@@ -451,7 +455,7 @@ Themes = {
 			["framer"] = "rbxassetid://10723394565",
 			["frown"] = "rbxassetid://10723394681",
 			["fuel"] = "rbxassetid://10723394846",
-				["functionsquare"] = "rbxassetid://10723395041",
+			["functionsquare"] = "rbxassetid://10723395041",
 			["gamepad"] = "rbxassetid://10723395457",
 			["gamepad2"] = "rbxassetid://10723395215",
 			["gauge"] = "rbxassetid://10723395708",
@@ -1104,9 +1108,6 @@ local function PlaySound()
     ClickSound:Play()
 end
 
-
-
-
 task.spawn(function()
     task.wait(2)
     for _, button in pairs(ScreenGui:GetDescendants()) do
@@ -1444,44 +1445,25 @@ function redzlib:MakeWindow(Configs)
 	
 	local UISizeX, UISizeY = unpack(redzlib.Save.UISize)
 	local MainFrame = InsertTheme(Create("ImageButton", ScreenGui, {
-    Size = UDim2.fromOffset(UISizeX, UISizeY),
-    Position = UDim2.new(0.5, -UISizeX/2, 0.5, -UISizeY/2),
-    BackgroundTransparency = 1,
-    Name = "Hub"
-}), "Main")
-
--- [✅ الحل النهائي] صورة الخلفية (مستطيلة)
-local WindowBackground = Create("ImageLabel", MainFrame, {
-    Name = "WindowBackground",
-    Size = UDim2.new(1, 0, 1, 0),
-    Position = UDim2.new(0, 0, 0, 0),
-    BackgroundTransparency = 1,
-    Image = "rbxassetid://131365290520974", 
-    ImageTransparency = 0.2,
-    ScaleType = Enum.ScaleType.Crop, -- لتملأ الصورة كامل المساحة بدون تشويه
-    ZIndex = 0
-})
--- لا نضيف Corner هنا
-
--- [✅ الحل النهائي] الزوايا الدائرية للإطار الخارجي فقط
-Make("Corner", MainFrame, UDim.new(0, 15))
-
-Make("Gradient", MainFrame, {
-    Rotation = 45
-})
-MakeDrag(MainFrame)
-
-local MainCorner = Make("Corner", MainFrame)
-
-local Components = Create("Folder", MainFrame, {
-    Name = "Components"
-})
-
-local DropdownHolder = Create("Folder", ScreenGui, {
-    Name = "Dropdown"
-})
-
-
+		Size = UDim2.fromOffset(UISizeX, UISizeY),
+		Position = UDim2.new(0.5, -UISizeX/2, 0.5, -UISizeY/2),
+		BackgroundTransparency = 0.03,
+		Name = "Hub"
+	}), "Main")
+	Make("Gradient", MainFrame, {
+		Rotation = 45
+	})MakeDrag(MainFrame)
+	
+	local MainCorner = Make("Corner", MainFrame)
+	
+	local Components = Create("Folder", MainFrame, {
+		Name = "Components"
+	})
+	
+	local DropdownHolder = Create("Folder", ScreenGui, {
+		Name = "Dropdown"
+	})
+	
 	local TopBar = Create("Frame", Components, {
 		Size = UDim2.new(1, 0, 0, 28),
 		BackgroundTransparency = 1,
@@ -1740,7 +1722,7 @@ end
 	function Window:CloseBtn()
 		local Dialog = Window:Dialog({
 			Title = "إغلاق",  
-			Text = "هل حقا بدك تقفل سكربت ؟", -- رساله قفل الواجهه
+			Text = "هل حقا تريد غلق سكربت NEXUS?  ", -- رساله قفل الواجهه
 			Options = {
 				{"نعم", function()  -- باتن الموافقه ايزي يعني
 					ScreenGui:Destroy()
@@ -2246,7 +2228,7 @@ end
 				Size = UDim2.new(0, 15, 0, 15),
 				Position = UDim2.new(0, -5, 0.5),
 				AnchorPoint = Vector2.new(1, 0.5),
-				Image = "rbxassetid://100744622088728",
+				Image = "rbxassetid://10709791523",
 				BackgroundTransparency = 1
 			})
 			
@@ -2557,47 +2539,6 @@ end
 			end
 			return Dropdown
 		end
-
-		function Tab:Addsizedropdown()
-			return Tab:AddDropdown({
-				Name = "اختار حجم الواجهة",
-				Options = {"صغيرة", "متوسطة", "كبيرة"},
-				Default = "متوسطه",
-				Callback = function(Value)
-					if Value == "صغيرة" then
-						MainFrame.Size = UDim2.fromOffset(450, 300)
-					elseif Value == "متوسطة" then
-						MainFrame.Size = UDim2.fromOffset(550, 380)
-					elseif Value == "كبيرة" then
-						MainFrame.Size = UDim2.fromOffset(630, 440)
-					end
-				end
-			})
-		end
-
-function Tab:AddSideDropdown()
-    return Tab:AddDropdown({
-        Name = "مكان قائمة التابات",
-        Options = {"يسار", "يمين"},
-        Default = "يسار",
-        Callback = function(Value)
-            if Value == "يسار" then
-                MainScroll.Position = UDim2.new(0, 0, 1, 0)
-                MainScroll.AnchorPoint = Vector2.new(0, 1)
-                
-                Containers.Position = UDim2.new(1, 0, 1, 0)
-                Containers.AnchorPoint = Vector2.new(1, 1)
-            elseif Value == "يمين" then
-                MainScroll.Position = UDim2.new(1, 0, 1, 0)
-                MainScroll.AnchorPoint = Vector2.new(1, 1)
-                
-                Containers.Position = UDim2.new(0, 0, 1, 0)
-                Containers.AnchorPoint = Vector2.new(0, 1)
-            end
-        end
-    })
-end
-
 		function Tab:AddSlider(Configs)
 			local SName = Configs[1] or Configs.Name or Configs.Title or "Slider!"
 			local SDesc = Configs.Desc or Configs.Description or ""
@@ -2905,15 +2846,7 @@ end
 	MinimizeButton.Activated:Connect(Window.MinimizeBtn)
 	return Window
 end
-if not success or (config and config.Status == "False") then 
-    if game.CoreGui:FindFirstChild("LanguageSelectorHub") then
-        game.CoreGui.LanguageSelectorHub:Destroy()
-    end
-    return 
-end
-
-
 return redzlib
 
--- SV LIB
+-- NEXUS LIB
 -- by Shadow
