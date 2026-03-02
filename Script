@@ -229,7 +229,7 @@ local args = {
     [2] = Color3.fromRGB(184, 115, 5), -- Amarelo
 }
 
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/No%20lag"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 local Window = redzlib:MakeWindow({
     Title = "  Clock7 HUB",
     SubTitle ="                           |  1.9V",
@@ -245,7 +245,7 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/No%20lag"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 
 local Window = redzlib:MakeWindow({
     Title = "Clock7 HUB",
@@ -262,10 +262,10 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/No%20lag"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 local Window = redzlib:MakeWindow({
     Title = "Clock7 HUB",
-    SubTitle = "                       |  1.2V",
+    SubTitle = "                       |  1.9V",
     SaveFolder = "تم التطوير"
 })
 
@@ -291,7 +291,7 @@ InfoTab:AddDiscordInvite({
 InfoTab:AddSection({ "معلومات السكربت" })
 InfoTab:AddParagraph({ "المالك / المطور:", "DBLACK (" })
 InfoTab:AddParagraph({ "فريق:", "R, المطور DBLACK" })
-InfoTab:AddParagraph({ ":", "Clock7 HUB " })
+InfoTab:AddParagraph({ "اسم سكربت:", "Clock7 HUB " })
 InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
 InfoTab:AddButton({": ", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/muskarnu/Projects/main/DemoNtr.txt"))()
