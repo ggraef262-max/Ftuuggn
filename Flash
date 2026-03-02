@@ -1,5 +1,5 @@
 -- ===================================================================
--- CLOCK 7 HUB ELITE - النسخة المصححة (شغال 100%)
+-- CLOCK 7 HUB ELITE - النسخة النهائية (شغال 100% مع تبويبات ظاهرة)
 -- ===================================================================
 
 local MarketplaceService = game:GetService("MarketplaceService")
@@ -10,7 +10,6 @@ local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
-local PlayerMouse = Player:GetMouse()
 
 local redzlib = {
     Themes = {
@@ -25,467 +24,470 @@ local redzlib = {
             ["Color Theme"] = Color3.fromRGB(255, 215, 0),
             ["Color Text"] = Color3.fromRGB(255, 255, 255),
             ["Color Dark Text"] = Color3.fromRGB(200, 200, 150)
-        },
-        Dark = {
-            ["Color Hub 1"] = ColorSequence.new({
-                ColorSequenceKeypoint.new(0.00, Color3.fromRGB(127, 255, 0)),
-                ColorSequenceKeypoint.new(0.50, Color3.fromRGB(25, 25, 25)),
-                ColorSequenceKeypoint.new(1.00, Color3.fromRGB(15, 15, 15))
-            }),
-            ["Color Hub 2"] = Color3.fromRGB(127, 255, 0),
-            ["Color Stroke"] = Color3.fromRGB(127, 255, 0),
-            ["Color Theme"] = Color3.fromRGB(127, 255, 0),
-            ["Color Text"] = Color3.fromRGB(240, 240, 240),
-            ["Color Dark Text"] = Color3.fromRGB(40, 40, 40)
         }
     },
-    Info = { Version = "1.0.0" },
     Save = { UISize = {520, 350}, TabSize = 165, Theme = "Clock7" },
-    Settings = {},
-    Connection = {},
     Instances = {},
-    Elements = {},
-    Options = {},
-    Flags = {},
     Tabs = {},
-    Icons = { ["home"] = "rbxassetid://10723407389", ["settings"] = "rbxassetid://10734950309" }
+    Icons = { home = "rbxassetid://10723407389", settings = "rbxassetid://10734950309" }
 }
 
 -- ===================================================================
--- [[ المتغيرات الأساسية ]]
+-- [[ إعدادات الشاشة ]]
 -- ===================================================================
 local ViewportSize = workspace.CurrentCamera.ViewportSize
 local UIScale = ViewportSize.Y / 450
-local SetProps, SetChildren, InsertTheme, Create
 
-InsertTheme = function(Instance, Type)
-    table.insert(redzlib.Instances, { Instance = Instance, Type = Type })
-    return Instance
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "Clock7_Elite"
+ScreenGui.Parent = CoreGui
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local Scale = Instance.new("UIScale")
+Scale.Parent = ScreenGui
+Scale.Scale = UIScale
+
+-- ===================================================================
+-- [[ دوال مساعدة ]]
+-- ===================================================================
+local function CreateTween(obj, prop, newVal, time)
+    local tween = TweenService:Create(obj, TweenInfo.new(time or 0.3), { [prop] = newVal })
+    tween:Play()
+    return tween
 end
 
-SetChildren = function(Instance, Children)
-    if Children then
-        for _, Child in pairs(Children) do
-            Child.Parent = Instance
+local function MakeDraggable(frame)
+    frame.Active = true
+    frame.Draggable = true
+end
+
+-- ===================================================================
+-- [[ إنشاء النافذة الرئيسية ]]
+-- ===================================================================
+local UISizeX, UISizeY = redzlib.Save.UISize[1], redzlib.Save.UISize[2]
+local MainFrame = Instance.new("ImageButton")
+MainFrame.Size = UDim2.fromOffset(UISizeX, UISizeY)
+MainFrame.Position = UDim2.new(0.5, -UISizeX/2, 0.5, -UISizeY/2)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.BackgroundTransparency = 0.03
+MainFrame.Parent = ScreenGui
+MainFrame.Name = "Hub"
+MainFrame.Image = "rbxassetid://13104251587"
+MainFrame.ImageColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.AutoButtonColor = false
+MakeDraggable(MainFrame)
+
+-- زوايا دائرية
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 20)
+UICorner.Parent = MainFrame
+
+-- تدرج لوني
+local UIGradient = Instance.new("UIGradient")
+UIGradient.Color = redzlib.Themes.Clock7["Color Hub 1"]
+UIGradient.Rotation = 45
+UIGradient.Parent = MainFrame
+
+-- ===================================================================
+-- [[ الشريط العلوي ]]
+-- ===================================================================
+local TopBar = Instance.new("Frame")
+TopBar.Size = UDim2.new(1, 0, 0, 45)
+TopBar.BackgroundTransparency = 1
+TopBar.Parent = MainFrame
+
+local Title = Instance.new("TextLabel")
+Title.Position = UDim2.new(0, 15, 0.5)
+Title.AnchorPoint = Vector2.new(0, 0.5)
+Title.Size = UDim2.new(0, 200, 0, 30)
+Title.BackgroundTransparency = 1
+Title.Text = "CLOCK 7 ELITE"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.TextSize = 18
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = "Left"
+Title.Parent = TopBar
+
+local SubTitle = Instance.new("TextLabel")
+SubTitle.Position = UDim2.new(0, 210, 0.9)
+SubTitle.AnchorPoint = Vector2.new(0, 1)
+SubTitle.Size = UDim2.new(0, 100, 0, 15)
+SubTitle.BackgroundTransparency = 1
+SubTitle.Text = "v1.0.0"
+SubTitle.TextColor3 = Color3.fromRGB(200, 200, 150)
+SubTitle.TextSize = 11
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.TextXAlignment = "Left"
+SubTitle.Parent = Title
+
+-- خط ذهبي
+local GoldLine = Instance.new("Frame")
+GoldLine.Size = UDim2.new(1, -20, 0, 3)
+GoldLine.Position = UDim2.new(0.5, 0, 1, -3)
+GoldLine.AnchorPoint = Vector2.new(0.5, 0)
+GoldLine.BackgroundColor3 = Color3.fromRGB(218, 165, 32)
+GoldLine.BackgroundTransparency = 0.3
+GoldLine.Parent = TopBar
+Instance.new("UICorner", GoldLine).CornerRadius = UDim.new(1, 0)
+
+-- أزرار التحكم
+local CloseBtn = Instance.new("ImageButton")
+CloseBtn.Size = UDim2.new(0, 20, 0, 20)
+CloseBtn.Position = UDim2.new(1, -12, 0.5)
+CloseBtn.AnchorPoint = Vector2.new(1, 0.5)
+CloseBtn.BackgroundTransparency = 1
+CloseBtn.Image = "rbxassetid://10747384394"
+CloseBtn.ImageColor3 = Color3.fromRGB(255, 80, 80)
+CloseBtn.Parent = TopBar
+
+local MinBtn = Instance.new("ImageButton")
+MinBtn.Size = UDim2.new(0, 20, 0, 20)
+MinBtn.Position = UDim2.new(1, -42, 0.5)
+MinBtn.AnchorPoint = Vector2.new(1, 0.5)
+MinBtn.BackgroundTransparency = 1
+MinBtn.Image = "rbxassetid://10734896206"
+MinBtn.ImageColor3 = Color3.fromRGB(255, 215, 0)
+MinBtn.Parent = TopBar
+
+-- ===================================================================
+-- [[ القائمة الجانبية (التبويبات) ]]
+-- ===================================================================
+local TabScroll = Instance.new("ScrollingFrame")
+TabScroll.Size = UDim2.new(0, redzlib.Save.TabSize, 1, -45)
+TabScroll.Position = UDim2.new(0, 0, 1, 0)
+TabScroll.AnchorPoint = Vector2.new(0, 1)
+TabScroll.BackgroundTransparency = 1
+TabScroll.ScrollBarThickness = 4
+TabScroll.ScrollBarImageColor3 = Color3.fromRGB(255, 215, 0)
+TabScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+TabScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+TabScroll.Parent = MainFrame
+
+local TabPadding = Instance.new("UIPadding")
+TabPadding.PaddingLeft = UDim.new(0, 12)
+TabPadding.PaddingRight = UDim.new(0, 12)
+TabPadding.PaddingTop = UDim.new(0, 12)
+TabPadding.PaddingBottom = UDim.new(0, 12)
+TabPadding.Parent = TabScroll
+
+local TabListLayout = Instance.new("UIListLayout")
+TabListLayout.Padding = UDim.new(0, 8)
+TabListLayout.Parent = TabScroll
+
+-- ===================================================================
+-- [[ منطقة المحتوى ]]
+-- ===================================================================
+local ContainerFrame = Instance.new("Frame")
+ContainerFrame.Size = UDim2.new(1, -TabScroll.Size.X.Offset - 8, 1, -45)
+ContainerFrame.Position = UDim2.new(1, -4, 1, 0)
+ContainerFrame.AnchorPoint = Vector2.new(1, 1)
+ContainerFrame.BackgroundTransparency = 1
+ContainerFrame.ClipsDescendants = true
+ContainerFrame.Parent = MainFrame
+
+-- ===================================================================
+-- [[ دوال النافذة ]]
+-- ===================================================================
+local Window = {}
+local FirstTab = true
+local Containers = {}
+
+CloseBtn.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+local Minimized = false
+local SaveSize = MainFrame.Size
+MinBtn.MouseButton1Click:Connect(function()
+    if Minimized then
+        MainFrame.Size = SaveSize
+        TabScroll.Visible = true
+        ContainerFrame.Visible = true
+        Minimized = false
+    else
+        SaveSize = MainFrame.Size
+        MainFrame.Size = UDim2.fromOffset(MainFrame.Size.X.Offset, 45)
+        TabScroll.Visible = false
+        ContainerFrame.Visible = false
+        Minimized = true
+    end
+end)
+
+-- ===================================================================
+-- [[ دالة إنشاء التبويبات ]]
+-- ===================================================================
+function Window:MakeTab(config)
+    local tabName = config.Title or config[1] or "Tab"
+    local tabIcon = config.Icon or config[2] or ""
+
+    -- زر التبويب
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(1, 0, 0, 35)
+    TabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    TabButton.BackgroundTransparency = 0.2
+    TabButton.AutoButtonColor = false
+    TabButton.Parent = TabScroll
+    TabButton.Text = ""
+    
+    local TabCorner = Instance.new("UICorner")
+    TabCorner.CornerRadius = UDim.new(0, 12)
+    TabCorner.Parent = TabButton
+    
+    local TabStroke = Instance.new("UIStroke")
+    TabStroke.Color = Color3.fromRGB(218, 165, 32)
+    TabStroke.Thickness = 1.5
+    TabStroke.Parent = TabButton
+    
+    -- نص التبويب
+    local TabLabel = Instance.new("TextLabel")
+    TabLabel.Size = UDim2.new(1, -35, 1, 0)
+    TabLabel.Position = UDim2.new(0, 35, 0, 0)
+    TabLabel.BackgroundTransparency = 1
+    TabLabel.Text = tabName
+    TabLabel.TextColor3 = Color3.new(1, 1, 1)
+    TabLabel.TextSize = 13
+    TabLabel.Font = Enum.Font.GothamBold
+    TabLabel.TextXAlignment = "Left"
+    TabLabel.Parent = TabButton
+    
+    -- المؤشر الجانبي
+    local TabIndicator = Instance.new("Frame")
+    TabIndicator.Size = FirstTab and UDim2.new(0, 4, 0, 4) or UDim2.new(0, 4, 0, 25)
+    TabIndicator.Position = UDim2.new(1, -10, 0.5)
+    TabIndicator.AnchorPoint = Vector2.new(1, 0.5)
+    TabIndicator.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+    TabIndicator.BackgroundTransparency = FirstTab and 1 or 0
+    TabIndicator.Parent = TabButton
+    
+    local IndicatorCorner = Instance.new("UICorner")
+    IndicatorCorner.CornerRadius = UDim.new(0.5, 0)
+    IndicatorCorner.Parent = TabIndicator
+    
+    -- حاوية المحتوى
+    local Container = Instance.new("ScrollingFrame")
+    Container.Size = UDim2.new(1, 0, 1, 0)
+    Container.BackgroundTransparency = 1
+    Container.ScrollBarThickness = 4
+    Container.ScrollBarImageColor3 = Color3.fromRGB(255, 215, 0)
+    Container.CanvasSize = UDim2.new(0, 0, 0, 0)
+    Container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    Container.BorderSizePixel = 0
+    Container.Parent = FirstTab and ContainerFrame or nil
+    
+    local ContainerPadding = Instance.new("UIPadding")
+    ContainerPadding.PaddingLeft = UDim.new(0, 15)
+    ContainerPadding.PaddingRight = UDim.new(0, 15)
+    ContainerPadding.PaddingTop = UDim.new(0, 15)
+    ContainerPadding.PaddingBottom = UDim.new(0, 15)
+    ContainerPadding.Parent = Container
+    
+    local ContainerLayout = Instance.new("UIListLayout")
+    ContainerLayout.Padding = UDim.new(0, 10)
+    ContainerLayout.Parent = Container
+    
+    table.insert(Containers, Container)
+    
+    -- وظيفة التبديل بين التبويبات
+    local function SelectTab()
+        for _, c in ipairs(Containers) do
+            c.Parent = nil
         end
-    end
-    return Instance
-end
-
-SetProps = function(Instance, Props)
-    if Props then
-        for prop, value in pairs(Props) do
-            Instance[prop] = value
-        end
-    end
-    return Instance
-end
-
-Create = function(...)
-    local args = {...}
-    local new = Instance.new(args[1])
-    if type(args[2]) == "table" then
-        SetProps(new, args[2])
-        SetChildren(new, args[3])
-    elseif typeof(args[2]) == "Instance" then
-        new.Parent = args[2]
-        SetProps(new, args[3])
-        SetChildren(new, args[4])
-    end
-    return new
-end
-
--- ===================================================================
--- [[ دوال التمرير والحركة ]]
--- ===================================================================
-local function CreateTween(Configs)
-    local Instance = Configs[1]
-    local Prop = Configs[2]
-    local NewVal = Configs[3]
-    local Time = Configs[4] or 0.5
-    local Tween = TweenService:Create(Instance, TweenInfo.new(Time), { [Prop] = NewVal })
-    Tween:Play()
-    if Configs[5] then Tween.Completed:Wait() end
-    return Tween
-end
-
--- ===================================================================
--- [[ إنشاء الشاشة الرئيسية ]]
--- ===================================================================
-local ScreenGui = Create("ScreenGui", CoreGui, {
-    Name = "Clock7_Elite",
-    DisplayOrder = 100,
-    ResetOnSpawn = false
-}, { Create("UIScale", { Scale = ViewportSize.Y / 450, Name = "Scale" }) })
-
-local function SaveJson(FileName, save)
-    if writefile then
-        pcall(writefile, FileName, HttpService:JSONEncode(save))
-    end
-end
-
--- ===================================================================
--- [[ إضافة عناصر ]]
--- ===================================================================
-local function AddEle(Name, Func) redzlib.Elements[Name] = Func end
-
-AddEle("Corner", function(parent, radius)
-    return Create("UICorner", parent, { CornerRadius = radius or UDim.new(0, 12) })
-end)
-
-AddEle("Stroke", function(parent, props, color, thickness)
-    return InsertTheme(Create("UIStroke", parent, {
-        Color = color or Color3.fromRGB(218, 165, 32),
-        Thickness = thickness or 1.5
-    }), "Stroke")
-end)
-
-AddEle("Button", function(parent, props, callback)
-    local btn = InsertTheme(Create("TextButton", parent, {
-        Text = "", Size = UDim2.fromScale(1, 1),
-        BackgroundColor3 = Color3.fromRGB(30, 30, 30),
-        AutoButtonColor = false, BackgroundTransparency = 0.2
-    }), "Frame")
-    btn.MouseEnter:Connect(function() CreateTween({btn, "BackgroundTransparency", 0, 0.2}) end)
-    btn.MouseLeave:Connect(function() CreateTween({btn, "BackgroundTransparency", 0.2, 0.2}) end)
-    if callback then btn.Activated:Connect(callback) end
-    return btn
-end)
-
-AddEle("Gradient", function(parent, props)
-    return InsertTheme(Create("UIGradient", parent, {
-        Color = ColorSequence.new({ Color3.fromRGB(10,10,10), Color3.fromRGB(184,115,5), Color3.fromRGB(10,10,10) })
-    }), "Gradient")
-end)
-
--- ===================================================================
--- [[ دالة السحب ]]
--- ===================================================================
-local function MakeDrag(Instance)
-    Instance.Active = true
-    Instance.InputBegan:Connect(function(Input)
-        if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-            local StartPos, DragStart = Instance.Position, Input.Position
-            while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                RunService.Heartbeat:Wait()
-                local delta = Input.Position - DragStart
-                Instance.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + delta.X / (ViewportSize.Y/450),
-                                             StartPos.Y.Scale, StartPos.Y.Offset + delta.Y / (ViewportSize.Y/450))
+        Container.Parent = ContainerFrame
+        
+        for _, btn in ipairs(TabScroll:GetChildren()) do
+            if btn:IsA("TextButton") then
+                local indicator = btn:FindFirstChildOfClass("Frame")
+                if indicator then
+                    CreateTween(indicator, "Size", UDim2.new(0, 4, 0, 4), 0.3)
+                    CreateTween(indicator, "BackgroundTransparency", 1, 0.3)
+                end
+                local label = btn:FindFirstChildOfClass("TextLabel")
+                if label then
+                    CreateTween(label, "TextTransparency", 0.3, 0.3)
+                end
             end
         end
-    end)
-    return Instance
-end
-
--- ===================================================================
--- [[ دالة إطار الأزرار ]]
--- ===================================================================
-local function ButtonFrame(Instance, Title, Description, HolderSize)
-    local Frame = Make("Button", Instance, { Size = UDim2.new(1,0,0,28), AutomaticSize = "Y" })
-    Make("Corner", Frame, UDim.new(0, 10))
-    Make("Stroke", Frame)
-
-    local LabelHolder = Create("Frame", Frame, {
-        AutomaticSize = "Y", BackgroundTransparency = 1,
-        Size = HolderSize, Position = UDim2.new(0,10,0)
-    }, {
-        Create("UIListLayout", { Padding = UDim.new(0,2) }),
-        Create("UIPadding", { PaddingTop = UDim.new(0,6), PaddingBottom = UDim.new(0,6) })
-    })
-
-    local TitleL = InsertTheme(Create("TextLabel", LabelHolder, {
-        Font = Enum.Font.GothamBold, TextColor3 = Color3.new(1,1,1),
-        Size = UDim2.new(1,-20), AutomaticSize = "Y",
-        TextXAlignment = "Left", BackgroundTransparency = 1,
-        TextSize = 12, Text = Title
-    }), "Text")
-
-    local DescL = InsertTheme(Create("TextLabel", LabelHolder, {
-        Font = Enum.Font.Gotham, TextColor3 = Color3.fromRGB(200,200,150),
-        Size = UDim2.new(1,-20), AutomaticSize = "Y",
-        TextXAlignment = "Left", BackgroundTransparency = 1,
-        TextSize = 10, Text = Description or "", Visible = Description and #Description > 0
-    }), "DarkText")
-
-    return Frame, { SetTitle = function(_,t) TitleL.Text = t end, SetDesc = function(_,d) DescL.Text = d; DescL.Visible = #d>0 end }
-end
-
--- ===================================================================
--- [[ دوال الإشعارات ]]
--- ===================================================================
-function redzlib:Notification(Configs)
-    local notif = Create("Frame", ScreenGui, {
-        Size = UDim2.new(0,300,0,70), Position = UDim2.new(0.5,-150,0,-100),
-        BackgroundColor3 = Color3.fromRGB(30,30,30), BackgroundTransparency = 0.1
-    })
-    Make("Corner", notif, UDim.new(0,12))
-    Make("Stroke", notif)
-    Create("TextLabel", notif, {
-        Size = UDim2.new(1,-20,0,25), Position = UDim2.new(0,10,0,10),
-        Text = Configs.Title or "CLOCK 7", Font = Enum.Font.GothamBold,
-        TextColor3 = Color3.fromRGB(255,215,0), BackgroundTransparency = 1,
-        TextSize = 16, TextXAlignment = "Left"
-    })
-    Create("TextLabel", notif, {
-        Size = UDim2.new(1,-20,0,25), Position = UDim2.new(0,10,0,35),
-        Text = Configs.Text or "", Font = Enum.Font.Gotham,
-        TextColor3 = Color3.new(1,1,1), BackgroundTransparency = 1,
-        TextSize = 12, TextXAlignment = "Left"
-    })
-    CreateTween({notif, "Position", UDim2.new(0.5,-150,0.05,0), 0.5})
-    task.wait(Configs.Duration or 3)
-    CreateTween({notif, "Position", UDim2.new(0.5,-150,0,-100), 0.5, true})
-    notif:Destroy()
-end
-
--- ===================================================================
--- [[ دالة تغيير الثيم ]]
--- ===================================================================
-function redzlib:SetTheme(NewTheme)
-    if not self.Themes[NewTheme] then return end
-    self.Save.Theme = NewTheme
-    local Theme = self.Themes[NewTheme]
-    for _, item in ipairs(self.Instances) do
-        if item.Type == "Gradient" then item.Instance.Color = Theme["Color Hub 1"]
-        elseif item.Type == "Frame" then item.Instance.BackgroundColor3 = Theme["Color Hub 2"]
-        elseif item.Type == "Stroke" then item.Instance.Color = Theme["Color Stroke"]
-        elseif item.Type == "Theme" then item.Instance.BackgroundColor3 = Theme["Color Theme"]
-        elseif item.Type == "Text" then item.Instance.TextColor3 = Theme["Color Text"]
-        elseif item.Type == "DarkText" then item.Instance.TextColor3 = Theme["Color Dark Text"] end
+        
+        CreateTween(TabIndicator, "Size", UDim2.new(0, 4, 0, 25), 0.3)
+        CreateTween(TabIndicator, "BackgroundTransparency", 0, 0.3)
+        CreateTween(TabLabel, "TextTransparency", 0, 0.3)
     end
-end
-
--- ===================================================================
--- [[ دالة إنشاء النافذة الرئيسية ]]
--- ===================================================================
-function redzlib:MakeWindow(Configs)
-    local WTitle = Configs[1] or Configs.Title or "CLOCK 7 ELITE"
-    local WMiniText = Configs[2] or Configs.SubTitle or "v1.0.0"
-
-    local UISizeX, UISizeY = unpack(self.Save.UISize)
-    local MainFrame = InsertTheme(Create("ImageButton", ScreenGui, {
-        Size = UDim2.fromOffset(UISizeX, UISizeY),
-        Position = UDim2.new(0.5, -UISizeX/2, 0.5, -UISizeY/2),
-        BackgroundTransparency = 0.03, Name = "Hub",
-        Image = "rbxassetid://13104251587", ImageColor3 = Color3.fromRGB(20,20,20)
-    }), "Main")
-    Make("Gradient", MainFrame)
-    MakeDrag(MainFrame)
-    Make("Corner", MainFrame, UDim.new(0, 20))
-
-    local Components = Create("Folder", MainFrame, { Name = "Components" })
-    local DropdownHolder = Create("Folder", ScreenGui, { Name = "Dropdown" })
-
-    local TopBar = Create("Frame", Components, { Size = UDim2.new(1,0,0,45), BackgroundTransparency = 1 })
-    Create("Frame", TopBar, {
-        Size = UDim2.new(1,-20,0,3), Position = UDim2.new(0.5,0,1,-3),
-        AnchorPoint = Vector2.new(0.5,0), BackgroundColor3 = Color3.fromRGB(218,165,32),
-        BackgroundTransparency = 0.3
-    })
-
-    local Title = InsertTheme(Create("TextLabel", TopBar, {
-        Position = UDim2.new(0,15,0.5), AnchorPoint = Vector2.new(0,0.5),
-        AutomaticSize = "XY", Text = WTitle, TextXAlignment = "Left",
-        TextSize = 18, TextColor3 = Color3.new(1,1,1), BackgroundTransparency = 1,
-        Font = Enum.Font.GothamBold, Name = "Title"
-    }), "Text")
-
-    local MainScroll = InsertTheme(Create("ScrollingFrame", Components, {
-        Size = UDim2.new(0, self.Save.TabSize, 1, -45),
-        ScrollBarImageColor3 = Color3.fromRGB(255,215,0),
-        Position = UDim2.new(0,0,1,0), AnchorPoint = Vector2.new(0,1),
-        ScrollBarThickness = 4, BackgroundTransparency = 1,
-        AutomaticCanvasSize = "Y", BorderSizePixel = 0
-    }, {
-        Create("UIPadding", { PaddingLeft = UDim.new(0,12), PaddingRight = UDim.new(0,12),
-                              PaddingTop = UDim.new(0,12), PaddingBottom = UDim.new(0,12) }),
-        Create("UIListLayout", { Padding = UDim.new(0,8) })
-    }), "ScrollBar")
-
-    local Containers = Create("Frame", Components, {
-        Size = UDim2.new(1, -MainScroll.Size.X.Offset-8, 1, -45),
-        AnchorPoint = Vector2.new(1,1), Position = UDim2.new(1,-4,1,0),
-        BackgroundTransparency = 1, ClipsDescendants = true
-    })
-
-    -- أزرار التحكم
-    local ButtonsFolder = Create("Folder", TopBar, { Name = "Buttons" })
-    local CloseBtn = Create("ImageButton", ButtonsFolder, {
-        Size = UDim2.new(0,20,0,20), Position = UDim2.new(1,-12,0.5),
-        AnchorPoint = Vector2.new(1,0.5), BackgroundTransparency = 1,
-        Image = "rbxassetid://10747384394", ImageColor3 = Color3.fromRGB(255,80,80)
-    })
-    local MinBtn = Create("ImageButton", ButtonsFolder, {
-        Size = UDim2.new(0,20,0,20), Position = UDim2.new(1,-42,0.5),
-        AnchorPoint = Vector2.new(1,0.5), BackgroundTransparency = 1,
-        Image = "rbxassetid://10734896206", ImageColor3 = Color3.fromRGB(255,215,0)
-    })
-
-    local Window, FirstTab = {}, true
-    local Minimized, SaveSize
-
-    function Window:CloseBtn() ScreenGui:Destroy() end
-    function Window:MinimizeBtn()
-        if Minimized then
-            CreateTween({MainFrame, "Size", SaveSize, 0.3})
-            Minimized = false
-        else
-            SaveSize = MainFrame.Size
-            CreateTween({MainFrame, "Size", UDim2.fromOffset(MainFrame.Size.X.Offset, 45), 0.3})
-            Minimized = true
-        end
-    end
-
-    CloseBtn.Activated:Connect(Window.CloseBtn)
-    MinBtn.Activated:Connect(Window.MinimizeBtn)
-
-    -- ===================================================================
-    -- [[ دالة إنشاء التبويبات ]]
-    -- ===================================================================
-    local ContainerList = {}
-    function Window:MakeTab(Configs)
-        local TName = Configs[1] or Configs.Title or "Tab"
-        local TIcon = Configs[2] or Configs.Icon or ""
-
-        local TabSelect = Create("Frame", MainScroll, { Size = UDim2.new(1,0,0,35), BackgroundTransparency = 1 })
-        local TabButton = Make("Button", TabSelect, { Size = UDim2.new(1,0,1,0) })
-        Make("Corner", TabButton, UDim.new(0,12))
-
-        local LabelTitle = InsertTheme(Create("TextLabel", TabButton, {
-            Size = UDim2.new(1, TIcon and -35 or -20, 1),
-            Position = UDim2.fromOffset(TIcon and 35 or 15),
-            BackgroundTransparency = 1, Font = Enum.Font.GothamBold,
-            Text = TName, TextColor3 = Color3.new(1,1,1), TextSize = 13,
-            TextXAlignment = "Left", TextTransparency = (FirstTab and 0.3) or 0
-        }), "Text")
-
-        local Selected = InsertTheme(Create("Frame", TabButton, {
-            Size = FirstTab and UDim2.new(0,4,0,4) or UDim2.new(0,4,0,25),
-            Position = UDim2.new(1,-10,0.5), AnchorPoint = Vector2.new(1,0.5),
-            BackgroundColor3 = Color3.fromRGB(255,215,0),
-            BackgroundTransparency = FirstTab and 1 or 0
-        }), "Theme")
-        Make("Corner", Selected, UDim.new(0.5,0))
-
-        local Container = InsertTheme(Create("ScrollingFrame", nil, {
-            Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,1),
-            AnchorPoint = Vector2.new(0,1), ScrollBarThickness = 4,
-            BackgroundTransparency = 1, ScrollBarImageColor3 = Color3.fromRGB(255,215,0),
-            AutomaticCanvasSize = "Y", BorderSizePixel = 0,
-            Name = "Container - "..TName
-        }, {
-            Create("UIPadding", { PaddingLeft = UDim.new(0,15), PaddingRight = UDim.new(0,15),
-                                  PaddingTop = UDim.new(0,15), PaddingBottom = UDim.new(0,15) }),
-            Create("UIListLayout", { Padding = UDim.new(0,10) })
-        }), "ScrollBar")
-
-        table.insert(ContainerList, Container)
-        if not FirstTab then Container.Parent = Containers end
-
-        local function Tabs()
-            if Container.Parent then return end
-            for _,f in pairs(ContainerList) do if f ~= Container then f.Parent = nil end end
-            Container.Parent = Containers
-            CreateTween({LabelTitle, "TextTransparency", 0, 0.35})
-            CreateTween({Selected, "Size", UDim2.new(0,4,0,25), 0.35})
-            CreateTween({Selected, "BackgroundTransparency", 0, 0.35})
-        end
-        TabButton.Activated:Connect(Tabs)
-
+    
+    TabButton.MouseButton1Click:Connect(SelectTab)
+    
+    if FirstTab then
         FirstTab = false
-        local Tab = {}
-        table.insert(self.Tabs, { func = Tab, Cont = Container })
-
-        function Tab:AddSection(Configs)
-            local Name = type(Configs)=="string" and Configs or Configs[1]
-            local Section = Create("Frame", Container, { Size = UDim2.new(1,0,0,30), BackgroundTransparency = 1 })
-            Create("Frame", Section, {
-                Size = UDim2.new(1,-20,0,2), Position = UDim2.new(0.5,0,1,-2),
-                AnchorPoint = Vector2.new(0.5,0), BackgroundColor3 = Color3.fromRGB(218,165,32),
-                BackgroundTransparency = 0.3
-            })
-            InsertTheme(Create("TextLabel", Section, {
-                Font = Enum.Font.GothamBold, Text = Name,
-                TextColor3 = Color3.fromRGB(255,215,0), Size = UDim2.new(1,-25,1,0),
-                Position = UDim2.new(0,5), BackgroundTransparency = 1,
-                TextSize = 18, TextXAlignment = "Left"
-            }), "Text")
-            return { Visible = function(_,b) Section.Visible = b end }
-        end
-
-        function Tab:AddParagraph(Configs)
-            local Frame = Make("Button", Container, { Size = UDim2.new(1,0,0,60), AutomaticSize = "Y" })
-            Make("Corner", Frame, UDim.new(0,10))
-            Make("Stroke", Frame)
-            InsertTheme(Create("TextLabel", Frame, {
-                Size = UDim2.new(1,-20,0,25), Position = UDim2.new(0,10,0,10),
-                Text = Configs[1] or Configs.Title, Font = Enum.Font.GothamBold,
-                TextColor3 = Color3.new(1,1,1), BackgroundTransparency = 1,
-                TextXAlignment = "Left", TextSize = 16
-            }), "Text")
-            InsertTheme(Create("TextLabel", Frame, {
-                Size = UDim2.new(1,-20,0,0), Position = UDim2.new(0,10,0,35),
-                Text = Configs[2] or Configs.Text or "", Font = Enum.Font.Gotham,
-                TextColor3 = Color3.fromRGB(200,200,150), BackgroundTransparency = 1,
-                TextWrapped = true, TextXAlignment = "Left", AutomaticSize = "Y"
-            }), "DarkText")
-            return {}
-        end
-
-        function Tab:AddButton(Configs)
-            local Frame, Label = ButtonFrame(Container, Configs[1] or Configs.Name, Configs.Desc or "", UDim2.new(1,-35))
-            Frame:FindFirstChildWhichIsA("TextButton").Activated:Connect(Configs.Callback or function() end)
-            return {}
-        end
-
-        function Tab:AddToggle(Configs)
-            local Frame, Label = ButtonFrame(Container, Configs[1] or Configs.Name, Configs.Desc or "", UDim2.new(1,-60))
-            local Btn = Frame:FindFirstChildWhichIsA("TextButton")
-            local ToggleHolder = InsertTheme(Create("Frame", Btn, {
-                Size = UDim2.new(0,50,0,24), Position = UDim2.new(1,-10,0.5),
-                AnchorPoint = Vector2.new(1,0.5), BackgroundColor3 = Color3.fromRGB(218,165,32)
-            }), "Stroke")
-            Make("Corner", ToggleHolder, UDim.new(0.5,0))
-            local Toggle = InsertTheme(Create("Frame", ToggleHolder, {
-                Size = UDim2.new(0,20,0,20), Position = UDim2.new(0,2,0.5),
-                AnchorPoint = Vector2.new(0,0.5), BackgroundColor3 = Color3.fromRGB(255,215,0)
-            }), "Theme")
-            Make("Corner", Toggle, UDim.new(0.5,0))
-
-            local state = Configs.Default or false
-            local function set(v)
-                state = v
-                Toggle.Position = v and UDim2.new(1,-22,0.5) or UDim2.new(0,2,0.5)
-                if Configs.Callback then Configs.Callback(v) end
-            end
-            set(state)
-            Btn.Activated:Connect(function() set(not state) end)
-            return { Set = function(_,v) set(v) end }
-        end
-
-        return Tab
     end
-
-    -- إضافة التبويبات
-    local Home = Window:MakeTab({ Title = "الرئيسية", Icon = "home" })
-    Home:AddSection("معلومات")
-    Home:AddParagraph({ Title = "CLOCK 7 ELITE", Text = "النسخة: 1.0.0\nمرحباً بك!" })
-    Home:AddButton({ Name = "اختبار", Desc = "زر تجريبي", Callback = function()
-        self:Notification({ Title = "CLOCK 7", Text = "السكربت يعمل!", Duration = 2 })
-    end})
-
-    local Settings = Window:MakeTab({ Title = "الإعدادات", Icon = "settings" })
-    Settings:AddSection("الثيمات")
-    Settings:AddButton({ Name = "ثيم CLOCK 7", Desc = "تفعيل الثيم الذهبي", Callback = function() self:SetTheme("Clock7") end })
-    Settings:AddButton({ Name = "ثيم عادي", Desc = "تفعيل الثيم العادي", Callback = function() self:SetTheme("Dark") end })
-
-    return Window
+    
+    -- ===================================================================
+    -- [[ دوال إضافة العناصر ]]
+    -- ===================================================================
+    local Tab = {}
+    
+    function Tab:AddSection(name)
+        local sectionName = type(name) == "string" and name or name[1] or name.Name or "Section"
+        
+        local Section = Instance.new("Frame")
+        Section.Size = UDim2.new(1, 0, 0, 30)
+        Section.BackgroundTransparency = 1
+        Section.Parent = Container
+        
+        local SectionLine = Instance.new("Frame")
+        SectionLine.Size = UDim2.new(1, -20, 0, 2)
+        SectionLine.Position = UDim2.new(0.5, 0, 1, -2)
+        SectionLine.AnchorPoint = Vector2.new(0.5, 0)
+        SectionLine.BackgroundColor3 = Color3.fromRGB(218, 165, 32)
+        SectionLine.BackgroundTransparency = 0.3
+        SectionLine.Parent = Section
+        Instance.new("UICorner", SectionLine).CornerRadius = UDim.new(1, 0)
+        
+        local SectionLabel = Instance.new("TextLabel")
+        SectionLabel.Size = UDim2.new(1, -25, 1, 0)
+        SectionLabel.Position = UDim2.new(0, 5, 0, 0)
+        SectionLabel.BackgroundTransparency = 1
+        SectionLabel.Text = sectionName
+        SectionLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+        SectionLabel.TextSize = 18
+        SectionLabel.Font = Enum.Font.GothamBold
+        SectionLabel.TextXAlignment = "Left"
+        SectionLabel.Parent = Section
+        
+        return { Visible = function(_, b) Section.Visible = b end }
+    end
+    
+    function Tab:AddParagraph(config)
+        local title = config.Title or config[1] or "Title"
+        local text = config.Text or config[2] or ""
+        
+        local Frame = Instance.new("Frame")
+        Frame.Size = UDim2.new(1, 0, 0, 70)
+        Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        Frame.BackgroundTransparency = 0.2
+        Frame.Parent = Container
+        
+        local Corner = Instance.new("UICorner")
+        Corner.CornerRadius = UDim.new(0, 10)
+        Corner.Parent = Frame
+        
+        local Stroke = Instance.new("UIStroke")
+        Stroke.Color = Color3.fromRGB(218, 165, 32)
+        Stroke.Thickness = 1.5
+        Stroke.Parent = Frame
+        
+        local TitleLabel = Instance.new("TextLabel")
+        TitleLabel.Size = UDim2.new(1, -20, 0, 25)
+        TitleLabel.Position = UDim2.new(0, 10, 0, 10)
+        TitleLabel.BackgroundTransparency = 1
+        TitleLabel.Text = title
+        TitleLabel.TextColor3 = Color3.new(1, 1, 1)
+        TitleLabel.TextSize = 16
+        TitleLabel.Font = Enum.Font.GothamBold
+        TitleLabel.TextXAlignment = "Left"
+        TitleLabel.Parent = Frame
+        
+        local TextLabel = Instance.new("TextLabel")
+        TextLabel.Size = UDim2.new(1, -20, 0, 25)
+        TextLabel.Position = UDim2.new(0, 10, 0, 40)
+        TextLabel.BackgroundTransparency = 1
+        TextLabel.Text = text
+        TextLabel.TextColor3 = Color3.fromRGB(200, 200, 150)
+        TextLabel.TextSize = 12
+        TextLabel.Font = Enum.Font.Gotham
+        TextLabel.TextXAlignment = "Left"
+        TextLabel.TextWrapped = true
+        TextLabel.Parent = Frame
+        
+        return {}
+    end
+    
+    function Tab:AddButton(config)
+        local name = config.Name or config[1] or "Button"
+        local desc = config.Desc or config.Description or ""
+        local callback = config.Callback or function() end
+        
+        local Frame = Instance.new("Frame")
+        Frame.Size = UDim2.new(1, 0, 0, 40)
+        Frame.BackgroundTransparency = 1
+        Frame.Parent = Container
+        
+        local Button = Instance.new("TextButton")
+        Button.Size = UDim2.new(1, 0, 1, 0)
+        Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        Button.BackgroundTransparency = 0.2
+        Button.AutoButtonColor = false
+        Button.Parent = Frame
+        Button.Text = ""
+        
+        local ButtonCorner = Instance.new("UICorner")
+        ButtonCorner.CornerRadius = UDim.new(0, 10)
+        ButtonCorner.Parent = Button
+        
+        local ButtonStroke = Instance.new("UIStroke")
+        ButtonStroke.Color = Color3.fromRGB(218, 165, 32)
+        ButtonStroke.Thickness = 1.5
+        ButtonStroke.Parent = Button
+        
+        local NameLabel = Instance.new("TextLabel")
+        NameLabel.Size = UDim2.new(1, -30, 0, 20)
+        NameLabel.Position = UDim2.new(0, 10, 0, 5)
+        NameLabel.BackgroundTransparency = 1
+        NameLabel.Text = name
+        NameLabel.TextColor3 = Color3.new(1, 1, 1)
+        NameLabel.TextSize = 14
+        NameLabel.Font = Enum.Font.GothamBold
+        NameLabel.TextXAlignment = "Left"
+        NameLabel.Parent = Button
+        
+        if desc and #desc > 0 then
+            local DescLabel = Instance.new("TextLabel")
+            DescLabel.Size = UDim2.new(1, -30, 0, 15)
+            DescLabel.Position = UDim2.new(0, 10, 0, 22)
+            DescLabel.BackgroundTransparency = 1
+            DescLabel.Text = desc
+            DescLabel.TextColor3 = Color3.fromRGB(200, 200, 150)
+            DescLabel.TextSize = 10
+            DescLabel.Font = Enum.Font.Gotham
+            DescLabel.TextXAlignment = "Left"
+            DescLabel.Parent = Button
+        end
+        
+        local Icon = Instance.new("ImageLabel")
+        Icon.Size = UDim2.new(0, 16, 0, 16)
+        Icon.Position = UDim2.new(1, -15, 0.5)
+        Icon.AnchorPoint = Vector2.new(1, 0.5)
+        Icon.BackgroundTransparency = 1
+        Icon.Image = "rbxassetid://10709791437"
+        Icon.ImageColor3 = Color3.fromRGB(255, 215, 0)
+        Icon.Parent = Button
+        
+        Button.MouseButton1Click:Connect(callback)
+        
+        return {}
+    end
+    
+    return Tab
 end
 
 -- ===================================================================
--- [[ تشغيل الواجهة ]]
+-- [[ إضافة التبويبات التجريبية ]]
 -- ===================================================================
-task.wait(0.5)
-local Window = redzlib:MakeWindow({ Title = "CLOCK 7 ELITE", SubTitle = "v1.0.0" })
+local HomeTab = Window:MakeTab({ Title = "الرئيسية", Icon = "home" })
+HomeTab:AddSection("معلومات")
+HomeTab:AddParagraph({ Title = "CLOCK 7 ELITE", Text = "النسخة: 1.0.0\nمرحباً بك في الواجهة الذهبية!" })
+
+HomeTab:AddSection("أزرار")
+HomeTab:AddButton({ 
+    Name = "اختبار", 
+    Desc = "اضغط للتجربة",
+    Callback = function()
+        print("الزر يعمل!")
+    end
+})
+
+local SettingsTab = Window:MakeTab({ Title = "الإعدادات", Icon = "settings" })
+SettingsTab:AddSection("التحكم")
+SettingsTab:AddButton({ Name = "زر تجريبي", Desc = "هذا زر تجريبي", Callback = function() print("تم الضغط") end })
+
 print("✅ CLOCK 7 ELITE يعمل!")
-return redzlib
+return Window
