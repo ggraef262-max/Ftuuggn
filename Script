@@ -229,7 +229,7 @@ local args = {
     [2] = Color3.fromRGB(184, 115, 5), -- Amarelo
 }
 
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/No%20lag"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 local Window = redzlib:MakeWindow({
     Title = "  Clock7 HUB",
     SubTitle ="                           |  1.9V",
@@ -245,7 +245,7 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/No%20lag"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 
 local Window = redzlib:MakeWindow({
     Title = "Clock7 HUB",
@@ -262,7 +262,7 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/No%20lag"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 local Window = redzlib:MakeWindow({
     Title = "Clock7 HUB",
     SubTitle = "                       |  1.2V",
