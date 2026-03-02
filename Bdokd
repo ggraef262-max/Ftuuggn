@@ -1,942 +1,217 @@
 -- ================================================
--- COLCK 7 - واجهة المستخدم المطورة بالكامل
+-- COLCK 7 - الواجهة الأسطورية الكاملة
 -- جميع الحقوق محفوظة لـ DHBLACK
--- الإصدار: 5.0 (النحاسي الذهبي + 9 مميزات جديدة)
+-- الإصدار: 7.0 (النسخة النهائية)
 -- ================================================
 
--- الإعدادات الأساسية (الألوان النحاسية)
-local Configs_HUB = { 
-  Cor_Hub = Color3.fromRGB(20, 12, 8),        -- بني غامق جداً
-  Cor_Options = Color3.fromRGB(40, 25, 15),    -- بني نحاسي
-  Cor_Stroke = Color3.fromRGB(205, 127, 50),   -- نحاسي ذهبي
-  Cor_Text = Color3.fromRGB(255, 215, 175),    -- بيج فاتح
-  Cor_DarkText = Color3.fromRGB(180, 140, 100), -- بيج غامق
-  Corner_Radius = UDim.new(0, 15), 
-  Text_Font = Enum.Font.FredokaOne 
+-- الالوان النحاسية الافتراضية
+local Colors = {
+    Background = Color3.fromRGB(20, 12, 8),
+    Second = Color3.fromRGB(40, 25, 15),
+    Main = Color3.fromRGB(205, 127, 50),
+    Text = Color3.fromRGB(255, 215, 175),
+    TextDark = Color3.fromRGB(180, 140, 100)
 }
 
--- الخدمات
-local CoreGui = game:GetService("CoreGui")
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
-
-local Player = Players.LocalPlayer
-
--- ================================================
--- نظام حفظ الإعدادات (Profiles)
--- ================================================
-
+-- اعدادات النافذة
 local Settings = {
-    CurrentProfile = "Default",
-    Profiles = {},
-    WindowSize = {500, 350},
-    Theme = "Copper",
-    Language = "AR",
-    SavedData = {}
+    Width = 700,
+    Height = 500,
+    MinW = 400,
+    MaxW = 1200,
+    MinH = 300,
+    MaxH = 800,
+    Theme = "Copper"
 }
 
-function SaveProfile(name)
-    Settings.Profiles[name] = {
-        WindowSize = Settings.WindowSize,
-        Theme = Settings.Theme,
-        Language = Settings.Language,
-        SavedData = Settings.SavedData
+-- الثيمات المتاحة
+local Themes = {
+    Copper = {
+        Background = Color3.fromRGB(20, 12, 8),
+        Second = Color3.fromRGB(40, 25, 15),
+        Main = Color3.fromRGB(205, 127, 50),
+        Text = Color3.fromRGB(255, 215, 175),
+        TextDark = Color3.fromRGB(180, 140, 100)
+    },
+    Dark = {
+        Background = Color3.fromRGB(8, 8, 8),
+        Second = Color3.fromRGB(25, 25, 25),
+        Main = Color3.fromRGB(120, 120, 120),
+        Text = Color3.fromRGB(220, 220, 220),
+        TextDark = Color3.fromRGB(150, 150, 150)
+    },
+    Gold = {
+        Background = Color3.fromRGB(25, 18, 8),
+        Second = Color3.fromRGB(45, 32, 15),
+        Main = Color3.fromRGB(255, 215, 0),
+        Text = Color3.fromRGB(255, 245, 200),
+        TextDark = Color3.fromRGB(200, 170, 100)
+    },
+    Blue = {
+        Background = Color3.fromRGB(8, 12, 20),
+        Second = Color3.fromRGB(15, 25, 40),
+        Main = Color3.fromRGB(64, 128, 255),
+        Text = Color3.fromRGB(220, 235, 255),
+        TextDark = Color3.fromRGB(140, 160, 200)
+    },
+    Red = {
+        Background = Color3.fromRGB(20, 8, 8),
+        Second = Color3.fromRGB(40, 15, 15),
+        Main = Color3.fromRGB(220, 40, 40),
+        Text = Color3.fromRGB(255, 200, 200),
+        TextDark = Color3.fromRGB(180, 120, 120)
     }
-    if writefile then
-        local data = HttpService:JSONEncode(Settings.Profiles)
-        writefile("COLCK7_Profiles.json", data)
-    end
-    MakeNotifi({
-        Title = "COLCK 7",
-        Text = "تم حفظ الملف الشخصي: " .. name,
-        Time = 2
-    })
-end
-
-function LoadProfile(name)
-    if Settings.Profiles[name] then
-        Settings.WindowSize = Settings.Profiles[name].WindowSize
-        Settings.Theme = Settings.Profiles[name].Theme
-        Settings.Language = Settings.Profiles[name].Language
-        Settings.SavedData = Settings.Profiles[name].SavedData
-        Settings.CurrentProfile = name
-        MakeNotifi({
-            Title = "COLCK 7",
-            Text = "تم تحميل الملف الشخصي: " .. name,
-            Time = 2
-        })
-    end
-end
-
--- تحميل الملفات المحفوظة
-if isfile and isfile("COLCK7_Profiles.json") then
-    local success, data = pcall(function()
-        return HttpService:JSONDecode(readfile("COLCK7_Profiles.json"))
-    end)
-    if success then
-        Settings.Profiles = data
-    end
-end
+}
 
 -- ================================================
--- دوال مساعدة محسنة
+-- دوال اساسية
 -- ================================================
 
 local function Create(instance, parent, props)
-    local new = Instance.new(instance)
-    new.Parent = parent
+    local obj = Instance.new(instance)
+    obj.Parent = parent
     if props then
-        for prop, value in pairs(props) do
-            new[prop] = value
+        for k, v in pairs(props) do
+            obj[k] = v
         end
     end
-    return new
+    return obj
 end
 
-local function SetProps(instance, props)
-    if instance and props then
-        for prop, value in pairs(props) do
-            instance[prop] = value
-        end
-    end
-    return instance
+local function AddCorner(obj, radius)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius or 12)
+    corner.Parent = obj
+    return corner
 end
 
-local function Corner(parent, props)
-    local new = Create("UICorner", parent)
-    new.CornerRadius = Configs_HUB.Corner_Radius
-    if props then
-        SetProps(new, props)
-    end
-    return new
+local function AddStroke(obj, color, thickness)
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = color or Colors.Main
+    stroke.Thickness = thickness or 2
+    stroke.Parent = obj
+    return stroke
 end
 
-local function Stroke(parent, props)
-    local new = Create("UIStroke", parent)
-    new.Color = Configs_HUB.Cor_Stroke
-    new.ApplyStrokeMode = "Border"
-    new.Thickness = 2
-    
-    local gradient = Instance.new("UIGradient")
-    gradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Configs_HUB.Cor_Stroke),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 215, 0)),
-        ColorSequenceKeypoint.new(1, Configs_HUB.Cor_Stroke)
-    }
-    gradient.Rotation = 0
-    gradient.Parent = new
-    
-    coroutine.wrap(function()
-        while new.Parent do
-            gradient.Rotation = (gradient.Rotation + 1) % 360
-            RunService.RenderStepped:Wait()
-        end
-    end)()
-    
-    if props then
-        SetProps(new, props)
-    end
-    return new
-end
-
-local function CreateTween(instance, prop, value, time, callback)
-    local tween = TweenService:Create(instance,
-        TweenInfo.new(time, Enum.EasingStyle.Quint),
-        {[prop] = value}
-    )
-    tween:Play()
-    if callback then
-        tween.Completed:Connect(callback)
-    end
-    return tween
-end
-
-local function TextSetColor(instance)
-    instance.MouseEnter:Connect(function()
-        CreateTween(instance, "TextColor3", Color3.fromRGB(255, 215, 0), 0.3)
-    end)
-    instance.MouseLeave:Connect(function()
-        CreateTween(instance, "TextColor3", Configs_HUB.Cor_Text, 0.3)
-    end)
-end
-
--- ================================================
--- تأثير الظل المحسن (Drop Shadow)
--- ================================================
-
-local function AddShadow(frame, intensity)
-    intensity = intensity or 0.5
+local function AddShadow(obj, intensity)
     local shadow = Instance.new("ImageLabel")
     shadow.Size = UDim2.new(1, 30, 1, 30)
     shadow.Position = UDim2.new(0, -15, 0, -15)
     shadow.BackgroundTransparency = 1
     shadow.Image = "rbxassetid://13115645980"
     shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-    shadow.ImageTransparency = 1 - intensity
+    shadow.ImageTransparency = 1 - (intensity or 0.5)
     shadow.ScaleType = Enum.ScaleType.Slice
     shadow.SliceCenter = Rect.new(10, 10, 118, 118)
-    shadow.ZIndex = frame.ZIndex - 1
-    shadow.Parent = frame
+    shadow.ZIndex = obj.ZIndex - 1
+    shadow.Parent = obj
     return shadow
 end
 
--- ================================================
--- تأثير الزجاج (Blur)
--- ================================================
-
-local blurEffect = nil
-
-local function SetBlur(intensity)
-    if not blurEffect then
-        blurEffect = Instance.new("BlurEffect")
-        blurEffect.Parent = game:GetService("Lighting")
-    end
-    CreateTween(blurEffect, "Size", intensity, 0.3)
+local TweenService = game:GetService("TweenService")
+local function Tween(obj, prop, value, time)
+    local tween = TweenService:Create(obj, TweenInfo.new(time or 0.3, Enum.EasingStyle.Quint), {[prop] = value})
+    tween:Play()
+    return tween
 end
 
 -- ================================================
--- نظام الإشعارات المتقدم
+-- انشاء الشاشة الرئيسية
 -- ================================================
 
-local NotificationPriority = {
-    Low = Color3.fromRGB(150, 150, 150),
-    Normal = Configs_HUB.Cor_Stroke,
-    High = Color3.fromRGB(255, 100, 100),
-    Critical = Color3.fromRGB(255, 0, 0)
-}
-
-local NotificationSounds = {
-    Info = "rbxassetid://9120387844",
-    Success = "rbxassetid://9120389994",
-    Warning = "rbxassetid://9120391570",
-    Error = "rbxassetid://9120392922"
-}
-
-local Menu_Notifi = Create("Frame", ScreenGui, {
-    Size = UDim2.new(0, 350, 1, 0),
-    Position = UDim2.new(1, 0, 0, 0),
-    AnchorPoint = Vector2.new(1, 0),
-    BackgroundTransparency = 1
-})
-
-local Padding = Create("UIPadding", Menu_Notifi, {
-    PaddingLeft = UDim.new(0, 25),
-    PaddingTop = UDim.new(0, 25),
-    PaddingBottom = UDim.new(0, 50)
-})
-
-local ListLayout = Create("UIListLayout", Menu_Notifi, {
-    Padding = UDim.new(0, 15),
-    VerticalAlignment = "Bottom"
-})
-
-function MakeNotifi(config)
-    config = config or {}
-    local title = config.Title or "COLCK 7"
-    local text = config.Text or "Notification"
-    local timewait = config.Time or 3
-    local priority = config.Priority or "Normal"
-    local sound = config.Sound
-    local color = NotificationPriority[priority] or Configs_HUB.Cor_Stroke
-    
-    local frame1 = Create("Frame", Menu_Notifi, {
-        Size = UDim2.new(2, 0, 0, 0),
-        BackgroundTransparency = 1,
-        AutomaticSize = "Y"
-    })
-    
-    local frame2 = Create("Frame", frame1, {
-        Size = UDim2.new(0, Menu_Notifi.Size.X.Offset - 50, 0, 0),
-        BackgroundColor3 = Configs_HUB.Cor_Hub,
-        Position = UDim2.new(0, Menu_Notifi.Size.X.Offset, 0, 0),
-        AutomaticSize = "Y"
-    })
-    Corner(frame2)
-    Stroke(frame2)
-    AddShadow(frame2, 0.3)
-    
-    -- شريط الأولوية
-    local priorityBar = Create("Frame", frame2, {
-        Size = UDim2.new(1, 0, 0, 3),
-        BackgroundColor3 = color,
-        Position = UDim2.new(0, 0, 0, 0)
-    })
-    
-    local titleLabel = Create("TextLabel", frame2, {
-        Size = UDim2.new(1, -30, 0, 25),
-        Font = Configs_HUB.Text_Font,
-        BackgroundTransparency = 1,
-        Text = title,
-        TextSize = 20,
-        Position = UDim2.new(0, 15, 0, 8),
-        TextXAlignment = "Left",
-        TextColor3 = color
-    })
-    
-    local closeBtn = Create("TextButton", frame2, {
-        Text = "✕",
-        Font = Configs_HUB.Text_Font,
-        TextSize = 18,
-        BackgroundTransparency = 1,
-        TextColor3 = Configs_HUB.Cor_Stroke,
-        Position = UDim2.new(1, -25, 0, 10),
-        Size = UDim2.new(0, 20, 0, 20)
-    })
-    
-    local messageLabel = Create("TextLabel", frame2, {
-        Size = UDim2.new(1, -30, 0, 0),
-        Position = UDim2.new(0, 15, 0, 38),
-        TextSize = 14,
-        TextColor3 = Configs_HUB.Cor_DarkText,
-        TextXAlignment = "Left",
-        TextYAlignment = "Top",
-        AutomaticSize = "Y",
-        Text = text,
-        Font = Configs_HUB.Text_Font,
-        BackgroundTransparency = 1,
-        TextWrapped = true
-    })
-    
-    local progressBar = Create("Frame", frame2, {
-        Size = UDim2.new(1, 0, 0, 2),
-        BackgroundColor3 = color,
-        Position = UDim2.new(0, 2, 0, 30),
-        BorderSizePixel = 0
-    })
-    Corner(progressBar)
-    
-    Create("Frame", frame2, {
-        Size = UDim2.new(0, 0, 0, 5),
-        Position = UDim2.new(0, 0, 1, 5),
-        BackgroundTransparency = 1
-    })
-    
-    -- صوت الإشعار
-    if sound then
-        local soundObj = Instance.new("Sound")
-        soundObj.SoundId = NotificationSounds[sound] or sound
-        soundObj.Volume = 0.5
-        soundObj.Parent = frame2
-        soundObj:Play()
-    end
-    
-    task.spawn(function()
-        CreateTween(progressBar, "Size", UDim2.new(0, 0, 0, 2), timewait)
-    end)
-    
-    closeBtn.MouseButton1Click:Connect(function()
-        CreateTween(frame2, "Position", UDim2.new(0, -20, 0, 0), 0.1)
-        CreateTween(frame2, "Position", UDim2.new(0, Menu_Notifi.Size.X.Offset, 0, 0), 0.5, function()
-            frame1:Destroy()
-        end)
-    end)
-    
-    task.spawn(function()
-        CreateTween(frame2, "Position", UDim2.new(0, -20, 0, 0), 0.5)
-        CreateTween(frame2, "Position", UDim2.new(), 0.1)
-        task.wait(timewait)
-        if frame2 then
-            CreateTween(frame2, "Position", UDim2.new(0, -20, 0, 0), 0.1)
-            CreateTween(frame2, "Position", UDim2.new(0, Menu_Notifi.Size.X.Offset, 0, 0), 0.5, function()
-                frame1:Destroy()
-            end)
-        end
-    end)
-end
-
--- ================================================
--- إنشاء النافذة الرئيسية
--- ================================================
-
-local ScreenGui = Create("ScreenGui", CoreGui, {
+local Screen = Create("ScreenGui", game:GetService("CoreGui"), {
     Name = "COLCK7_Ultimate",
     ResetOnSpawn = false,
     ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 })
 
-local ScreenFind = CoreGui:FindFirstChild(ScreenGui.Name)
-if ScreenFind and ScreenFind ~= ScreenGui then
-    ScreenFind:Destroy()
-end
-
-function DestroyScript()
-    SetBlur(0)
-    CreateTween(ScreenGui:FindFirstChild("MainFrame"), "Size", UDim2.new(0, 0, 0, 0), 0.3, function()
-        ScreenGui:Destroy()
-    end)
-end
-
--- ================================================
--- النافذة الرئيسية مع تحكم كامل بالحجم
--- ================================================
-
-local MainFrame = Create("Frame", ScreenGui, {
-    Name = "MainFrame",
-    BackgroundColor3 = Configs_HUB.Cor_Hub,
-    Size = UDim2.new(0, Settings.WindowSize[1], 0, Settings.WindowSize[2]),
-    Position = UDim2.new(0.5, -Settings.WindowSize[1]/2, 0.5, -Settings.WindowSize[2]/2),
+-- النافذة الرئيسية
+local Main = Create("Frame", Screen, {
+    Size = UDim2.new(0, Settings.Width, 0, Settings.Height),
+    Position = UDim2.new(0.5, -Settings.Width/2, 0.5, -Settings.Height/2),
+    BackgroundColor3 = Colors.Background,
     Active = true,
     ClipsDescendants = true
 })
-Corner(MainFrame)
-Stroke(MainFrame)
-AddShadow(MainFrame, 0.7)
+AddCorner(Main, 18)
+AddStroke(Main, Colors.Main, 2)
+AddShadow(Main, 0.7)
 
 -- ================================================
 -- الشريط العلوي
 -- ================================================
 
-local TopBar = Create("Frame", MainFrame, {
-    Size = UDim2.new(1, 0, 0, 40),
-    BackgroundColor3 = Configs_HUB.Cor_Options,
-    BorderSizePixel = 0
+local TopBar = Create("Frame", Main, {
+    Size = UDim2.new(1, 0, 0, 55),
+    BackgroundColor3 = Colors.Second
 })
-Corner(TopBar)
+AddCorner(TopBar, 18)
 
 local Title = Create("TextLabel", TopBar, {
-    Size = UDim2.new(0.3, 0, 1, 0),
-    Position = UDim2.new(0, 15, 0, 0),
+    Size = UDim2.new(0.4, 0, 1, 0),
+    Position = UDim2.new(0, 20, 0, 0),
     BackgroundTransparency = 1,
     Text = "COLCK 7",
-    TextColor3 = Configs_HUB.Cor_Stroke,
+    TextColor3 = Colors.Main,
     TextXAlignment = "Left",
-    Font = Configs_HUB.Text_Font,
-    TextSize = 22
+    Font = Enum.Font.GothamBold,
+    TextSize = 28
 })
 
 local SubTitle = Create("TextLabel", TopBar, {
     Size = UDim2.new(0.3, 0, 1, 0),
-    Position = UDim2.new(0.3, 5, 0, 0),
+    Position = UDim2.new(0.4, 5, 0, 0),
     BackgroundTransparency = 1,
     Text = "DHBLACK",
-    TextColor3 = Configs_HUB.Cor_Text,
+    TextColor3 = Colors.Text,
     TextXAlignment = "Left",
-    Font = Configs_HUB.Text_Font,
-    TextSize = 16
+    Font = Enum.Font.Gotham,
+    TextSize = 18
 })
 
 -- ================================================
--- أزرار التحكم المتقدمة
+-- ازرار التحكم
 -- ================================================
 
-local ButtonFrame = Create("Frame", TopBar, {
-    Size = UDim2.new(0, 160, 0, 30),
-    Position = UDim2.new(1, -10, 0.5, -15),
+local ControlFrame = Create("Frame", TopBar, {
+    Size = UDim2.new(0, 180, 0, 35),
+    Position = UDim2.new(1, -10, 0.5, -17.5),
     AnchorPoint = Vector2.new(1, 0),
     BackgroundTransparency = 1
 })
 
--- زر التصغير
-local MinBtn = Create("TextButton", ButtonFrame, {
-    Size = UDim2.new(0, 30, 0, 30),
-    Position = UDim2.new(0, 0, 0, 0),
-    BackgroundColor3 = Configs_HUB.Cor_Options,
-    Text = "−",
-    TextColor3 = Configs_HUB.Cor_Text,
-    Font = Configs_HUB.Text_Font,
-    TextSize = 20
-})
-Corner(MinBtn)
-
--- زر تكبير
-local MaxBtn = Create("TextButton", ButtonFrame, {
-    Size = UDim2.new(0, 30, 0, 30),
-    Position = UDim2.new(0, 35, 0, 0),
-    BackgroundColor3 = Configs_HUB.Cor_Options,
-    Text = "□",
-    TextColor3 = Configs_HUB.Cor_Text,
-    Font = Configs_HUB.Text_Font,
-    TextSize = 18
-})
-Corner(MaxBtn)
-
--- زر إغلاق
-local CloseBtn = Create("TextButton", ButtonFrame, {
-    Size = UDim2.new(0, 30, 0, 30),
-    Position = UDim2.new(0, 70, 0, 0),
-    BackgroundColor3 = Configs_HUB.Cor_Options,
-    Text = "✕",
-    TextColor3 = Configs_HUB.Cor_Stroke,
-    Font = Configs_HUB.Text_Font,
-    TextSize = 18
-})
-Corner(CloseBtn)
-
--- زر القائمة
-local MenuBtn = Create("TextButton", ButtonFrame, {
-    Size = UDim2.new(0, 30, 0, 30),
-    Position = UDim2.new(0, 105, 0, 0),
-    BackgroundColor3 = Configs_HUB.Cor_Options,
-    Text = "☰",
-    TextColor3 = Configs_HUB.Cor_Stroke,
-    Font = Configs_HUB.Text_Font,
-    TextSize = 20
-})
-Corner(MenuBtn)
-
--- ================================================
--- نظام تكبير/تصغير النافذة
--- ================================================
-
-local isMinimized = false
-local isMaximized = false
-local normalSize = MainFrame.Size
-local normalPos = MainFrame.Position
-
-MinBtn.MouseButton1Click:Connect(function()
-    isMinimized = not isMinimized
-    if isMinimized then
-        CreateTween(MainFrame, "Size", UDim2.new(0, 500, 0, 40), 0.3)
-        CreateTween(MainFrame, "Position", UDim2.new(0.5, -250, 1, -45), 0.3)
-        MinBtn.Text = "+"
-    else
-        CreateTween(MainFrame, "Size", normalSize, 0.3)
-        CreateTween(MainFrame, "Position", normalPos, 0.3)
-        MinBtn.Text = "−"
-    end
-end)
-
-MaxBtn.MouseButton1Click:Connect(function()
-    isMaximized = not isMaximized
-    if isMaximized then
-        normalSize = MainFrame.Size
-        normalPos = MainFrame.Position
-        CreateTween(MainFrame, "Size", UDim2.new(1, 0, 1, 0), 0.3)
-        CreateTween(MainFrame, "Position", UDim2.new(0, 0, 0, 0), 0.3)
-        MaxBtn.Text = "❐"
-    else
-        CreateTween(MainFrame, "Size", normalSize, 0.3)
-        CreateTween(MainFrame, "Position", normalPos, 0.3)
-        MaxBtn.Text = "□"
-    end
-end)
-
-CloseBtn.MouseButton1Click:Connect(DestroyScript)
-
--- ================================================
--- نظام تغيير الحجم بالسحب
--- ================================================
-
-local resizeHandles = {}
-local handlePositions = {
-    {Position = UDim2.new(1, -5, 0.5, -5), Size = UDim2.new(0, 10, 0, 10), Cursor = "SizeEast"},      -- يمين
-    {Position = UDim2.new(0, -5, 0.5, -5), Size = UDim2.new(0, 10, 0, 10), Cursor = "SizeWest"},      -- يسار
-    {Position = UDim2.new(0.5, -5, 1, -5), Size = UDim2.new(0, 10, 0, 10), Cursor = "SizeSouth"},     -- أسفل
-    {Position = UDim2.new(0.5, -5, 0, -5), Size = UDim2.new(0, 10, 0, 10), Cursor = "SizeNorth"},     -- أعلى
-    {Position = UDim2.new(1, -5, 1, -5), Size = UDim2.new(0, 10, 0, 10), Cursor = "SizeSouthEast"},   -- أسفل يمين
-    {Position = UDim2.new(0, -5, 1, -5), Size = UDim2.new(0, 10, 0, 10), Cursor = "SizeSouthWest"},   -- أسفل يسار
-    {Position = UDim2.new(1, -5, 0, -5), Size = UDim2.new(0, 10, 0, 10), Cursor = "SizeNorthEast"},   -- أعلى يمين
-    {Position = UDim2.new(0, -5, 0, -5), Size = UDim2.new(0, 10, 0, 10), Cursor = "SizeNorthWest"}    -- أعلى يسار
-}
-
-for i, data in ipairs(handlePositions) do
-    local handle = Create("Frame", MainFrame, {
-        Size = data.Size,
-        Position = data.Position,
-        BackgroundColor3 = Configs_HUB.Cor_Stroke,
-        BackgroundTransparency = 0.5,
-        Visible = false
-    })
-    Corner(handle)
-    resizeHandles[i] = handle
-    
-    -- تغيير شكل المؤشر
-    handle.MouseEnter:Connect(function()
-        UserInputService.MouseIcon = data.Cursor
-    end)
-    handle.MouseLeave:Connect(function()
-        UserInputService.MouseIcon = ""
-    end)
-    
-    -- سحب لتغيير الحجم
-    local dragging = false
-    local startSize, startPos, startMouse
-    
-    handle.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            startSize = MainFrame.Size
-            startPos = MainFrame.Position
-            startMouse = input.Position
-            handle.BackgroundColor3 = Configs_HUB.Cor_Text
-            SetBlur(3)
-        end
-    end)
-    
-    handle.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = false
-            handle.BackgroundColor3 = Configs_HUB.Cor_Stroke
-            SetBlur(0)
-            Settings.WindowSize = {MainFrame.Size.X.Offset, MainFrame.Size.Y.Offset}
-        end
-    end)
-    
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = input.Position - startMouse
-            
-            if i == 1 then -- يمين
-                MainFrame.Size = UDim2.new(0, startSize.X.Offset + delta.X, 0, startSize.Y.Offset)
-            elseif i == 2 then -- يسار
-                MainFrame.Size = UDim2.new(0, startSize.X.Offset - delta.X, 0, startSize.Y.Offset)
-                MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset)
-            elseif i == 3 then -- أسفل
-                MainFrame.Size = UDim2.new(0, startSize.X.Offset, 0, startSize.Y.Offset + delta.Y)
-            elseif i == 4 then -- أعلى
-                MainFrame.Size = UDim2.new(0, startSize.X.Offset, 0, startSize.Y.Offset - delta.Y)
-                MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-            elseif i == 5 then -- أسفل يمين
-                MainFrame.Size = UDim2.new(0, startSize.X.Offset + delta.X, 0, startSize.Y.Offset + delta.Y)
-            elseif i == 6 then -- أسفل يسار
-                MainFrame.Size = UDim2.new(0, startSize.X.Offset - delta.X, 0, startSize.Y.Offset + delta.Y)
-                MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset)
-            elseif i == 7 then -- أعلى يمين
-                MainFrame.Size = UDim2.new(0, startSize.X.Offset + delta.X, 0, startSize.Y.Offset - delta.Y)
-                MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-            elseif i == 8 then -- أعلى يسار
-                MainFrame.Size = UDim2.new(0, startSize.X.Offset - delta.X, 0, startSize.Y.Offset - delta.Y)
-                MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-            end
-            
-            -- منع التصغير أكثر من اللازم
-            MainFrame.Size = UDim2.new(0, math.max(400, MainFrame.Size.X.Offset), 0, math.max(300, MainFrame.Size.Y.Offset))
-        end
-    end)
-end
-
--- إظهار مقابض التغيير عند تحريك الماوس
-MainFrame.MouseEnter:Connect(function()
-    for _, handle in ipairs(resizeHandles) do
-        handle.Visible = true
-    end
-end)
-
-MainFrame.MouseLeave:Connect(function()
-    for _, handle in ipairs(resizeHandles) do
-        handle.Visible = false
-    end
-end)
-
--- ================================================
--- نظام القائمة الجانبية
--- ================================================
-
-local SideMenu = Create("Frame", MainFrame, {
-    Size = UDim2.new(0, 200, 1, -40),
-    Position = UDim2.new(0, -200, 0, 40),
-    BackgroundColor3 = Configs_HUB.Cor_Options,
-    Visible = false
-})
-Corner(SideMenu)
-Stroke(SideMenu)
-AddShadow(SideMenu, 0.5)
-
-local menuOpen = false
-
-MenuBtn.MouseButton1Click:Connect(function()
-    menuOpen = not menuOpen
-    if menuOpen then
-        SideMenu.Visible = true
-        CreateTween(SideMenu, "Position", UDim2.new(0, 0, 0, 40), 0.3)
-        SetBlur(5)
-    else
-        CreateTween(SideMenu, "Position", UDim2.new(0, -200, 0, 40), 0.3, function()
-            SideMenu.Visible = false
-        end)
-        SetBlur(0)
-    end
-end)
-
--- محتوى القائمة الجانبية
-local SidePadding = Create("UIPadding", SideMenu, {
-    PaddingLeft = UDim.new(0, 10),
-    PaddingRight = UDim.new(0, 10),
-    PaddingTop = UDim.new(0, 10),
-    PaddingBottom = UDim.new(0, 10)
-})
-
-local SideLayout = Create("UIListLayout", SideMenu, {
-    Padding = UDim.new(0, 8),
-    HorizontalAlignment = "Center"
-})
-
--- عناصر القائمة الجانبية
-local function AddSideButton(text, icon, callback)
-    local btn = Create("TextButton", SideMenu, {
-        Size = UDim2.new(1, 0, 0, 35),
-        BackgroundColor3 = Configs_HUB.Cor_Hub,
-        Text = ""
-    })
-    Corner(btn)
-    
-    if icon then
-        local img = Create("ImageLabel", btn, {
-            Size = UDim2.new(0, 25, 0, 25),
-            Position = UDim2.new(0, 5, 0.5, -12.5),
-            BackgroundTransparency = 1,
-            Image = icon
-        })
-    end
-    
-    local label = Create("TextLabel", btn, {
-        Size = UDim2.new(1, -40, 1, 0),
-        Position = UDim2.new(0, icon and 35 or 10, 0, 0),
-        BackgroundTransparency = 1,
+local function CreateControlButton(text, color, callback)
+    local btn = Create("TextButton", ControlFrame, {
+        Size = UDim2.new(0, 35, 0, 35),
+        BackgroundColor3 = color or Colors.Second,
         Text = text,
-        TextColor3 = Configs_HUB.Cor_Text,
-        TextXAlignment = "Left",
-        Font = Configs_HUB.Text_Font,
-        TextSize = 14
+        TextColor3 = Colors.Text,
+        Font = Enum.Font.GothamBold,
+        TextSize = 20
     })
-    
+    AddCorner(btn, 10)
     btn.MouseButton1Click:Connect(callback)
-    
-    btn.MouseEnter:Connect(function()
-        CreateTween(btn, "BackgroundColor3", Configs_HUB.Cor_Stroke, 0.2)
-    end)
-    btn.MouseLeave:Connect(function()
-        CreateTween(btn, "BackgroundColor3", Configs_HUB.Cor_Hub, 0.2)
-    end)
-    
     return btn
 end
 
--- إضافة عناصر للقائمة الجانبية
-AddSideButton("الملفات الشخصية", "rbxassetid://10709776126", function()
-    -- سيتم إضافة محتوى لاحقاً
+-- ازرار التحكم
+local MinBtn = CreateControlButton("−", Colors.Second, function()
+    Main:TweenSize(UDim2.new(0, Settings.Width, 0, 55), "Out", "Quint", 0.3)
 end)
 
-AddSideButton("الإعدادات", "rbxassetid://10709769286", function()
-    -- سيتم إضافة محتوى لاحقاً
+local MaxBtn = CreateControlButton("□", Colors.Second, function()
+    Main:TweenSize(UDim2.new(1, 0, 1, 0), "Out", "Quint", 0.3)
+    Main:TweenPosition(UDim2.new(0, 0, 0, 0), "Out", "Quint", 0.3)
 end)
 
-AddSideButton("حفظ", "rbxassetid://10709762058", function()
-    SaveProfile("Profile_" .. os.time())
+local CloseBtn = CreateControlButton("✕", Colors.Main, function()
+    Screen:Destroy()
 end)
 
-AddSideButton("تحميل", "rbxassetid://10709762233", function()
-    -- سيتم إضافة محتوى لاحقاً
-end)
-
-AddSideButton("اللغة", "rbxassetid://10709761813", function()
-    -- سيتم إضافة محتوى لاحقاً
-end)
-
--- ================================================
--- نظام البحث في التبويبات
--- ================================================
-
-local SearchBar = Create("Frame", MainFrame, {
-    Size = UDim2.new(0, 200, 0, 30),
-    Position = UDim2.new(0, 10, 0, 45),
-    BackgroundColor3 = Configs_HUB.Cor_Options,
-    Visible = false
-})
-Corner(SearchBar)
-Stroke(SearchBar)
-
-local SearchIcon = Create("ImageLabel", SearchBar, {
-    Size = UDim2.new(0, 20, 0, 20),
-    Position = UDim2.new(0, 5, 0.5, -10),
-    BackgroundTransparency = 1,
-    Image = "rbxassetid://10709752996"
-})
-
-local SearchBox = Create("TextBox", SearchBar, {
-    Size = UDim2.new(1, -30, 1, 0),
-    Position = UDim2.new(0, 30, 0, 0),
-    BackgroundTransparency = 1,
-    PlaceholderText = "بحث...",
-    PlaceholderColor3 = Configs_HUB.Cor_DarkText,
-    Text = "",
-    TextColor3 = Configs_HUB.Cor_Text,
-    Font = Configs_HUB.Text_Font,
-    TextSize = 14,
-    ClearTextOnFocus = false
-})
-
--- زر البحث
-local SearchBtn = Create("TextButton", TopBar, {
-    Size = UDim2.new(0, 30, 0, 30),
-    Position = UDim2.new(1, -140, 0.5, -15),
-    BackgroundColor3 = Configs_HUB.Cor_Options,
-    Text = "🔍",
-    TextColor3 = Configs_HUB.Cor_Stroke,
-    Font = Configs_HUB.Text_Font,
-    TextSize = 16
-})
-Corner(SearchBtn)
-
-local searchVisible = false
-SearchBtn.MouseButton1Click:Connect(function()
-    searchVisible = not searchVisible
-    SearchBar.Visible = searchVisible
-    if searchVisible then
-        SearchBox:CaptureFocus()
-    end
-end)
-
--- ================================================
--- نظام المهام المجدولة (Scheduler)
--- ================================================
-
-local Scheduler = {
-    Tasks = {},
-    Running = true
-}
-
-function Scheduler:AddTask(name, interval, callback, repeats)
-    local task = {
-        Name = name,
-        Interval = interval,
-        Callback = callback,
-        Repeats = repeats or -1,
-        LastRun = 0,
-        Enabled = true
-    }
-    table.insert(self.Tasks, task)
-    return task
-end
-
-function Scheduler:RemoveTask(name)
-    for i, task in ipairs(self.Tasks) do
-        if task.Name == name then
-            table.remove(self.Tasks, i)
-            break
-        end
-    end
-end
-
-RunService.Heartbeat:Connect(function()
-    if not Scheduler.Running then return end
-    local currentTime = tick()
-    for _, task in ipairs(Scheduler.Tasks) do
-        if task.Enabled and (task.Repeats ~= 0) and (currentTime - task.LastRun >= task.Interval) then
-            task.LastRun = currentTime
-            task.Repeats = task.Repeats - 1
-            task.Callback()
-        end
-    end
-end)
-
--- ================================================
--- نظام اللغات
--- ================================================
-
-local Languages = {
-    AR = {
-        Search = "بحث",
-        Save = "حفظ",
-        Load = "تحميل",
-        Settings = "الإعدادات",
-        Profiles = "الملفات الشخصية",
-        Close = "إغلاق",
-        Minimize = "تصغير",
-        Maximize = "تكبير",
-        Menu = "القائمة"
-    },
-    EN = {
-        Search = "Search",
-        Save = "Save",
-        Load = "Load",
-        Settings = "Settings",
-        Profiles = "Profiles",
-        Close = "Close",
-        Minimize = "Minimize",
-        Maximize = "Maximize",
-        Menu = "Menu"
-    }
-}
-
-local currentLanguage = "AR"
-
-function SetLanguage(lang)
-    if Languages[lang] then
-        currentLanguage = lang
-        Settings.Language = lang
-        UpdateUIText()
-    end
-end
-
-function GetText(key)
-    return Languages[currentLanguage][key] or key
-end
-
-function UpdateUIText()
-    -- تحديث نصوص الواجهة
-    SearchBox.PlaceholderText = GetText("Search")
-    -- يمكن إضافة المزيد هنا
-end
-
--- ================================================
--- نظام الحماية
--- ================================================
-
-local Security = {
-    Locked = false,
-    Password = "",
-    Attempts = 0,
-    MaxAttempts = 3
-}
-
-function Security:Lock(password)
-    self.Locked = true
-    self.Password = password
-    MainFrame.Visible = false
-    
-    local lockScreen = Create("Frame", ScreenGui, {
-        Size = UDim2.new(1, 0, 1, 0),
-        BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-        BackgroundTransparency = 0.5
-    })
-    
-    local lockFrame = Create("Frame", lockScreen, {
-        Size = UDim2.new(0, 300, 0, 150),
-        Position = UDim2.new(0.5, -150, 0.5, -75),
-        BackgroundColor3 = Configs_HUB.Cor_Hub
-    })
-    Corner(lockFrame)
-    Stroke(lockFrame)
-    
-    local passBox = Create("TextBox", lockFrame, {
-        Size = UDim2.new(1, -40, 0, 35),
-        Position = UDim2.new(0, 20, 0, 30),
-        BackgroundColor3 = Configs_HUB.Cor_Options,
-        PlaceholderText = "Enter Password",
-        Text = "",
-        TextColor3 = Configs_HUB.Cor_Text,
-        Font = Configs_HUB.Text_Font,
-        TextSize = 16
-    })
-    Corner(passBox)
-    
-    local unlockBtn = Create("TextButton", lockFrame, {
-        Size = UDim2.new(1, -40, 0, 35),
-        Position = UDim2.new(0, 20, 0, 75),
-        BackgroundColor3 = Configs_HUB.Cor_Stroke,
-        Text = "Unlock",
-        TextColor3 = Configs_HUB.Cor_Text,
-        Font = Configs_HUB.Text_Font,
-        TextSize = 16
-    })
-    Corner(unlockBtn)
-    
-    unlockBtn.MouseButton1Click:Connect(function()
-        if passBox.Text == self.Password then
-            lockScreen:Destroy()
-            MainFrame.Visible = true
-            self.Locked = false
-        else
-            self.Attempts = self.Attempts + 1
-            if self.Attempts >= self.MaxAttempts then
-                DestroyScript()
-            end
-        end
-    end)
+-- ترتيب الازرار
+local btns = {MinBtn, MaxBtn, CloseBtn}
+for i, btn in ipairs(btns) do
+    btn.Position = UDim2.new(0, (i-1) * 40, 0, 0)
 end
 
 -- ================================================
@@ -950,21 +225,20 @@ TopBar.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = true
         dragStart = input.Position
-        startPos = MainFrame.Position
+        startPos = Main.Position
     end
 end)
 
 TopBar.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = false
-        normalPos = MainFrame.Position
     end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
+game:GetService("UserInputService").InputChanged:Connect(function(input)
     if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
         local delta = input.Position - dragStart
-        MainFrame.Position = UDim2.new(
+        Main.Position = UDim2.new(
             startPos.X.Scale,
             startPos.X.Offset + delta.X,
             startPos.Y.Scale,
@@ -974,31 +248,516 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 -- ================================================
--- التبويبات والمحتوى (سنضيفها لاحقاً)
+-- القائمة الجانبية
 -- ================================================
 
--- هنا ستضيف دوال MakeTab, AddButton, AddToggle, إلخ...
-
--- ================================================
--- إشعار بدء التشغيل
--- ================================================
-
-MakeNotifi({
-    Title = "COLCK 7",
-    Text = "تم تحميل الواجهة المطورة بنجاح!",
-    Time = 3,
-    Priority = "High",
-    Sound = "Success"
+local SideBar = Create("Frame", Main, {
+    Size = UDim2.new(0, 150, 1, -55),
+    Position = UDim2.new(0, 0, 0, 55),
+    BackgroundColor3 = Colors.Second
 })
+AddCorner(SideBar, 18)
+
+-- ================================================
+-- منطقة المحتوى
+-- ================================================
+
+local ContentArea = Create("Frame", Main, {
+    Size = UDim2.new(1, -150, 1, -55),
+    Position = UDim2.new(0, 150, 0, 55),
+    BackgroundColor3 = Colors.Background
+})
+AddCorner(ContentArea, 18)
+
+-- منطقة قابلة للتمرير
+local Scroll = Create("ScrollingFrame", ContentArea, {
+    Size = UDim2.new(1, -10, 1, -10),
+    Position = UDim2.new(0, 5, 0, 5),
+    BackgroundTransparency = 1,
+    ScrollBarThickness = 4,
+    ScrollBarImageColor3 = Colors.Main,
+    CanvasSize = UDim2.new(0, 0, 0, 0),
+    AutomaticCanvasSize = "Y"
+})
+
+local Padding = Create("UIPadding", Scroll, {
+    PaddingLeft = UDim.new(0, 10),
+    PaddingRight = UDim.new(0, 10),
+    PaddingTop = UDim.new(0, 10),
+    PaddingBottom = UDim.new(0, 10)
+})
+
+local Layout = Create("UIListLayout", Scroll, {
+    Padding = UDim.new(0, 8),
+    HorizontalAlignment = "Center"
+})
+
+-- ================================================
+-- نظام التبويبات
+-- ================================================
+
+local Tabs = {}
+local CurrentTab = nil
+
+function MakeTab(name, isActive)
+    local btn = Create("TextButton", SideBar, {
+        Size = UDim2.new(1, -10, 0, 45),
+        Position = UDim2.new(0, 5, 0, 5 + (#Tabs * 50)),
+        BackgroundColor3 = isActive and Colors.Main or Colors.Background,
+        Text = ""
+    })
+    AddCorner(btn, 12)
+    AddStroke(btn, Colors.Main, 1)
+    
+    local txt = Create("TextLabel", btn, {
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundTransparency = 1,
+        Text = name,
+        TextColor3 = Colors.Text,
+        Font = Enum.Font.Gotham,
+        TextSize = 16
+    })
+    
+    local content = Create("Frame", Scroll, {
+        Size = UDim2.new(1, 0, 0, 0),
+        BackgroundTransparency = 1,
+        Visible = isActive or false
+    })
+    
+    local contentLayout = Create("UIListLayout", content, {
+        Padding = UDim.new(0, 10),
+        HorizontalAlignment = "Center"
+    })
+    
+    local tab = {
+        Btn = btn,
+        Content = content,
+        Layout = contentLayout,
+        Name = name
+    }
+    table.insert(Tabs, tab)
+    
+    btn.MouseButton1Click:Connect(function()
+        for _, t in ipairs(Tabs) do
+            t.Btn.BackgroundColor3 = Colors.Background
+            t.Content.Visible = false
+        end
+        btn.BackgroundColor3 = Colors.Main
+        content.Visible = true
+        CurrentTab = content
+    end)
+    
+    return content
+end
+
+-- ================================================
+-- دوال انشاء العناصر
+-- ================================================
+
+function AddSection(parent, text)
+    local section = Create("Frame", parent, {
+        Size = UDim2.new(1, 0, 0, 30),
+        BackgroundTransparency = 1
+    })
+    
+    local line = Create("Frame", section, {
+        Size = UDim2.new(1, 0, 0, 2),
+        Position = UDim2.new(0, 0, 1, -2),
+        BackgroundColor3 = Colors.Main
+    })
+    AddCorner(line, 1)
+    
+    local label = Create("TextLabel", section, {
+        Size = UDim2.new(1, -10, 1, 0),
+        Position = UDim2.new(0, 10, 0, 0),
+        BackgroundTransparency = 1,
+        Text = text,
+        TextColor3 = Colors.Main,
+        TextXAlignment = "Left",
+        Font = Enum.Font.GothamBold,
+        TextSize = 18
+    })
+    
+    return section
+end
+
+function AddButton(parent, text, callback)
+    local btn = Create("TextButton", parent, {
+        Size = UDim2.new(1, 0, 0, 45),
+        BackgroundColor3 = Colors.Second,
+        Text = ""
+    })
+    AddCorner(btn, 12)
+    AddStroke(btn, Colors.Main, 1)
+    
+    local txt = Create("TextLabel", btn, {
+        Size = UDim2.new(1, -20, 1, 0),
+        Position = UDim2.new(0, 10, 0, 0),
+        BackgroundTransparency = 1,
+        Text = text,
+        TextColor3 = Colors.Text,
+        TextXAlignment = "Left",
+        Font = Enum.Font.Gotham,
+        TextSize = 16
+    })
+    
+    btn.MouseButton1Click:Connect(callback)
+    
+    btn.MouseEnter:Connect(function()
+        Tween(btn, "BackgroundColor3", Colors.Main, 0.2)
+    end)
+    
+    btn.MouseLeave:Connect(function()
+        Tween(btn, "BackgroundColor3", Colors.Second, 0.2)
+    end)
+    
+    return btn
+end
+
+function AddToggle(parent, text, default, callback)
+    local frame = Create("Frame", parent, {
+        Size = UDim2.new(1, 0, 0, 45),
+        BackgroundColor3 = Colors.Second
+    })
+    AddCorner(frame, 12)
+    AddStroke(frame, Colors.Main, 1)
+    
+    local label = Create("TextLabel", frame, {
+        Size = UDim2.new(0.7, -15, 1, 0),
+        Position = UDim2.new(0, 10, 0, 0),
+        BackgroundTransparency = 1,
+        Text = text,
+        TextColor3 = Colors.Text,
+        TextXAlignment = "Left",
+        Font = Enum.Font.Gotham,
+        TextSize = 16
+    })
+    
+    local toggle = Create("TextButton", frame, {
+        Size = UDim2.new(0, 70, 0, 30),
+        Position = UDim2.new(1, -80, 0.5, -15),
+        BackgroundColor3 = default and Colors.Main or Colors.Background,
+        Text = default and "ON" or "OFF",
+        TextColor3 = Colors.Text,
+        Font = Enum.Font.GothamBold,
+        TextSize = 14
+    })
+    AddCorner(toggle, 20)
+    
+    local state = default
+    
+    toggle.MouseButton1Click:Connect(function()
+        state = not state
+        Tween(toggle, "BackgroundColor3", state and Colors.Main or Colors.Background, 0.2)
+        toggle.Text = state and "ON" or "OFF"
+        callback(state)
+    end)
+    
+    return frame
+end
+
+function AddSlider(parent, text, min, max, default, callback)
+    local frame = Create("Frame", parent, {
+        Size = UDim2.new(1, 0, 0, 60),
+        BackgroundColor3 = Colors.Second
+    })
+    AddCorner(frame, 12)
+    AddStroke(frame, Colors.Main, 1)
+    
+    local label = Create("TextLabel", frame, {
+        Size = UDim2.new(0.6, -10, 0, 20),
+        Position = UDim2.new(0, 10, 0, 5),
+        BackgroundTransparency = 1,
+        Text = text,
+        TextColor3 = Colors.Text,
+        TextXAlignment = "Left",
+        Font = Enum.Font.Gotham,
+        TextSize = 14
+    })
+    
+    local valueLabel = Create("TextLabel", frame, {
+        Size = UDim2.new(0.3, -5, 0, 20),
+        Position = UDim2.new(0.7, 0, 0, 5),
+        BackgroundTransparency = 1,
+        Text = tostring(default),
+        TextColor3 = Colors.Main,
+        TextXAlignment = "Right",
+        Font = Enum.Font.GothamBold,
+        TextSize = 16
+    })
+    
+    local bar = Create("Frame", frame, {
+        Size = UDim2.new(1, -20, 0, 20),
+        Position = UDim2.new(0, 10, 0, 30),
+        BackgroundColor3 = Colors.Background
+    })
+    AddCorner(bar, 10)
+    
+    local fill = Create("Frame", bar, {
+        Size = UDim2.new((default - min) / (max - min), 0, 1, 0),
+        BackgroundColor3 = Colors.Main
+    })
+    AddCorner(fill, 10)
+    
+    local drag = Create("TextButton", bar, {
+        Size = UDim2.new(1, 0, 1, 0),
+        BackgroundTransparency = 1,
+        Text = ""
+    })
+    
+    local dragging = false
+    
+    drag.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+    
+    game:GetService("UserInputService").InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if dragging then
+            local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+            local pos = mouse.X - bar.AbsolutePosition.X
+            local percent = math.clamp(pos / bar.AbsoluteSize.X, 0, 1)
+            local val = math.floor(min + (max - min) * percent)
+            fill.Size = UDim2.new(percent, 0, 1, 0)
+            valueLabel.Text = tostring(val)
+            callback(val)
+        end
+    end)
+    
+    return frame
+end
+
+function AddDropdown(parent, text, options, default, callback)
+    local frame = Create("Frame", parent, {
+        Size = UDim2.new(1, 0, 0, 70),
+        BackgroundColor3 = Colors.Second
+    })
+    AddCorner(frame, 12)
+    AddStroke(frame, Colors.Main, 1)
+    
+    local label = Create("TextLabel", frame, {
+        Size = UDim2.new(1, -20, 0, 20),
+        Position = UDim2.new(0, 10, 0, 5),
+        BackgroundTransparency = 1,
+        Text = text,
+        TextColor3 = Colors.Text,
+        TextXAlignment = "Left",
+        Font = Enum.Font.Gotham,
+        TextSize = 14
+    })
+    
+    local dropdown = Create("TextButton", frame, {
+        Size = UDim2.new(1, -20, 0, 30),
+        Position = UDim2.new(0, 10, 0, 30),
+        BackgroundColor3 = Colors.Background,
+        Text = default or options[1] or "",
+        TextColor3 = Colors.Text,
+        Font = Enum.Font.Gotham,
+        TextSize = 14
+    })
+    AddCorner(dropdown, 10)
+    
+    local arrow = Create("TextLabel", dropdown, {
+        Size = UDim2.new(0, 20, 1, 0),
+        Position = UDim2.new(1, -25, 0, 0),
+        BackgroundTransparency = 1,
+        Text = "▼",
+        TextColor3 = Colors.Main,
+        Font = Enum.Font.GothamBold,
+        TextSize = 12
+    })
+    
+    dropdown.MouseButton1Click:Connect(function()
+        local current = dropdown.Text
+        local idx = 1
+        for i, opt in ipairs(options) do
+            if opt == current then
+                idx = i + 1
+                break
+            end
+        end
+        if idx > #options then idx = 1 end
+        dropdown.Text = options[idx]
+        callback(options[idx])
+    end)
+    
+    return frame
+end
+
+function AddLabel(parent, text, size)
+    local label = Create("TextLabel", parent, {
+        Size = UDim2.new(1, -10, 0, 25),
+        BackgroundTransparency = 1,
+        Text = text,
+        TextColor3 = Colors.Text,
+        TextXAlignment = "Left",
+        Font = Enum.Font.Gotham,
+        TextSize = size or 14
+    })
+    return label
+end
+
+-- ================================================
+-- انشاء التبويبات الفعلية
+-- ================================================
+
+-- تبويب الرئيسية
+local Home = MakeTab("الرئيسية", true)
+
+AddSection(Home, "معلومات")
+AddLabel(Home, "COLCK 7 - النسخة الأسطورية", 18)
+AddLabel(Home, "المالك: DHBLACK", 16)
+AddLabel(Home, "المطورين: Rami, Ghali, Sajwaad", 16)
+AddLabel(Home, "الإصدار: 7.0 النهائي", 16)
+
+AddSection(Home, "أزرار سريعة")
+AddButton(Home, "🔄 اعادة الدخول", function()
+    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
+end)
+
+AddButton(Home, "✅ اختبار", function()
+    print("الزر يعمل")
+end)
+
+-- تبويب الاعدادات
+local SettingsTab = MakeTab("الاعدادات", false)
+
+AddSection(SettingsTab, "التحكم بالحجم")
+AddSlider(SettingsTab, "العرض", 400, 1200, Settings.Width, function(val)
+    Settings.Width = val
+    Main.Size = UDim2.new(0, val, 0, Settings.Height)
+    Main.Position = UDim2.new(0.5, -val/2, 0.5, -Settings.Height/2)
+end)
+
+AddSlider(SettingsTab, "الارتفاع", 300, 800, Settings.Height, function(val)
+    Settings.Height = val
+    Main.Size = UDim2.new(0, Settings.Width, 0, val)
+    Main.Position = UDim2.new(0.5, -Settings.Width/2, 0.5, -val/2)
+end)
+
+AddButton(SettingsTab, "🔄 اعادة الحجم الافتراضي", function()
+    Settings.Width = 700
+    Settings.Height = 500
+    Main.Size = UDim2.new(0, 700, 0, 500)
+    Main.Position = UDim2.new(0.5, -350, 0.5, -250)
+end)
+
+AddSection(SettingsTab, "الوان الواجهة")
+AddDropdown(SettingsTab, "الثيم", {"Copper", "Dark", "Gold", "Blue", "Red"}, "Copper", function(theme)
+    Colors = Themes[theme]
+    Settings.Theme = theme
+    
+    Main.BackgroundColor3 = Colors.Background
+    TopBar.BackgroundColor3 = Colors.Second
+    SideBar.BackgroundColor3 = Colors.Second
+    ContentArea.BackgroundColor3 = Colors.Background
+    Title.TextColor3 = Colors.Main
+    SubTitle.TextColor3 = Colors.Text
+    CloseBtn.BackgroundColor3 = Colors.Main
+    Scroll.ScrollBarImageColor3 = Colors.Main
+    
+    for _, btn in ipairs(Tabs) do
+        btn.Btn.BackgroundColor3 = Colors.Background
+        AddStroke(btn.Btn, Colors.Main, 1)
+    end
+    
+    if CurrentTab then
+        for _, tab in ipairs(Tabs) do
+            if tab.Content == CurrentTab then
+                tab.Btn.BackgroundColor3 = Colors.Main
+            end
+        end
+    end
+end)
+
+AddToggle(SettingsTab, "وضع التباين العالي", false, function(state)
+    if state then
+        Colors.Main = Color3.fromRGB(255, 255, 255)
+        Title.TextColor3 = Colors.Main
+    else
+        Colors = Themes[Settings.Theme]
+        Title.TextColor3 = Colors.Main
+    end
+end)
+
+-- تبويب ادوات
+local ToolsTab = MakeTab("ادوات", false)
+
+AddSection(ToolsTab, "ادوات متنوعة")
+AddButton(ToolsTab, "نسخ رابط", function()
+    setclipboard("https://t.me/R_amI11")
+end)
+
+AddToggle(ToolsTab, "وضع المطور", false, function(state)
+    print("وضع المطور:", state)
+end)
+
+AddSection(ToolsTab, "معلومات اضافية")
+AddLabel(ToolsTab, "تم التطوير بواسطة فريق DHBLACK")
+AddLabel(ToolsTab, "للتواصل: t.me/R_amI11")
+
+-- ================================================
+-- اظهار اول تبويب
+-- ================================================
+
+for i, tab in ipairs(Tabs) do
+    if tab.Content == Home then
+        tab.Btn.BackgroundColor3 = Colors.Main
+    end
+end
+
+-- ================================================
+-- اظهار اعلان النجاح
+-- ================================================
+
+local Notif = Create("Frame", Screen, {
+    Size = UDim2.new(0, 350, 0, 70),
+    Position = UDim2.new(0.5, -175, 0, -70),
+    BackgroundColor3 = Colors.Background
+})
+AddCorner(Notif, 15)
+AddStroke(Notif, Colors.Main, 2)
+AddShadow(Notif, 0.5)
+
+local NotifText = Create("TextLabel", Notif, {
+    Size = UDim2.new(1, -20, 1, 0),
+    Position = UDim2.new(0, 10, 0, 0),
+    BackgroundTransparency = 1,
+    Text = "✅ COLCK 7\nتم التحميل بنجاح! جميع الحقوق محفوظة لـ DHBLACK",
+    TextColor3 = Colors.Text,
+    Font = Enum.Font.GothamBold,
+    TextSize = 16,
+    TextWrapped = true
+})
+
+Tween(Notif, "Position", UDim2.new(0.5, -175, 0, 20), 0.5)
+task.wait(3)
+Tween(Notif, "Position", UDim2.new(0.5, -175, 0, -70), 0.5)
+task.wait(0.5)
+Notif:Destroy()
 
 print("✅ COLCK 7 Ultimate UI Loaded Successfully!")
 
--- تصدير الدوال للاستخدام الخارجي
+-- ================================================
+-- ارجاع الدوال للاستخدام الخارجي
+-- ================================================
+
 return {
-    MakeNotifi = MakeNotifi,
-    DestroyScript = DestroyScript,
-    SetLanguage = SetLanguage,
-    Security = Security,
-    Scheduler = Scheduler,
+    Screen = Screen,
+    Main = Main,
+    MakeTab = MakeTab,
+    AddSection = AddSection,
+    AddButton = AddButton,
+    AddToggle = AddToggle,
+    AddSlider = AddSlider,
+    AddDropdown = AddDropdown,
+    AddLabel = AddLabel,
+    Colors = Colors,
+    Themes = Themes,
     Settings = Settings
 }
