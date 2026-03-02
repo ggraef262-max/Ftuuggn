@@ -1450,7 +1450,7 @@ function redzlib:MakeWindow(Configs)
     Name = "Hub"
 }), "Main")
 
--- [⚠️ تم التعديل هنا] جعل الصورة تغطي كامل النافذة بدون زوايا دائرية
+-- [✅ الحل النهائي] صورة الخلفية (مستطيلة)
 local WindowBackground = Create("ImageLabel", MainFrame, {
     Name = "WindowBackground",
     Size = UDim2.new(1, 0, 1, 0),
@@ -1458,12 +1458,12 @@ local WindowBackground = Create("ImageLabel", MainFrame, {
     BackgroundTransparency = 1,
     Image = "rbxassetid://131365290520974", 
     ImageTransparency = 0.2,
-    ScaleType = Enum.ScaleType.Crop, -- لتغطية كامل المساحة
+    ScaleType = Enum.ScaleType.Crop, -- لتملأ الصورة كامل المساحة بدون تشويه
     ZIndex = 0
 })
--- [⚠️ تم التعديل هنا] لا نضيف UICorner للصورة
+-- لا نضيف Corner هنا
 
--- [⚠️ تم التعديل هنا] الزوايا الدائرية فقط للإطار الخارجي
+-- [✅ الحل النهائي] الزوايا الدائرية للإطار الخارجي فقط
 Make("Corner", MainFrame, UDim.new(0, 15))
 
 Make("Gradient", MainFrame, {
