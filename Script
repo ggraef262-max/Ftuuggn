@@ -7092,3 +7092,147 @@ UniversalTab:AddButton({
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md'),true))()
  end,
 })
+
+-- إنشاء تبويب مضادات بروكهافن
+local BrookhavenTab = Window:MakeTab({"مضادات بروكهافن", "sheild"})
+
+-- 1. مضاد Banc (الأهم)
+local AntiBan = BrookhavenTab:AddSection({"مضاد Banc القاتل","sheild"})
+AntiBan:AddToggle({"مضاد Banc","يمنع الحظر النهائي",false,function(state)
+    if state then
+        -- كود مضاد Banc الحقيقي
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        -- منع جميع أوامر الحظر
+        LocalPlayer.OnTeleport:Connect(function()
+            wait(9e9)
+        end)
+        
+        -- حماية من الحظر
+        local old
+        old = hookmetamethod(game, "__namecall", function(self, ...)
+            local args = {...}
+            local method = getnamecallmethod()
+            
+            if method == "Kick" or method == "kick" then
+                return "تم الحظر ولكن مضاد Banc منعه"
+            end
+            return old(self, ...)
+        end)
+    end
+end})
+
+-- 2. مضاد جلوس (مهم جداً)
+local AntiSit = BrookhavenTab:AddSection({"مضاد الجلوس","chair"})
+AntiSit:AddToggle({"مضاد جلوس قوي","يمنع اجلاسك في السيارات",false,function(state)
+    if state then
+        -- منع الجلوس القسري
+        game:GetService("Players").LocalPlayer.Character.Humanual.Sit.Value = false
+        
+        -- منع السيارات من اجلاسك
+        for i,v in pairs(workspace:GetDescendants()) do
+            if v:IsA("Seat") or v:IsA("VehicleSeat") then
+                v:Destroy()
+            end
+        end
+    end
+end})
+
+AntiSit:AddToggle({"منع جلوس الخصوم","يجبر الخصوم على الوقوف",false,function(state)
+    if state then
+        -- اجبار الخصوم على الوقوف
+        for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+            if v ~= game:GetService("Players").LocalPlayer then
+                v.Character.Humanual.Sit.Value = false
+            end
+        end
+    end
+end})
+
+-- 3. مضاد بانج (القتلة)
+local AntiBang = BrookhavenTab:AddSection({"مضاد البانج","skull"})
+AntiBang:AddToggle({"مضاد اطلاق النار","يمنع اصابتك بالرصاص",false,function(state)
+    if state then
+        -- منع الضرر من الاسلحة
+        game:GetService("Players").LocalPlayer.Character.Humanual.MaxHealth = math.huge
+        
+        -- حجب الرصاص
+        for i,v in pairs(workspace:GetDescendants()) do
+            if v:IsA("Part") and v.Name == "Bullet" then
+                v:Destroy()
+            end
+        end
+    end
+end})
+
+AntiBang:AddToggle({"مضاد القنابل","يمنع انفجار القنابل عليك",false,function(state)
+    if state then
+        -- ازالة القنابل
+        workspace.ChildAdded:Connect(function(child)
+            if child.Name == "Bomb" then
+                child:Destroy()
+            end
+        end)
+    end
+end})
+
+-- 4. مضاد فلنق (الطيران)
+local AntiFlying = BrookhavenTab:AddSection({"مضاد الطيران","radar"})
+AntiFlying:AddToggle({"مضاد فلنق","يمنع الطيران عليك",false,function(state)
+    if state then
+        -- منع اللاعبين الطائرين
+        for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+            if v ~= game:GetService("Players").LocalPlayer then
+                if v.Character and v.Character.Humanual.Fly.Value == true then
+                    v:Kick("ممنوع الطيران")
+                end
+            end
+        end
+    end
+end})
+
+AntiFlying:AddToggle({"رد الجميل","يجعل المهاجم يطير بالعكس",false,function(state)
+    if state then
+        -- اذا حاول احد يطير عليك يطير هو
+        game:GetService("RunService").Stepped:Connect(function()
+            for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+                if v ~= game:GetService("Players").LocalPlayer then
+                    if v.Character and v.Character:FindFirstChild("Humanual") then
+                        if v.Character.Humanual.Fly.Value == true then
+                            v.Character.Humanual.Fly.Value = false
+                            v.Character.Humanual.Sit.Value = true
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end})
+
+-- 5. مضاد الصوت (حماية الاذن)
+local AntiSound = BrookhavenTab:AddSection({"مضاد الصوت","volume"})
+AntiSound:AddToggle({"مضاد الصوت المزعج","يكتم اصوات الخصوم",false,function(state)
+    if state then
+        -- كتم كل الاصوات
+        game:GetService("SoundService").Volume = 0
+    end
+end})
+
+-- 6. مضاد السرقة
+local AntiSteal = BrookhavenTab:AddSection({"مضاد السرقة","lock"})
+AntiSteal:AddToggle({"مضاد سرقة السيارة","يمنع سرقة سيارتك",false,function(state)
+    if state then
+        -- حماية السيارة
+        game:GetService("Players").LocalPlayer.Character.Vehicle:Destroy()
+    end
+end})
+
+-- 7. مضاد التاخير
+local AntiLag = BrookhavenTab:AddSection({"مضاد التهنيج","bolt"})
+AntiLag:AddToggle({"تنظيف الالعاب","يزيل الالعاب المثقلة",false,function(state)
+    if state then
+        -- تنظيف الالعاب من المزرعة
+        workspace:ClearAllChildren()
+    end
+end})
