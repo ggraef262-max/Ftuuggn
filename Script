@@ -7092,147 +7092,407 @@ UniversalTab:AddButton({
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md'),true))()
  end,
 })
+local UniversalTab = Window:MakeTab({"مضادات سكربتات من صنعي V2", "plane"})
 
--- إنشاء تبويب مضادات بروكهافن
-local BrookhavenTab = Window:MakeTab({"مضادات بروكهافن", "sheild"})
+-- متغيرات لتخزين حالة التشغيل لكل حماية
+local antiFlangEnabled = false
+local antiBangEnabled = false
+local antiSitEnabled = false
+local antiJumpEnabled = false
+local antiSpeedEnabled = false
+local antiTPEnabled = false
+local antiKickEnabled = false
 
--- 1. مضاد Banc (الأهم)
-local AntiBan = BrookhavenTab:AddSection({"مضاد Banc القاتل","sheild"})
-AntiBan:AddToggle({"مضاد Banc","يمنع الحظر النهائي",false,function(state)
-    if state then
-        -- كود مضاد Banc الحقيقي
-        local Players = game:GetService("Players")
-        local LocalPlayer = Players.LocalPlayer
+-- جدول لتخزين الاتصالات
+local connections = {}
+
+-- قسم الحمايات الرئيسي
+Section = UniversalTab:AddSection({
+    Name = "مضادات سكربتات من صنعي"
+})
+
+----------------------------------------------------------------
+-- زر مضاد فلنق (Toggle)
+----------------------------------------------------------------
+UniversalTab:AddButton({
+    Name = "🔴 مضاد فلنق",
+    Info = "اضغط للتشغيل/الإيقاف",
+    Callback = function()
+        antiFlangEnabled = not antiFlangEnabled
         
-        -- منع جميع أوامر الحظر
-        LocalPlayer.OnTeleport:Connect(function()
-            wait(9e9)
-        end)
-        
-        -- حماية من الحظر
-        local old
-        old = hookmetamethod(game, "__namecall", function(self, ...)
-            local args = {...}
-            local method = getnamecallmethod()
+        if antiFlangEnabled then
+            -- تشغيل مضاد فلنق
+            local player = game:GetService("Players").LocalPlayer
+            connections.antiFlang = player.CharacterAdded:Connect(function(char)
+                wait(0.5)
+                local humanoid = char:WaitForChild("Humanoid")
+                humanoid:GetPropertyChangedSignal("PlatformStand"):Connect(function()
+                    if humanoid.PlatformStand then
+                        humanoid.PlatformStand = false
+                    end
+                end)
+            end)
             
-            if method == "Kick" or method == "kick" then
-                return "تم الحظر ولكن مضاد Banc منعه"
+            -- تغيير لون الزر للأخضر (دلالة على التشغيل)
+            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0) -- أخضر
+            
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ مضاد فلنق",
+                Text = "تم التشغيل",
+                Duration = 1
+            })
+        else
+            -- إيقاف مضاد فلنق
+            if connections.antiFlang then
+                connections.antiFlang:Disconnect()
+                connections.antiFlang = nil
             end
-            return old(self, ...)
-        end)
-    end
-end})
+            
+            -- تغيير لون الزر للأحمر (دلالة على الإيقاف)
+            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0) -- أحمر
+            
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "🔴 مضاد فلنق",
+                Text = "تم الإيقاف",
+                Duration = 1
+            })
+        end
+    end,
+})
 
--- 2. مضاد جلوس (مهم جداً)
-local AntiSit = BrookhavenTab:AddSection({"مضاد الجلوس","chair"})
-AntiSit:AddToggle({"مضاد جلوس قوي","يمنع اجلاسك في السيارات",false,function(state)
-    if state then
-        -- منع الجلوس القسري
-        game:GetService("Players").LocalPlayer.Character.Humanual.Sit.Value = false
+----------------------------------------------------------------
+-- زر مضاد بانج (Toggle) - مع كود مدمج
+----------------------------------------------------------------
+UniversalTab:AddButton({
+    Name = "🔴 مضاد بانج",
+    Info = "اضغط للتشغيل/الإيقاف",
+    Callback = function()
+        antiBangEnabled = not antiBangEnabled
         
-        -- منع السيارات من اجلاسك
-        for i,v in pairs(workspace:GetDescendants()) do
-            if v:IsA("Seat") or v:IsA("VehicleSeat") then
-                v:Destroy()
-            end
-        end
-    end
-end})
-
-AntiSit:AddToggle({"منع جلوس الخصوم","يجبر الخصوم على الوقوف",false,function(state)
-    if state then
-        -- اجبار الخصوم على الوقوف
-        for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-            if v ~= game:GetService("Players").LocalPlayer then
-                v.Character.Humanual.Sit.Value = false
-            end
-        end
-    end
-end})
-
--- 3. مضاد بانج (القتلة)
-local AntiBang = BrookhavenTab:AddSection({"مضاد البانج","skull"})
-AntiBang:AddToggle({"مضاد اطلاق النار","يمنع اصابتك بالرصاص",false,function(state)
-    if state then
-        -- منع الضرر من الاسلحة
-        game:GetService("Players").LocalPlayer.Character.Humanual.MaxHealth = math.huge
-        
-        -- حجب الرصاص
-        for i,v in pairs(workspace:GetDescendants()) do
-            if v:IsA("Part") and v.Name == "Bullet" then
-                v:Destroy()
-            end
-        end
-    end
-end})
-
-AntiBang:AddToggle({"مضاد القنابل","يمنع انفجار القنابل عليك",false,function(state)
-    if state then
-        -- ازالة القنابل
-        workspace.ChildAdded:Connect(function(child)
-            if child.Name == "Bomb" then
-                child:Destroy()
-            end
-        end)
-    end
-end})
-
--- 4. مضاد فلنق (الطيران)
-local AntiFlying = BrookhavenTab:AddSection({"مضاد الطيران","radar"})
-AntiFlying:AddToggle({"مضاد فلنق","يمنع الطيران عليك",false,function(state)
-    if state then
-        -- منع اللاعبين الطائرين
-        for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-            if v ~= game:GetService("Players").LocalPlayer then
-                if v.Character and v.Character.Humanual.Fly.Value == true then
-                    v:Kick("ممنوع الطيران")
-                end
-            end
-        end
-    end
-end})
-
-AntiFlying:AddToggle({"رد الجميل","يجعل المهاجم يطير بالعكس",false,function(state)
-    if state then
-        -- اذا حاول احد يطير عليك يطير هو
-        game:GetService("RunService").Stepped:Connect(function()
-            for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-                if v ~= game:GetService("Players").LocalPlayer then
-                    if v.Character and v.Character:FindFirstChild("Humanual") then
-                        if v.Character.Humanual.Fly.Value == true then
-                            v.Character.Humanual.Fly.Value = false
-                            v.Character.Humanual.Sit.Value = true
-                        end
+        if antiBangEnabled then
+            -- تشغيل مضاد بانج (كود مدمج)
+            local mt = getrawmetatable(game)
+            local oldNamecall = mt.__namecall
+            setreadonly(mt, false)
+            
+            connections.antiBang = game:GetService("RunService").Stepped:Connect(function()
+                local player = game:GetService("Players").LocalPlayer
+                if player and player.Character then
+                    local humanoid = player.Character:FindFirstChild("Humanoid")
+                    if humanoid and humanoid.Health <= 0 then
+                        humanoid.Health = 100
                     end
                 end
+            end)
+            
+            mt.__namecall = newcclosure(function(self, ...)
+                local method = getnamecallmethod()
+                if method == "TakeDamage" or method == "Damage" then
+                    return nil
+                end
+                return oldNamecall(self, ...)
+            end)
+            
+            setreadonly(mt, true)
+            
+            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ مضاد بانج",
+                Text = "تم التشغيل",
+                Duration = 1
+            })
+        else
+            -- إيقاف مضاد بانج
+            if connections.antiBang then
+                connections.antiBang:Disconnect()
+                connections.antiBang = nil
             end
-        end)
-    end
-end})
+            
+            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "🔴 مضاد بانج",
+                Text = "تم الإيقاف",
+                Duration = 1
+            })
+        end
+    end,
+})
 
--- 5. مضاد الصوت (حماية الاذن)
-local AntiSound = BrookhavenTab:AddSection({"مضاد الصوت","volume"})
-AntiSound:AddToggle({"مضاد الصوت المزعج","يكتم اصوات الخصوم",false,function(state)
-    if state then
-        -- كتم كل الاصوات
-        game:GetService("SoundService").Volume = 0
-    end
-end})
+----------------------------------------------------------------
+-- زر مضاد جلوس (Toggle)
+----------------------------------------------------------------
+UniversalTab:AddButton({
+    Name = "🔴 مضاد جلوس",
+    Info = "اضغط للتشغيل/الإيقاف",
+    Callback = function()
+        antiSitEnabled = not antiSitEnabled
+        
+        if antiSitEnabled then
+            -- تشغيل مضاد جلوس
+            local player = game:GetService("Players").LocalPlayer
+            connections.antiSit = game:GetService("RunService").Stepped:Connect(function()
+                if player and player.Character then
+                    local humanoid = player.Character:FindFirstChild("Humanoid")
+                    if humanoid and humanoid.Sit then
+                        humanoid.Sit = false
+                    end
+                end
+            end)
+            
+            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ مضاد جلوس",
+                Text = "تم التشغيل",
+                Duration = 1
+            })
+        else
+            -- إيقاف مضاد جلوس
+            if connections.antiSit then
+                connections.antiSit:Disconnect()
+                connections.antiSit = nil
+            end
+            
+            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "🔴 مضاد جلوس",
+                Text = "تم الإيقاف",
+                Duration = 1
+            })
+        end
+    end,
+})
 
--- 6. مضاد السرقة
-local AntiSteal = BrookhavenTab:AddSection({"مضاد السرقة","lock"})
-AntiSteal:AddToggle({"مضاد سرقة السيارة","يمنع سرقة سيارتك",false,function(state)
-    if state then
-        -- حماية السيارة
-        game:GetService("Players").LocalPlayer.Character.Vehicle:Destroy()
-    end
-end})
+----------------------------------------------------------------
+-- زر مضاد جامبر (Toggle)
+----------------------------------------------------------------
+UniversalTab:AddButton({
+    Name = "🔴 مضاد جامبر",
+    Info = "حماية من سكربتات القفز",
+    Callback = function()
+        antiJumpEnabled = not antiJumpEnabled
+        
+        if antiJumpEnabled then
+            -- تشغيل مضاد جامبر
+            local player = game:GetService("Players").LocalPlayer
+            connections.antiJump = player.CharacterAdded:Connect(function(char)
+                local humanoid = char:WaitForChild("Humanoid")
+                humanoid.JumpPower = 50
+                humanoid.JumpHeight = 7.2
+                
+                humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
+                    if humanoid.JumpPower > 50 then
+                        humanoid.JumpPower = 50
+                    end
+                end)
+            end)
+            
+            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ مضاد جامبر",
+                Text = "تم التشغيل",
+                Duration = 1
+            })
+        else
+            if connections.antiJump then
+                connections.antiJump:Disconnect()
+                connections.antiJump = nil
+            end
+            
+            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "🔴 مضاد جامبر",
+                Text = "تم الإيقاف",
+                Duration = 1
+            })
+        end
+    end,
+})
 
--- 7. مضاد التاخير
-local AntiLag = BrookhavenTab:AddSection({"مضاد التهنيج","bolt"})
-AntiLag:AddToggle({"تنظيف الالعاب","يزيل الالعاب المثقلة",false,function(state)
-    if state then
-        -- تنظيف الالعاب من المزرعة
-        workspace:ClearAllChildren()
-    end
-end})
+----------------------------------------------------------------
+-- زر مضاد سبيد (Toggle)
+----------------------------------------------------------------
+UniversalTab:AddButton({
+    Name = "🔴 مضاد سبيد",
+    Info = "حماية من سكربتات السرعة",
+    Callback = function()
+        antiSpeedEnabled = not antiSpeedEnabled
+        
+        if antiSpeedEnabled then
+            -- تشغيل مضاد سبيد
+            local player = game:GetService("Players").LocalPlayer
+            connections.antiSpeed = game:GetService("RunService").Stepped:Connect(function()
+                if player and player.Character then
+                    local humanoid = player.Character:FindFirstChild("Humanoid")
+                    if humanoid and humanoid.WalkSpeed > 16 then
+                        humanoid.WalkSpeed = 16
+                    end
+                end
+            end)
+            
+            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ مضاد سبيد",
+                Text = "تم التشغيل",
+                Duration = 1
+            })
+        else
+            if connections.antiSpeed then
+                connections.antiSpeed:Disconnect()
+                connections.antiSpeed = nil
+            end
+            
+            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "🔴 مضاد سبيد",
+                Text = "تم الإيقاف",
+                Duration = 1
+            })
+        end
+    end,
+})
+
+----------------------------------------------------------------
+-- زر مضاد تيليبورت (Toggle)
+----------------------------------------------------------------
+UniversalTab:AddButton({
+    Name = "🔴 مضاد تيليبورت",
+    Info = "حماية من سكربتات النقل",
+    Callback = function()
+        antiTPEnabled = not antiTPEnabled
+        
+        if antiTPEnabled then
+            -- تشغيل مضاد تيليبورت
+            local player = game:GetService("Players").LocalPlayer
+            connections.antiTP = player.CharacterAdded:Connect(function(char)
+                local rootPart = char:WaitForChild("HumanoidRootPart")
+                local lastPosition = rootPart.Position
+                
+                game:GetService("RunService").Heartbeat:Connect(function()
+                    if rootPart and (rootPart.Position - lastPosition).Magnitude > 100 then
+                        rootPart.Position = lastPosition
+                    end
+                    lastPosition = rootPart.Position
+                end)
+            end)
+            
+            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ مضاد تيليبورت",
+                Text = "تم التشغيل",
+                Duration = 1
+            })
+        else
+            if connections.antiTP then
+                connections.antiTP:Disconnect()
+                connections.antiTP = nil
+            end
+            
+            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "🔴 مضاد تيليبورت",
+                Text = "تم الإيقاف",
+                Duration = 1
+            })
+        end
+    end,
+})
+
+----------------------------------------------------------------
+-- زر مضاد كيك (Toggle)
+----------------------------------------------------------------
+UniversalTab:AddButton({
+    Name = "🔴 مضاد كيك",
+    Info = "حماية من الطرد",
+    Callback = function()
+        antiKickEnabled = not antiKickEnabled
+        
+        if antiKickEnabled then
+            -- تشغيل مضاد كيك
+            local mt = getrawmetatable(game)
+            local oldNamecall = mt.__namecall
+            setreadonly(mt, false)
+            
+            mt.__namecall = newcclosure(function(self, ...)
+                local method = getnamecallmethod()
+                if method == "Kick" then
+                    return nil
+                end
+                return oldNamecall(self, ...)
+            end)
+            
+            setreadonly(mt, true)
+            
+            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "✅ مضاد كيك",
+                Text = "تم التشغيل",
+                Duration = 1
+            })
+        else
+            -- إيقاف مضاد كيك (إعادة الميتاتيبل للطبيعي صعب، لكن بنوقف الاتصالات)
+            if connections.antiKick then
+                connections.antiKick:Disconnect()
+                connections.antiKick = nil
+            end
+            
+            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "🔴 مضاد كيك",
+                Text = "تم الإيقاف",
+                Duration = 1
+            })
+        end
+    end,
+})
+
+----------------------------------------------------------------
+-- زر إيقاف الكل
+----------------------------------------------------------------
+Section2 = UniversalTab:AddSection({
+    Name = "التحكم العام"
+})
+
+UniversalTab:AddButton({
+    Name = "⏹️ إيقاف جميع الحمايات",
+    Info = "إيقاف كل الحمايات النشطة",
+    Callback = function()
+        -- إيقاف الكل
+        antiFlangEnabled = false
+        antiBangEnabled = false
+        antiSitEnabled = false
+        antiJumpEnabled = false
+        antiSpeedEnabled = false
+        antiTPEnabled = false
+        antiKickEnabled = false
+        
+        -- قطع جميع الاتصالات
+        for name, connection in pairs(connections) do
+            pcall(function() connection:Disconnect() end)
+        end
+        connections = {}
+        
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "⏹️ تم",
+            Text = "إيقاف جميع الحمايات",
+            Duration = 2
+        })
+    end,
+})
+
+----------------------------------------------------------------
+-- زر قيد التطوير
+----------------------------------------------------------------
+Section3 = UniversalTab:AddSection({
+    Name = "قيد التطوير"
+})
+
+UniversalTab:AddButton({
+    Name = "🚧 قيد تطوير",
+    Callback = function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "🚧 قيد التطوير",
+            Text = "هذه الميزة قيد التطوير",
+            Duration = 2
+        })
+    end,
+})
