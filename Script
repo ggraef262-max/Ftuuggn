@@ -69,7 +69,7 @@ local v7 = CreateObject("ImageLabel", {
     Name = "UserImage",
     Parent = v6,
     BackgroundTransparency = 1,
-    Image = "rbxassetid://113646902595327",
+    Image = "rbxassetid://126865658241127",
     Position = UDim2.new(0, 15, 0, 10),
     Size = UDim2.new(0, 55, 0, 55)
 });
