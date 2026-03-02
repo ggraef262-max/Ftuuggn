@@ -7496,3 +7496,101 @@ UniversalTab:AddButton({
         })
     end,
 })
+
+-- قسم تحسين FPS
+local FpsSection = FpsTab:AddSection({
+    Name = "تحسين FPS"
+})
+
+-- شريط تمرير للتحكم بـ FPS
+FpsSection:AddSlider({
+    Name = "الحد الأقصى لـ FPS",
+    Min = 30,
+    Max = 240,
+    Default = 60,
+    Callback = function(Value)
+        setfpscap(Value) -- لتحديد FPS
+        print("تم تعيين FPS إلى: " .. Value)
+    end
+})
+
+-- زر لتحسين الأداء
+FpsSection:AddButton({
+    Name = "تحسين الأداء القصوى",
+    Callback = function()
+        -- كود تحسين الأداء
+        settings().Rendering.QualityLevel = 1 -- أقل جودة رسومية
+        lighting.technology = "Voxel" -- تقنية الإضاءة
+        workspace.DescendantAdded:Connect(function() end) -- تعطيل المؤثرات
+        print("تم تحسين الأداء إلى الحد الأقصى")
+    end
+})
+
+-- زر لإلغاء تجميد المشاهد
+FpsSection:AddButton({
+    Name = "إلغاء تجميد الرسوميات",
+    Callback = function()
+        sethiddenproperty(workspace, "StreamingEnabled", false)
+        print("تم إلغاء تجميد الرسوميات")
+    end
+})
+
+-- قسم اللاق الحقيقي
+local LagSection = FpsTab:AddSection({
+    Name = "اللاق الحقيقي"
+})
+
+-- زر لتوليد لاق اصطناعي
+LagSection:AddButton({
+    Name = "توليد لاق (لاج)",
+    Callback = function()
+        -- توليد لاق مؤقت
+        for i = 1, 1000 do
+            local part = Instance.new("Part")
+            part.Parent = workspace
+            task.wait()
+        end
+        print("تم توليد لاق")
+    end
+})
+
+-- زر لقياس اللاق
+LagSection:AddButton({
+    Name = "قياس نسبة اللاق",
+    Callback = function()
+        local startTime = tick()
+        wait(0.1)
+        local endTime = tick()
+        local lag = (endTime - startTime) * 1000 - 100
+        print("نسبة اللاق الحالية: " .. lag .. "ms")
+    end
+})
+
+-- شريط تمرير للتحكم في اللاق
+LagSection:AddSlider({
+    Name = "التحكم في شدة اللاق",
+    Min = 0,
+    Max = 100,
+    Default = 0,
+    Callback = function(Value)
+        if Value > 0 then
+            -- إضافة لاق بناءً على القيمة
+            for i = 1, Value * 10 do
+                local part = Instance.new("Part")
+                part.Parent = workspace
+            end
+        end
+        print("شدة اللاق: " .. Value .. "%")
+    end
+})
+
+-- زر إعادة تعيين
+LagSection:AddButton({
+    Name = "إعادة تعيين الإعدادات",
+    Callback = function()
+        -- إعادة تعيين الإعدادات
+        settings().Rendering.QualityLevel = 3 -- جودة متوسطة
+        lighting.technology = "Future"
+        print("تم إعادة تعيين الإعدادات")
+    end
+})
