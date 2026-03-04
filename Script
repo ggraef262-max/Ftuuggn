@@ -7710,3 +7710,181 @@ TrollTab:AddButton({
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("Wear", 9e9):InvokeServer(unpack(args))
     end
 })
+
+local UniversalTab = Window:MakeTab({"مضادات", "shield"})
+
+-- Seção للمضادات
+Section = UniversalTab:AddSection({
+    Name = "مضادات عامة"
+})
+
+-- Anti Bang (مضاد البانج)
+UniversalTab:AddToggle({
+    Name = "مضاد البانج",
+    Description = "يحميك من البانج والأسلحة النارية",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            -- تفعيل مضاد البانج
+            _G.AntiBang = true
+            
+            -- حماية من الرصاص
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiBang and game.Players.LocalPlayer.Character then
+                    -- إزالة الرصاص القريب
+                    for i, v in pairs(workspace:GetDescendants()) do
+                        if v:IsA("Part") and v.Name:lower():find("bullet") or v.Name:lower():find("shot") then
+                            v:Destroy()
+                        end
+                    end
+                    
+                    -- منع الضرر من الأسلحة
+                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid:SetAttribute("NoDamage", true)
+                    end
+                end
+            end)
+            
+            -- حماية من الصوت العالي
+            local UserInputService = game:GetService("UserInputService")
+            UserInputService.TouchEnabled = false -- منع الاهتزاز
+            
+            print("Anti Bang: تم التفعيل")
+        else
+            -- إيقاف مضاد البانج
+            _G.AntiBang = false
+            print("Anti Bang: تم الإيقاف")
+        end
+    end
+})
+
+-- Anti Flying (مضاد الطيران)
+UniversalTab:AddToggle({
+    Name = "مضاد الطيران",
+    Description = "يرجعك للأرض إذا أحد طيرك",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            _G.AntiFly = true
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiFly and game.Players.LocalPlayer.Character then
+                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+                    if humanoid and humanoid:GetState() == Enum.HumanoidStateType.Freefall then
+                        humanoid:ChangeState(Enum.HumanoidStateType.Landed)
+                    end
+                end
+            end)
+        else
+            _G.AntiFly = false
+            print("Anti Fly: تم الإيقاف")
+        end
+    end
+})
+
+-- Anti Sit (مضاد الجلوس)
+UniversalTab:AddToggle({
+    Name = "مضاد الجلوس",
+    Description = "يمنع أحد يجلسك قسرياً",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            _G.AntiSit = true
+            game.Players.LocalPlayer.Character.Humanoid.Sitting:Connect(function()
+                if _G.AntiSit then
+                    game.Players.LocalPlayer.Character.Humanoid.Sit = false
+                end
+            end)
+        else
+            _G.AntiSit = false
+            print("Anti Sit: تم الإيقاف")
+        end
+    end
+})
+
+-- Seção للمضادات الإضافية
+Section2 = UniversalTab:AddSection({
+    Name = "مضادات إضافية"
+})
+
+-- Anti Void (مضاد الفراغ)
+UniversalTab:AddToggle({
+    Name = "مضاد الفراغ",
+    Description = "يمنع سقوطك في الفراغ",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/IIIPEHIII/AntiVoid/main/AntiVoid.lua"))()
+            _G.AntiVoid = true
+        else
+            _G.AntiVoid = false
+            print("Anti Void: تم الإيقاف")
+        end
+    end
+})
+
+-- Anti Kick (مضاد الطرد)
+UniversalTab:AddToggle({
+    Name = "مضاد الطرد",
+    Description = "يمنع طردك من السيرفر",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/tonyblackwell/antic/main/antikick.lua"))()
+            _G.AntiKick = true
+        else
+            _G.AntiKick = false
+            print("Anti Kick: تم الإيقاف")
+        end
+    end
+})
+
+-- Anti Crash (مضاد التجميد)
+UniversalTab:AddToggle({
+    Name = "مضاد التجميد",
+    Description = "يحميك من أدوات التجميد والكراش",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/PenguinManiack/AntiLag/main/anticrash.lua"))()
+            _G.AntiCrash = true
+        else
+            _G.AntiCrash = false
+            print("Anti Crash: تم الإيقاف")
+        end
+    end
+})
+
+-- Anti Drown (مضاد الغرق)
+UniversalTab:AddToggle({
+    Name = "مضاد الغرق",
+    Description = "يمنع غرقك في الماء",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            game.Players.LocalPlayer.Character.Humanoid.BreathDamage:Disconnect()
+            _G.AntiDrown = true
+        else
+            _G.AntiDrown = false
+            print("Anti Drown: تم الإيقاف")
+        end
+    end
+})
+
+-- Anti Fall Damage (مضاد ضرر السقوط)
+UniversalTab:AddToggle({
+    Name = "مضاد ضرر السقوط",
+    Description = "يمنع الضرر عند السقوط",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            game.Players.LocalPlayer.Character.Humanoid.FallDamage:Connect(function()
+                return false
+            end)
+            _G.AntiFall = true
+        else
+            _G.AntiFall = false
+            print("Anti Fall: تم الإيقاف")
+        end
+    end
+})
