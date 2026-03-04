@@ -7094,7 +7094,7 @@ UniversalTab:AddButton({
 })
 
 
-local SkinTab = UniversalTab:AddSection({ "سكنات" })
+local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", " })
 TrollTab:AddSection({ "سكنات" })
 
 TrollTab:AddButton({
