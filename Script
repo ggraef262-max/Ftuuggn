@@ -7594,3 +7594,115 @@ LagSection:AddButton({
         print("تم إعادة تعيين الإعدادات")
     end
 })
+
+-- إنشاء تبويب جديد للسكنات
+local SkinTab = TrollTab:AddSection({ "سكنات" })
+
+-- إضافة زر رأس روبوت
+SkinTab:AddButton({
+    Name = "راس روبوت",
+    Description = "سكن راس روبوت",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 3210773801,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Items.Equip:InvokeServer(unpack(args))
+    end
+})
+
+-- إضافة سكنات أخرى
+-- سكن رأس الديناصور
+SkinTab:AddButton({
+    Name = "راس ديناصور",
+    Description = "سكن راس ديناصور",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 3210773802, -- مثال ID مختلف
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Items.Equip:InvokeServer(unpack(args))
+    end
+})
+
+-- سكن راس تنين
+SkinTab:AddButton({
+    Name = "راس تنين",
+    Description = "سكن راس تنين",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 3210773803, -- مثال ID مختلف
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Items.Equip:InvokeServer(unpack(args))
+    end
+})
+
+-- سكن راس مهرج
+SkinTab:AddButton({
+    Name = "راس مهرج",
+    Description = "سكن راس مهرج",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 3210773804, -- مثال ID مختلف
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Items.Equip:InvokeServer(unpack(args))
+    end
+})
+
+-- سكن راس قرع
+SkinTab:AddButton({
+    Name = "راس قرع",
+    Description = "سكن راس قرع",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 3210773805, -- مثال ID مختلف
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Items.Equip:InvokeServer(unpack(args))
+    end
+})
+
+-- سكن راس فضائي
+SkinTab:AddButton({
+    Name = "راس فضائي",
+    Description = "سكن راس فضائي",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 3210773806, -- مثال ID مختلف
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Items.Equip:InvokeServer(unpack(args))
+    end
+})
