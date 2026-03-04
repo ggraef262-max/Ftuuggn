@@ -7093,10 +7093,10 @@ UniversalTab:AddButton({
     end,
 })
 
-local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
+local TrollTab = Window:MakeTab({ Title = "سكنات واجسام وشعور", Icon = "rbxassetid://13364900349" })
 
 
-TrollTab:AddSection({ "سكنات" })
+TrollTab:AddSection({ "كل شي" })
 TrollTab:AddButton({
     Name = "راس روبوت",
     Description = "روبوت",
