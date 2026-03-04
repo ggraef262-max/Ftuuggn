@@ -7087,12 +7087,14 @@ Section = UniversalTab:AddSection({
 })
 
 UniversalTab:AddButton({
-  Name = "تحريك دهني",
-  Callback = function()
-loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md'),true))()
- end,
+    Name = "تحريك دهني",
+    Callback = function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md'), true))()
+    end,
 })
-local SkinTab = TrollTab:AddSection({ "سكنات" })
+
+-- تبويب السكنات
+local SkinTab = UniversalTab:AddSection({ "سكنات" })
 
 SkinTab:AddButton({
     Name = "راس روبوت",
