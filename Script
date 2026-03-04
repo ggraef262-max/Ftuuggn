@@ -7092,5 +7092,21 @@ UniversalTab:AddButton({
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md'),true))()
  end,
 })
-
 local SkinTab = TrollTab:AddSection({ "سكنات" })
+
+SkinTab:AddButton({
+    Name = "راس روبوت",
+    Description = "روبوت",
+    Callback = function()
+        local args = {
+            [1] = {
+                [1] = 3210773801,
+                [2] = 0,
+                [3] = 0,
+                [4] = 0,
+                [5] = 0,
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Items.Equip:InvokeServer(unpack(args))
+    end
+})
