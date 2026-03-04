@@ -7093,10 +7093,11 @@ UniversalTab:AddButton({
     end,
 })
 
--- تبويب السكنات
-local SkinTab = UniversalTab:AddSection({ "سكنات" })
 
-SkinTab:AddButton({
+local SkinTab = UniversalTab:AddSection({ "سكنات" })
+TrollTab:AddSection({ "سكنات" })
+
+TrollTab:AddButton({
     Name = "راس روبوت",
     Description = "روبوت",
     Callback = function()
