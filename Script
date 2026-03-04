@@ -7908,3 +7908,18 @@ UniversalTab:AddToggle({
         end
     end
 })
+
+local UniversalTab = Window:MakeTab({"سكربتات مضادات", "plane"})
+
+-- Seção para Scripts Universais
+Section = UniversalTab:AddSection({
+    Name = "سكربتات مضادات قويه"
+})
+
+UniversalTab:AddButton({
+  Name = "سكربـت الـرقـصـات",
+  Callback = function()
+    -- line: [0, 0] id: 126
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Baseplate-Fe-All-Emote-7386"))()
+  end,
+})
