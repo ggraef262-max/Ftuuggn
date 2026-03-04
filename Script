@@ -7594,7 +7594,6 @@ LagSection:AddButton({
         print("تم إعادة تعيين الإعدادات")
     end
 })
-
 -- إنشاء تبويب جديد للسكنات
 local SkinTab = TrollTab:AddSection({ "سكنات" })
 
