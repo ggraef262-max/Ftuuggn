@@ -8107,31 +8107,41 @@ UniversalTab:AddButton({
   end,
 })
 
-local Main = MakeTab({Name = "الـكـشـف"})
+-- إنشاء التاب (التبويب) داخل الواجهة
+local MainTab = Library:MakeTab({
+    Name = "الـكـشـف",
+    Icon = "eye" -- اختياري: أيقونة للتاب
+})
+
+-- تحميل ESP (من الرابط المعتاد)
 local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
 ESP:Toggle(true)
 ESP.Players = false
 ESP.Names = false
 
-local Toggle = AddToggle(Main, {
-  Name = "تـفـعـيـل الـكـشـف",
-  Default = false,
-  Callback = function(Value)
-    ESP.Players = Value
-  end
+-- إضافة زر تفعيل الكشف داخل التاب
+MainTab:AddToggle({
+    Name = "تـفـعـيـل الـكـشـف",
+    Default = false,
+    Callback = function(Value)
+        ESP.Players = Value
+    end
 })
 
-local Toggle = AddToggle(Main, {
-  Name = "كـشـف اسـامـي الـلاعـبـيـن",
-  Default = false,
-  Callback = function(Value)
-    ESP.Names = Value
-  end
+-- إضافة زر تفعيل الأسماء
+MainTab:AddToggle({
+    Name = "كـشـف اسـامـي الـلاعـبـيـن",
+    Default = false,
+    Callback = function(Value)
+        ESP.Names = Value
+    end
 })
-AddColorPicker(Main, {
-  Name = "لـون الـكـشـف",
-  Default = Color3.fromRGB(255, 255, 0),
-  Callback = function(Value)
-    ESP.Color = Value
-  end
+
+-- إضافة منتقي الألوان
+MainTab:AddColorPicker({
+    Name = "لـون الـكـشـف",
+    Default = Color3.fromRGB(255, 255, 0),
+    Callback = function(Value)
+        ESP.Color = Value
+    end
 })
