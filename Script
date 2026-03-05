@@ -7888,6 +7888,7 @@ TrollTab:AddButton({
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("Wear", 9e9):InvokeServer(unpack(args))
     end
 })
+
 local Main = MakeTab({Name = "بـانـق"})
 
 
