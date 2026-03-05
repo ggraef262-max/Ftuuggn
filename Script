@@ -3865,7 +3865,7 @@ task.wait(0.25)
 })
 
 Troll:AddButton({
-    Name = "سحب الكل كنبة [ممكن مايصير]",
+    Name = "سحب الكل بي الكنبه",
     Callback = function()
         local args = {
     [1] = "ClearAllTools"
@@ -5124,6 +5124,14 @@ local Tab = Window:MakeTab({"الاسماء", "Paper"})
 
 local isNameActive = false
 local isBioActive = false
+local toggleActive = false
+local spamConnection = nil
+local names = {"", "", ""}
+local execSpeed = 1
+local currentNameIndex = 1
+local nameColorConnection = nil
+local bioColorConnection = nil
+local hue = 0
 
 local SectionRGBName = Tab:AddSection({
     Name = "اسم RGB"
@@ -5131,14 +5139,61 @@ local SectionRGBName = Tab:AddSection({
 
 Tab:AddToggle({
     Name = "تلوين الاسم",
-    Description = "تلوين اسمك ",
+    Description = "تلوين اسمك في بروكهافن",
     Default = false,
     Callback = function(value)
         isNameActive = value
-        print(value and "RGB Name ativado" or "RGB Name desativado")
+        print(value and "تم تفعيل تلوين الاسم" or "تم إيقاف تلوين الاسم")
+        
+        if value then
+            -- تشغيل تلوين الاسم
+            if nameColorConnection then
+                nameColorConnection:Disconnect()
+            end
+            
+            nameColorConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if isNameActive then
+                    hue = (hue + 0.01) % 1
+                    local color = Color3.fromHSV(hue, 1, 1)
+                    
+                    -- تغيير لون الاسم في بروكهافن
+                    local player = game:GetService("Players").LocalPlayer
+                    
+                    -- محاولة تغيير لون اسم اللاعب
+                    pcall(function()
+                        -- للشات
+                        game:GetService("Chat"):SetPlayerDisplayNameColor(player, color)
+                        
+                        -- لاسم فوق الرأس (بروكهافن)
+                        local character = player.Character
+                        if character then
+                            local head = character:FindFirstChild("Head")
+                            if head then
+                                -- البحث عن اسم اللاعب فوق الرأس
+                                local nameTag = head:FindFirstChild("NameTag") or 
+                                               head:FindFirstChild("DisplayNameTag") or
+                                               head:FindFirstChild("BillboardGui")
+                                if nameTag then
+                                    local textLabel = nameTag:FindFirstChild("TextLabel") or 
+                                                     nameTag:FindFirstChild("Name")
+                                    if textLabel then
+                                        textLabel.TextColor3 = color
+                                    end
+                                end
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            -- إيقاف تلوين الاسم
+            if nameColorConnection then
+                nameColorConnection:Disconnect()
+                nameColorConnection = nil
+            end
+        end
     end
 })
-
 
 local SectionRGBBio = Tab:AddSection({
     Name = "RGB بايو"
@@ -5146,32 +5201,68 @@ local SectionRGBBio = Tab:AddSection({
 
 Tab:AddToggle({
     Name = "بايو ملون",
-    Description = "تلوين البايو",
+    Description = "تلوين البايو في بروكهافن",
     Default = false,
     Callback = function(value)
         isBioActive = value
-        print(value and "RGB BIO ativado" or "RGB BIO desativado")
+        print(value and "تم تفعيل تلوين البايو" or "تم إيقاف تلوين البايو")
+        
+        if value then
+            -- تشغيل تلوين البايو
+            if bioColorConnection then
+                bioColorConnection:Disconnect()
+            end
+            
+            bioColorConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if isBioActive then
+                    hue = (hue + 0.01) % 1
+                    local color = Color3.fromHSV(hue, 1, 1)
+                    
+                    -- تغيير لون البايو في بروكهافن
+                    pcall(function()
+                        -- البحث عن البايو وتلوينه
+                        local playerGui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+                        if playerGui then
+                            -- البحث عن واجهة البايو في بروكهافن
+                            local bioFrame = playerGui:FindFirstChild("BioFrame") or
+                                            playerGui:FindFirstChild("ProfileGui") or
+                                            playerGui:FindFirstChild("NameDisplay")
+                            
+                            if bioFrame then
+                                local bioText = bioFrame:FindFirstChild("BioText") or
+                                               bioFrame:FindFirstChild("Description") or
+                                               bioFrame:FindFirstChild("TextLabel")
+                                if bioText then
+                                    bioText.TextColor3 = color
+                                end
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            -- إيقاف تلوين البايو
+            if bioColorConnection then
+                bioColorConnection:Disconnect()
+                bioColorConnection = nil
+            end
+        end
     end
 })
 
 local SectionSpam = Tab:AddSection({
-    Name = "(new)سبام اسماء"
+    Name = "(new) سبام اسماء"
 })
-
-
--- متغيرات
-local names = {"", "", ""}
-local execSpeed = 1
-local toggleActive = false
 
 -- إنشاء TextBox للأسماء الثلاثة
 for i = 1, 3 do
-Tab:AddTextBox({
+    Tab:AddTextBox({
         Name = "أدخل الاسم " .. i,
         Default = "",
         TextDisappear = false,
         Callback = function(value)
             names[i] = value
+            print("تم حفظ الاسم " .. i .. ": " .. value)
         end
     })
 end
@@ -5182,14 +5273,101 @@ Tab:AddSlider({
     Min = 1,
     Max = 3,
     Default = 1,
-    Increment = 1,
+    Increment = 0.5,
     ValueName = "x",
     Callback = function(value)
         execSpeed = value
+        print("تم تغيير السرعة إلى: " .. value)
     end
 })
 
--- Toggle للتشغيل مع الحماية
+-- Toggle لتشغيل وإيقاف السبام
+Tab:AddToggle({
+    Name = "تشغيل سبام الأسماء",
+    Description = "تبديل الأسماء تلقائياً في بروكهافن",
+    Default = false,
+    Callback = function(value)
+        toggleActive = value
+        
+        if toggleActive then
+            -- بدء السبام
+            if spamConnection then
+                spamConnection:Disconnect()
+            end
+            
+            spamConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if toggleActive then
+                    -- تصفية الأسماء الفارغة
+                    local validNames = {}
+                    for _, name in ipairs(names) do
+                        if name and name ~= "" then
+                            table.insert(validNames, name)
+                        end
+                    end
+                    
+                    if #validNames > 0 then
+                        -- تغيير الاسم في بروكهافن
+                        local nameToSet = validNames[currentNameIndex]
+                        print("تغيير الاسم إلى: " .. nameToSet)
+                        
+                        -- محاولة تغيير الاسم بعدة طرق
+                        pcall(function()
+                            local player = game:GetService("Players").LocalPlayer
+                            
+                            -- الطريقة 1: تغيير DisplayName
+                            player.DisplayName = nameToSet
+                            
+                            -- الطريقة 2: تحديث الاسم في الشخصية
+                            local character = player.Character
+                            if character then
+                                -- تحديث اسم الشخصية
+                                character.Name = nameToSet
+                                
+                                -- تحديث الاسم في واجهة المستخدم
+                                local humanoid = character:FindFirstChild("Humanoid")
+                                if humanoid then
+                                    humanoid.DisplayName = nameToSet
+                                end
+                            end
+                            
+                            -- الطريقة 3: تغيير اسم اللاعب (إذا مسموح)
+                            -- player.Name = nameToSet -- بعض الألعاب تمنع هذا
+                        end)
+                        
+                        -- التبديل إلى الاسم التالي
+                        currentNameIndex = currentNameIndex + 1
+                        if currentNameIndex > #validNames then
+                            currentNameIndex = 1
+                        end
+                        
+                        -- التحكم في السرعة
+                        wait(0.5 / execSpeed)
+                    end
+                end
+            end)
+            
+            print("تم بدء سبام الأسماء")
+        else
+            -- إيقاف السبام
+            if spamConnection then
+                spamConnection:Disconnect()
+                spamConnection = nil
+            end
+            print("تم إيقاف سبام الأسماء")
+        end
+    end
+})
+
+-- زر لعرض الأسماء المحفوظة
+Tab:AddButton({
+    Name = "عرض الأسماء المحفوظة",
+    Callback = function()
+        print("=== الأسماء المحفوظة ===")
+        for i, name in ipairs(names) do
+            print("الاسم " .. i .. ": " .. (name ~= "" and name or "فارغ"))
+        end
+    end
+})-- Toggle للتشغيل مع الحماية
 Tab:AddToggle({
     Name = "تشغيل السبام",
     Default = false,
@@ -5642,7 +5820,7 @@ Tab:AddSection({"تشغيل الصوت للكل"})
 
 -- Lista de áudios
 local audios = {
-    {Name = "ياميتي كوداساي", ID = 108494476595033},
+    {Name = "يابكايه", ID = 98640789490482},
     {Name = "صراخ", ID = 5710016194},
     {Name = "مخيف", ID = 85435253347146},
     {Name = "صوت عالي", ID = 6855150757},
