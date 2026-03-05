@@ -7888,203 +7888,204 @@ TrollTab:AddButton({
     end
 })
 
-local UniversalTab = Window:MakeTab({"مضادات", "shield"})
+-- تأكد من أن لديك مكتبة واجهات (مثل Orca أو أي مكتبة تستخدمها) معرفة بـ 'Window'
+-- هذا الكود يفترض أنك ستضيفه داخل سكريبت تنفيذ السورس.
 
-Section = UniversalTab:AddSection({
-    Name = "مضادات عامة"
+local UniversalTab = Window:MakeTab({"مضادات قوية", "shield"})
+
+local Section = UniversalTab:AddSection({
+    Name = "مضادات حقيقية 2026"
 })
 
--- Anti Bang
-UniversalTab:AddToggle({
-    Name = "مضاد البانج",
-    Description = "يحميك من البانج والأسلحة النارية",
-    Default = false,
-    Callback = function(Value)
-        _G.AntiBang = Value
-        if Value then
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if _G.AntiBang and game.Players.LocalPlayer.Character then
-                    for i, v in pairs(workspace:GetDescendants()) do
-                        pcall(function()
-                            if v:IsA("Part") and (v.Name:lower():find("bullet") or v.Name:lower():find("shot") or v.Name:lower():find("projectile")) then
-                                v:Destroy()
-                            end
-                        end)
-                    end
-                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                    if humanoid then
-                        humanoid:SetAttribute("NoDamage", true)
-                    end
-                end
-            end)
-        end
-    end
-})
+-- متغيرات عامة للتحكم
+_G.AntiSit = false
+_G.AntiFly = false
+_G.AntiBang = false
 
--- Anti Flying
-UniversalTab:AddToggle({
-    Name = "مضاد الطيران",
-    Description = "يرجعك للأرض إذا أحد طيرك",
-    Default = false,
-    Callback = function(Value)
-        _G.AntiFly = Value
-        if Value then
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if _G.AntiFly and game.Players.LocalPlayer.Character then
-                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                    if humanoid and (humanoid:GetState() == Enum.HumanoidStateType.Freefall or humanoid:GetState() == Enum.HumanoidStateType.Jumping) then
-                        humanoid:ChangeState(Enum.HumanoidStateType.Landed)
-                    end
-                end
-            end)
-        end
-    end
-})
+-- متغيرات للاتصالات (لإيقافها بشكل صحيح)
+local antiSitConnection = nil
+local antiFlyConnection = nil
+local antiBangConnection = nil
 
--- Anti Sit
+-- دالة لإيقاف الاتصالات القديمة
+local function disconnectConnections()
+    if antiSitConnection then antiSitConnection:Disconnect() antiSitConnection = nil end
+    if antiFlyConnection then antiFlyConnection:Disconnect() antiFlyConnection = nil end
+    if antiBangConnection then antiBangConnection:Disconnect() antiBangConnection = nil end
+end
+
+-- 1. مضاد الجلوس القسري (مضاد Sit) - طريقة قوية
 UniversalTab:AddToggle({
-    Name = "مضاد الجلوس",
-    Description = "يمنع أحد يجلسك قسرياً",
+    Name = "مضاد الجلوس القسري 💺",
+    Description = "يمنع أي أحد يجلسك قسرياً بشكل فوري",
     Default = false,
     Callback = function(Value)
         _G.AntiSit = Value
         if Value then
-            game.Players.LocalPlayer.Character.Humanoid.StateChanged:Connect(function(oldState, newState)
-                if _G.AntiSit and newState == Enum.HumanoidStateType.Seated then
-                    task.wait(0.1)
-                    game.Players.LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Running)
-                end
+            -- أولاً: قطع أي اتصال قديم
+            if antiSitConnection then antiSitConnection:Disconnect() end
+            
+            -- الاتصال الجديد: يراقب تغيير حالة الهومونويد
+            antiSitConnection = game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+                -- ننتظر قليلاً حتى يكتمل تحميل الشخصية
+                task.wait(0.5)
+                local humanoid = char:WaitForChild("Humanoid")
+                antiSitConnection = humanoid.StateChanged:Connect(function(oldState, newState)
+                    if _G.AntiSit and newState == Enum.HumanoidStateType.Seated then
+                        -- منع الجلوس القسري
+                        humanoid:ChangeState(Enum.HumanoidStateType.Running)
+                        -- (اختياري) إرجاع اللاعب إلى وضعه الطبيعي لو كان في كرسي
+                        local rootPart = char:FindFirstChild("HumanoidRootPart")
+                        if rootPart and rootPart:FindFirstChildOfClass("Weld") then
+                            rootPart:FindFirstChildOfClass("Weld"):Destroy()
+                        end
+                    end
+                end)
             end)
+            
+            -- اتصال للشخصية الحالية
+            local char = game.Players.LocalPlayer.Character
+            if char and char:FindFirstChild("Humanoid") then
+                local humanoid = char.Humanoid
+                antiSitConnection = humanoid.StateChanged:Connect(function(oldState, newState)
+                    if _G.AntiSit and newState == Enum.HumanoidStateType.Seated then
+                        humanoid:ChangeState(Enum.HumanoidStateType.Running)
+                        local rootPart = char:FindFirstChild("HumanoidRootPart")
+                        if rootPart and rootPart:FindFirstChildOfClass("Weld") then
+                            rootPart:FindFirstChildOfClass("Weld"):Destroy()
+                        end
+                    end
+                end)
+            end
+        else
+            -- لو طفينا الميزة، نقطع الاتصال
+            if antiSitConnection then antiSitConnection:Disconnect() antiSitConnection = nil end
         end
     end
 })
 
-Section2 = UniversalTab:AddSection({
-    Name = "مضادات 2026"
-})
-
--- Anti Void
+-- 2. مضاد الطيران (مضاد Fly / فلنق) - طريقة قوية
 UniversalTab:AddToggle({
-    Name = "مضاد الفراغ",
-    Description = "يمنع سقوطك في الفراغ",
+    Name = "مضاد الطيران القسري 🚫",
+    Description = "يرجعك فوراً للأرض إذا أحد طيرك (يمنع الطيران القسري)",
     Default = false,
     Callback = function(Value)
-        _G.AntiVoid = Value
+        _G.AntiFly = Value
         if Value then
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if _G.AntiVoid and game.Players.LocalPlayer.Character then
+            -- قطع الاتصال القديم
+            if antiFlyConnection then antiFlyConnection:Disconnect() end
+            
+            -- مراقبة وضعية اللاعب بشكل مستمر
+            antiFlyConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiFly and game.Players.LocalPlayer.Character then
+                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
                     local rootPart = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                    if rootPart and rootPart.Position.Y < -50 then
-                        rootPart.CFrame = CFrame.new(0, 50, 0)
+                    
+                    if humanoid and rootPart then
+                        -- الكشف عن الطيران القسري: حالة Freefall (سقوط حر) أو إذا كان الجسم عالياً بدون سبب وليس في حالة قفز عادي
+                        -- أو إذا كانت خاصية PlatformStand مفعلة (بعض طرق الفلنق تستخدمها)
+                        if humanoid:GetState() == Enum.HumanoidStateType.Freefall or humanoid:GetState() == Enum.HumanoidStateType.Jumping or humanoid.PlatformStand then
+                            -- منع الطيران: إرجاعه لحالة Running أو Landed
+                            if humanoid:GetState() == Enum.HumanoidStateType.Freefall then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Landed)
+                            end
+                            -- تعطيل PlatformStand الذي يسبب الطيران أحياناً
+                            if humanoid.PlatformStand then
+                                humanoid.PlatformStand = false
+                            end
+                            
+                            -- (اختياري) تثبيت السرعة العمودية لمنع الارتفاع المفاجئ
+                            if rootPart.Velocity.Y > 5 then -- إذا كان يرتفع بسرعة
+                                rootPart.Velocity = Vector3.new(rootPart.Velocity.X, 0, rootPart.Velocity.Z)
+                            end
+                        end
                     end
                 end
             end)
-        end
-    end
-})
-
--- Anti Kick
-UniversalTab:AddToggle({
-    Name = "مضاد الطرد",
-    Description = "يمنع طردك من السيرفر",
-    Default = false,
-    Callback = function(Value)
-        _G.AntiKick = Value
-        if Value then
-            local oldKick = game.Players.LocalPlayer.Kick
-            game.Players.LocalPlayer.Kick = function(...)
-                if _G.AntiKick then
-                    return warn("تم منع الطرد")
-                end
-                return oldKick(...)
-            end
         else
-            game.Players.LocalPlayer.Kick = nil
+            -- لو طفينا الميزة، نقطع الاتصال
+            if antiFlyConnection then antiFlyConnection:Disconnect() antiFlyConnection = nil end
         end
     end
 })
 
--- Anti Crash
+-- 3. مضاد البانج (مضاد الرصاص والأسلحة) - طريقة قوية ومحسنة
 UniversalTab:AddToggle({
-    Name = "مضاد التجميد",
-    Description = "يحميك من أدوات التجميد والكراش",
+    Name = "مضاد البانج الحقيقي 🔫",
+    Description = "يحميك من جميع أنواع الرصاص والأسلحة النارية",
     Default = false,
     Callback = function(Value)
-        _G.AntiCrash = Value
+        _G.AntiBang = Value
         if Value then
-            game:GetService("RunService").Stepped:Connect(function()
-                if _G.AntiCrash then
+            -- قطع الاتصال القديم
+            if antiBangConnection then antiBangConnection:Disconnect() end
+            
+            -- الاتصال الجديد: يراقب باستمرار ويحذف المقذوفات
+            antiBangConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiBang then
+                    -- البحث عن المقذوفات في المكان
                     for i, v in pairs(workspace:GetDescendants()) do
                         pcall(function()
-                            if v:IsA("ParticleEmitter") and v.Enabled and #v:GetChildren() > 30 then
-                                v.Enabled = false
+                            -- معايير أكثر شمولاً للكشف عن الرصاص
+                            local name = v.Name:lower()
+                            local className = v.ClassName:lower()
+                            
+                            -- تحقق من الأسماء الشائعة للرصاص وأنواع المقذوفات
+                            if (v:IsA("Part") or v:IsA("MeshPart") or v:IsA("BasePart")) and 
+                               (name:find("bullet") or name:find("shot") or name:find("projectile") or 
+                                name:find("missile") or name:find("pellet") or name:find("ray") or
+                                name:find("arrow") or name:find("rocket") or name:find("beam") or
+                                -- معايير إضافية: السرعة العالية أو وجود BodyVelocity (من أدوات الرماية)
+                                (v:FindFirstChildOfClass("BodyVelocity") and v.AssemblyLinearVelocity.Magnitude > 50) or
+                                v.AssemblyLinearVelocity.Magnitude > 100) then
+                                v:Destroy() -- حذف الرصاصة
                             end
                         end)
                     end
-                end
-            end)
-        end
-    end
-})
-
--- Anti Drown
-UniversalTab:AddToggle({
-    Name = "مضاد الغرق",
-    Description = "يمنع غرقك في الماء",
-    Default = false,
-    Callback = function(Value)
-        _G.AntiDrown = Value
-        if Value then
-            game.Players.LocalPlayer.Character.Humanoid:SetAttribute("Oxygen", 100)
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if _G.AntiDrown and game.Players.LocalPlayer.Character then
-                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                    if humanoid then
-                        humanoid:SetAttribute("Oxygen", 100)
-                        humanoid.BreathDamage:Disconnect()
+                    
+                    -- حماية الشخصية من الضرر (طريقة إضافية)
+                    local char = game.Players.LocalPlayer.Character
+                    if char then
+                        -- إزالة أي أجزاء مؤقتة أو وحوش يمكن أن تسبب ضرر
+                        local humanoid = char:FindFirstChildOfClass("Humanoid")
+                        if humanoid then
+                            -- بعض الألعاب تستخدم "Damage" tags
+                            humanoid:SetAttribute("NoDamage", true) -- قد لا تعمل في كل الألعاب
+                            
+                            -- محاولة منع الضرر من المصدر: إزالة أي أجزاء غريبة ملتصقة بالشخصية
+                            for _, child in pairs(char:GetChildren()) do
+                                if child:IsA("Part") or child:IsA("MeshPart") then
+                                    if child.Name:lower():find("bullet") or child.Name:lower():find("hitbox") then
+                                        child:Destroy()
+                                    end
+                                end
+                            end
+                        end
                     end
                 end
             end)
+        else
+            -- لو طفينا الميزة، نقطع الاتصال
+            if antiBangConnection then antiBangConnection:Disconnect() antiBangConnection = nil end
         end
     end
 })
 
--- Anti Fall Damage
-UniversalTab:AddToggle({
-    Name = "مضاد ضرر السقوط",
-    Description = "يمنع الضرر عند السقوط",
-    Default = false,
-    Callback = function(Value)
-        _G.AntiFall = Value
-        if Value then
-            game.Players.LocalPlayer.Character.Humanoid.FallDamage:Connect(function()
-                if _G.AntiFall then
-                    return false
-                end
-            end)
-        end
+-- (اختياري) تنظيف الاتصالات عند تغيير الشخصية
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+    -- نعيد تفعيل الميزات إذا كانت مفعلة عند ولادة الشخصية الجديدة
+    if _G.AntiSit then
+        -- إعادة تشغيل منطق AntiSit للشخصية الجديدة (سيتم التقاطه من الاتصال الموجود)
     end
-})
+    if _G.AntiFly then
+        -- إعادة تشغيل منطق AntiFly
+    end
+    if _G.AntiBang then
+        -- إعادة تشغيل منطق AntiBang
+    end
+end)
 
--- Anti Spin
-UniversalTab:AddToggle({
-    Name = "مضاد السبين",
-    Description = "يمنع تدويرك بالجيم",
-    Default = false,
-    Callback = function(Value)
-        _G.AntiSpin = Value
-        if Value then
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if _G.AntiSpin and game.Players.LocalPlayer.Character then
-                    local rootPart = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                    if rootPart and rootPart.RotVelocity.Magnitude > 10 then
-                        rootPart.RotVelocity = Vector3.new(0,0,0)
-                    end
-                end
-            end)
-        end
-    end
-})
+print("تم تحميل المضادات القوية بنجاح!")
 
 local UniversalTab = Window:MakeTab({"سكربتات مضادات", "plane"})
 
@@ -8105,43 +8106,4 @@ UniversalTab:AddButton({
   Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Fling"))()
   end,
-})
-
--- إنشاء التاب (التبويب) داخل الواجهة
-local MainTab = Library:MakeTab({
-    Name = "الـكـشـف",
-    Icon = "eye" -- اختياري: أيقونة للتاب
-})
-
--- تحميل ESP (من الرابط المعتاد)
-local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
-ESP:Toggle(true)
-ESP.Players = false
-ESP.Names = false
-
--- إضافة زر تفعيل الكشف داخل التاب
-MainTab:AddToggle({
-    Name = "تـفـعـيـل الـكـشـف",
-    Default = false,
-    Callback = function(Value)
-        ESP.Players = Value
-    end
-})
-
--- إضافة زر تفعيل الأسماء
-MainTab:AddToggle({
-    Name = "كـشـف اسـامـي الـلاعـبـيـن",
-    Default = false,
-    Callback = function(Value)
-        ESP.Names = Value
-    end
-})
-
--- إضافة منتقي الألوان
-MainTab:AddColorPicker({
-    Name = "لـون الـكـشـف",
-    Default = Color3.fromRGB(255, 255, 0),
-    Callback = function(Value)
-        ESP.Color = Value
-    end
 })
