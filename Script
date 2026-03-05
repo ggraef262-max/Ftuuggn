@@ -7894,7 +7894,7 @@ TrollTab:AddButton({
 local UniversalTab = Window:MakeTab({"مضادات قوية", "shield"})
 
 local Section = UniversalTab:AddSection({
-    Name = "مضادات حقيقية 2026"
+    Name = "مضادات قيد تطوير"
 })
 
 -- متغيرات عامة للتحكم
@@ -7916,7 +7916,7 @@ end
 
 -- 1. مضاد الجلوس القسري (مضاد Sit) - طريقة قوية
 UniversalTab:AddToggle({
-    Name = "مضاد الجلوس القسري 💺",
+    Name = "مضاد الجلوس القسري ",
     Description = "يمنع أي أحد يجلسك قسرياً بشكل فوري",
     Default = false,
     Callback = function(Value)
@@ -7966,7 +7966,7 @@ UniversalTab:AddToggle({
 
 -- 2. مضاد الطيران (مضاد Fly / فلنق) - طريقة قوية
 UniversalTab:AddToggle({
-    Name = "مضاد الطيران القسري 🚫",
+    Name = "مضاد الطيران القسري ",
     Description = "يرجعك فوراً للأرض إذا أحد طيرك (يمنع الطيران القسري)",
     Default = false,
     Callback = function(Value)
@@ -8011,7 +8011,7 @@ UniversalTab:AddToggle({
 
 -- 3. مضاد البانج (مضاد الرصاص والأسلحة) - طريقة قوية ومحسنة
 UniversalTab:AddToggle({
-    Name = "مضاد البانج الحقيقي 🔫",
+    Name = "مضاد البانج الحقيقي ",
     Description = "يحميك من جميع أنواع الرصاص والأسلحة النارية",
     Default = false,
     Callback = function(Value)
