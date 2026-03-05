@@ -7889,62 +7889,202 @@ TrollTab:AddButton({
     end
 })
 
+local UniversalTab = Window:MakeTab({"مضادات", "shield"})
 
-local Main = MakeTab({Name = "بـانـق"})
-
-
-AddSection(Main, {"الـحمـايـة مـن الـجـلـوس"})
-
-
-AddToggle(Main, {
-    Name = "حـمـايـة جـلـوس",
-    Default = false,
-    Callback = function(state)
-local seats = {}
-for _, seat in next, workspace:GetDescendants() do
-	if seat:IsA("Seat") then
-		seats[seat] = true
-	end
-end
-
-workspace.DescendantAdded:connect(function(seat)
-	if seat:IsA("Seat") then
-		seats[seat] = true
-		seat.Disabled = not enabled
-	end
-end)
-
-workspace.DescendantRemoving:connect(function(seat)
-	if seat:IsA("Seat") then
-		seats[seat] = nil
-	end
-end)
-
-setEnabled = function(newEnabled)
-	if newEnabled == enabled then
-		return
-	end
-	enabled = newEnabled
-	for seat, _ in next, seats do
-		seat.Disabled = not enabled
-	end
-end
-
----
-
-setEnabled(false)
-	end,
+Section = UniversalTab:AddSection({
+    Name = "مضادات عامة"
 })
 
-AddSection(Main, {"الـحمـايـة مـن الـفـلـنـق"})
-
-
-AddToggle(Main, {
-    Name = "حـمـايـة فـلـنـق",
+-- Anti Bang
+UniversalTab:AddToggle({
+    Name = "مضاد البانج",
+    Description = "يحميك من البانج والأسلحة النارية",
     Default = false,
-    Callback = function(state)
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/NotAtomz/Atom-Scripts/refs/heads/main/anti%20fling"))()
-	end,
+    Callback = function(Value)
+        _G.AntiBang = Value
+        if Value then
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiBang and game.Players.LocalPlayer.Character then
+                    for i, v in pairs(workspace:GetDescendants()) do
+                        pcall(function()
+                            if v:IsA("Part") and (v.Name:lower():find("bullet") or v.Name:lower():find("shot") or v.Name:lower():find("projectile")) then
+                                v:Destroy()
+                            end
+                        end)
+                    end
+                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:SetAttribute("NoDamage", true)
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- Anti Flying
+UniversalTab:AddToggle({
+    Name = "مضاد الطيران",
+    Description = "يرجعك للأرض إذا أحد طيرك",
+    Default = false,
+    Callback = function(Value)
+        _G.AntiFly = Value
+        if Value then
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiFly and game.Players.LocalPlayer.Character then
+                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                    if humanoid and (humanoid:GetState() == Enum.HumanoidStateType.Freefall or humanoid:GetState() == Enum.HumanoidStateType.Jumping) then
+                        humanoid:ChangeState(Enum.HumanoidStateType.Landed)
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- Anti Sit
+UniversalTab:AddToggle({
+    Name = "مضاد الجلوس",
+    Description = "يمنع أحد يجلسك قسرياً",
+    Default = false,
+    Callback = function(Value)
+        _G.AntiSit = Value
+        if Value then
+            game.Players.LocalPlayer.Character.Humanoid.StateChanged:Connect(function(oldState, newState)
+                if _G.AntiSit and newState == Enum.HumanoidStateType.Seated then
+                    task.wait(0.1)
+                    game.Players.LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Running)
+                end
+            end)
+        end
+    end
+})
+
+Section2 = UniversalTab:AddSection({
+    Name = "مضادات 2026"
+})
+
+-- Anti Void
+UniversalTab:AddToggle({
+    Name = "مضاد الفراغ",
+    Description = "يمنع سقوطك في الفراغ",
+    Default = false,
+    Callback = function(Value)
+        _G.AntiVoid = Value
+        if Value then
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiVoid and game.Players.LocalPlayer.Character then
+                    local rootPart = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    if rootPart and rootPart.Position.Y < -50 then
+                        rootPart.CFrame = CFrame.new(0, 50, 0)
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- Anti Kick
+UniversalTab:AddToggle({
+    Name = "مضاد الطرد",
+    Description = "يمنع طردك من السيرفر",
+    Default = false,
+    Callback = function(Value)
+        _G.AntiKick = Value
+        if Value then
+            local oldKick = game.Players.LocalPlayer.Kick
+            game.Players.LocalPlayer.Kick = function(...)
+                if _G.AntiKick then
+                    return warn("تم منع الطرد")
+                end
+                return oldKick(...)
+            end
+        else
+            game.Players.LocalPlayer.Kick = nil
+        end
+    end
+})
+
+-- Anti Crash
+UniversalTab:AddToggle({
+    Name = "مضاد التجميد",
+    Description = "يحميك من أدوات التجميد والكراش",
+    Default = false,
+    Callback = function(Value)
+        _G.AntiCrash = Value
+        if Value then
+            game:GetService("RunService").Stepped:Connect(function()
+                if _G.AntiCrash then
+                    for i, v in pairs(workspace:GetDescendants()) do
+                        pcall(function()
+                            if v:IsA("ParticleEmitter") and v.Enabled and #v:GetChildren() > 30 then
+                                v.Enabled = false
+                            end
+                        end)
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- Anti Drown
+UniversalTab:AddToggle({
+    Name = "مضاد الغرق",
+    Description = "يمنع غرقك في الماء",
+    Default = false,
+    Callback = function(Value)
+        _G.AntiDrown = Value
+        if Value then
+            game.Players.LocalPlayer.Character.Humanoid:SetAttribute("Oxygen", 100)
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiDrown and game.Players.LocalPlayer.Character then
+                    local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:SetAttribute("Oxygen", 100)
+                        humanoid.BreathDamage:Disconnect()
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- Anti Fall Damage
+UniversalTab:AddToggle({
+    Name = "مضاد ضرر السقوط",
+    Description = "يمنع الضرر عند السقوط",
+    Default = false,
+    Callback = function(Value)
+        _G.AntiFall = Value
+        if Value then
+            game.Players.LocalPlayer.Character.Humanoid.FallDamage:Connect(function()
+                if _G.AntiFall then
+                    return false
+                end
+            end)
+        end
+    end
+})
+
+-- Anti Spin
+UniversalTab:AddToggle({
+    Name = "مضاد السبين",
+    Description = "يمنع تدويرك بالجيم",
+    Default = false,
+    Callback = function(Value)
+        _G.AntiSpin = Value
+        if Value then
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.AntiSpin and game.Players.LocalPlayer.Character then
+                    local rootPart = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    if rootPart and rootPart.RotVelocity.Magnitude > 10 then
+                        rootPart.RotVelocity = Vector3.new(0,0,0)
+                    end
+                end
+            end)
+        end
+    end
 })
 
 local UniversalTab = Window:MakeTab({"سكربتات مضادات", "plane"})
