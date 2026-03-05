@@ -66,7 +66,7 @@ local v6 = CreateObject("Frame", {
 });
 v4(12, v6);
 
--- نظام الألوان قوس قزح المحسن
+-- نظام الألوان المتغيرة
 local RainbowActive = true
 local Hue = 0
 local Saturation = 1
@@ -74,34 +74,15 @@ local Value = 1
 
 spawn(function()
     while RainbowActive do
-        -- تغيير Hue بخطوات مختلفة لضمان رؤية كل الألوان
-        Hue = (Hue + 0.005) % 1
-        
-        -- ألوان مختلفة حسب قيمة Hue
-        local RainbowColor
-        
-        if Hue < 0.16 then
-            RainbowColor = Color3.fromRGB(255, 0, 0) -- أحمر
-        elseif Hue < 0.33 then
-            RainbowColor = Color3.fromRGB(255, 165, 0) -- برتقالي
-        elseif Hue < 0.5 then
-            RainbowColor = Color3.fromRGB(255, 255, 0) -- أصفر
-        elseif Hue < 0.66 then
-            RainbowColor = Color3.fromRGB(0, 255, 0) -- أخضر
-        elseif Hue < 0.83 then
-            RainbowColor = Color3.fromRGB(0, 0, 255) -- أزرق
-        else
-            RainbowColor = Color3.fromRGB(128, 0, 128) -- بنفسجي
-        end
-        
+        Hue = (Hue + 0.01) % 1
+        local RainbowColor = Color3.fromHSV(Hue, Saturation, Value)
         v6.BackgroundColor3 = RainbowColor
         v8.TextColor3 = RainbowColor
         v10.TextColor3 = RainbowColor
         v12.BackgroundColor3 = RainbowColor
         v13.TextColor3 = RainbowColor
         v7.ImageColor3 = RainbowColor
-        
-        wait(0.2) -- تأخير أطول لرؤية كل لون بوضوح
+        wait(0.1)
     end
 end)
 
@@ -182,14 +163,14 @@ local v13 = CreateObject("TextLabel", {
     Position = UDim2.new(0.5, 0, 1, - 25),
     Size = UDim2.new(1, - 20, 0, 20),
     Font = Enum.Font.Gotham,
-    Text = "قوس قزح",
+    Text = "",
     TextColor3 = v2.LoaderData.Colors.Topic,
     TextSize = 14,
     TextXAlignment = Enum.TextXAlignment.Center,
     AnchorPoint = Vector2.new(0.5, 0.5)
 });
 function UpdateStepText(v191)
-    v13.Text = v3[v191] or "قوس قزح" ;
+    v13.Text = v3[v191] or "" ;
 end
 function UpdatePercentage(v193, v194)
     TweenObject(v12, 0.5, {
@@ -218,7 +199,6 @@ for v195, v196 in pairs(v2.Keyframes) do
     UpdatePercentage(v196[2], v195);
 end
 UpdatePercentage(100, 4);
-wait(1)
 TweenObject(v9, 0.5, {
     TextTransparency = 1
 });
@@ -289,44 +269,27 @@ Window:AddMinimizeButton({
     }
 })
 
--- ألوان قوس قزح للقائمة
+-- ألوان متغيرة للقائمة
 spawn(function()
     local MenuRainbow = true
     local MenuHue = 0
     while MenuRainbow do
-        MenuHue = (MenuHue + 0.005) % 1
-        
-        local RainbowColor
-        if MenuHue < 0.16 then
-            RainbowColor = Color3.fromRGB(255, 0, 0)
-        elseif MenuHue < 0.33 then
-            RainbowColor = Color3.fromRGB(255, 165, 0)
-        elseif MenuHue < 0.5 then
-            RainbowColor = Color3.fromRGB(255, 255, 0)
-        elseif MenuHue < 0.66 then
-            RainbowColor = Color3.fromRGB(0, 255, 0)
-        elseif MenuHue < 0.83 then
-            RainbowColor = Color3.fromRGB(0, 0, 255)
-        else
-            RainbowColor = Color3.fromRGB(128, 0, 128)
-        end
-        
+        MenuHue = (MenuHue + 0.01) % 1
+        local RainbowColor = Color3.fromHSV(MenuHue, 1, 1)
         for _, v in pairs(game.CoreGui:GetDescendants()) do
             if v:IsA("Frame") and v.Name == "Main" then
                 v.BackgroundColor3 = RainbowColor
             end
-            if v:IsA("TextLabel") then
-                v.TextColor3 = RainbowColor
-            end
-            if v:IsA("TextButton") then
+            if v:IsA("TextLabel") and v.Name == "UserName" then
                 v.TextColor3 = RainbowColor
             end
         end
-        wait(0.2)
+        wait(0.1)
     end
 end)
 
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
+
 local Window = redzlib:MakeWindow({
     Title = "Clock7 HUB",
     SubTitle = "                       |  1.9V",
@@ -342,7 +305,6 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
-
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 local Window = redzlib:MakeWindow({
     Title = "Clock7 HUB",
