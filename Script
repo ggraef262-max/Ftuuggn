@@ -1,24 +1,12 @@
 --TS7 was here.
 -- ////////////
--- Clock7 HUB - الإصدار النهائي v2.0
--- تم التطوير بواسطة TS7
-
-shared.LoaderTitle = "Clock7 HUB";
-shared.LoaderColors = {
-    Main = Color3.fromRGB(184, 115, 5),
-    Topic = Color3.fromRGB(0, 0, 0),
-    Title = Color3.fromRGB(255, 255, 255),
-    LoaderBackground = Color3.fromRGB(0, 0, 0),
-    LoaderSplash = Color3.fromRGB(255, 255, 255)
-}
+shared.LoaderTitle = "Clock7  HUB";
 shared.LoaderKeyFrames = {
-    [1] = {0.5, 20},
-    [2] = {0.8, 40},
-    [3] = {0.6, 60},
-    [4] = {0.7, 80},
-    [5] = {0.5, 100}
-}
-
+    [1] = {
+        2,
+        100
+    }
+};
 local v2 = {
     LoaderData = {
         Name = shared.LoaderTitle or "A Loader",
@@ -27,26 +15,23 @@ local v2 = {
             Topic = Color3.fromRGB(0, 0, 0),
             Title = Color3.fromRGB(255, 255, 255),
             LoaderBackground = Color3.fromRGB(0, 0, 0),
-            LoaderSplash = Color3.fromRGB(255, 255, 255)
+            LoaderSplash = Color3.fromRGB(0, 0, 0)
         }
     },
     Keyframes = shared.LoaderKeyFrames or {
-        [1] = {2, 100}
+        [1] = {
+            2,
+            100
+        }
     }
 };
-
 local v3 = {
-    [1] = "جاري تحميل المكتبات...",
-    [2] = "تجهيز واجهة المستخدم...",
-    [3] = "تحميل الأدوات...",
-    [4] = "تهيئة الإعدادات...",
-    [5] = "اكتمل التحميل!"
+    [1] = "",
+    [2] = "",
 };
-
 function TweenObject(v178, v179, v180)
     game.TweenService:Create(v178, TweenInfo.new(v179, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), v180):Play();
 end
-
 function CreateObject(v181, v182)
     local v183 = Instance.new(v181);
     local v184;
@@ -60,18 +45,15 @@ function CreateObject(v181, v182)
     v183.Parent = v184;
     return v183;
 end
-
 local function v4(v186, v187)
     local v188 = Instance.new("UICorner");
     v188.CornerRadius = UDim.new(0, v186);
     v188.Parent = v187;
 end
-
 local v5 = CreateObject("ScreenGui", {
-    Name = "Clock7Loader",
+    Name = "Core",
     Parent = game.CoreGui
 });
-
 local v6 = CreateObject("Frame", {
     Name = "Main",
     Parent = v5,
@@ -83,7 +65,6 @@ local v6 = CreateObject("Frame", {
     Size = UDim2.new(0, 0, 0, 0)
 });
 v4(12, v6);
-
 local v7 = CreateObject("ImageLabel", {
     Name = "UserImage",
     Parent = v6,
@@ -93,41 +74,39 @@ local v7 = CreateObject("ImageLabel", {
     Size = UDim2.new(0, 55, 0, 55)
 });
 v4(25, v7);
-
 local v8 = CreateObject("TextLabel", {
     Name = "UserName",
     Parent = v6,
     BackgroundTransparency = 1,
-    Text = "شڪرا على انتضارڪ | CLOCK7 HUB",
-    Position = UDim2.new(0, 80, 0, 20),
-    Size = UDim2.new(0, 250, 0, 30),
+    Text = "                   | شڪرا على انتضارڪ |     ",
+    Position = UDim2.new(0, 60, 0, 20),
+    Size = UDim2.new(0, 300, 0, 70),
     Font = Enum.Font.GothamBold,
     TextColor3 = v2.LoaderData.Colors.Title,
-    TextSize = 16,
+    TextSize = 14,
     TextXAlignment = Enum.TextXAlignment.Left
 });
-
 local v9 = CreateObject("TextLabel", {
     Name = "Top",
     TextTransparency = 1,
     Parent = v6,
     BackgroundColor3 = Color3.fromRGB(255, 255, 255),
     BackgroundTransparency = 1,
-    Position = UDim2.new(0, 10, 0, 10),
-    Size = UDim2.new(0, 100, 0, 20),
+    Position = UDim2.new(10, 10, 10, 10),
+    Size = UDim2.new(10, 10, 10, 10),
     Font = Enum.Font.Gotham,
-    Text = "Loader v2.0",
+    Text = "Loader",
     TextColor3 = v2.LoaderData.Colors.Topic,
     TextSize = 10,
     TextXAlignment = Enum.TextXAlignment.Left
 });
-
 local v10 = CreateObject("TextLabel", {
     Name = "Title",
     Parent = v6,
     TextTransparency = 1,
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
     BackgroundTransparency = 1,
-    Position = UDim2.new(0, 30, 0, 55),
+    Position = UDim2.new(0, 30, 0, 90),
     Size = UDim2.new(0, 200, 0, 26),
     Font = Enum.Font.Gotham,
     RichText = true,
@@ -136,7 +115,6 @@ local v10 = CreateObject("TextLabel", {
     TextSize = 14,
     TextXAlignment = Enum.TextXAlignment.Left
 });
-
 local v11 = CreateObject("Frame", {
     Name = "BG",
     Parent = v6,
@@ -144,11 +122,10 @@ local v11 = CreateObject("Frame", {
     BackgroundTransparency = 1,
     BackgroundColor3 = v2.LoaderData.Colors.LoaderBackground,
     BorderSizePixel = 0,
-    Position = UDim2.new(0.5, 0, 0, 85),
+    Position = UDim2.new(0.5, 0, 0, 70),
     Size = UDim2.new(0.8500000238418579, 0, 0, 24)
 });
 v4(8, v11);
-
 local v12 = CreateObject("Frame", {
     Name = "Progress",
     Parent = v11,
@@ -158,13 +135,12 @@ local v12 = CreateObject("Frame", {
     Size = UDim2.new(0, 0, 0, 24)
 });
 v4(8, v12);
-
 local v13 = CreateObject("TextLabel", {
     Name = "StepLabel",
     Parent = v6,
     BackgroundTransparency = 1,
-    Position = UDim2.new(0.5, 0, 1, -25),
-    Size = UDim2.new(1, -20, 0, 20),
+    Position = UDim2.new(0.5, 0, 1, - 25),
+    Size = UDim2.new(1, - 20, 0, 20),
     Font = Enum.Font.Gotham,
     Text = "",
     TextColor3 = v2.LoaderData.Colors.Topic,
@@ -172,24 +148,19 @@ local v13 = CreateObject("TextLabel", {
     TextXAlignment = Enum.TextXAlignment.Center,
     AnchorPoint = Vector2.new(0.5, 0.5)
 });
-
 function UpdateStepText(v191)
-    v13.Text = v3[v191] or "جاري التحميل...";
+    v13.Text = v3[v191] or "" ;
 end
-
 function UpdatePercentage(v193, v194)
     TweenObject(v12, 0.5, {
         Size = UDim2.new(v193 / 100, 0, 0, 24)
     });
     UpdateStepText(v194);
 end
-
--- بدء حركة الظهور
 TweenObject(v6, 0.25, {
     Size = UDim2.new(0, 346, 0, 121)
 });
-wait(0.25);
-
+wait();
 TweenObject(v9, 0.5, {
     TextTransparency = 0
 });
@@ -202,16 +173,11 @@ TweenObject(v11, 0.5, {
 TweenObject(v12, 0.5, {
     BackgroundTransparency = 0
 });
-
--- مراحل التحميل
 for v195, v196 in pairs(v2.Keyframes) do
     wait(v196[1]);
     UpdatePercentage(v196[2], v195);
 end
-
-wait(0.5);
-
--- إخفاء العناصر
+UpdatePercentage(100, 4);
 TweenObject(v9, 0.5, {
     TextTransparency = 1
 });
@@ -224,66 +190,50 @@ TweenObject(v11, 0.5, {
 TweenObject(v12, 0.5, {
     BackgroundTransparency = 1
 });
-
 wait(0.5);
-
--- إخفاء اللودر
 TweenObject(v6, 0.25, {
     Size = UDim2.new(0, 0, 0, 0)
 });
 wait(0.25);
 v5:Destroy();
 
--- تشغيل الصوت
 local Sound = Instance.new("Sound", game:GetService("SoundService"));
 Sound.SoundId = "rbxassetid://82845990304289";
-Sound.Volume = 0.5;
 Sound:Play();
 
--- قتل اللاعب
 game.Players.LocalPlayer.Character.Humanoid.Health = 0
 wait(0.1)
-
--- إشعار
 game.StarterGui:SetCore("SendNotification", {
     Title = "Clock7 HUB",
-    Text = "شڪراً على الانتضار - ARAB TEAM",
+    Text = "-شڪراً على الانتضار-"; -- ARAB TEAM
     Duration = 5;
 })
+game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "  | CLOCK 7    HUB  |  ")
 
--- تغيير الاسم
-game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "CLOCK7 HUB | v2.0")
-
--- تغيير لون الاسم
 local args = {
     [1] = "PickingRPNameColor",
-    [2] = Color3.fromRGB(184, 115, 5)
+    [2] = Color3.fromRGB(184, 115, 5), -- Amarelo
 }
+
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
 
--- تغيير الباي
-local bioArgs = {
+local args = {
     [1] = "RolePlayBio",
-    [2] = "CLOCK7 HUB | TS7"
+    [2] ="  | Clock7      HUB  |  "
 }
-game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(bioArgs))
 
--- تغيير لون الباي
-local bioColorArgs = {
+game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
+
+local args = {
     [1] = "PickingRPBioColor",
-    [2] = Color3.fromRGB(184, 115, 5)
+    [2] = Color3.fromRGB(184, 115, 5), -- Amarelo
 }
-game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(bioColorArgs))
 
-wait(1)
-
--- تحميل المكتبة مرة واحدة فقط
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
-
 local Window = redzlib:MakeWindow({
-    Title = "Clock7 HUB",
-    SubTitle = "v2.0 | TS7",
-    SaveFolder = "Clock7_Settings"
+    Title = "  Clock7 HUB",
+    SubTitle ="                           |  1.9V",
+    SaveFolder = "تم التطوير"
 })
 
 Window:AddMinimizeButton({
@@ -295,128 +245,39 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 
--- علامة تبويب رئيسية
-local MainTab = Window:MakeTab({
-    Name = "الرئيسية",
-    Icon = "rbxassetid://126865658241127"
+local Window = redzlib:MakeWindow({
+    Title = "Clock7 HUB",
+    SubTitle = "                       |  1.9V",
+    SaveFolder = "قيد التطوير"
 })
 
--- معلومات
-local InfoSection = MainTab:AddSection({
-    Name = "معلومات"
+Window:AddMinimizeButton({
+    Button = {
+        Image = "rbxassetid://126865658241127",
+        BackgroundTransparency = 15
+    },
+    Corner = {
+        CornerRadius = UDim.new(0, 6)
+    }
+})
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
+local Window = redzlib:MakeWindow({
+    Title = "Clock7 HUB",
+    SubTitle = "                       |  1.9V",
+    SaveFolder = "تم التطوير"
 })
 
-InfoSection:AddLabel("الاسم: Clock7 HUB")
-InfoSection:AddLabel("الإصدار: 2.0")
-InfoSection:AddLabel("المطور: TS7")
-InfoSection:AddLabel("الفريق: ARAB TEAM")
-
--- التحكم باللاعب
-local PlayerSection = MainTab:AddSection({
-    Name = "التحكم باللاعب"
+Window:AddMinimizeButton({
+    Button = {
+        Image = "rbxassetid://126865658241127",
+        BackgroundTransparency = 15
+    },
+    Corner = {
+        CornerRadius = UDim.new(0, 6)
+    }
 })
-
-PlayerSection:AddButton({
-    Name = "قتل اللاعب",
-    Description = "يقتل اللاعب على الفور",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        if player and player.Character and player.Character:FindFirstChild("Humanoid") then
-            player.Character.Humanoid.Health = 0
-            redzlib:Notify("تم قتل اللاعب", "تنبيه", 3)
-        end
-    end
-})
-
-PlayerSection:AddButton({
-    Name = "إصلاح الشخصية",
-    Description = "يعيد الشخصية إذا علقت",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        if player and player.Character then
-            player.Character:BreakJoints()
-            wait(1)
-            player:LoadCharacter()
-            redzlib:Notify("تم إصلاح الشخصية", "تنبيه", 3)
-        end
-    end
-})
-
--- تغيير الاسم
-local NameSection = MainTab:AddSection({
-    Name = "تغيير الاسم"
-})
-
-NameSection:AddTextbox({
-    Name = "الاسم الجديد",
-    Default = "CLOCK7 HUB",
-    ClearText = true,
-    Callback = function(text)
-        game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", text)
-        redzlib:Notify("تم تغيير الاسم إلى: " .. text, "نجاح", 3)
-    end
-})
-
-NameSection:AddTextbox({
-    Name = "الباي الجديد",
-    Default = "CLOCK7 HUB | TS7",
-    ClearText = true,
-    Callback = function(text)
-        local args = {
-            [1] = "RolePlayBio",
-            [2] = text
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
-        redzlib:Notify("تم تغيير الباي", "نجاح", 3)
-    end
-})
-
-NameSection:AddColorpicker({
-    Name = "لون الاسم",
-    Default = Color3.fromRGB(184, 115, 5),
-    Callback = function(color)
-        local args = {
-            [1] = "PickingRPNameColor",
-            [2] = color
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
-    end
-})
-
--- علامة تبويب الإعدادات
-local SettingsTab = Window:MakeTab({
-    Name = "الإعدادات",
-    Icon = "rbxassetid://126865658241127"
-})
-
-local SettingsSection = SettingsTab:AddSection({
-    Name = "إعدادات"
-})
-
-SettingsSection:AddToggle({
-    Name = "تفعيل الصوت",
-    Default = true,
-    Callback = function(value)
-        _G.SoundEnabled = value
-    end
-})
-
-SettingsSection:AddButton({
-    Name = "إعادة تشغيل السكربت",
-    Description = "يعيد تحميل Clock7 HUB",
-    Callback = function()
-        redzlib:Notify("جاري إعادة التشغيل...", "تنبيه", 2)
-        wait(2)
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
-    end
-})
-
--- رسالة في الشات
-wait(2)
-game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("✅ Clock7 HUB v2.0 | TS7 تم التفعيل!", "All")
-
-print("✅ Clock7 HUB v2.0 - TS7 was here")
 local InfoTab = Window:MakeTab({ Title = "حـقوق", Icon = "rbxassetid://126865658241127" })
 
 
