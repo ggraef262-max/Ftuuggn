@@ -65,6 +65,26 @@ local v6 = CreateObject("Frame", {
     Size = UDim2.new(0, 0, 0, 0)
 });
 v4(12, v6);
+
+-- نظام الألوان قوس قزح
+local RainbowActive = true
+local Hue = 0
+local Saturation = 1
+local Value = 1
+
+spawn(function()
+    while RainbowActive do
+        Hue = (Hue + 0.01) % 1
+        local RainbowColor = Color3.fromHSV(Hue, Saturation, Value)
+        v6.BackgroundColor3 = RainbowColor
+        v8.TextColor3 = RainbowColor
+        v10.TextColor3 = RainbowColor
+        v12.BackgroundColor3 = RainbowColor
+        v13.TextColor3 = RainbowColor
+        wait(0.05)
+    end
+end)
+
 local v7 = CreateObject("ImageLabel", {
     Name = "UserImage",
     Parent = v6,
@@ -197,6 +217,8 @@ TweenObject(v6, 0.25, {
 wait(0.25);
 v5:Destroy();
 
+RainbowActive = false
+
 local Sound = Instance.new("Sound", game:GetService("SoundService"));
 Sound.SoundId = "rbxassetid://82845990304289";
 Sound:Play();
@@ -205,14 +227,14 @@ game.Players.LocalPlayer.Character.Humanoid.Health = 0
 wait(0.1)
 game.StarterGui:SetCore("SendNotification", {
     Title = "Clock7 HUB",
-    Text = "-شڪراً على الانتضار-"; -- ARAB TEAM
+    Text = "-شڪراً على الانتضار-";
     Duration = 5;
 })
 game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "  | CLOCK 7    HUB  |  ")
 
 local args = {
     [1] = "PickingRPNameColor",
-    [2] = Color3.fromRGB(184, 115, 5), -- Amarelo
+    [2] = Color3.fromRGB(184, 115, 5),
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
@@ -226,7 +248,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTe
 
 local args = {
     [1] = "PickingRPBioColor",
-    [2] = Color3.fromRGB(184, 115, 5), -- Amarelo
+    [2] = Color3.fromRGB(184, 115, 5),
 }
 
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
@@ -245,6 +267,25 @@ Window:AddMinimizeButton({
         CornerRadius = UDim.new(0, 6)
     }
 })
+
+spawn(function()
+    local MenuRainbow = true
+    local MenuHue = 0
+    while MenuRainbow do
+        MenuHue = (MenuHue + 0.01) % 1
+        local RainbowColor = Color3.fromHSV(MenuHue, 1, 1)
+        for _, v in pairs(game.CoreGui:GetDescendants()) do
+            if v:IsA("Frame") and v.Name == "Main" then
+                v.BackgroundColor3 = RainbowColor
+            end
+            if v:IsA("TextLabel") and v.Name == "UserName" then
+                v.TextColor3 = RainbowColor
+            end
+        end
+        wait(0.05)
+    end
+end)
+
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 
 local Window = redzlib:MakeWindow({
