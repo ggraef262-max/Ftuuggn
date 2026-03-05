@@ -5876,6 +5876,8 @@ Tab:AddTextBox({
     end
 })
 
+Tab:AddParagraph({"Info", "تكرار الصوت (١٢٣٤٥٦٧٨٩)"}
+
 -- Adicionar uma dropdown para selecionar o áudio
 local audioNames = {}
 for _, audio in ipairs(audios) do
