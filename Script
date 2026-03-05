@@ -7889,6 +7889,7 @@ TrollTab:AddButton({
     end
 })
 
+
 local Main = MakeTab({Name = "بـانـق"})
 
 
@@ -7934,7 +7935,6 @@ end
 setEnabled(false)
 	end,
 })
-
 
 AddSection(Main, {"الـحمـايـة مـن الـفـلـنـق"})
 
