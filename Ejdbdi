@@ -4,256 +4,264 @@ local CoreGui = game:GetService("CoreGui")
 local SoundService = game:GetService("SoundService")
 local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
-local StarterGui = game:GetService("StarterGui")
 local UserInputService = game:GetService("UserInputService")
 
--- إخفاء الإشعارات
-StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
-StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
-StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, false)
+-- ====== الألوان الجذابة ======
+local PRIMARY = Color3.fromRGB(0, 170, 255)  -- أزرق ساطع
+local SECONDARY = Color3.fromRGB(255, 70, 200)  -- وردي
+local ACCENT = Color3.fromRGB(255, 215, 0)  -- ذهبي
+local DARK = Color3.fromRGB(10, 10, 10)  -- أسود عميق
+local WHITE = Color3.fromRGB(255, 255, 255)  -- أبيض
 
--- ====== الألوان الفنية ======
-local GOLD = Color3.fromRGB(184, 115, 51)  -- ذهبي
-local DARK_GOLD = Color3.fromRGB(120, 70, 20)  -- ذهبي غامق
-local FIRE = Color3.fromRGB(255, 100, 0)  -- ناري
-local BLOOD = Color3.fromRGB(180, 40, 40)  -- دم
-
--- ====== مؤثرات سينمائية ======
+-- ====== مؤثرات بصرية خفيفة ======
 local blur = Instance.new("BlurEffect", Lighting)
-blur.Size = 20
+blur.Size = 5
 
-local colorCorrection = Instance.new("ColorCorrectionEffect", Lighting)
-colorCorrection.TintColor = GOLD
-colorCorrection.Contrast = 0.2
-colorCorrection.Saturation = 0.1
-
--- ====== موسيقى تصويرية ======
+-- ====== موسيقى ======
 local music = Instance.new("Sound", SoundService)
 music.SoundId = "rbxassetid://1838138986"  -- موسيقى حماسية
-music.Volume = 0.3
+music.Volume = 0.2
 music.Looped = true
-music.PlaybackSpeed = 0.9
 music:Play()
 
--- ====== الواجهة الفنية ======
+-- ====== الواجهة الرئيسية ======
 local gui = Instance.new("ScreenGui", CoreGui)
-gui.Name = "ArtLoader"
+gui.Name = "LoaderGUI"
 gui.IgnoreGuiInset = true
 gui.ResetOnSpawn = false
-gui.DisplayOrder = 999
+gui.DisplayOrder = 100
 
--- ====== الصورة الفنية ======
-local artImage = Instance.new("ImageLabel", gui)
-artImage.Size = UDim2.fromScale(1, 1)
-artImage.Position = UDim2.fromScale(0.5, 0.5)
-artImage.AnchorPoint = Vector2.new(0.5, 0.5)
-artImage.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-artImage.Image = "rbxassetid://126865658241127"  -- صورتك الفنية
-artImage.ImageColor3 = GOLD
-artImage.ImageTransparency = 0.15
-artImage.ScaleType = Enum.ScaleType.Crop
-artImage.ZIndex = 0
+-- ====== الخلفية المتحركة ======
+local background = Instance.new("Frame", gui)
+background.Size = UDim2.fromScale(1, 1)
+background.BackgroundColor3 = DARK
+background.ZIndex = 0
 
--- ====== تأثير الزجاج ======
-local glassEffect = Instance.new("Frame", gui)
-glassEffect.Size = UDim2.fromScale(1, 1)
-glassEffect.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-glassEffect.BackgroundTransparency = 0.3
-glassEffect.BorderSizePixel = 0
-glassEffect.ZIndex = 1
-
--- ====== إطار فني ======
-local topBorder = Instance.new("Frame", gui)
-topBorder.Size = UDim2.new(1, 0, 0, 3)
-topBorder.Position = UDim2.fromScale(0, 0)
-topBorder.BackgroundColor3 = GOLD
-topBorder.BorderSizePixel = 0
-topBorder.ZIndex = 5
-
-local bottomBorder = Instance.new("Frame", gui)
-bottomBorder.Size = UDim2.new(1, 0, 0, 3)
-bottomBorder.Position = UDim2.fromScale(0, 1)
-bottomBorder.AnchorPoint = Vector2.new(0, 1)
-bottomBorder.BackgroundColor3 = GOLD
-bottomBorder.BorderSizePixel = 0
-bottomBorder.ZIndex = 5
-
--- ====== اسم فني ======
-local title = Instance.new("TextLabel", gui)
-title.Size = UDim2.fromScale(0.9, 0.2)
-title.Position = UDim2.fromScale(0.5, 0.2)
-title.AnchorPoint = Vector2.new(0.5, 0.5)
-title.BackgroundTransparency = 1
-title.Text = "CLOCK 7"
-title.Font = Enum.Font.GothamBlack
-title.TextSize = 80
-title.TextColor3 = GOLD
-title.TextStrokeTransparency = 0.2
-title.TextStrokeColor3 = FIRE
-title.ZIndex = 4
-
-local subTitle = Instance.new("TextLabel", gui)
-subTitle.Size = UDim2.fromScale(0.5, 0.05)
-subTitle.Position = UDim2.fromScale(0.5, 0.3)
-subTitle.AnchorPoint = Vector2.new(0.5, 0.5)
-subTitle.BackgroundTransparency = 1
-subTitle.Text = "ART COLLECTION"
-subTitle.Font = Enum.Font.Gotham
-subTitle.TextSize = 24
-subTitle.TextColor3 = GOLD
-subTitle.TextTransparency = 0.4
-subTitle.ZIndex = 4
-
--- ====== شريط فني ======
-local progressBarBg = Instance.new("Frame", gui)
-progressBarBg.Size = UDim2.fromScale(0.7, 0.04)
-progressBarBg.Position = UDim2.fromScale(0.5, 0.6)
-progressBarBg.AnchorPoint = Vector2.new(0.5, 0.5)
-progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-progressBarBg.BorderSizePixel = 0
-progressBarBg.ZIndex = 3
-
-local progressBarCorner = Instance.new("UICorner", progressBarBg)
-progressBarCorner.CornerRadius = UDim.new(1, 0)
-
--- شريط متدرج
-local progressBar = Instance.new("Frame", progressBarBg)
-progressBar.Size = UDim2.fromScale(0, 1)
-progressBar.BackgroundColor3 = GOLD
-progressBar.BorderSizePixel = 0
-progressBar.ZIndex = 3
-
-local progressGradient = Instance.new("UIGradient", progressBar)
-progressGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, GOLD),
-    ColorSequenceKeypoint.new(0.5, FIRE),
-    ColorSequenceKeypoint.new(1, BLOOD)
+-- خلفية متدرجة
+local gradient = Instance.new("UIGradient", background)
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, DARK),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(20, 20, 30)),
+    ColorSequenceKeypoint.new(1, DARK)
 })
+gradient.Rotation = 45
 
-local progressBarCorner2 = Instance.new("UICorner", progressBar)
-progressBarCorner2.CornerRadius = UDim.new(1, 0)
-
--- ====== نسبة فنية ======
-local percentage = Instance.new("TextLabel", gui)
-percentage.Size = UDim2.fromScale(0.3, 0.06)
-percentage.Position = UDim2.fromScale(0.5, 0.68)
-percentage.AnchorPoint = Vector2.new(0.5, 0.5)
-percentage.BackgroundTransparency = 1
-percentage.Text = "0%"
-percentage.Font = Enum.Font.GothamBold
-percentage.TextSize = 36
-percentage.TextColor3 = GOLD
-percentage.TextStrokeTransparency = 0.5
-percentage.TextStrokeColor3 = FIRE
-percentage.ZIndex = 3
-
--- ====== تأثيرات بصرية ======
+-- ====== جسيمات متحركة ======
 local particles = {}
-for i = 1, 15 do
+for i = 1, 20 do
     local particle = Instance.new("Frame", gui)
-    particle.Size = UDim2.fromOffset(math.random(2, 6), math.random(2, 6))
+    particle.Size = UDim2.fromOffset(math.random(2, 8), math.random(2, 8))
     particle.Position = UDim2.fromScale(math.random(), math.random())
-    particle.BackgroundColor3 = GOLD:lerp(FIRE, math.random())
-    particle.BackgroundTransparency = 0.3
+    particle.BackgroundColor3 = PRIMARY:lerp(SECONDARY, math.random())
+    particle.BackgroundTransparency = 0.4
     particle.BorderSizePixel = 0
-    particle.ZIndex = 2
+    particle.ZIndex = 1
     
-    local particleCorner = Instance.new("UICorner", particle)
-    particleCorner.CornerRadius = UDim.new(1, 0)
+    local corner = Instance.new("UICorner", particle)
+    corner.CornerRadius = UDim.new(1, 0)
     
     table.insert(particles, {
         frame = particle,
-        speed = Vector2.new(math.random(-30, 30)/1000, math.random(-20, -5)/1000),
-        transparencySpeed = math.random(1, 3)/10
+        speed = Vector2.new(math.random(-50, 50)/1000, math.random(-30, 30)/1000),
+        transparencySpeed = math.random(1, 5)/10
     })
 end
 
--- ====== حركة فنية ======
+-- ====== الحاوية الرئيسية ======
+local container = Instance.new("Frame", gui)
+container.Size = UDim2.fromScale(0.5, 0.6)
+container.Position = UDim2.fromScale(0.5, 0.5)
+container.AnchorPoint = Vector2.new(0.5, 0.5)
+container.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+container.BackgroundTransparency = 0.1
+container.BorderSizePixel = 0
+container.ZIndex = 2
+container.ClipsDescendants = true
+
+-- زوايا دائرية
+local containerCorner = Instance.new("UICorner", container)
+containerCorner.CornerRadius = UDim.new(0, 20)
+
+-- إطار متوهج
+local stroke = Instance.new("UIStroke", container)
+stroke.Color = PRIMARY
+stroke.Thickness = 2
+stroke.Transparency = 0.5
+
+-- ====== الصورة ======
+local imageContainer = Instance.new("Frame", container)
+imageContainer.Size = UDim2.fromScale(1, 0.5)
+imageContainer.Position = UDim2.fromScale(0, 0)
+imageContainer.BackgroundColor3 = PRIMARY
+imageContainer.BackgroundTransparency = 0.9
+imageContainer.BorderSizePixel = 0
+imageContainer.ClipsDescendants = true
+
+local imageCorner = Instance.new("UICorner", imageContainer)
+imageCorner.CornerRadius = UDim.new(0, 20)
+
+local artImage = Instance.new("ImageLabel", imageContainer)
+artImage.Size = UDim2.fromScale(1, 1)
+artImage.Position = UDim2.fromScale(0.5, 0.5)
+artImage.AnchorPoint = Vector2.new(0.5, 0.5)
+artImage.BackgroundTransparency = 1
+artImage.Image = "rbxassetid://126865658241127"
+artImage.ScaleType = Enum.ScaleType.Crop
+artImage.ZIndex = 2
+
+-- ====== العنوان ======
+local title = Instance.new("TextLabel", container)
+title.Size = UDim2.fromScale(1, 0.15)
+title.Position = UDim2.fromScale(0, 0.5)
+title.BackgroundTransparency = 1
+title.Text = "CLOCK 7"
+title.Font = Enum.Font.GothamBlack
+title.TextSize = 50
+title.TextColor3 = WHITE
+title.TextStrokeColor3 = PRIMARY
+title.TextStrokeTransparency = 0.3
+title.ZIndex = 3
+
+-- ====== النص الفرعي ======
+local subText = Instance.new("TextLabel", container)
+subText.Size = UDim2.fromScale(1, 0.1)
+subText.Position = UDim2.fromScale(0, 0.65)
+subText.BackgroundTransparency = 1
+subText.Text = "Loading amazing content..."
+subText.Font = Enum.Font.Gotham
+subText.TextSize = 18
+subText.TextColor3 = Color3.fromRGB(200, 200, 200)
+subText.ZIndex = 3
+
+-- ====== شريط التقدم ======
+local progressContainer = Instance.new("Frame", container)
+progressContainer.Size = UDim2.fromScale(0.8, 0.08)
+progressContainer.Position = UDim2.fromScale(0.5, 0.8)
+progressContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+progressContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+progressContainer.BorderSizePixel = 0
+progressContainer.ZIndex = 3
+
+local progressCorner = Instance.new("UICorner", progressContainer)
+progressCorner.CornerRadius = UDim.new(1, 0)
+
+-- شريط التقدم المتحرك
+local progressBar = Instance.new("Frame", progressContainer)
+progressBar.Size = UDim2.fromScale(0, 1)
+progressBar.BackgroundColor3 = PRIMARY
+progressBar.BorderSizePixel = 0
+progressBar.ZIndex = 4
+
+local progressBarCorner = Instance.new("UICorner", progressBar)
+progressBarCorner.CornerRadius = UDim.new(1, 0)
+
+-- تدرج للشريط
+local progressGradient = Instance.new("UIGradient", progressBar)
+progressGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, PRIMARY),
+    ColorSequenceKeypoint.new(0.5, SECONDARY),
+    ColorSequenceKeypoint.new(1, ACCENT)
+})
+progressGradient.Rotation = 90
+
+-- ====== نسبة التقدم ======
+local percentLabel = Instance.new("TextLabel", container)
+percentLabel.Size = UDim2.fromScale(0.3, 0.1)
+percentLabel.Position = UDim2.fromScale(0.5, 0.9)
+percentLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+percentLabel.BackgroundTransparency = 1
+percentLabel.Text = "0%"
+percentLabel.Font = Enum.Font.GothamBold
+percentLabel.TextSize = 30
+percentLabel.TextColor3 = WHITE
+percentLabel.ZIndex = 3
+
+-- ====== تأثيرات حركية ======
 RunService.RenderStepped:Connect(function(dt)
     local time = tick()
     
     -- حركة الجسيمات
     for _, p in ipairs(particles) do
         local pos = p.frame.Position
-        local newX = pos.X.Scale + p.speed.X * dt * 30
-        local newY = pos.Y.Scale + p.speed.Y * dt * 30
+        local newX = pos.X.Scale + p.speed.X * dt * 60
+        local newY = pos.Y.Scale + p.speed.Y * dt * 60
         
-        if newY < 0 then
-            newY = 1
-            newX = math.random()
+        if newX < 0 or newX > 1 then
+            p.speed = Vector2.new(-p.speed.X, p.speed.Y)
+            newX = math.clamp(newX, 0, 1)
+        end
+        if newY < 0 or newY > 1 then
+            p.speed = Vector2.new(p.speed.X, -p.speed.Y)
+            newY = math.clamp(newY, 0, 1)
         end
         
         p.frame.Position = UDim2.fromScale(newX, newY)
         p.frame.BackgroundTransparency = 0.3 + math.sin(time * p.transparencySpeed) * 0.2
     end
     
-    -- نبض خفيف للعنوان
-    title.TextTransparency = 0.1 + math.sin(time * 3) * 0.1
-    title.TextStrokeTransparency = 0.2 + math.sin(time * 4) * 0.1
+    -- دوران التدرج في الخلفية
+    gradient.Rotation = gradient.Rotation + dt * 10
 end)
 
--- ====== تحميل فني ======
-task.wait(0.5)
-
--- تأثير دخول
-TweenService:Create(title, TweenInfo.new(1, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-    TextTransparency = 0,
-    Position = UDim2.fromScale(0.5, 0.2)
+-- ====== تأثير الدخول ======
+container.Size = UDim2.fromScale(0, 0)
+TweenService:Create(container, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    Size = UDim2.fromScale(0.5, 0.6)
 }):Play()
 
--- تحميل السكربت
+TweenService:Create(blur, TweenInfo.new(0.8), {
+    Size = 0
+}):Play()
+
+task.wait(0.5)
+
+-- ====== التحميل ======
 local success, result = pcall(function()
     return game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Script")
 end)
 
 if success and result then
     for i = 1, 100 do
-        -- تحديث الشريط
         progressBar.Size = UDim2.fromScale(i/100, 1)
-        percentage.Text = i .. "%"
+        percentLabel.Text = i .. "%"
         
-        -- تأثيرات فنية أثناء التحميل
-        if i % 25 == 0 then
-            -- نبضة عند كل 25%
+        if i % 20 == 0 then
             TweenService:Create(progressBar, TweenInfo.new(0.2), {
-                BackgroundColor3 = FIRE
+                BackgroundColor3 = SECONDARY
             }):Play()
-            task.wait(0.1)
+            task.wait(0.05)
             TweenService:Create(progressBar, TweenInfo.new(0.2), {
-                BackgroundColor3 = GOLD
+                BackgroundColor3 = PRIMARY
             }):Play()
         end
         
         task.wait(0.01)
     end
     
-    percentage.Text = "✓ COMPLETE"
-    
-    -- صوت نجاح
-    local successSound = Instance.new("Sound", SoundService)
-    successSound.SoundId = "rbxassetid://9120391256"
-    successSound.Volume = 2
-    successSound:Play()
+    percentLabel.Text = "✓ READY"
+    subText.Text = "Launching..."
     
     task.wait(0.5)
     
     -- تشغيل السكربت
     pcall(function() loadstring(result)() end)
+    
+    -- تلاشي ناعم
+    TweenService:Create(gui, TweenInfo.new(0.5), {
+        Enabled = false
+    }):Play()
+    
 else
-    percentage.Text = "✗ ERROR"
-    task.wait(2)
+    percentLabel.Text = "✗ ERROR"
+    subText.Text = "Failed to load content"
+    subText.TextColor3 = Color3.fromRGB(255, 80, 80)
 end
 
--- تلاشي فني
-TweenService:Create(glassEffect, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
-TweenService:Create(artImage, TweenInfo.new(1), {ImageTransparency = 1}):Play()
-TweenService:Create(music, TweenInfo.new(2), {Volume = 0}):Play()
+task.wait(2)
 
-task.wait(1.5)
-
--- تنظيف
-blur:Destroy()
-colorCorrection:Destroy()
-music:Destroy()
-gui:Destroy()
-gui:Destroy()
+-- تنظيف إذا لم يتم التلاشي
+if gui.Enabled then
+    TweenService:Create(gui, TweenInfo.new(0.5), {
+        Enabled = false
+    }):Play()
+end
