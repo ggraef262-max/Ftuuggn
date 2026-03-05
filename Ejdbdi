@@ -1,267 +1,109 @@
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
-local SoundService = game:GetService("SoundService")
-local Lighting = game:GetService("Lighting")
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
 
--- ====== الألوان الجذابة ======
-local PRIMARY = Color3.fromRGB(0, 170, 255)  -- أزرق ساطع
-local SECONDARY = Color3.fromRGB(255, 70, 200)  -- وردي
-local ACCENT = Color3.fromRGB(255, 215, 0)  -- ذهبي
-local DARK = Color3.fromRGB(10, 10, 10)  -- أسود عميق
-local WHITE = Color3.fromRGB(255, 255, 255)  -- أبيض
+-- ألوان نحاسية
+local COPPER = Color3.fromRGB(184, 115, 51)
+local DARK_COPPER = Color3.fromRGB(120, 70, 20)
+local LIGHT_COPPER = Color3.fromRGB(220, 160, 80)
 
--- ====== مؤثرات بصرية خفيفة ======
-local blur = Instance.new("BlurEffect", Lighting)
-blur.Size = 5
-
--- ====== موسيقى ======
-local music = Instance.new("Sound", SoundService)
-music.SoundId = "rbxassetid://1838138986"  -- موسيقى حماسية
-music.Volume = 0.2
-music.Looped = true
-music:Play()
-
--- ====== الواجهة الرئيسية ======
+-- واجهة خفيفة جداً وسريعة
 local gui = Instance.new("ScreenGui", CoreGui)
-gui.Name = "LoaderGUI"
+gui.Name = "FastCopperLoader"
 gui.IgnoreGuiInset = true
 gui.ResetOnSpawn = false
-gui.DisplayOrder = 100
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.DisplayOrder = 999999
 
--- ====== الخلفية المتحركة ======
-local background = Instance.new("Frame", gui)
-background.Size = UDim2.fromScale(1, 1)
-background.BackgroundColor3 = DARK
-background.ZIndex = 0
-
--- خلفية متدرجة
-local gradient = Instance.new("UIGradient", background)
-gradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, DARK),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(20, 20, 30)),
-    ColorSequenceKeypoint.new(1, DARK)
-})
-gradient.Rotation = 45
-
--- ====== جسيمات متحركة ======
-local particles = {}
-for i = 1, 20 do
-    local particle = Instance.new("Frame", gui)
-    particle.Size = UDim2.fromOffset(math.random(2, 8), math.random(2, 8))
-    particle.Position = UDim2.fromScale(math.random(), math.random())
-    particle.BackgroundColor3 = PRIMARY:lerp(SECONDARY, math.random())
-    particle.BackgroundTransparency = 0.4
-    particle.BorderSizePixel = 0
-    particle.ZIndex = 1
-    
-    local corner = Instance.new("UICorner", particle)
-    corner.CornerRadius = UDim.new(1, 0)
-    
-    table.insert(particles, {
-        frame = particle,
-        speed = Vector2.new(math.random(-50, 50)/1000, math.random(-30, 30)/1000),
-        transparencySpeed = math.random(1, 5)/10
-    })
-end
-
--- ====== الحاوية الرئيسية ======
+-- الحاوية الرئيسية (تظهر فوراً)
 local container = Instance.new("Frame", gui)
-container.Size = UDim2.fromScale(0.5, 0.6)
+container.Size = UDim2.fromScale(0.4, 0.25)
 container.Position = UDim2.fromScale(0.5, 0.5)
 container.AnchorPoint = Vector2.new(0.5, 0.5)
-container.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-container.BackgroundTransparency = 0.1
+container.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+container.BackgroundTransparency = 0
 container.BorderSizePixel = 0
-container.ZIndex = 2
-container.ClipsDescendants = true
+container.Visible = true -- تظهر على طول
 
--- زوايا دائرية
-local containerCorner = Instance.new("UICorner", container)
-containerCorner.CornerRadius = UDim.new(0, 20)
+-- زوايا
+local corner = Instance.new("UICorner", container)
+corner.CornerRadius = UDim.new(0, 10)
 
--- إطار متوهج
+-- إطار نحاسي
 local stroke = Instance.new("UIStroke", container)
-stroke.Color = PRIMARY
+stroke.Color = COPPER
 stroke.Thickness = 2
-stroke.Transparency = 0.5
+stroke.Transparency = 0
 
--- ====== الصورة ======
-local imageContainer = Instance.new("Frame", container)
-imageContainer.Size = UDim2.fromScale(1, 0.5)
-imageContainer.Position = UDim2.fromScale(0, 0)
-imageContainer.BackgroundColor3 = PRIMARY
-imageContainer.BackgroundTransparency = 0.9
-imageContainer.BorderSizePixel = 0
-imageContainer.ClipsDescendants = true
-
-local imageCorner = Instance.new("UICorner", imageContainer)
-imageCorner.CornerRadius = UDim.new(0, 20)
-
-local artImage = Instance.new("ImageLabel", imageContainer)
-artImage.Size = UDim2.fromScale(1, 1)
-artImage.Position = UDim2.fromScale(0.5, 0.5)
-artImage.AnchorPoint = Vector2.new(0.5, 0.5)
-artImage.BackgroundTransparency = 1
-artImage.Image = "rbxassetid://126865658241127"
-artImage.ScaleType = Enum.ScaleType.Crop
-artImage.ZIndex = 2
-
--- ====== العنوان ======
+-- العنوان
 local title = Instance.new("TextLabel", container)
-title.Size = UDim2.fromScale(1, 0.15)
-title.Position = UDim2.fromScale(0, 0.5)
+title.Size = UDim2.fromScale(1, 0.3)
+title.Position = UDim2.fromScale(0.5, 0.2)
+title.AnchorPoint = Vector2.new(0.5, 0.5)
 title.BackgroundTransparency = 1
 title.Text = "CLOCK 7"
 title.Font = Enum.Font.GothamBlack
-title.TextSize = 50
-title.TextColor3 = WHITE
-title.TextStrokeColor3 = PRIMARY
-title.TextStrokeTransparency = 0.3
-title.ZIndex = 3
+title.TextSize = 40
+title.TextColor3 = LIGHT_COPPER
+title.TextTransparency = 0
+title.Visible = true
 
--- ====== النص الفرعي ======
-local subText = Instance.new("TextLabel", container)
-subText.Size = UDim2.fromScale(1, 0.1)
-subText.Position = UDim2.fromScale(0, 0.65)
-subText.BackgroundTransparency = 1
-subText.Text = "Loading amazing content..."
-subText.Font = Enum.Font.Gotham
-subText.TextSize = 18
-subText.TextColor3 = Color3.fromRGB(200, 200, 200)
-subText.ZIndex = 3
+-- شريط التحميل
+local progressBg = Instance.new("Frame", container)
+progressBg.Size = UDim2.fromScale(0.8, 0.15)
+progressBg.Position = UDim2.fromScale(0.5, 0.6)
+progressBg.AnchorPoint = Vector2.new(0.5, 0.5)
+progressBg.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+progressBg.BorderSizePixel = 0
+progressBg.Visible = true
 
--- ====== شريط التقدم ======
-local progressContainer = Instance.new("Frame", container)
-progressContainer.Size = UDim2.fromScale(0.8, 0.08)
-progressContainer.Position = UDim2.fromScale(0.5, 0.8)
-progressContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-progressContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-progressContainer.BorderSizePixel = 0
-progressContainer.ZIndex = 3
-
-local progressCorner = Instance.new("UICorner", progressContainer)
+local progressCorner = Instance.new("UICorner", progressBg)
 progressCorner.CornerRadius = UDim.new(1, 0)
 
--- شريط التقدم المتحرك
-local progressBar = Instance.new("Frame", progressContainer)
+local progressBar = Instance.new("Frame", progressBg)
 progressBar.Size = UDim2.fromScale(0, 1)
-progressBar.BackgroundColor3 = PRIMARY
+progressBar.BackgroundColor3 = COPPER
 progressBar.BorderSizePixel = 0
-progressBar.ZIndex = 4
+progressBar.Visible = true
 
-local progressBarCorner = Instance.new("UICorner", progressBar)
-progressBarCorner.CornerRadius = UDim.new(1, 0)
+local barCorner = Instance.new("UICorner", progressBar)
+barCorner.CornerRadius = UDim.new(1, 0)
 
--- تدرج للشريط
-local progressGradient = Instance.new("UIGradient", progressBar)
-progressGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, PRIMARY),
-    ColorSequenceKeypoint.new(0.5, SECONDARY),
-    ColorSequenceKeypoint.new(1, ACCENT)
-})
-progressGradient.Rotation = 90
+-- العداد
+local percent = Instance.new("TextLabel", container)
+percent.Size = UDim2.fromScale(1, 0.2)
+percent.Position = UDim2.fromScale(0.5, 0.8)
+percent.AnchorPoint = Vector2.new(0.5, 0.5)
+percent.BackgroundTransparency = 1
+percent.Text = "0%"
+percent.Font = Enum.Font.GothamBold
+percent.TextSize = 30
+percent.TextColor3 = LIGHT_COPPER
+percent.TextTransparency = 0
+percent.Visible = true
 
--- ====== نسبة التقدم ======
-local percentLabel = Instance.new("TextLabel", container)
-percentLabel.Size = UDim2.fromScale(0.3, 0.1)
-percentLabel.Position = UDim2.fromScale(0.5, 0.9)
-percentLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-percentLabel.BackgroundTransparency = 1
-percentLabel.Text = "0%"
-percentLabel.Font = Enum.Font.GothamBold
-percentLabel.TextSize = 30
-percentLabel.TextColor3 = WHITE
-percentLabel.ZIndex = 3
-
--- ====== تأثيرات حركية ======
-RunService.RenderStepped:Connect(function(dt)
-    local time = tick()
-    
-    -- حركة الجسيمات
-    for _, p in ipairs(particles) do
-        local pos = p.frame.Position
-        local newX = pos.X.Scale + p.speed.X * dt * 60
-        local newY = pos.Y.Scale + p.speed.Y * dt * 60
-        
-        if newX < 0 or newX > 1 then
-            p.speed = Vector2.new(-p.speed.X, p.speed.Y)
-            newX = math.clamp(newX, 0, 1)
-        end
-        if newY < 0 or newY > 1 then
-            p.speed = Vector2.new(p.speed.X, -p.speed.Y)
-            newY = math.clamp(newY, 0, 1)
-        end
-        
-        p.frame.Position = UDim2.fromScale(newX, newY)
-        p.frame.BackgroundTransparency = 0.3 + math.sin(time * p.transparencySpeed) * 0.2
-    end
-    
-    -- دوران التدرج في الخلفية
-    gradient.Rotation = gradient.Rotation + dt * 10
-end)
-
--- ====== تأثير الدخول ======
-container.Size = UDim2.fromScale(0, 0)
-TweenService:Create(container, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-    Size = UDim2.fromScale(0.5, 0.6)
-}):Play()
-
-TweenService:Create(blur, TweenInfo.new(0.8), {
-    Size = 0
-}):Play()
-
-task.wait(0.5)
-
--- ====== التحميل ======
+-- بدون أي تأخير - نبدأ التحميل فوراً
 local success, result = pcall(function()
     return game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Script")
 end)
 
 if success and result then
+    -- تحديث سريع جداً
     for i = 1, 100 do
         progressBar.Size = UDim2.fromScale(i/100, 1)
-        percentLabel.Text = i .. "%"
-        
-        if i % 20 == 0 then
-            TweenService:Create(progressBar, TweenInfo.new(0.2), {
-                BackgroundColor3 = SECONDARY
-            }):Play()
-            task.wait(0.05)
-            TweenService:Create(progressBar, TweenInfo.new(0.2), {
-                BackgroundColor3 = PRIMARY
-            }):Play()
-        end
-        
-        task.wait(0.01)
+        percent.Text = i .. "%"
+        task.wait(0.002) -- سريع جداً
     end
     
-    percentLabel.Text = "✓ READY"
-    subText.Text = "Launching..."
-    
-    task.wait(0.5)
+    percent.Text = "✓"
+    task.wait(0.2)
     
     -- تشغيل السكربت
     pcall(function() loadstring(result)() end)
     
-    -- تلاشي ناعم
-    TweenService:Create(gui, TweenInfo.new(0.5), {
-        Enabled = false
-    }):Play()
-    
+    -- إخفاء سريع
+    gui:Destroy()
 else
-    percentLabel.Text = "✗ ERROR"
-    subText.Text = "Failed to load content"
-    subText.TextColor3 = Color3.fromRGB(255, 80, 80)
-end
-
-task.wait(2)
-
--- تنظيف إذا لم يتم التلاشي
-if gui.Enabled then
-    TweenService:Create(gui, TweenInfo.new(0.5), {
-        Enabled = false
-    }):Play()
+    percent.Text = "✗"
+    task.wait(0.5)
+    gui:Destroy()
 end
