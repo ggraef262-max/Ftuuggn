@@ -7919,7 +7919,6 @@ Section = UniversalTab:AddSection({
 UniversalTab:AddButton({
   Name = "مضاد بانج",
   Callback = function()
-    -- line: [0, 0] id: 126
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%E2%80%8Fint%20bang"))()
   end,
 })
@@ -7927,7 +7926,6 @@ UniversalTab:AddButton({
 UniversalTab:AddButton({
   Name = "مضاد فلنق",
   Callback = function()
-    -- line: [0, 0] id: 126
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%E2%80%8Fint%20bang"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Fling"))()
   end,
 })
