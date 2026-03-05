@@ -2380,7 +2380,7 @@ Troll:AddButton({
 local kill = Troll:AddSection({Name = "قتل بالنقر على اللاعب"})
 
 Troll:AddButton({
-  Name = "قتل بالابواب [Beta]",
+  Name = "قتل بالابواب [اصدار 1.0]",
 Description = "Para Usar, Recomendo chegar perto de outras portas, apos ela ir até você, clique no jogador que deseja flingar",
   Callback = function()
 local Players = game:GetService("Players")
@@ -3061,7 +3061,7 @@ local LocalPlayer = Players.LocalPlayer
 
 -- إنشاء الأداة
 local tool = Instance.new("Tool")
-tool.Name = "GhimXRamiتجميد الناس"
+tool.Name = "متوقفه بسبب مطور الماب تجميد الناس"
 tool.RequiresHandle = false
 tool.CanBeDropped = false
 tool.Parent = LocalPlayer.Backpack
@@ -5815,11 +5815,11 @@ Section1:AddButton({
 local Tab = Window:MakeTab({"اغاني مجانية", "Music"})
 
 -- Create a section
-Tab:AddSection({"تشغيل الصوت للكل"})
+Tab:AddSection({" تشغيل الصوت في للكل وفي لا"})
 
 -- Lista de áudios
 local audios = {
-    {Name = "يابكايه", ID = 98640789490482},
+    {Name = "يابكايه اغنيه لليبيه", ID = 98640789490482},
     {Name = "صراخ", ID = 5710016194},
     {Name = "مخيف", ID = 85435253347146},
     {Name = "صوت عالي", ID = 6855150757},
@@ -5858,10 +5858,10 @@ local audios = {
     {Name = "Uh Que Nojo", ID = 103440368630269},
     {Name = "Sai dai Lava Prato", ID = 101232400175829},
     {Name = "Seloko num compensa", ID = 78442476709262},
-    {Name = "(NEW) Chimpanzini Bananini Funk", ID = 137148228908678},
-    {Name = "(NEW) Candyland - Tobu", ID = 118939739460633},
-    {Name = "(NEW) نغمة ترند", ID = 100656590080703},
-    {Name = "(NEW) não to entendendo nd meme estourado", ID = 7962533987},
+    {Name = "(جديده) Chimpanzini Bananini Funk", ID = 137148228908678},
+    {Name = "(جديده) Candyland - Tobu", ID = 118939739460633},
+    {Name = "(جديده) نغمة ترند", ID = 100656590080703},
+    {Name = "(جديده) não to entendendo nd meme estourado", ID = 7962533987},
 }
 
 local selectedAudioID
@@ -5876,7 +5876,7 @@ Tab:AddTextBox({
     end
 })
 
-Tab:AddParagraph({"Info", "تكرار الصوت (١٢٣٤٥٦٧٨٩)"}
+
 
 -- Adicionar uma dropdown para selecionar o áudio
 local audioNames = {}
