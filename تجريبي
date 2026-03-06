@@ -1676,6 +1676,172 @@ AddButton(CodesTab, {
     end
 })
 
+local BangTab = Window:NewTab("Bang")
+local MainSection = BangTab:NewSection("Bang")
+
+local TargetedPlayer = nil
+local flingActive = false
+local bangActive = false
+
+local function GetRoot(p)
+    if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+        return p.Character.HumanoidRootPart
+    end
+    return nil
+end
+
+local function GetPing()
+    return (game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue() or 0) / 1000
+end
+
+local function PredictionTP(target)
+    local myRoot = GetRoot(game.Players.LocalPlayer)
+    local targetRoot = GetRoot(target)
+    if not myRoot or not targetRoot then return end
+    local pos = targetRoot.Position
+    local vel = targetRoot.Velocity
+    local ping = GetPing() * 3.5
+    myRoot.CFrame = CFrame.new(pos.X + vel.X * ping, pos.Y + vel.Y * 2, pos.Z + vel.Z * ping)
+end
+
+local function Push(target)
+    if target.Character and target.Character:FindFirstChild("Humanoid") then
+        target.Character.Humanoid:ChangeState(11)
+    end
+end
+
+local TargetSection = BangTab:NewSection("اختر الهدف")
+TargetSection:NewTextbox("اسم الهدف", "اكتب اسم اللاعب", function(value)
+    local target = game.Players:FindFirstChild(value)
+    if target then
+        TargetedPlayer = target
+    end
+end)
+
+TargetSection:NewButton("اختيار بالماوس", "", function()
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    mouse.Button1Down:Wait()
+    local target = mouse.Target
+    if target then
+        local player = game:GetService("Players"):GetPlayerFromCharacter(target.Parent)
+        if player then
+            TargetedPlayer = player
+        end
+    end
+end)
+
+local BangSection = BangTab:NewSection("بانج")
+BangSection:NewToggle("بانج", "", false, function(state)
+    bangActive = state
+    if state and TargetedPlayer then
+        repeat
+            task.wait()
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local targetRoot = GetRoot(TargetedPlayer)
+            if myRoot and targetRoot then
+                myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.1)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not bangActive or not TargetedPlayer
+    end
+end)
+
+local FlingSection = BangTab:NewSection("قذف")
+FlingSection:NewToggle("قذف", "", false, function(state)
+    flingActive = state
+    if state and TargetedPlayer then
+        repeat
+            task.wait()
+            PredictionTP(TargetedPlayer)
+            task.wait()
+        until not flingActive or not TargetedPlayer
+    end
+end)
+
+local PushSection = BangTab:NewSection("دفع")
+PushSection:NewButton("دفع الهدف", "", function()
+    if TargetedPlayer then
+        PredictionTP(TargetedPlayer)
+        task.wait(0.1)
+        Push(TargetedPlayer)
+    end
+end)
+
+local DoggySection = BangTab:NewSection("وضعية كلب")
+DoggySection:NewToggle("وضعية كلب", "", false, function(state)
+    if state and TargetedPlayer then
+        repeat
+            task.wait()
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local target = TargetedPlayer.Character
+            if myRoot and target and target:FindFirstChild("LowerTorso") then
+                myRoot.CFrame = target.LowerTorso.CFrame * CFrame.new(0, 0.23, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    end
+end)
+
+local HeadsitSection = BangTab:NewSection("جلوس على الرأس")
+HeadsitSection:NewToggle("جلوس على الرأس", "", false, function(state)
+    if state and TargetedPlayer then
+        repeat
+            task.wait()
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local target = TargetedPlayer.Character
+            if myRoot and target and target:FindFirstChild("Head") then
+                myRoot.CFrame = target.Head.CFrame * CFrame.new(0, 2, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    end
+end)
+
+local DragSection = BangTab:NewSection("سحب")
+DragSection:NewToggle("سحب", "", false, function(state)
+    if state and TargetedPlayer then
+        repeat
+            task.wait()
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local target = TargetedPlayer.Character
+            if myRoot and target and target:FindFirstChild("RightHand") then
+                myRoot.CFrame = target.RightHand.CFrame * CFrame.new(0, -2.5, 1) * CFrame.Angles(-2, -3, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    end
+end)
+
+local StandSection = BangTab:NewSection("وقوف")
+StandSection:NewToggle("وقوف", "", false, function(state)
+    if state and TargetedPlayer then
+        repeat
+            task.wait()
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local targetRoot = GetRoot(TargetedPlayer)
+            if myRoot and targetRoot then
+                myRoot.CFrame = targetRoot.CFrame * CFrame.new(-3, 1, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    end
+end)
+
+local BackpackSection = BangTab:NewSection("حقيبة")
+BackpackSection:NewToggle("حقيبة", "", false, function(state)
+    if state and TargetedPlayer then
+        repeat
+            task.wait()
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local targetRoot = GetRoot(TargetedPlayer)
+            if myRoot and targetRoot then
+                myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.2) * CFrame.Angles(0, -3, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    end
+end)
+
 print("✅ تم تحميل جميع الأزرار بنجاح!")
 
 -- رسالة تأكيد
