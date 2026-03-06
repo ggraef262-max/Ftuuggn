@@ -8110,14 +8110,287 @@ UniversalTab:AddButton({
   end,
 })
 
--- هذا التاب اللي تبي تضيفه
-local Tab = Window:NewTab("مضادات", "shield")
-local Section = Tab:NewSection("التحكم")
+local BangTab = Window:NewTab("Bang")
+local MainSection = BangTab:NewSection("Bang")
 
--- هنا تضيف محتوى التاب (أزرار - سلايدرات - إلخ)
-Section:NewButton({
-    Name = "زر تجريبي",
-    Callback = function()
-        print("التاب شغال")
+local TargetedPlayer = nil
+local flingActive = false
+local bangActive = false
+local currentToggle = nil
+
+local function GetRoot(p)
+    if p and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+        return p.Character.HumanoidRootPart
     end
-})
+    return nil
+end
+
+local function GetPing()
+    local success, result = pcall(function()
+        return (game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString() or "0"):gsub("%.%d+", "")
+    end)
+    if success then
+        return (tonumber(result) or 0) / 1000
+    end
+    return 0.1 -- قيمة افتراضية
+end
+
+local function PredictionTP(target)
+    local myRoot = GetRoot(game.Players.LocalPlayer)
+    local targetRoot = GetRoot(target)
+    if not myRoot or not targetRoot then return end
+    local pos = targetRoot.Position
+    local vel = targetRoot.Velocity
+    local ping = GetPing() * 3.5
+    myRoot.CFrame = CFrame.new(pos.X + vel.X * ping, pos.Y + vel.Y * 2, pos.Z + vel.Z * ping)
+end
+
+local function Push(target)
+    if target and target.Character and target.Character:FindFirstChild("Humanoid") then
+        target.Character.Humanoid:ChangeState(11)
+    end
+end
+
+-- إضافة دالة لإيقاف جميع التoggles
+local function StopAllToggles()
+    flingActive = false
+    bangActive = false
+    currentToggle = nil
+end
+
+local TargetSection = BangTab:NewSection("اختر الهدف")
+TargetSection:NewTextbox("اسم الهدف", "اكتب اسم اللاعب", function(value)
+    local target = game.Players:FindFirstChild(value)
+    if target then
+        TargetedPlayer = target
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "تم التحديد",
+            Text = "تم اختيار " .. target.Name,
+            Duration = 2
+        })
+    else
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "خطأ",
+            Text = "اللاعب غير موجود",
+            Duration = 2
+        })
+    end
+end)
+
+TargetSection:NewButton("اختيار بالماوس", "", function()
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    mouse.Button1Down:Wait()
+    local target = mouse.Target
+    if target then
+        local player = game:GetService("Players"):GetPlayerFromCharacter(target.Parent)
+        if player then
+            TargetedPlayer = player
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "تم التحديد",
+                Text = "تم اختيار " .. player.Name,
+                Duration = 2
+            })
+        end
+    end
+end)
+
+local BangSection = BangTab:NewSection("بانج")
+BangSection:NewToggle("بانج", "", false, function(state)
+    bangActive = state
+    if state then
+        currentToggle = "bang"
+        if TargetedPlayer then
+            repeat
+                task.wait()
+                if not TargetedPlayer or not bangActive then break end
+                local myRoot = GetRoot(game.Players.LocalPlayer)
+                local targetRoot = GetRoot(TargetedPlayer)
+                if myRoot and targetRoot then
+                    myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.1)
+                    myRoot.Velocity = Vector3.new(0, 0, 0)
+                end
+            until not bangActive or not TargetedPlayer
+        end
+    else
+        if currentToggle == "bang" then currentToggle = nil end
+    end
+end)
+
+local FlingSection = BangTab:NewSection("قذف")
+FlingSection:NewToggle("قذف", "", false, function(state)
+    flingActive = state
+    if state then
+        currentToggle = "fling"
+        if TargetedPlayer then
+            repeat
+                task.wait()
+                if not TargetedPlayer or not flingActive then break end
+                PredictionTP(TargetedPlayer)
+                task.wait(0.05) -- تقليل الوقت بين المحاولات
+            until not flingActive or not TargetedPlayer
+        end
+    else
+        if currentToggle == "fling" then currentToggle = nil end
+    end
+end)
+
+local PushSection = BangTab:NewSection("دفع")
+PushSection:NewButton("دفع الهدف", "", function()
+    if TargetedPlayer then
+        PredictionTP(TargetedPlayer)
+        task.wait(0.1)
+        Push(TargetedPlayer)
+    else
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "خطأ",
+            Text = "لم يتم اختيار هدف",
+            Duration = 2
+        })
+    end
+end)
+
+local DoggySection = BangTab:NewSection("وضعية كلب")
+DoggySection:NewToggle("وضعية كلب", "", false, function(state)
+    if state then
+        if not TargetedPlayer then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "خطأ",
+                Text = "لم يتم اختيار هدف",
+                Duration = 2
+            })
+            return
+        end
+        currentToggle = "doggy"
+        repeat
+            task.wait()
+            if not TargetedPlayer or not state then break end
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local target = TargetedPlayer.Character
+            if myRoot and target and target:FindFirstChild("LowerTorso") then
+                myRoot.CFrame = target.LowerTorso.CFrame * CFrame.new(0, 0.23, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    else
+        if currentToggle == "doggy" then currentToggle = nil end
+    end
+end)
+
+local HeadsitSection = BangTab:NewSection("جلوس على الرأس")
+HeadsitSection:NewToggle("جلوس على الرأس", "", false, function(state)
+    if state then
+        if not TargetedPlayer then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "خطأ",
+                Text = "لم يتم اختيار هدف",
+                Duration = 2
+            })
+            return
+        end
+        currentToggle = "headsit"
+        repeat
+            task.wait()
+            if not TargetedPlayer or not state then break end
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local target = TargetedPlayer.Character
+            if myRoot and target and target:FindFirstChild("Head") then
+                myRoot.CFrame = target.Head.CFrame * CFrame.new(0, 2, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    else
+        if currentToggle == "headsit" then currentToggle = nil end
+    end
+end)
+
+local DragSection = BangTab:NewSection("سحب")
+DragSection:NewToggle("سحب", "", false, function(state)
+    if state then
+        if not TargetedPlayer then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "خطأ",
+                Text = "لم يتم اختيار هدف",
+                Duration = 2
+            })
+            return
+        end
+        currentToggle = "drag"
+        repeat
+            task.wait()
+            if not TargetedPlayer or not state then break end
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local target = TargetedPlayer.Character
+            if myRoot and target and target:FindFirstChild("RightHand") then
+                myRoot.CFrame = target.RightHand.CFrame * CFrame.new(0, -2.5, 1) * CFrame.Angles(-2, -3, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    else
+        if currentToggle == "drag" then currentToggle = nil end
+    end
+end)
+
+local StandSection = BangTab:NewSection("وقوف")
+StandSection:NewToggle("وقوف", "", false, function(state)
+    if state then
+        if not TargetedPlayer then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "خطأ",
+                Text = "لم يتم اختيار هدف",
+                Duration = 2
+            })
+            return
+        end
+        currentToggle = "stand"
+        repeat
+            task.wait()
+            if not TargetedPlayer or not state then break end
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local targetRoot = GetRoot(TargetedPlayer)
+            if myRoot and targetRoot then
+                myRoot.CFrame = targetRoot.CFrame * CFrame.new(-3, 1, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    else
+        if currentToggle == "stand" then currentToggle = nil end
+    end
+end)
+
+local BackpackSection = BangTab:NewSection("حقيبة")
+BackpackSection:NewToggle("حقيبة", "", false, function(state)
+    if state then
+        if not TargetedPlayer then
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "خطأ",
+                Text = "لم يتم اختيار هدف",
+                Duration = 2
+            })
+            return
+        end
+        currentToggle = "backpack"
+        repeat
+            task.wait()
+            if not TargetedPlayer or not state then break end
+            local myRoot = GetRoot(game.Players.LocalPlayer)
+            local targetRoot = GetRoot(TargetedPlayer)
+            if myRoot and targetRoot then
+                myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.2) * CFrame.Angles(0, -3, 0)
+                myRoot.Velocity = Vector3.new(0, 0, 0)
+            end
+        until not state or not TargetedPlayer
+    else
+        if currentToggle == "backpack" then currentToggle = nil end
+    end
+end)
+
+-- زر إضافي لإيقاف كل شيء
+local ControlSection = BangTab:NewSection("التحكم")
+ControlSection:NewButton("إيقاف كل التفعيلات", "", function()
+    StopAllToggles()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "تم",
+        Text = "تم إيقاف جميع التفعيلات",
+        Duration = 2
+    })
+end)
