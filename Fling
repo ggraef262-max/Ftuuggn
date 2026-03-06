@@ -1,324 +1,164 @@
 --[[
-    clock7 - AntiFling + RemoveFall محسن
+	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
 ]]
-
+-- AntiFling + RemoveFall (respawn-safe) --
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local player = Players.LocalPlayer
 
-if getgenv().Clock7Running then
+if getgenv().AntiFlingRunning then
     pcall(function()
         StarterGui:SetCore("SendNotification", {
-            Title = "clock7",
-            Text = "السكريبت شغال بالفعل",
-            Duration = 2
+            Title = "Anti-Fling",
+            Text = "Script is already running",
+            Duration = 3
         })
     end)
+    print("[AntiFling] already running, aborting.")
     return
 end
-getgenv().Clock7Running = true
+getgenv().AntiFlingRunning = true
+print("[AntiFling] executed")
 
--- انتظار تحميل اللاعب
-repeat wait() until player and player.Character
+local player = Players.LocalPlayer
+if not player then
+    warn("[AntiFling] LocalPlayer not found.")
+    return
+end
 
--- واجهة محسنة
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "clock7"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Parent = player:WaitForChild("PlayerGui")
-
--- الإطار الرئيسي مع تأثيرات
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 240, 0, 320)
-MainFrame.Position = UDim2.new(0.02, 0, 0.3, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-MainFrame.BackgroundTransparency = 0.1
-MainFrame.BorderSizePixel = 0
-MainFrame.Active = true
-MainFrame.Draggable = true
-MainFrame.ClipsDescendants = true
-MainFrame.Parent = ScreenGui
-
--- إطار داخلي
-local InnerFrame = Instance.new("Frame")
-InnerFrame.Size = UDim2.new(1, -20, 1, -20)
-InnerFrame.Position = UDim2.new(0, 10, 0, 10)
-InnerFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-InnerFrame.BorderSizePixel = 0
-InnerFrame.Parent = MainFrame
-
--- عنوان
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, 0, 0, 45)
-Title.Position = UDim2.new(0, 0, 0, 0)
-Title.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
-Title.Text = "🔷 clock7 🔷"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextScaled = true
-Title.Font = Enum.Font.GothamBold
-Title.BorderSizePixel = 0
-Title.Parent = InnerFrame
-
--- خط فاصل
-local Line = Instance.new("Frame")
-Line.Size = UDim2.new(1, -20, 0, 2)
-Line.Position = UDim2.new(0, 10, 0, 50)
-Line.BackgroundColor3 = Color3.fromRGB(80, 80, 255)
-Line.BorderSizePixel = 0
-Line.Parent = InnerFrame
-
--- زر AntiFling
-local AntiFlingBtn = Instance.new("TextButton")
-AntiFlingBtn.Size = UDim2.new(1, -20, 0, 45)
-AntiFlingBtn.Position = UDim2.new(0, 10, 0, 60)
-AntiFlingBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-AntiFlingBtn.Text = "✅ AntiFling: ON"
-AntiFlingBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-AntiFlingBtn.TextScaled = true
-AntiFlingBtn.Font = Enum.Font.Gotham
-AntiFlingBtn.BorderSizePixel = 0
-AntiFlingBtn.Parent = InnerFrame
-
--- زر RemoveFall
-local RemoveFallBtn = Instance.new("TextButton")
-RemoveFallBtn.Size = UDim2.new(1, -20, 0, 45)
-RemoveFallBtn.Position = UDim2.new(0, 10, 0, 115)
-RemoveFallBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-RemoveFallBtn.Text = "❌ Remove Fall: OFF"
-RemoveFallBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-RemoveFallBtn.TextScaled = true
-RemoveFallBtn.Font = Enum.Font.Gotham
-RemoveFallBtn.BorderSizePixel = 0
-RemoveFallBtn.Parent = InnerFrame
-
--- زر Gaze
-local GazeBtn = Instance.new("TextButton")
-GazeBtn.Size = UDim2.new(1, -20, 0, 45)
-GazeBtn.Position = UDim2.new(0, 10, 0, 170)
-GazeBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
-GazeBtn.Text = "🎯 Gaze: OFF"
-GazeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-GazeBtn.TextScaled = true
-GazeBtn.Font = Enum.Font.Gotham
-GazeBtn.BorderSizePixel = 0
-GazeBtn.Parent = InnerFrame
-
--- معلومات
-local InfoText = Instance.new("TextLabel")
-InfoText.Size = UDim2.new(1, -20, 0, 40)
-InfoText.Position = UDim2.new(0, 10, 0, 225)
-InfoText.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
-InfoText.Text = "Press G for Gaze\nDelta Version 2026"
-InfoText.TextColor3 = Color3.fromRGB(200, 200, 255)
-InfoText.TextScaled = true
-InfoText.Font = Enum.Font.Gotham
-InfoText.BorderSizePixel = 0
-InfoText.Parent = InnerFrame
-
--- متغيرات
+-- weak-key table so parts can GC
 local lastPositions = setmetatable({}, {__mode = "k"})
-local range = 25
+local range = 20
+
+-- reusable OverlapParams (we'll update FilterDescendantsInstances when character changes)
 local overlapParams = OverlapParams.new()
 overlapParams.FilterType = Enum.RaycastFilterType.Exclude
 
-local AntiFling = true
-local RemoveFall = false
-local GazeActive = false
-local gazeConnection
-local targetPos = Vector3.new(905, -500, 0)
-local lastCharPos
+local currentCharacter = player.Character
+local humanoid
 
--- ===== AntiFling =====
 local function setupCharacter(char)
     if not char then return end
+    currentCharacter = char
+    humanoid = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid", 5)
     overlapParams.FilterDescendantsInstances = {char}
+    -- clear old last positions to avoid stale state from previous character
     lastPositions = setmetatable({}, {__mode = "k"})
-    print("[clock7] Character updated")
+    if humanoid then
+        pcall(function()
+            humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+        end)
+    end
+    print("[AntiFling] character set ->", tostring(char.Name))
 end
 
-setupCharacter(player.Character)
-player.CharacterAdded:Connect(function(char)
-    wait(1)
-    setupCharacter(char)
-end)
+-- initial setup (wait if necessary)
+if not currentCharacter or not currentCharacter.Parent then
+    currentCharacter = player.Character or player.CharacterAdded:Wait()
+end
+setupCharacter(currentCharacter)
+player.CharacterAdded:Connect(function(char) setupCharacter(char) end)
 
--- AntiFling loop
+-- Anti-Fling loop (Heartbeat)
 RunService.Heartbeat:Connect(function()
-    if not AntiFling then return end
-    
     local char = player.Character
     if not char or not char.Parent then return end
-    
+    -- keep overlap filter up to date
     overlapParams.FilterDescendantsInstances = {char}
-    
+
     local cf, size = char:GetBoundingBox()
     local regionSize = size + Vector3.new(range, range, range)
     local ok, parts = pcall(function()
         return workspace:GetPartBoundsInBox(cf, regionSize, overlapParams)
     end)
-    
-    if ok and parts then
-        for _, part in ipairs(parts) do
-            pcall(function()
-                part.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-                part.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
-                part.Velocity = Vector3.new(0, 0, 0)
-                part.RotVelocity = Vector3.new(0, 0, 0)
-                
-                local lastPos = lastPositions[part]
-                if lastPos and (part.Position - lastPos).Magnitude > 1.5 then
-                    part.CanCollide = false
-                end
-                lastPositions[part] = part.Position
-            end)
+    if not ok or not parts then return end
+
+    for _, part in ipairs(parts) do
+        if part and part:IsA("BasePart") then
+            -- try modern Assembly velocity resets; fallback to Velocity where needed
+            pcall(function() part.AssemblyLinearVelocity = Vector3.new(0, 0, 0) end)
+            pcall(function() part.AssemblyAngularVelocity = Vector3.new(0, 0, 0) end)
+            -- fallback if executor doesn't support Assembly*:
+            pcall(function() part.Velocity = Vector3.new(0, 0, 0) end)
+            pcall(function() part.RotVelocity = Vector3.new(0, 0, 0) end)
+
+            local lastPos = lastPositions[part]
+            if lastPos and (part.Position - lastPos).Magnitude > 1 then
+                pcall(function() part.CanCollide = false end)
+            end
+            lastPositions[part] = part.Position
         end
     end
 end)
 
--- ===== RemoveFall =====
+-- Notify once
+pcall(function()
+    StarterGui:SetCore("SendNotification", {
+        Title = "Anti-Fling",
+        Text = "Protection Enabled",
+        Duration = 3
+    })
+end)
+
+-- ===================== Remove Fall UI =====================
+local playerGui = player:WaitForChild("PlayerGui")
+local gui = Instance.new("ScreenGui")
+gui.Name = "RemoveFallGui"
+gui.ResetOnSpawn = false -- keep GUI after respawn
+gui.Parent = playerGui
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 170, 0, 48)
+button.Position = UDim2.new(0.4, 0, 0.2, 0)
+button.Text = "Remove Fall Damage: OFF"
+button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Active = true
+button.Draggable = true
+button.Parent = gui
+
+local RemoveFall = false
+local loopRunning = false
+
 local function getRoot(char)
     return char and char:FindFirstChild("HumanoidRootPart")
 end
 
 local function startRemoveFall()
+    if loopRunning then return end
+    loopRunning = true
+    print("[RemoveFall] started")
     task.spawn(function()
         while RemoveFall do
             RunService.Heartbeat:Wait()
             local char = player.Character
             local root = getRoot(char)
-            
-            if char and root and root.Parent then
-                local vel = root.Velocity
+            local vel, movel = nil, 0.1
+
+            if char and char.Parent and root and root.Parent then
+                vel = root.Velocity
                 pcall(function() root.Velocity = Vector3.new(0, 0, 0) end)
-                
+
                 RunService.RenderStepped:Wait()
-                if root and root.Parent then
+                if player.Character and root and root.Parent then
                     pcall(function() root.Velocity = vel end)
+                end
+
+                RunService.Stepped:Wait()
+                if player.Character and root and root.Parent then
+                    pcall(function() root.Velocity = vel + Vector3.new(0, movel, 0) end)
+                    movel = -movel
                 end
             end
         end
+        loopRunning = false
+        print("[RemoveFall] stopped")
     end)
 end
 
--- ===== Gaze System =====
-local function toggleGaze()
-    if not player.Character then return end
-    
-    local hrp = player.Character:FindFirstChild("HumanoidRootPart")
-    if not hrp then return end
-    
-    if GazeActive then
-        GazeActive = false
-        GazeBtn.Text = "🎯 Gaze: OFF"
-        GazeBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
-        
-        if gazeConnection then
-            gazeConnection:Disconnect()
-            gazeConnection = nil
-        end
-        
-        if lastCharPos then
-            hrp.CFrame = CFrame.new(lastCharPos)
-        end
-        
-        workspace.FallenPartsDestroyHeight = -500
-        
-        if workspace.CurrentCamera and player.Character then
-            local humanoid = player.Character:FindFirstChildWhichIsA("Humanoid")
-            if humanoid then
-                workspace.CurrentCamera.CameraSubject = humanoid
-            end
-        end
-        
-        if workspace:FindFirstChild("GazePoint7") then
-            workspace.GazePoint7:Destroy()
-        end
-        
-        hrp.Anchored = false
-        
-    else
-        lastCharPos = hrp.Position
-        
-        local gazePart = Instance.new("Part")
-        gazePart.Size = Vector3.new(4, 1, 4)
-        gazePart.Position = lastCharPos
-        gazePart.Anchored = true
-        gazePart.CanCollide = false
-        gazePart.Transparency = 0.4
-        gazePart.BrickColor = BrickColor.new("Bright blue")
-        gazePart.Material = Enum.Material.Neon
-        gazePart.Name = "GazePoint7"
-        gazePart.Parent = workspace
-        
-        local pointLight = Instance.new("PointLight")
-        pointLight.Color = Color3.fromRGB(0, 150, 255)
-        pointLight.Range = 15
-        pointLight.Brightness = 2
-        pointLight.Parent = gazePart
-        
-        workspace.CurrentCamera.CameraSubject = gazePart
-        
-        GazeActive = true
-        GazeBtn.Text = "🎯 Gaze: ON"
-        GazeBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-        
-        wait(0.1)
-        workspace.FallenPartsDestroyHeight = -1000
-        
-        hrp.CFrame = CFrame.new(targetPos)
-        wait(0.05)
-        hrp.Anchored = true
-        
-        gazeConnection = RunService.Heartbeat:Connect(function()
-            if GazeActive and player.Character then
-                local root = player.Character:FindFirstChild("HumanoidRootPart")
-                if root then
-                    root.Velocity = Vector3.new(0, 0, 0)
-                    root.Anchored = true
-                end
-            end
-        end)
-    end
-end
-
--- ===== Buttons Events =====
-AntiFlingBtn.MouseButton1Click:Connect(function()
-    AntiFling = not AntiFling
-    AntiFlingBtn.Text = AntiFling and "✅ AntiFling: ON" or "❌ AntiFling: OFF"
-    AntiFlingBtn.BackgroundColor3 = AntiFling and Color3.fromRGB(0, 150, 255) or Color3.fromRGB(150, 0, 0)
-end)
-
-RemoveFallBtn.MouseButton1Click:Connect(function()
+button.MouseButton1Click:Connect(function()
     RemoveFall = not RemoveFall
-    RemoveFallBtn.Text = RemoveFall and "✅ Remove Fall: ON" or "❌ Remove Fall: OFF"
-    RemoveFallBtn.BackgroundColor3 = RemoveFall and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 50, 50)
-    
-    if RemoveFall then
-        startRemoveFall()
-    end
+    button.Text = "Remove Fall Damage: " .. (RemoveFall and "ON" or "OFF")
+    print("[RemoveFall] Toggle ->", RemoveFall and "ON" or "OFF")
+    if RemoveFall then startRemoveFall() end
 end)
-
-GazeBtn.MouseButton1Click:Connect(toggleGaze)
-
--- اختصار G
-UserInputService.InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.G and not UserInputService:GetFocusedTextBox() then
-        toggleGaze()
-    end
-end)
-
--- إشعار
-pcall(function()
-    StarterGui:SetCore("SendNotification", {
-        Title = "clock7",
-        Text = "تم التفعيل | Press G for Gaze",
-        Duration = 3
-    })
-end)
-
-print("✅ clock7 loaded successfully")
-print("🔥 AntiFling, RemoveFall, Gaze ready")
