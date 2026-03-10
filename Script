@@ -8111,42 +8111,19 @@ UniversalTab:AddButton({
 })
 
 
--- تبويب Bang فقط
-local BangTab = Window:MakeTab({Name = "Bang", Icon = "rbxassetid://4483345998", Premium = false})
+
+-- تبويب Bang
+local BangTab = Window:NewTab("Bang")
+local BangSection = BangTab:NewSection("التحكم بالهدف")
 
 -- المتغيرات العامة
 local TargetedPlayer = nil
 local flingActive = false
 local bangActive = false
 local currentToggle = nil
+local toggleLoops = {}
 
--- قسم اختيار الهدف
-local TargetSection = BangTab:NewSection("اختر الهدف")
-
-TargetSection:AddTextbox("اسم الهدف", "اكتب اسم اللاعب", function(value)
-    local target = game.Players:FindFirstChild(value)
-    if target then
-        TargetedPlayer = target
-        Library:Notify({Title = "تم التحديد", Description = "تم اختيار " .. target.Name, Duration = 3})
-    else
-        Library:Notify({Title = "خطأ", Description = "اللاعب غير موجود", Duration = 3})
-    end
-end)
-
-TargetSection:AddButton({Name = "اختيار بالماوس", Callback = function()
-    local mouse = game.Players.LocalPlayer:GetMouse()
-    mouse.Button1Down:Wait()
-    local target = mouse.Target
-    if target then
-        local player = game:GetService("Players"):GetPlayerFromCharacter(target.Parent)
-        if player then
-            TargetedPlayer = player
-            Library:Notify({Title = "تم التحديد", Description = "تم اختيار " .. player.Name, Duration = 3})
-        end
-    end
-end})
-
--- الوظائف الأساسية
+-- وظيفة الحصول على الجذر
 local function GetRoot(p)
     if p and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
         return p.Character.HumanoidRootPart
@@ -8154,195 +8131,234 @@ local function GetRoot(p)
     return nil
 end
 
-local function GetPing()
-    local success, result = pcall(function()
-        return (game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString() or "0"):gsub("%.%d+", "")
-    end)
-    if success then
-        return (tonumber(result) or 0) / 1000
-    end
-    return 0.1
-end
-
-local function PredictionTP(target)
-    local myRoot = GetRoot(game.Players.LocalPlayer)
-    local targetRoot = GetRoot(target)
-    if not myRoot or not targetRoot then return end
-    local pos = targetRoot.Position
-    local vel = targetRoot.Velocity
-    local ping = GetPing() * 3.5
-    myRoot.CFrame = CFrame.new(pos.X + vel.X * ping, pos.Y + vel.Y * 2, pos.Z + vel.Z * ping)
-end
-
-local function Push(target)
-    if target and target.Character and target.Character:FindFirstChild("Humanoid") then
-        target.Character.Humanoid:ChangeState(11)
-    end
-end
-
+-- وظيفة إيقاف كل التفعيلات
 local function StopAllToggles()
     flingActive = false
     bangActive = false
     currentToggle = nil
+    for _, loop in pairs(toggleLoops) do
+        loop = false
+    end
+    toggleLoops = {}
 end
 
--- قسم بانج
-local BangSection = BangTab:NewSection("التحكم بالهدف")
+-- قسم اختيار الهدف
+local TargetSection = BangTab:NewSection("اختر الهدف")
 
-BangSection:AddToggle({Name = "بانج", Default = false, Callback = function(state)
+TargetSection:NewTextBox("اسم الهدف", "اكتب اسم اللاعب", function(value)
+    local target = game.Players:FindFirstChild(value)
+    if target then
+        TargetedPlayer = target
+        Library:Notify({
+            Title = "تم التحديد",
+            Description = "تم اختيار " .. target.Name,
+            Duration = 3
+        })
+    else
+        Library:Notify({
+            Title = "خطأ",
+            Description = "اللاعب غير موجود",
+            Duration = 3
+        })
+    end
+end)
+
+TargetSection:NewButton("اختيار بالماوس", "", function()
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    mouse.Button1Down:Wait()
+    local target = mouse.Target
+    if target then
+        local player = game:GetService("Players"):GetPlayerFromCharacter(target.Parent)
+        if player then
+            TargetedPlayer = player
+            Library:Notify({
+                Title = "تم التحديد",
+                Description = "تم اختيار " .. player.Name,
+                Duration = 3
+            })
+        end
+    end
+end)
+
+-- التفعيلات
+BangSection:NewToggle("بانج", "", function(state)
     bangActive = state
     if state then
+        if not TargetedPlayer then
+            Library:Notify({
+                Title = "خطأ",
+                Description = "لم يتم اختيار هدف",
+                Duration = 2
+            })
+            bangActive = false
+            return
+        end
         currentToggle = "bang"
-        if TargetedPlayer then
-            repeat
-                task.wait()
-                if not TargetedPlayer or not bangActive then break end
+        toggleLoops.bang = true
+        
+        coroutine.wrap(function()
+            while toggleLoops.bang and bangActive and TargetedPlayer do
                 local myRoot = GetRoot(game.Players.LocalPlayer)
                 local targetRoot = GetRoot(TargetedPlayer)
+                
                 if myRoot and targetRoot then
                     myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.1)
                     myRoot.Velocity = Vector3.new(0, 0, 0)
                 end
-            until not bangActive or not TargetedPlayer
-        else
-            Library:Notify({Title = "خطأ", Description = "لم يتم اختيار هدف", Duration = 2})
-            bangActive = false
-        end
-    end
-end})
-
-BangSection:AddToggle({Name = "قذف", Default = false, Callback = function(state)
-    flingActive = state
-    if state then
-        currentToggle = "fling"
-        if TargetedPlayer then
-            repeat
                 task.wait()
-                if not TargetedPlayer or not flingActive then break end
-                PredictionTP(TargetedPlayer)
-                task.wait(0.05)
-            until not flingActive or not TargetedPlayer
-        else
-            Library:Notify({Title = "خطأ", Description = "لم يتم اختيار هدف", Duration = 2})
-            flingActive = false
-        end
-    end
-end})
-
-BangSection:AddButton({Name = "دفع الهدف", Callback = function()
-    if TargetedPlayer then
-        PredictionTP(TargetedPlayer)
-        task.wait(0.1)
-        Push(TargetedPlayer)
+            end
+        end)()
     else
-        Library:Notify({Title = "خطأ", Description = "لم يتم اختيار هدف", Duration = 2})
+        toggleLoops.bang = false
     end
-end})
+end)
 
-BangSection:AddToggle({Name = "وضعية كلب", Default = false, Callback = function(state)
+BangSection:NewToggle("وضعية كلب", "", function(state)
     if state then
         if not TargetedPlayer then
-            Library:Notify({Title = "خطأ", Description = "لم يتم اختيار هدف", Duration = 2})
+            Library:Notify({
+                Title = "خطأ",
+                Description = "لم يتم اختيار هدف",
+                Duration = 2
+            })
             return
         end
         currentToggle = "doggy"
-        repeat
-            task.wait()
-            if not TargetedPlayer or not state then break end
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local target = TargetedPlayer.Character
-            if myRoot and target and target:FindFirstChild("LowerTorso") then
-                myRoot.CFrame = target.LowerTorso.CFrame * CFrame.new(0, 0.23, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
+        toggleLoops.doggy = true
+        
+        coroutine.wrap(function()
+            while toggleLoops.doggy and state and TargetedPlayer do
+                local myRoot = GetRoot(game.Players.LocalPlayer)
+                local target = TargetedPlayer.Character
+                
+                if myRoot and target and target:FindFirstChild("LowerTorso") then
+                    myRoot.CFrame = target.LowerTorso.CFrame * CFrame.new(0, 0.23, 0)
+                    myRoot.Velocity = Vector3.new(0, 0, 0)
+                end
+                task.wait()
             end
-        until not state or not TargetedPlayer
+        end)()
+    else
+        toggleLoops.doggy = false
     end
-end})
+end)
 
-BangSection:AddToggle({Name = "جلوس على الرأس", Default = false, Callback = function(state)
+BangSection:NewToggle("جلوس على الرأس", "", function(state)
     if state then
         if not TargetedPlayer then
-            Library:Notify({Title = "خطأ", Description = "لم يتم اختيار هدف", Duration = 2})
+            Library:Notify({
+                Title = "خطأ",
+                Description = "لم يتم اختيار هدف",
+                Duration = 2
+            })
             return
         end
         currentToggle = "headsit"
-        repeat
-            task.wait()
-            if not TargetedPlayer or not state then break end
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local target = TargetedPlayer.Character
-            if myRoot and target and target:FindFirstChild("Head") then
-                myRoot.CFrame = target.Head.CFrame * CFrame.new(0, 2, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
+        toggleLoops.headsit = true
+        
+        coroutine.wrap(function()
+            while toggleLoops.headsit and state and TargetedPlayer do
+                local myRoot = GetRoot(game.Players.LocalPlayer)
+                local target = TargetedPlayer.Character
+                
+                if myRoot and target and target:FindFirstChild("Head") then
+                    myRoot.CFrame = target.Head.CFrame * CFrame.new(0, 2, 0)
+                    myRoot.Velocity = Vector3.new(0, 0, 0)
+                end
+                task.wait()
             end
-        until not state or not TargetedPlayer
+        end)()
+    else
+        toggleLoops.headsit = false
     end
-end})
+end)
 
-BangSection:AddToggle({Name = "سحب", Default = false, Callback = function(state)
+BangSection:NewToggle("سحب", "", function(state)
     if state then
         if not TargetedPlayer then
-            Library:Notify({Title = "خطأ", Description = "لم يتم اختيار هدف", Duration = 2})
+            Library:Notify({
+                Title = "خطأ",
+                Description = "لم يتم اختيار هدف",
+                Duration = 2
+            })
             return
         end
         currentToggle = "drag"
-        repeat
-            task.wait()
-            if not TargetedPlayer or not state then break end
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local target = TargetedPlayer.Character
-            if myRoot and target and target:FindFirstChild("RightHand") then
-                myRoot.CFrame = target.RightHand.CFrame * CFrame.new(0, -2.5, 1) * CFrame.Angles(-2, -3, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
+        toggleLoops.drag = true
+        
+        coroutine.wrap(function()
+            while toggleLoops.drag and state and TargetedPlayer do
+                local myRoot = GetRoot(game.Players.LocalPlayer)
+                local target = TargetedPlayer.Character
+                
+                if myRoot and target and target:FindFirstChild("RightHand") then
+                    myRoot.CFrame = target.RightHand.CFrame * CFrame.new(0, -2.5, 1) * CFrame.Angles(-2, -3, 0)
+                    myRoot.Velocity = Vector3.new(0, 0, 0)
+                end
+                task.wait()
             end
-        until not state or not TargetedPlayer
+        end)()
+    else
+        toggleLoops.drag = false
     end
-end})
+end)
 
-BangSection:AddToggle({Name = "وقوف", Default = false, Callback = function(state)
+BangSection:NewToggle("وقوف", "", function(state)
     if state then
         if not TargetedPlayer then
-            Library:Notify({Title = "خطأ", Description = "لم يتم اختيار هدف", Duration = 2})
+            Library:Notify({
+                Title = "خطأ",
+                Description = "لم يتم اختيار هدف",
+                Duration = 2
+            })
             return
         end
         currentToggle = "stand"
-        repeat
-            task.wait()
-            if not TargetedPlayer or not state then break end
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local targetRoot = GetRoot(TargetedPlayer)
-            if myRoot and targetRoot then
-                myRoot.CFrame = targetRoot.CFrame * CFrame.new(-3, 1, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
+        toggleLoops.stand = true
+        
+        coroutine.wrap(function()
+            while toggleLoops.stand and state and TargetedPlayer do
+                local myRoot = GetRoot(game.Players.LocalPlayer)
+                local targetRoot = GetRoot(TargetedPlayer)
+                
+                if myRoot and targetRoot then
+                    myRoot.CFrame = targetRoot.CFrame * CFrame.new(-3, 1, 0)
+                    myRoot.Velocity = Vector3.new(0, 0, 0)
+                end
+                task.wait()
             end
-        until not state or not TargetedPlayer
+        end)()
+    else
+        toggleLoops.stand = false
     end
-end})
+end)
 
-BangSection:AddToggle({Name = "حقيبة", Default = false, Callback = function(state)
+BangSection:NewToggle("حقيبة", "", function(state)
     if state then
         if not TargetedPlayer then
-            Library:Notify({Title = "خطأ", Description = "لم يتم اختيار هدف", Duration = 2})
+            Library:Notify({
+                Title = "خطأ",
+                Description = "لم يتم اختيار هدف",
+                Duration = 2
+            })
             return
         end
         currentToggle = "backpack"
-        repeat
-            task.wait()
-            if not TargetedPlayer or not state then break end
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local targetRoot = GetRoot(TargetedPlayer)
-            if myRoot and targetRoot then
-                myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.2) * CFrame.Angles(0, -3, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
+        toggleLoops.backpack = true
+        
+        coroutine.wrap(function()
+            while toggleLoops.backpack and state and TargetedPlayer do
+                local myRoot = GetRoot(game.Players.LocalPlayer)
+                local targetRoot = GetRoot(TargetedPlayer)
+                
+                if myRoot and targetRoot then
+                    myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.2) * CFrame.Angles(0, -3, 0)
+                    myRoot.Velocity = Vector3.new(0, 0, 0)
+                end
+                task.wait()
             end
-        until not state or not TargetedPlayer
+        end)()
+    else
+        toggleLoops.backpack = false
     end
-end})
-
--- قسم التحكم
-local ControlSection = BangTab:NewSection("التحكم")
-
-ControlSection:AddButton({Name = "إيقاف كل التفعيلات", Callback = function()
-    StopAllToggles()
-    Library:Notify({Title = "تم", Description = "تم إيقاف جميع التفعيلات", Duration = 2})
-end})
+end)
