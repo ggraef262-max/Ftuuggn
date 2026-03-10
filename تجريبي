@@ -262,7 +262,7 @@ pcall(function()
 end)
 
 -- تحميل الـ UI مرة واحدة فقط
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Kdjjx"))()
 
 
 local Window = redzlib:MakeWindow({
