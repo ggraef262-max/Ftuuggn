@@ -1,1852 +1,1359 @@
---TS7 was here.
--- ////////////
-shared.LoaderTitle = "Everlast HUB";
-shared.LoaderKeyFrames = {
-    [1] = {
-        2,
-        100
-    }
-};
+-- ==================================================
+-- SYSTEM BROKEN - COPPER COMPLETE EDITION
+-- ==================================================
+-- المطور: Dblack (مطور Clock7)
+-- واجهة نحاسية كاملة بكل الوظائف
+-- ==================================================
 
-local v2 = {
-    LoaderData = {
-        Name = shared.LoaderTitle or "A Loader",
-        Colors = shared.LoaderColors or {
-            Main = Color3.fromRGB(127, 255, 0),
-            Topic = Color3.fromRGB(0, 0, 0),
-            Title = Color3.fromRGB(255, 255, 255),
-            LoaderBackground = Color3.fromRGB(0, 0, 0),
-            LoaderSplash = Color3.fromRGB(0, 0, 0)
-        }
-    },
-    Keyframes = shared.LoaderKeyFrames or {
-        [1] = {
-            2,
-            100
-        }
-    }
-};
-
-local v3 = {
-    [1] = "",
-    [2] = "",
-};
-
-function TweenObject(v178, v179, v180)
-    game.TweenService:Create(v178, TweenInfo.new(v179, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), v180):Play();
+if game.CoreGui:FindFirstChild("SystemBroken_Copper") then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "CR8",
+        Text = "الواجهة محملة مسبقاً - اضغط INS للفتح",
+        Duration = 3
+    })
+    return
 end
 
-function CreateObject(v181, v182)
-    local v183 = Instance.new(v181);
-    local v184;
-    for v416, v417 in pairs(v182) do
-        if (v416 ~= "Parent") then
-            v183[v416] = v417;
-        else
-            v184 = v417;
-        end
-    end
-    v183.Parent = v184;
-    return v183;
-end
+-- ==================================================
+-- الألوان النحاسية
+-- ==================================================
+local colors = {
+    primary = Color3.fromRGB(45, 30, 20),
+    secondary = Color3.fromRGB(70, 45, 30),
+    accent = Color3.fromRGB(205, 127, 50),
+    accent2 = Color3.fromRGB(218, 138, 65),
+    accent3 = Color3.fromRGB(184, 115, 51),
+    accent4 = Color3.fromRGB(238, 173, 45),
+    accent5 = Color3.fromRGB(169, 89, 30),
+    text = Color3.fromRGB(255, 248, 235),
+    textDark = Color3.fromRGB(210, 180, 140),
+    bg1 = Color3.fromRGB(35, 25, 15),
+    bg2 = Color3.fromRGB(55, 40, 25),
+    bg3 = Color3.fromRGB(75, 55, 35),
+    success = Color3.fromRGB(144, 238, 144),
+    error = Color3.fromRGB(255, 99, 71),
+    warning = Color3.fromRGB(255, 215, 0),
+}
 
-local function v4(v186, v187)
-    local v188 = Instance.new("UICorner");
-    v188.CornerRadius = UDim.new(0, v186);
-    v188.Parent = v187;
-end
-
-local v5 = CreateObject("ScreenGui", {
-    Name = "Core",
-    Parent = game.CoreGui
-});
-
-local v6 = CreateObject("Frame", {
-    Name = "Main",
-    Parent = v5,
-    BackgroundColor3 = v2.LoaderData.Colors.Main,
-    BorderSizePixel = 0,
-    ClipsDescendants = true,
-    Position = UDim2.new(0.5, 0, 0.5, 0),
-    AnchorPoint = Vector2.new(0.5, 0.5),
-    Size = UDim2.new(0, 0, 0, 0)
-});
-v4(12, v6);
-
-local v7 = CreateObject("ImageLabel", {
-    Name = "UserImage",
-    Parent = v6,
-    BackgroundTransparency = 1,
-    Image = "rbxassetid://113646902595327",
-    Position = UDim2.new(0, 15, 0, 10),
-    Size = UDim2.new(0, 55, 0, 55)
-});
-v4(25, v7);
-
-local v8 = CreateObject("TextLabel", {
-    Name = "UserName",
-    Parent = v6,
-    BackgroundTransparency = 1,
-    Text = "                   | شڪرا على انتضارڪ |     ",
-    Position = UDim2.new(0, 60, 0, 20),
-    Size = UDim2.new(0, 300, 0, 70),
-    Font = Enum.Font.GothamBold,
-    TextColor3 = v2.LoaderData.Colors.Title,
-    TextSize = 14,
-    TextXAlignment = Enum.TextXAlignment.Left
-});
-
-local v9 = CreateObject("TextLabel", {
-    Name = "Top",
-    TextTransparency = 1,
-    Parent = v6,
-    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-    BackgroundTransparency = 1,
-    Position = UDim2.new(10, 10, 10, 10),
-    Size = UDim2.new(10, 10, 10, 10),
-    Font = Enum.Font.Gotham,
-    Text = "Loader",
-    TextColor3 = v2.LoaderData.Colors.Topic,
-    TextSize = 10,
-    TextXAlignment = Enum.TextXAlignment.Left
-});
-
-local v10 = CreateObject("TextLabel", {
-    Name = "Title",
-    Parent = v6,
-    TextTransparency = 1,
-    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-    BackgroundTransparency = 1,
-    Position = UDim2.new(0, 30, 0, 90),
-    Size = UDim2.new(0, 200, 0, 26),
-    Font = Enum.Font.Gotham,
-    RichText = true,
-    Text = "<b>" .. v2.LoaderData.Name .. "</b>",
-    TextColor3 = v2.LoaderData.Colors.Title,
-    TextSize = 14,
-    TextXAlignment = Enum.TextXAlignment.Left
-});
-
-local v11 = CreateObject("Frame", {
-    Name = "BG",
-    Parent = v6,
-    AnchorPoint = Vector2.new(0.5, 0),
-    BackgroundTransparency = 1,
-    BackgroundColor3 = v2.LoaderData.Colors.LoaderBackground,
-    BorderSizePixel = 0,
-    Position = UDim2.new(0.5, 0, 0, 70),
-    Size = UDim2.new(0.8500000238418579, 0, 0, 24)
-});
-v4(8, v11);
-
-local v12 = CreateObject("Frame", {
-    Name = "Progress",
-    Parent = v11,
-    BackgroundColor3 = v2.LoaderData.Colors.LoaderSplash,
-    BackgroundTransparency = 1,
-    BorderSizePixel = 0,
-    Size = UDim2.new(0, 0, 0, 24)
-});
-v4(8, v12);
-
-local v13 = CreateObject("TextLabel", {
-    Name = "StepLabel",
-    Parent = v6,
-    BackgroundTransparency = 1,
-    Position = UDim2.new(0.5, 0, 1, - 25),
-    Size = UDim2.new(1, - 20, 0, 20),
-    Font = Enum.Font.Gotham,
-    Text = "",
-    TextColor3 = v2.LoaderData.Colors.Topic,
-    TextSize = 14,
-    TextXAlignment = Enum.TextXAlignment.Center,
-    AnchorPoint = Vector2.new(0.5, 0.5)
-});
-
-function UpdateStepText(v191)
-    v13.Text = v3[v191] or "" ;
-end
-
-function UpdatePercentage(v193, v194)
-    TweenObject(v12, 0.5, {
-        Size = UDim2.new(v193 / 100, 0, 0, 24)
-    });
-    UpdateStepText(v194);
-end
-
-TweenObject(v6, 0.25, {
-    Size = UDim2.new(0, 346, 0, 121)
-});
-wait();
-TweenObject(v9, 0.5, {
-    TextTransparency = 0
-});
-TweenObject(v10, 0.5, {
-    TextTransparency = 0
-});
-TweenObject(v11, 0.5, {
-    BackgroundTransparency = 0
-});
-TweenObject(v12, 0.5, {
-    BackgroundTransparency = 0
-});
-
-for v195, v196 in pairs(v2.Keyframes) do
-    wait(v196[1]);
-    UpdatePercentage(v196[2], v195);
-end
-
-UpdatePercentage(100, 4);
-TweenObject(v9, 0.5, {
-    TextTransparency = 1
-});
-TweenObject(v10, 0.5, {
-    TextTransparency = 1
-});
-TweenObject(v11, 0.5, {
-    BackgroundTransparency = 1
-});
-TweenObject(v12, 0.5, {
-    BackgroundTransparency = 1
-});
-wait(0.5);
-TweenObject(v6, 0.25, {
-    Size = UDim2.new(0, 0, 0, 0)
-});
-wait(0.25);
-v5:Destroy();
-
-local Sound = Instance.new("Sound", game:GetService("SoundService"));
-Sound.SoundId = "rbxassetid://82845990304289";
-Sound:Play();
-
--- حماية من الأخطاء
-pcall(function()
-    game.Players.LocalPlayer.Character.Humanoid.Health = 100
-end)
-
-wait(0.1)
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Everlast";
-    Text = "-شڪراً على الانتضار-"; -- ARAB TEAM
-    Duration = 5;
-})
-
--- حماية من الأخطاء للـ Remote Events
-pcall(function()
-    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer("RolePlayName", "  | Everlast HUB |  ")
-end)
-
-pcall(function()
-    local args = {
-        [1] = "PickingRPNameColor",
-        [2] = Color3.fromRGB(127, 255, 0),
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
-end)
-
-pcall(function()
-    local args = {
-        [1] = "RolePlayBio",
-        [2] = "  | Everlast HUB |  "
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
-end)
-
-pcall(function()
-    local args = {
-        [1] = "PickingRPBioColor",
-        [2] = Color3.fromRGB(255, 215, 0),
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
-end)
-
--- تحميل الـ UI مرة واحدة فقط
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Kdjjx"))()
-
-
-local Window = redzlib:MakeWindow({
-    Title = "Everlast HUB",
-    SubTitle = "                       |  1.9V",
-    SaveFolder = "قيد التطوير"
-})
-
-Window:AddMinimizeButton({
-    Button = {
-        Image = "rbxassetid://113646902595327",
-        BackgroundTransparency = 15
-    },
-    Corner = {
-        CornerRadius = UDim.new(0, 6)
-    }
-})
-
-local InfoTab = Window:MakeTab({ 
-    Title = "حـقوق", 
-    Icon = "rbxassetid://113646902595327" 
-})
-
-InfoTab:AddDiscordInvite({
-    Name = " مـطور DBLACK",
-    Description = "تليجرام",
-    Logo = "rbxassetid://113646902595327",
-    Invite = "https://t.me/dblack9920",
-})
-
-InfoTab:AddSection({ "معلومات السكربت" })
-InfoTab:AddParagraph({ "المالك / المطور:", "DBLACK" })
-InfoTab:AddParagraph({ "فريق:", "R, المطور DBLACK" })
-InfoTab:AddParagraph({ "الهابل:", "Everlast HUB " })
-InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
-InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
-
-InfoTab:AddButton({
-    Name = "سكربت اضافي", 
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/muskarnu/Projects/main/DemoNtr.txt"))()
-    end
-})
-
-InfoTab:AddSection({ "اعادة دخول" })
-InfoTab:AddButton({
-    Name = "اعادة دخول للسيرفر",
-    Callback = function()
-        local TeleportService = game:GetService("TeleportService")
-        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
-    end
-}) 
-
-local UniversalTab = Window:MakeTab({ 
-    Title = "سكربتات متنوعة", 
-    Icon = "rbxassetid://6031085854" 
-})
-
--- Seção para Scripts Universais
-local Section = UniversalTab:AddSection({
-    Name = "سكربتات مفيدة"
-})
-
--- Botão para ShiftLock
-UniversalTab:AddButton({
-    Name = "سكربت قفل",
-    Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/N2tiHgyv"))()
-    end
-})
-
-UniversalTab:AddButton({
-    Name = "سكربـت الـرقـصـات",
-    Callback = function()
-        loadstring(game:HttpGet("https://scriptblox.com/raw/Baseplate-Fe-All-Emote-7386"))()
-    end,
-})
-
-UniversalTab:AddButton({
-    Name = "سكربـت الـرحـمة",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/n0kc/AtomicHub/main/Map-Al-Biout.lua"))()
-    end,
-})
-
-UniversalTab:AddButton({
-    Name = "سكربـت طـيـران السيارة",
-    Callback = function()
-        loadstring(game:HttpGet("https://abre.ai/fly-gui"))()
-    end,
-})
-
--- Botão para Ghost Hub
-UniversalTab:AddButton({
-    Name = "سكربت الشبح Ghost Hub",
-    Callback = function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-GhostHub-16534"))()
-    end
-})
-
--- Botão para Infinite Yield
-UniversalTab:AddButton({
-    Name = "InfiniteYield - ادمن انفنتي",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-    end
-})
-
--- Botão para Fly Gui
-UniversalTab:AddButton({
-    Name = "طيران",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Fly"))()
-    end
-})
-
--- Botão para Nameless Admin 
-UniversalTab:AddButton({
-    Name = "سكربت ادمن Nameless",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source"))()
-    end
-})
-
-UniversalTab:AddButton({
-    Name = "تحكم بالسيارات",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md", true))()
-    end
-})
-
-UniversalTab:AddButton({
-    Name = "سـكربـت ضـرب +18",
-    Callback = function()
-        loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
-    end
-})
-
-UniversalTab:AddButton({
-    Name = "سـكـربـت حـضـن",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/martinng5/martin/refs/heads/main/martin.lua.txt"))()
-    end
-})
-
-local UniversalTab = Window:MakeTab({"مضادات سكربتات من صنعي V2", "plane"})
-
--- متغيرات لتخزين حالة التشغيل لكل حماية
-local antiFlangEnabled = false
-local antiBangEnabled = false
-local antiSitEnabled = false
-local antiJumpEnabled = false
-local antiSpeedEnabled = false
-local antiTPEnabled = false
-local antiKickEnabled = false
-
--- جدول لتخزين الاتصالات
-local connections = {}
-
--- قسم الحمايات الرئيسي
-Section = UniversalTab:AddSection({
-    Name = "مضادات سكربتات من صنعي"
-})
-
-----------------------------------------------------------------
--- زر مضاد فلنق (Toggle)
-----------------------------------------------------------------
-UniversalTab:AddButton({
-    Name = "🔴 مضاد فلنق",
-    Info = "اضغط للتشغيل/الإيقاف",
-    Callback = function()
-        antiFlangEnabled = not antiFlangEnabled
-        
-        if antiFlangEnabled then
-            -- تشغيل مضاد فلنق
-            local player = game:GetService("Players").LocalPlayer
-            connections.antiFlang = player.CharacterAdded:Connect(function(char)
-                wait(0.5)
-                local humanoid = char:WaitForChild("Humanoid")
-                humanoid:GetPropertyChangedSignal("PlatformStand"):Connect(function()
-                    if humanoid.PlatformStand then
-                        humanoid.PlatformStand = false
-                    end
-                end)
-            end)
-            
-            -- تغيير لون الزر للأخضر (دلالة على التشغيل)
-            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0) -- أخضر
-            
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "✅ مضاد فلنق",
-                Text = "تم التشغيل",
-                Duration = 1
-            })
-        else
-            -- إيقاف مضاد فلنق
-            if connections.antiFlang then
-                connections.antiFlang:Disconnect()
-                connections.antiFlang = nil
-            end
-            
-            -- تغيير لون الزر للأحمر (دلالة على الإيقاف)
-            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0) -- أحمر
-            
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "🔴 مضاد فلنق",
-                Text = "تم الإيقاف",
-                Duration = 1
-            })
-        end
-    end,
-})
-
-----------------------------------------------------------------
--- زر مضاد بانج (Toggle) - مع كود مدمج
-----------------------------------------------------------------
-UniversalTab:AddButton({
-    Name = "🔴 مضاد بانج",
-    Info = "اضغط للتشغيل/الإيقاف",
-    Callback = function()
-        antiBangEnabled = not antiBangEnabled
-        
-        if antiBangEnabled then
-            -- تشغيل مضاد بانج (كود مدمج)
-            local mt = getrawmetatable(game)
-            local oldNamecall = mt.__namecall
-            setreadonly(mt, false)
-            
-            connections.antiBang = game:GetService("RunService").Stepped:Connect(function()
-                local player = game:GetService("Players").LocalPlayer
-                if player and player.Character then
-                    local humanoid = player.Character:FindFirstChild("Humanoid")
-                    if humanoid and humanoid.Health <= 0 then
-                        humanoid.Health = 100
-                    end
-                end
-            end)
-            
-            mt.__namecall = newcclosure(function(self, ...)
-                local method = getnamecallmethod()
-                if method == "TakeDamage" or method == "Damage" then
-                    return nil
-                end
-                return oldNamecall(self, ...)
-            end)
-            
-            setreadonly(mt, true)
-            
-            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "✅ مضاد بانج",
-                Text = "تم التشغيل",
-                Duration = 1
-            })
-        else
-            -- إيقاف مضاد بانج
-            if connections.antiBang then
-                connections.antiBang:Disconnect()
-                connections.antiBang = nil
-            end
-            
-            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "🔴 مضاد بانج",
-                Text = "تم الإيقاف",
-                Duration = 1
-            })
-        end
-    end,
-})
-
-----------------------------------------------------------------
--- زر مضاد جلوس (Toggle)
-----------------------------------------------------------------
-UniversalTab:AddButton({
-    Name = "🔴 مضاد جلوس",
-    Info = "اضغط للتشغيل/الإيقاف",
-    Callback = function()
-        antiSitEnabled = not antiSitEnabled
-        
-        if antiSitEnabled then
-            -- تشغيل مضاد جلوس
-            local player = game:GetService("Players").LocalPlayer
-            connections.antiSit = game:GetService("RunService").Stepped:Connect(function()
-                if player and player.Character then
-                    local humanoid = player.Character:FindFirstChild("Humanoid")
-                    if humanoid and humanoid.Sit then
-                        humanoid.Sit = false
-                    end
-                end
-            end)
-            
-            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "✅ مضاد جلوس",
-                Text = "تم التشغيل",
-                Duration = 1
-            })
-        else
-            -- إيقاف مضاد جلوس
-            if connections.antiSit then
-                connections.antiSit:Disconnect()
-                connections.antiSit = nil
-            end
-            
-            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "🔴 مضاد جلوس",
-                Text = "تم الإيقاف",
-                Duration = 1
-            })
-        end
-    end,
-})
-
-----------------------------------------------------------------
--- زر مضاد جامبر (Toggle)
-----------------------------------------------------------------
-UniversalTab:AddButton({
-    Name = "🔴 مضاد جامبر",
-    Info = "حماية من سكربتات القفز",
-    Callback = function()
-        antiJumpEnabled = not antiJumpEnabled
-        
-        if antiJumpEnabled then
-            -- تشغيل مضاد جامبر
-            local player = game:GetService("Players").LocalPlayer
-            connections.antiJump = player.CharacterAdded:Connect(function(char)
-                local humanoid = char:WaitForChild("Humanoid")
-                humanoid.JumpPower = 50
-                humanoid.JumpHeight = 7.2
-                
-                humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
-                    if humanoid.JumpPower > 50 then
-                        humanoid.JumpPower = 50
-                    end
-                end)
-            end)
-            
-            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "✅ مضاد جامبر",
-                Text = "تم التشغيل",
-                Duration = 1
-            })
-        else
-            if connections.antiJump then
-                connections.antiJump:Disconnect()
-                connections.antiJump = nil
-            end
-            
-            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "🔴 مضاد جامبر",
-                Text = "تم الإيقاف",
-                Duration = 1
-            })
-        end
-    end,
-})
-
-----------------------------------------------------------------
--- زر مضاد سبيد (Toggle)
-----------------------------------------------------------------
-UniversalTab:AddButton({
-    Name = "🔴 مضاد سبيد",
-    Info = "حماية من سكربتات السرعة",
-    Callback = function()
-        antiSpeedEnabled = not antiSpeedEnabled
-        
-        if antiSpeedEnabled then
-            -- تشغيل مضاد سبيد
-            local player = game:GetService("Players").LocalPlayer
-            connections.antiSpeed = game:GetService("RunService").Stepped:Connect(function()
-                if player and player.Character then
-                    local humanoid = player.Character:FindFirstChild("Humanoid")
-                    if humanoid and humanoid.WalkSpeed > 16 then
-                        humanoid.WalkSpeed = 16
-                    end
-                end
-            end)
-            
-            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "✅ مضاد سبيد",
-                Text = "تم التشغيل",
-                Duration = 1
-            })
-        else
-            if connections.antiSpeed then
-                connections.antiSpeed:Disconnect()
-                connections.antiSpeed = nil
-            end
-            
-            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "🔴 مضاد سبيد",
-                Text = "تم الإيقاف",
-                Duration = 1
-            })
-        end
-    end,
-})
-
-----------------------------------------------------------------
--- زر مضاد تيليبورت (Toggle)
-----------------------------------------------------------------
-UniversalTab:AddButton({
-    Name = "🔴 مضاد تيليبورت",
-    Info = "حماية من سكربتات النقل",
-    Callback = function()
-        antiTPEnabled = not antiTPEnabled
-        
-        if antiTPEnabled then
-            -- تشغيل مضاد تيليبورت
-            local player = game:GetService("Players").LocalPlayer
-            connections.antiTP = player.CharacterAdded:Connect(function(char)
-                local rootPart = char:WaitForChild("HumanoidRootPart")
-                local lastPosition = rootPart.Position
-                
-                game:GetService("RunService").Heartbeat:Connect(function()
-                    if rootPart and (rootPart.Position - lastPosition).Magnitude > 100 then
-                        rootPart.Position = lastPosition
-                    end
-                    lastPosition = rootPart.Position
-                end)
-            end)
-            
-            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "✅ مضاد تيليبورت",
-                Text = "تم التشغيل",
-                Duration = 1
-            })
-        else
-            if connections.antiTP then
-                connections.antiTP:Disconnect()
-                connections.antiTP = nil
-            end
-            
-            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "🔴 مضاد تيليبورت",
-                Text = "تم الإيقاف",
-                Duration = 1
-            })
-        end
-    end,
-})
-
-----------------------------------------------------------------
--- زر مضاد كيك (Toggle)
-----------------------------------------------------------------
-UniversalTab:AddButton({
-    Name = "🔴 مضاد كيك",
-    Info = "حماية من الطرد",
-    Callback = function()
-        antiKickEnabled = not antiKickEnabled
-        
-        if antiKickEnabled then
-            -- تشغيل مضاد كيك
-            local mt = getrawmetatable(game)
-            local oldNamecall = mt.__namecall
-            setreadonly(mt, false)
-            
-            mt.__namecall = newcclosure(function(self, ...)
-                local method = getnamecallmethod()
-                if method == "Kick" then
-                    return nil
-                end
-                return oldNamecall(self, ...)
-            end)
-            
-            setreadonly(mt, true)
-            
-            script.Parent.BackgroundColor3 = Color3.new(0, 1, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "✅ مضاد كيك",
-                Text = "تم التشغيل",
-                Duration = 1
-            })
-        else
-            -- إيقاف مضاد كيك (إعادة الميتاتيبل للطبيعي صعب، لكن بنوقف الاتصالات)
-            if connections.antiKick then
-                connections.antiKick:Disconnect()
-                connections.antiKick = nil
-            end
-            
-            script.Parent.BackgroundColor3 = Color3.new(1, 0, 0)
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "🔴 مضاد كيك",
-                Text = "تم الإيقاف",
-                Duration = 1
-            })
-        end
-    end,
-})
-
-----------------------------------------------------------------
--- زر إيقاف الكل
-----------------------------------------------------------------
-Section2 = UniversalTab:AddSection({
-    Name = "التحكم العام"
-})
-
-UniversalTab:AddButton({
-    Name = "⏹️ إيقاف جميع الحمايات",
-    Info = "إيقاف كل الحمايات النشطة",
-    Callback = function()
-        -- إيقاف الكل
-        antiFlangEnabled = false
-        antiBangEnabled = false
-        antiSitEnabled = false
-        antiJumpEnabled = false
-        antiSpeedEnabled = false
-        antiTPEnabled = false
-        antiKickEnabled = false
-        
-        -- قطع جميع الاتصالات
-        for name, connection in pairs(connections) do
-            pcall(function() connection:Disconnect() end)
-        end
-        connections = {}
-        
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "⏹️ تم",
-            Text = "إيقاف جميع الحمايات",
-            Duration = 2
-        })
-    end,
-})
-
-----------------------------------------------------------------
--- زر قيد التطوير
-----------------------------------------------------------------
-Section3 = UniversalTab:AddSection({
-    Name = "قيد التطوير"
-})
-
-UniversalTab:AddButton({
-    Name = "🚧 قيد تطوير",
-    Callback = function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "🚧 قيد التطوير",
-            Text = "هذه الميزة قيد التطوير",
-            Duration = 2
-        })
-    end,
-})
-
--- تعريف التبويبات بأسماء مختلفة
-local HeadsAndLegsTab = MakeTab({Name = "الـرؤوس و الارجـل"})
-local BodiesTab = MakeTab({Name = "الاجـسـام"})
-local CodesTab = MakeTab({Name = "اكـواد مـلابـس"})
-
--- متغير للـ Remote (للتحقق من وجوده)
+-- ==================================================
+-- الخدمات
+-- ==================================================
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Remotes = ReplicatedStorage:WaitForChild("Remotes", 9e9)
-local WearRemote = Remotes:WaitForChild("Wear", 9e9)
-local ChangeCharacterRemote = Remotes:WaitForChild("ChangeCharacterBody", 9e9)
-
---======================================
--- التبويب الأول: الرؤوس والأرجل
---======================================
-
--- أزرار الرؤوس
-AddButton(HeadsAndLegsTab, {
-    Name = "رأس روبـوت",
-    Callback = function()
-        WearRemote:InvokeServer(3210773801)
-    end
-})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رأس بـنـت كـيـوت",
-    Callback = function()
-        WearRemote:InvokeServer(140991)
-    end
-})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رأس مـخـفـي",
-    Callback = function()
-        WearRemote:InvokeServer(134082579)
-    end
-})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رأس كـوبـي | رول",
-    Callback = function()
-        WearRemote:InvokeServer(746767604)
-    end
-})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رأس عـيـون زرقـاء",
-    Callback = function()
-        WearRemote:InvokeServer(16580493236)
-    end
-})
-
-AddSection(HeadsAndLegsTab, {"الارجـل"})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رجـل مـقـطـوعـة لـلـبـنـات",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 96491916349570,
-                [2] = 76683091425509,
-                [3] = 75159926897589,
-                [4] = 139607718,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رجـل مـقـطـوعـة لـلـولـد",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 1,
-                [2] = 1,
-                [3] = 1,
-                [4] = 139607718,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رجـل حـديـديـة",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 1,
-                [2] = 1,
-                [3] = 1,
-                [4] = 17500249989,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رجـل الـعـضـم الـرصـاصـي",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 1,
-                [2] = 1,
-                [3] = 1,
-                [4] = 14547162578,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(HeadsAndLegsTab, {
-    Name = "رجـل رول",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 1,
-                [2] = 1,
-                [3] = 1,
-                [4] = 3230472745,
-                [5] = 3230470862,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
---======================================
--- التبويب الثاني: الأجسام
---======================================
-
-AddSection(BodiesTab, {"اجـسـام الـبـنـات"})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 1",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 96491916349570,
-                [2] = 76683091425509,
-                [3] = 75159926897589,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 2",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 74302534603111,
-                [2] = 76683091425509,
-                [3] = 75159926897589,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 3",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 124754866635882,
-                [2] = 76683091425509,
-                [3] = 75159926897589,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 4",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 96491916349570,
-                [2] = 14854350570,
-                [3] = 14854350451,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 5",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 101577365085156,
-                [2] = 121017849910260,
-                [3] = 111571034664628,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 6",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 18839824113,
-                [2] = 18839824209,
-                [3] = 18839824132,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 7",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 16214246112,
-                [2] = 76683091425509,
-                [3] = 16214251181,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 8",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 15539008532,
-                [2] = 15539008875,
-                [3] = 15539008680,
-                [4] = 15539008795,
-                [5] = 15539011945,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم بـنـت 9",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 14861800638,
-                [2] = 14861800626,
-                [3] = 14861801452,
-                [4] = 14861800627,
-                [5] = 14861801454,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddSection(BodiesTab, {"اجـسـام الـولـد"})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم ولـد 1",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 17754346388,
-                [2] = 1,
-                [3] = 1,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم ولـد 2",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 92757812011061,
-                [2] = 99519402284266,
-                [3] = 115905570886697,
-                [4] = 1,
-                [5] = 1,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم ولـد كـوبـي",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 86499666,
-                [2] = 27112039,
-                [3] = 27112052,
-                [4] = 27112068,
-                [5] = 27112056,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم ولـد رول",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 27112025,
-                [2] = 27112039,
-                [3] = 27112052,
-                [4] = 3230472745,
-                [5] = 3230470862,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم ولـد مـعـضـل",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 18178775358,
-                [2] = 18178775182,
-                [3] = 18178775725,
-                [4] = 18178777453,
-                [5] = 18178775695,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddSection(BodiesTab, {"اجـسـام الـقـزم"})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم قـزم",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 14579958702,
-                [2] = 14579959062,
-                [3] = 14579959191,
-                [4] = 14579959249,
-                [5] = 14579963667,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم قـزم مـتـوسـط",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 77813057823038,
-                [2] = 135110043370135,
-                [3] = 116607813654019,
-                [4] = 138966229804486,
-                [5] = 128961183894053,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم قـزم صـغـيـر",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 120973199097564,
-                [2] = 118345433416023,
-                [3] = 112849465115864,
-                [4] = 78321005147549,
-                [5] = 106586789635639,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم قـزم الـمـربـع",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 126267841602936,
-                [2] = 77530451194918,
-                [3] = 123471958406889,
-                [4] = 117042768644173,
-                [5] = 131948590344338,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
-AddButton(BodiesTab, {
-    Name = "جـسـم قـزم بـنـت",
-    Callback = function()
-        local args = {
-            [1] = {
-                [1] = 15282063616,
-                [2] = 15282063632,
-                [3] = 15282063615,
-                [4] = 14538400463,
-                [5] = 14538400387,
-                [6] = 1,
-            }
-        }
-        ChangeCharacterRemote:InvokeServer(unpack(args))
-    end
-})
-
---======================================
--- التبويب الثالث: أكواد ملابس
---======================================
-
-AddSection(CodesTab, {"اكـمام الـيد"})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد اسود مخطط",
-    Callback = function()
-        WearRemote:InvokeServer(9239689111)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "سـتـرة اسـود",
-    Callback = function()
-        WearRemote:InvokeServer(89892588488089)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "سـتـرة زهـري كـيـوت ",
-    Callback = function()
-        WearRemote:InvokeServer(99429391843259)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد اسود عـادي 1",
-    Callback = function()
-        WearRemote:InvokeServer(10789914680)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد اسود عـادي 2",
-    Callback = function()
-        WearRemote:InvokeServer(11363898043)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد اسود عـادي 3",
-    Callback = function()
-        WearRemote:InvokeServer(10791180072)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد ابـيـض مزخرف ",
-    Callback = function()
-        WearRemote:InvokeServer(10871965173)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد زهري",
-    Callback = function()
-        WearRemote:InvokeServer(10789939838)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد احـمـر",
-    Callback = function()
-        WearRemote:InvokeServer(12379676852)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "اضـافـر اسـود",
-    Callback = function()
-        WearRemote:InvokeServer(12825022709)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد قـصـير 1",
-    Callback = function()
-        WearRemote:InvokeServer(12483105503)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد قـصـير 2",
-    Callback = function()
-        WearRemote:InvokeServer(12483109504)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد قـصـير 3",
-    Callback = function()
-        WearRemote:InvokeServer(11613796964)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد قـصـير 4",
-    Callback = function()
-        WearRemote:InvokeServer(10954568687)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد قـصـير 5",
-    Callback = function()
-        WearRemote:InvokeServer(11679250718)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "قـفازات يد قـصـير 6",
-    Callback = function()
-        WearRemote:InvokeServer(11182924874)
-    end
-})
-
-AddSection(CodesTab, {"اكـمام الرجـل"})
-
-AddButton(CodesTab, {
-    Name = "حـذاء الـشيطـان زهري",
-    Callback = function()
-        WearRemote:InvokeServer(14388006902)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء الـشيطـان احـمـر",
-    Callback = function()
-        WearRemote:InvokeServer(14388019333)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء الـشيطـان ابـيض",
-    Callback = function()
-        WearRemote:InvokeServer(14387999337)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء الـشيطـان اسـود",
-    Callback = function()
-        WearRemote:InvokeServer(14388004031)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء طـويل اسـود",
-    Callback = function()
-        WearRemote:InvokeServer(11433864064)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء طـويل ابـيض",
-    Callback = function()
-        WearRemote:InvokeServer(11111279400)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء طـويل ابـيض و احـمر",
-    Callback = function()
-        WearRemote:InvokeServer(11708887517)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء الـقـرش الاسـود",
-    Callback = function()
-        WearRemote:InvokeServer(13463375063)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 1",
-    Callback = function()
-        WearRemote:InvokeServer(11856087406)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 2",
-    Callback = function()
-        WearRemote:InvokeServer(14388001192)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 3",
-    Callback = function()
-        WearRemote:InvokeServer(12453321203)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 4",
-    Callback = function()
-        WearRemote:InvokeServer(14338742287)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 5",
-    Callback = function()
-        WearRemote:InvokeServer(14338742287)  -- مكرر لكن زي ماهو موجود
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 6",
-    Callback = function()
-        WearRemote:InvokeServer(12296189693)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 7",
-    Callback = function()
-        WearRemote:InvokeServer(14338732820)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 8",
-    Callback = function()
-        WearRemote:InvokeServer(14338735628)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 9",
-    Callback = function()
-        WearRemote:InvokeServer(14338738380)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "حـذاء قـصـير 10",
-    Callback = function()
-        WearRemote:InvokeServer(14338744418)
-    end
-})
-
-AddSection(CodesTab, {"اشـياء للـيـد"})
-
-AddButton(CodesTab, {
-    Name = "ورد اسـود",
-    Callback = function()
-        WearRemote:InvokeServer(12465465333)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "ورد ابـيض",
-    Callback = function()
-        WearRemote:InvokeServer(12465472210)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "ورد احـمـر",
-    Callback = function()
-        WearRemote:InvokeServer(12465376206)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "ورد احـمـر و ابـيض",
-    Callback = function()
-        WearRemote:InvokeServer(1246535644)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "ورد زهـري",
-    Callback = function()
-        WearRemote:InvokeServer(1246547853)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "ورد سـمـائـي",
-    Callback = function()
-        WearRemote:InvokeServer(12465483807)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "دب ابـيض",
-    Callback = function()
-        WearRemote:InvokeServer(12156704614)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "دب ابـيض و اسـود",
-    Callback = function()
-        WearRemote:InvokeServer(12157590166)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "مسـدس مـاء لعـبة",
-    Callback = function()
-        WearRemote:InvokeServer(13135818072)
-    end
-})
-
-AddSection(CodesTab, {"الاشـواك"})
-
-AddButton(CodesTab, {
-    Name = "شـوك 1",
-    Callback = function()
-        WearRemote:InvokeServer(13463287248)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "شـوك 2",
-    Callback = function()
-        WearRemote:InvokeServer(3463272877)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "شـوك 3",
-    Callback = function()
-        WearRemote:InvokeServer(13463272877)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "شـوك 4",
-    Callback = function()
-        WearRemote:InvokeServer(13463355223)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "شـوك 5",
-    Callback = function()
-        WearRemote:InvokeServer(3463292395)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "شـوك 6",
-    Callback = function()
-        WearRemote:InvokeServer(13463290106)
-    end
-})
-
-AddSection(CodesTab, {"مـلابـس كـيـوت "})
-
-AddButton(CodesTab, {
-    Name = "لـبـس كـيـوت 1",
-    Callback = function()
-        WearRemote:InvokeServer(84110484978046)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "لـبـس كـيـوت 2",
-    Callback = function()
-        WearRemote:InvokeServer(75698084918608)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "لـبـس كـيـوت 3",
-    Callback = function()
-        WearRemote:InvokeServer(79220663432789)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "لـبـس كـيـوت 4",
-    Callback = function()
-        WearRemote:InvokeServer(78061398976556)
-    end
-})
-
-AddButton(CodesTab, {
-    Name = "لـبـس كـيـوت 5",
-    Callback = function()
-        WearRemote:InvokeServer(93303265717630)
-    end
-})
-
-local BangTab = Window:NewTab("Bang")
-local MainSection = BangTab:NewSection("Bang")
-
-local TargetedPlayer = nil
-local flingActive = false
-local bangActive = false
-
-local function GetRoot(p)
-    if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-        return p.Character.HumanoidRootPart
+local plr = Players.LocalPlayer
+local mouse = plr:GetMouse()
+local StarterGui = game:GetService("StarterGui")
+
+-- ==================================================
+-- المتغيرات العامة
+-- ==================================================
+local targetPlayer = nil
+local flyActive = false
+local flyConnection = nil
+local flySpeed = 50
+local savedPosition = nil
+local infiniteJump = false
+local infiniteJumpConnection = nil
+local noclipActive = false
+local noclipConnection = nil
+local antiRagdollActive = false
+local antiRagdollConnections = {}
+local voidProtection = false
+local espActive = false
+local espConnections = {}
+local espObjects = {}
+local chatSpamActive = false
+local chatSpamConnection = nil
+local spamMessage = "System Broken Copper"
+local spamDelay = 0.5
+local speedValue = 16
+local jumpValue = 50
+
+-- ==================================================
+-- الدوال المساعدة
+-- ==================================================
+
+local function GetPing()
+    local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
+    return ping / 1000
+end
+
+local function GetRoot(plr)
+    if plr and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+        return plr.Character.HumanoidRootPart
     end
     return nil
 end
 
-local function GetPing()
-    return (game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue() or 0) / 1000
-end
-
-local function PredictionTP(target)
-    local myRoot = GetRoot(game.Players.LocalPlayer)
-    local targetRoot = GetRoot(target)
-    if not myRoot or not targetRoot then return end
-    local pos = targetRoot.Position
-    local vel = targetRoot.Velocity
-    local ping = GetPing() * 3.5
-    myRoot.CFrame = CFrame.new(pos.X + vel.X * ping, pos.Y + vel.Y * 2, pos.Z + vel.Z * ping)
-end
-
-local function Push(target)
-    if target.Character and target.Character:FindFirstChild("Humanoid") then
-        target.Character.Humanoid:ChangeState(11)
+local function GetHumanoid(plr)
+    if plr and plr.Character and plr.Character:FindFirstChildOfClass("Humanoid") then
+        return plr.Character:FindFirstChildOfClass("Humanoid")
     end
+    return nil
 end
 
-local TargetSection = BangTab:NewSection("اختر الهدف")
-TargetSection:NewTextbox("اسم الهدف", "اكتب اسم اللاعب", function(value)
-    local target = game.Players:FindFirstChild(value)
-    if target then
-        TargetedPlayer = target
-    end
-end)
+local function CreateNotification(title, text, duration)
+    StarterGui:SetCore("SendNotification", {
+        Title = title or "System Broken",
+        Text = text or "",
+        Duration = duration or 3
+    })
+end
 
-TargetSection:NewButton("اختيار بالماوس", "", function()
-    local mouse = game.Players.LocalPlayer:GetMouse()
-    mouse.Button1Down:Wait()
-    local target = mouse.Target
-    if target then
-        local player = game:GetService("Players"):GetPlayerFromCharacter(target.Parent)
-        if player then
-            TargetedPlayer = player
+local function GetPlayerFromString(input)
+    if input == "" then return nil end
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Name:lower():find(input:lower()) or player.DisplayName:lower():find(input:lower()) then
+            return player
         end
     end
-end)
+    return nil
+end
 
-local BangSection = BangTab:NewSection("بانج")
-BangSection:NewToggle("بانج", "", false, function(state)
-    bangActive = state
-    if state and TargetedPlayer then
-        repeat
-            task.wait()
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local targetRoot = GetRoot(TargetedPlayer)
-            if myRoot and targetRoot then
-                myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.1)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
-            end
-        until not bangActive or not TargetedPlayer
+local function PushPlayer(target)
+    if not target or not target.Character then return end
+    local pushEvent = ReplicatedStorage:FindFirstChild("PushEvent") or 
+                     ReplicatedStorage:FindFirstChild("PushTool") or
+                     ReplicatedStorage:FindFirstChild("Push")
+    if pushEvent and pushEvent:IsA("RemoteEvent") then
+        pushEvent:FireServer(target.Character)
     end
-end)
+end
 
-local FlingSection = BangTab:NewSection("قذف")
-FlingSection:NewToggle("قذف", "", false, function(state)
-    flingActive = state
-    if state and TargetedPlayer then
-        repeat
-            task.wait()
-            PredictionTP(TargetedPlayer)
-            task.wait()
-        until not flingActive or not TargetedPlayer
+local function PlayAnimation(animId)
+    pcall(function()
+        if not plr.Character then return end
+        local humanoid = plr.Character:FindFirstChildOfClass("Humanoid")
+        if not humanoid then return end
+        for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
+            track:Stop()
+        end
+        local anim = Instance.new("Animation")
+        anim.AnimationId = "rbxassetid://" .. animId
+        local track = humanoid:LoadAnimation(anim)
+        track:Play()
+    end)
+end
+
+local function StopAllAnimations()
+    pcall(function()
+        if not plr.Character then return end
+        local humanoid = plr.Character:FindFirstChildOfClass("Humanoid")
+        if not humanoid then return end
+        for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
+            track:Stop()
+        end
+    end)
+end
+
+local function ToggleRagdoll(bool)
+    pcall(function()
+        if not plr.Character then return end
+        if plr.Character:FindFirstChild("Falling down") then
+            plr.Character["Falling down"].Disabled = bool
+        end
+        if plr.Character:FindFirstChild("Swimming") then
+            plr.Character["Swimming"].Disabled = bool
+        end
+        if plr.Character:FindFirstChild("StartRagdoll") then
+            plr.Character["StartRagdoll"].Disabled = bool
+        end
+        if plr.Character:FindFirstChild("Pushed") then
+            plr.Character["Pushed"].Disabled = bool
+        end
+        if plr.Character:FindFirstChild("RagdollMe") then
+            plr.Character["RagdollMe"].Disabled = bool
+        end
+    end)
+end
+
+local function ToggleVoidProtection(bool)
+    if bool then
+        game.Workspace.FallenPartsDestroyHeight = 0/0
+    else
+        game.Workspace.FallenPartsDestroyHeight = -500
     end
-end)
+end
 
-local PushSection = BangTab:NewSection("دفع")
-PushSection:NewButton("دفع الهدف", "", function()
-    if TargetedPlayer then
-        PredictionTP(TargetedPlayer)
-        task.wait(0.1)
-        Push(TargetedPlayer)
-    end
-end)
+-- ==================================================
+-- إنشاء الواجهة
+-- ==================================================
 
-local DoggySection = BangTab:NewSection("وضعية كلب")
-DoggySection:NewToggle("وضعية كلب", "", false, function(state)
-    if state and TargetedPlayer then
-        repeat
-            task.wait()
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local target = TargetedPlayer.Character
-            if myRoot and target and target:FindFirstChild("LowerTorso") then
-                myRoot.CFrame = target.LowerTorso.CFrame * CFrame.new(0, 0.23, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
-            end
-        until not state or not TargetedPlayer
-    end
-end)
+local gui = Instance.new("ScreenGui")
+gui.Name = "SystemBroken_Copper"
+gui.Parent = game.CoreGui
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.ResetOnSpawn = false
 
-local HeadsitSection = BangTab:NewSection("جلوس على الرأس")
-HeadsitSection:NewToggle("جلوس على الرأس", "", false, function(state)
-    if state and TargetedPlayer then
-        repeat
-            task.wait()
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local target = TargetedPlayer.Character
-            if myRoot and target and target:FindFirstChild("Head") then
-                myRoot.CFrame = target.Head.CFrame * CFrame.new(0, 2, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
-            end
-        until not state or not TargetedPlayer
-    end
-end)
+local blur = Instance.new("BlurEffect")
+blur.Parent = Lighting
+blur.Size = 0
 
-local DragSection = BangTab:NewSection("سحب")
-DragSection:NewToggle("سحب", "", false, function(state)
-    if state and TargetedPlayer then
-        repeat
-            task.wait()
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local target = TargetedPlayer.Character
-            if myRoot and target and target:FindFirstChild("RightHand") then
-                myRoot.CFrame = target.RightHand.CFrame * CFrame.new(0, -2.5, 1) * CFrame.Angles(-2, -3, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
-            end
-        until not state or not TargetedPlayer
-    end
-end)
+local main = Instance.new("Frame")
+main.Name = "Main"
+main.Parent = gui
+main.BackgroundColor3 = colors.bg1
+main.BorderSizePixel = 0
+main.Position = UDim2.new(0.5, -375, 0.5, -275)
+main.Size = UDim2.new(0, 750, 0, 550)
+main.Active = true
+main.Draggable = true
+main.ClipsDescendants = true
 
-local StandSection = BangTab:NewSection("وقوف")
-StandSection:NewToggle("وقوف", "", false, function(state)
-    if state and TargetedPlayer then
-        repeat
-            task.wait()
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local targetRoot = GetRoot(TargetedPlayer)
-            if myRoot and targetRoot then
-                myRoot.CFrame = targetRoot.CFrame * CFrame.new(-3, 1, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
-            end
-        until not state or not TargetedPlayer
-    end
-end)
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 15)
+corner.Parent = main
 
-local BackpackSection = BangTab:NewSection("حقيبة")
-BackpackSection:NewToggle("حقيبة", "", false, function(state)
-    if state and TargetedPlayer then
-        repeat
-            task.wait()
-            local myRoot = GetRoot(game.Players.LocalPlayer)
-            local targetRoot = GetRoot(TargetedPlayer)
-            if myRoot and targetRoot then
-                myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.2) * CFrame.Angles(0, -3, 0)
-                myRoot.Velocity = Vector3.new(0, 0, 0)
-            end
-        until not state or not TargetedPlayer
-    end
-end)
+local glow = Instance.new("Frame")
+glow.Parent = main
+glow.Size = UDim2.new(1, 4, 1, 4)
+glow.Position = UDim2.new(0, -2, 0, -2)
+glow.BackgroundTransparency = 1
+glow.ZIndex = -1
 
-print("✅ تم تحميل جميع الأزرار بنجاح!")
-
--- رسالة تأكيد
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Everlast HUB",
-    Text = "تم التحميل بنجاح!",
-    Duration = 3
+local glowGradient = Instance.new("UIGradient")
+glowGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, colors.accent),
+    ColorSequenceKeypoint.new(0.5, colors.accent2),
+    ColorSequenceKeypoint.new(1, colors.accent3)
 })
+glowGradient.Rotation = 45
+glowGradient.Parent = glow
+
+local titleBar = Instance.new("Frame")
+titleBar.Parent = main
+titleBar.BackgroundColor3 = colors.bg2
+titleBar.BorderSizePixel = 0
+titleBar.Size = UDim2.new(1, 0, 0, 45)
+
+local titleCorner = Instance.new("UICorner")
+titleCorner.CornerRadius = UDim.new(0, 15)
+titleCorner.Parent = titleBar
+
+local title = Instance.new("TextLabel")
+title.Parent = titleBar
+title.BackgroundTransparency = 1
+title.Size = UDim2.new(1, -150, 1, 0)
+title.Position = UDim2.new(0, 15, 0, 0)
+title.Text = "⚜️ SYSTEM BROKEN - COPPER COMPLETE ⚜️"
+title.TextColor3 = colors.accent4
+title.TextSize = 20
+title.Font = Enum.Font.GothamBold
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Parent = titleBar
+closeBtn.Size = UDim2.new(0, 35, 0, 35)
+closeBtn.Position = UDim2.new(1, -40, 0.5, -17.5)
+closeBtn.BackgroundColor3 = colors.bg3
+closeBtn.Text = "✕"
+closeBtn.TextColor3 = colors.error
+closeBtn.TextSize = 18
+closeBtn.Font = Enum.Font.GothamBold
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeBtn
+
+closeBtn.MouseEnter:Connect(function()
+    TweenService:Create(closeBtn, TweenInfo.new(0.2), {BackgroundColor3 = colors.bg2}):Play()
+end)
+
+closeBtn.MouseLeave:Connect(function()
+    TweenService:Create(closeBtn, TweenInfo.new(0.2), {BackgroundColor3 = colors.bg3}):Play()
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+    TweenService:Create(main, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 0)}):Play()
+    TweenService:Create(blur, TweenInfo.new(0.3), {Size = 0}):Play()
+    task.wait(0.3)
+    gui:Destroy()
+end)
+
+local minBtn = Instance.new("TextButton")
+minBtn.Parent = titleBar
+minBtn.Size = UDim2.new(0, 35, 0, 35)
+minBtn.Position = UDim2.new(1, -80, 0.5, -17.5)
+minBtn.BackgroundColor3 = colors.bg3
+minBtn.Text = "🗕"
+minBtn.TextColor3 = colors.text
+minBtn.TextSize = 18
+minBtn.Font = Enum.Font.GothamBold
+
+local minCorner = Instance.new("UICorner")
+minCorner.CornerRadius = UDim.new(0, 8)
+minCorner.Parent = minBtn
+
+local minimized = false
+minBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    if minimized then
+        TweenService:Create(main, TweenInfo.new(0.3), {Size = UDim2.new(0, 750, 0, 45)}):Play()
+        minBtn.Text = "🗖"
+    else
+        TweenService:Create(main, TweenInfo.new(0.3), {Size = UDim2.new(0, 750, 0, 550)}):Play()
+        minBtn.Text = "🗕"
+    end
+end)
+
+-- ==================================================
+-- القائمة الجانبية
+-- ==================================================
+
+local sidebar = Instance.new("Frame")
+sidebar.Parent = main
+sidebar.BackgroundColor3 = colors.bg2
+sidebar.BorderSizePixel = 0
+sidebar.Position = UDim2.new(0, 10, 0, 55)
+sidebar.Size = UDim2.new(0, 170, 0, 485)
+
+local sidebarCorner = Instance.new("UICorner")
+sidebarCorner.CornerRadius = UDim.new(0, 12)
+sidebarCorner.Parent = sidebar
+
+local sidebarInner = Instance.new("Frame")
+sidebarInner.Parent = sidebar
+sidebarInner.Size = UDim2.new(1, -10, 1, -10)
+sidebarInner.Position = UDim2.new(0, 5, 0, 5)
+sidebarInner.BackgroundColor3 = colors.bg3
+sidebarInner.BackgroundTransparency = 0.3
+
+local sidebarInnerCorner = Instance.new("UICorner")
+sidebarInnerCorner.CornerRadius = UDim.new(0, 8)
+sidebarInnerCorner.Parent = sidebarInner
+
+local sidebarList = Instance.new("UIListLayout")
+sidebarList.Parent = sidebarInner
+sidebarList.Padding = UDim.new(0, 5)
+sidebarList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local sidebarPadding = Instance.new("UIPadding")
+sidebarPadding.Parent = sidebarInner
+sidebarPadding.PaddingTop = UDim.new(0, 10)
+
+local function createSidebarButton(text, icon, color)
+    local btn = Instance.new("TextButton")
+    btn.Parent = sidebarInner
+    btn.Size = UDim2.new(0, 140, 0, 40)
+    btn.BackgroundColor3 = colors.bg2
+    btn.Text = ""
+    btn.AutoButtonColor = false
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 8)
+    btnCorner.Parent = btn
+    
+    local iconLabel = Instance.new("TextLabel")
+    iconLabel.Parent = btn
+    iconLabel.Size = UDim2.new(0, 30, 1, 0)
+    iconLabel.Position = UDim2.new(0, 5, 0, 0)
+    iconLabel.BackgroundTransparency = 1
+    iconLabel.Text = icon
+    iconLabel.TextColor3 = color or colors.accent
+    iconLabel.TextSize = 18
+    iconLabel.Font = Enum.Font.GothamBold
+    
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Parent = btn
+    textLabel.Size = UDim2.new(1, -40, 1, 0)
+    textLabel.Position = UDim2.new(0, 35, 0, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = text
+    textLabel.TextColor3 = colors.text
+    textLabel.TextSize = 14
+    textLabel.Font = Enum.Font.Gotham
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    btn.MouseEnter:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = colors.bg3}):Play()
+    end)
+    
+    btn.MouseLeave:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = colors.bg2}):Play()
+    end)
+    
+    return btn
+end
+
+local homeBtn = createSidebarButton("الرئيسية", "🏠", colors.accent4)
+local gameBtn = createSidebarButton("اللعبة", "🎮", colors.accent)
+local charBtn = createSidebarButton("الشخصية", "👤", colors.accent2)
+local targetBtn = createSidebarButton("الهدف", "🎯", colors.accent3)
+local animBtn = createSidebarButton("الحركات", "💃", colors.accent4)
+local miscBtn = createSidebarButton("متنوع", "⚙️", colors.accent2)
+local settingsBtn = createSidebarButton("الإعدادات", "⚡", colors.accent)
+local creditsBtn = createSidebarButton("المطور", "📜", colors.accent3)
+
+-- ==================================================
+-- منطقة المحتوى
+-- ==================================================
+
+local content = Instance.new("Frame")
+content.Parent = main
+content.BackgroundColor3 = colors.bg2
+content.BorderSizePixel = 0
+content.Position = UDim2.new(0, 190, 0, 55)
+content.Size = UDim2.new(0, 550, 0, 485)
+
+local contentCorner = Instance.new("UICorner")
+contentCorner.CornerRadius = UDim.new(0, 12)
+contentCorner.Parent = content
+
+local contentInner = Instance.new("Frame")
+contentInner.Parent = content
+contentInner.Size = UDim2.new(1, -10, 1, -10)
+contentInner.Position = UDim2.new(0, 5, 0, 5)
+contentInner.BackgroundColor3 = colors.bg3
+contentInner.BackgroundTransparency = 0.3
+
+local contentInnerCorner = Instance.new("UICorner")
+contentInnerCorner.CornerRadius = UDim.new(0, 8)
+contentInnerCorner.Parent = contentInner
+
+local contentHeader = Instance.new("Frame")
+contentHeader.Parent = contentInner
+contentHeader.Size = UDim2.new(1, -20, 0, 35)
+contentHeader.Position = UDim2.new(0, 10, 0, 10)
+contentHeader.BackgroundColor3 = colors.bg2
+contentHeader.BorderSizePixel = 0
+
+local headerCorner = Instance.new("UICorner")
+headerCorner.CornerRadius = UDim.new(0, 8)
+headerCorner.Parent = contentHeader
+
+local headerTitle = Instance.new("TextLabel")
+headerTitle.Parent = contentHeader
+headerTitle.Size = UDim2.new(1, -20, 1, 0)
+headerTitle.Position = UDim2.new(0, 10, 0, 0)
+headerTitle.BackgroundTransparency = 1
+headerTitle.Text = "الرئيسية"
+headerTitle.TextColor3 = colors.accent4
+headerTitle.TextSize = 16
+headerTitle.Font = Enum.Font.GothamBold
+headerTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local scrolling = Instance.new("ScrollingFrame")
+scrolling.Parent = contentInner
+scrolling.Size = UDim2.new(1, -20, 1, -55)
+scrolling.Position = UDim2.new(0, 10, 0, 50)
+scrolling.BackgroundTransparency = 1
+scrolling.ScrollBarThickness = 5
+scrolling.ScrollBarImageColor3 = colors.accent
+scrolling.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrolling.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+local scrollingList = Instance.new("UIListLayout")
+scrollingList.Parent = scrolling
+scrollingList.Padding = UDim.new(0, 10)
+scrollingList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local scrollingPadding = Instance.new("UIPadding")
+scrollingPadding.Parent = scrolling
+scrollingPadding.PaddingTop = UDim.new(0, 5)
+
+-- ==================================================
+-- دوال إنشاء العناصر
+-- ==================================================
+
+local function createSection(title)
+    local section = Instance.new("TextLabel")
+    section.Parent = scrolling
+    section.Size = UDim2.new(0, 510, 0, 35)
+    section.BackgroundColor3 = colors.bg2
+    section.Text = "  " .. title
+    section.TextColor3 = colors.accent4
+    section.TextSize = 16
+    section.Font = Enum.Font.GothamBold
+    section.TextXAlignment = Enum.TextXAlignment.Left
+    local sectionCorner = Instance.new("UICorner")
+    sectionCorner.CornerRadius = UDim.new(0, 8)
+    sectionCorner.Parent = section
+    return section
+end
+
+local function createButton(text, callback)
+    local btn = Instance.new("TextButton")
+    btn.Parent = scrolling
+    btn.Size = UDim2.new(0, 250, 0, 40)
+    btn.BackgroundColor3 = colors.bg2
+    btn.Text = text
+    btn.TextColor3 = colors.text
+    btn.TextSize = 14
+    btn.Font = Enum.Font.Gotham
+    btn.AutoButtonColor = false
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 8)
+    btnCorner.Parent = btn
+    btn.MouseEnter:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = colors.bg3}):Play()
+        btn.TextColor3 = colors.accent4
+    end)
+    btn.MouseLeave:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = colors.bg2}):Play()
+        btn.TextColor3 = colors.text
+    end)
+    btn.MouseButton1Click:Connect(callback)
+    return btn
+end
+
+local function createToggle(text, default, callback)
+    local frame = Instance.new("Frame")
+    frame.Parent = scrolling
+    frame.Size = UDim2.new(0, 250, 0, 40)
+    frame.BackgroundColor3 = colors.bg2
+    local frameCorner = Instance.new("UICorner")
+    frameCorner.CornerRadius = UDim.new(0, 8)
+    frameCorner.Parent = frame
+    local label = Instance.new("TextLabel")
+    label.Parent = frame
+    label.Size = UDim2.new(1, -60, 1, 0)
+    label.Position = UDim2.new(0, 10, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = colors.text
+    label.TextSize = 14
+    label.Font = Enum.Font.Gotham
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Parent = frame
+    toggleBtn.Size = UDim2.new(0, 45, 0, 20)
+    toggleBtn.Position = UDim2.new(1, -50, 0.5, -10)
+    toggleBtn.BackgroundColor3 = default and colors.accent or colors.bg3
+    toggleBtn.Text = ""
+    local toggleCorner = Instance.new("UICorner")
+    toggleCorner.CornerRadius = UDim.new(1, 0)
+    toggleCorner.Parent = toggleBtn
+    local circle = Instance.new("Frame")
+    circle.Parent = toggleBtn
+    circle.Size = UDim2.new(0, 16, 0, 16)
+    circle.Position = default and UDim2.new(1, -21, 0.5, -8) or UDim2.new(0, 4, 0.5, -8)
+    circle.BackgroundColor3 = colors.text
+    local circleCorner = Instance.new("UICorner")
+    circleCorner.CornerRadius = UDim.new(1, 0)
+    circleCorner.Parent = circle
+    local state = default
+    callback(state)
+    toggleBtn.MouseButton1Click:Connect(function()
+        state = not state
+        if state then
+            TweenService:Create(toggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = colors.accent}):Play()
+            TweenService:Create(circle, TweenInfo.new(0.2), {Position = UDim2.new(1, -21, 0.5, -8)}):Play()
+        else
+            TweenService:Create(toggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = colors.bg3}):Play()
+            TweenService:Create(circle, TweenInfo.new(0.2), {Position = UDim2.new(0, 4, 0.5, -8)}):Play()
+        end
+        callback(state)
+    end)
+    return frame
+end
+
+local function createInput(placeholder, callback, default)
+    local box = Instance.new("TextBox")
+    box.Parent = scrolling
+    box.Size = UDim2.new(0, 250, 0, 40)
+    box.BackgroundColor3 = colors.bg2
+    box.PlaceholderText = placeholder
+    box.PlaceholderColor3 = colors.textDark
+    box.Text = default or ""
+    box.TextColor3 = colors.text
+    box.TextSize = 14
+    box.Font = Enum.Font.Gotham
+    box.ClearTextOnFocus = false
+    local boxCorner = Instance.new("UICorner")
+    boxCorner.CornerRadius = UDim.new(0, 8)
+    boxCorner.Parent = box
+    box.FocusLost:Connect(function()
+        callback(box.Text)
+    end)
+    return box
+end
+
+local function createSlider(text, min, max, default, callback)
+    local frame = Instance.new("Frame")
+    frame.Parent = scrolling
+    frame.Size = UDim2.new(0, 250, 0, 70)
+    frame.BackgroundColor3 = colors.bg2
+    local frameCorner = Instance.new("UICorner")
+    frameCorner.CornerRadius = UDim.new(0, 8)
+    frameCorner.Parent = frame
+    local label = Instance.new("TextLabel")
+    label.Parent = frame
+    label.Size = UDim2.new(1, -60, 0, 20)
+    label.Position = UDim2.new(0, 10, 0, 5)
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = colors.text
+    label.TextSize = 14
+    label.Font = Enum.Font.Gotham
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    local valueLabel = Instance.new("TextLabel")
+    valueLabel.Parent = frame
+    valueLabel.Size = UDim2.new(0, 40, 0, 20)
+    valueLabel.Position = UDim2.new(1, -45, 0, 5)
+    valueLabel.BackgroundTransparency = 1
+    valueLabel.Text = tostring(default)
+    valueLabel.TextColor3 = colors.accent4
+    valueLabel.TextSize = 14
+    valueLabel.Font = Enum.Font.GothamBold
+    local sliderBg = Instance.new("Frame")
+    sliderBg.Parent = frame
+    sliderBg.Size = UDim2.new(1, -20, 0, 4)
+    sliderBg.Position = UDim2.new(0, 10, 0, 40)
+    sliderBg.BackgroundColor3 = colors.bg3
+    local sliderBgCorner = Instance.new("UICorner")
+    sliderBgCorner.CornerRadius = UDim.new(1, 0)
+    sliderBgCorner.Parent = sliderBg
+    local sliderFill = Instance.new("Frame")
+    sliderFill.Parent = sliderBg
+    sliderFill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+    sliderFill.BackgroundColor3 = colors.accent
+    local sliderFillCorner = Instance.new("UICorner")
+    sliderFillCorner.CornerRadius = UDim.new(1, 0)
+    sliderFillCorner.Parent = sliderFill
+    local sliderButton = Instance.new("TextButton")
+    sliderButton.Parent = sliderBg
+    sliderButton.Size = UDim2.new(0, 14, 0, 14)
+    sliderButton.Position = UDim2.new((default - min) / (max - min), -7, 0.5, -7)
+    sliderButton.BackgroundColor3 = colors.text
+    sliderButton.Text = ""
+    local sliderButtonCorner = Instance.new("UICorner")
+    sliderButtonCorner.CornerRadius = UDim.new(1, 0)
+    sliderButtonCorner.Parent = sliderButton
+    local dragging = false
+    sliderButton.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local mousePos = UserInputService:GetMouseLocation()
+            local sliderPos = sliderBg.AbsolutePosition.X
+            local sliderSize = sliderBg.AbsoluteSize.X
+            local percent = math.clamp((mousePos.X - sliderPos) / sliderSize, 0, 1)
+            local value = math.floor(min + (max - min) * percent)
+            sliderFill.Size = UDim2.new(percent, 0, 1, 0)
+            sliderButton.Position = UDim2.new(percent, -7, 0.5, -7)
+            valueLabel.Text = tostring(value)
+            callback(value)
+        end
+    end)
+    return frame
+end
+
+-- ==================================================
+-- محتوى الأقسام
+-- ==================================================
+
+local currentSection = "home"
+
+local function clearContent()
+    for _, v in pairs(scrolling:GetChildren()) do
+        if not v:IsA("UIListLayout") and not v:IsA("UIPadding") then
+            v:Destroy()
+        end
+    end
+end
+
+-- الرئيسية
+local function showHome()
+    clearContent()
+    headerTitle.Text = "الرئيسية"
+    
+    createSection("مرحباً بك")
+    
+    local profileCard = Instance.new("Frame")
+    profileCard.Parent = scrolling
+    profileCard.Size = UDim2.new(0, 510, 0, 100)
+    profileCard.BackgroundColor3 = colors.bg2
+    local profileCorner = Instance.new("UICorner")
+    profileCorner.CornerRadius = UDim.new(0, 10)
+    profileCorner.Parent = profileCard
+    
+    local profileImage = Instance.new("ImageLabel")
+    profileImage.Parent = profileCard
+    profileImage.Size = UDim2.new(0, 70, 0, 70)
+    profileImage.Position = UDim2.new(0, 15, 0.5, -35)
+    profileImage.BackgroundColor3 = colors.bg3
+    profileImage.Image = Players:GetUserThumbnailAsync(plr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+    local profileImageCorner = Instance.new("UICorner")
+    profileImageCorner.CornerRadius = UDim.new(0, 35)
+    profileImageCorner.Parent = profileImage
+    
+    local profileName = Instance.new("TextLabel")
+    profileName.Parent = profileCard
+    profileName.Size = UDim2.new(0, 400, 0, 30)
+    profileName.Position = UDim2.new(0, 100, 0, 20)
+    profileName.BackgroundTransparency = 1
+    profileName.Text = "اللاعب: " .. plr.Name
+    profileName.TextColor3 = colors.accent4
+    profileName.TextSize = 18
+    profileName.Font = Enum.Font.GothamBold
+    profileName.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local profileDisplay = Instance.new("TextLabel")
+    profileDisplay.Parent = profileCard
+    profileDisplay.Size = UDim2.new(0, 400, 0, 25)
+    profileDisplay.Position = UDim2.new(0, 100, 0, 50)
+    profileDisplay.BackgroundTransparency = 1
+    profileDisplay.Text = "العرض: " .. plr.DisplayName
+    profileDisplay.TextColor3 = colors.text
+    profileDisplay.TextSize = 14
+    profileDisplay.Font = Enum.Font.Gotham
+    profileDisplay.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local ping = Instance.new("TextLabel")
+    ping.Parent = scrolling
+    ping.Size = UDim2.new(0, 510, 0, 40)
+    ping.BackgroundColor3 = colors.bg2
+    ping.Text = "📶 البنج: " .. math.floor(GetPing() * 1000) .. " ms"
+    ping.TextColor3 = colors.text
+    ping.TextSize = 16
+    ping.Font = Enum.Font.Gotham
+    local pingCorner = Instance.new("UICorner")
+    pingCorner.CornerRadius = UDim.new(0, 8)
+    pingCorner.Parent = ping
+end
+
+-- اللعبة
+local function showGame()
+    clearContent()
+    headerTitle.Text = "اللعبة"
+    
+    createSection("حماية")
+    createToggle("مضاد الراجدول", false, function(state)
+        antiRagdollActive = state
+        ToggleRagdoll(state)
+    end)
+    createToggle("حماية الفراغ", false, function(state)
+        voidProtection = state
+        ToggleVoidProtection(state)
+    end)
+    
+    createSection("هجوم")
+    createButton("دفع الكل", function()
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= plr then
+                PushPlayer(player)
+            end
+        end
+        CreateNotification("تم", "تم دفع الجميع", 2)
+    end)
+    
+    createSection("تلبورت")
+    createButton("تلبورت للمدفع", function()
+        if plr.Character then
+            plr.Character.HumanoidRootPart.CFrame = CFrame.new(-61, 34, -228)
+        end
+    end)
+    createButton("تلبورت للبناية", function()
+        if plr.Character then
+            plr.Character.HumanoidRootPart.CFrame = CFrame.new(142, 1033, -192)
+        end
+    end)
+    createButton("تلبورت للمسبح", function()
+        if plr.Character then
+            plr.Character.HumanoidRootPart.CFrame = CFrame.new(-133, 65, -321)
+        end
+    end)
+end
+
+-- الشخصية
+local function showCharacter()
+    clearContent()
+    headerTitle.Text = "الشخصية"
+    
+    createSection("حركة")
+    createSlider("سرعة المشي", 16, 500, 16, function(value)
+        if plr.Character then
+            plr.Character.Humanoid.WalkSpeed = value
+        end
+    end)
+    createSlider("قوة القفز", 50, 500, 50, function(value)
+        if plr.Character then
+            plr.Character.Humanoid.JumpPower = value
+        end
+    end)
+    createToggle("قفز لانهائي", false, function(state)
+        infiniteJump = state
+        if state then
+            infiniteJumpConnection = UserInputService.JumpRequest:Connect(function()
+                if plr.Character then
+                    plr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        elseif infiniteJumpConnection then
+            infiniteJumpConnection:Disconnect()
+        end
+    end)
+    createToggle("نو كليب", false, function(state)
+        noclipActive = state
+        if state then
+            noclipConnection = RunService.Stepped:Connect(function()
+                if plr.Character then
+                    for _, part in pairs(plr.Character:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        elseif noclipConnection then
+            noclipConnection:Disconnect()
+        end
+    end)
+    
+    createSection("طيران")
+    createSlider("سرعة الطيران", 10, 500, 50, function(value)
+        flySpeed = value
+    end)
+    createToggle("تشغيل الطيران", false, function(state)
+        flyActive = state
+        if state then
+            local humanoid = GetHumanoid(plr)
+            if humanoid then
+                humanoid.PlatformStand = true
+                local bodyGyro = Instance.new("BodyGyro")
+                bodyGyro.Parent = plr.Character.HumanoidRootPart
+                bodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+                local bodyVelocity = Instance.new("BodyVelocity")
+                bodyVelocity.Parent = plr.Character.HumanoidRootPart
+                bodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+                flyConnection = RunService.Heartbeat:Connect(function()
+                    if not flyActive then return end
+                    local moveDir = Vector3.new()
+                    if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                        moveDir = moveDir + workspace.CurrentCamera.CFrame.LookVector
+                    end
+                    if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                        moveDir = moveDir - workspace.CurrentCamera.CFrame.LookVector
+                    end
+                    if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                        moveDir = moveDir - workspace.CurrentCamera.CFrame.RightVector
+                    end
+                    if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                        moveDir = moveDir + workspace.CurrentCamera.CFrame.RightVector
+                    end
+                    if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+                        moveDir = moveDir + Vector3.new(0, 1, 0)
+                    end
+                    if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+                        moveDir = moveDir - Vector3.new(0, 1, 0)
+                    end
+                    bodyVelocity.Velocity = moveDir * flySpeed
+                    bodyGyro.CFrame = workspace.CurrentCamera.CFrame
+                end)
+            end
+        elseif flyConnection then
+            flyConnection:Disconnect()
+            if plr.Character then
+                local humanoid = GetHumanoid(plr)
+                if humanoid then
+                    humanoid.PlatformStand = false
+                end
+            end
+        end
+    end)
+    
+    createSection("حفظ الموقع")
+    createButton("حفظ الموقع", function()
+        if plr.Character then
+            savedPosition = plr.Character.HumanoidRootPart.Position
+            CreateNotification("تم", "تم حفظ الموقع", 2)
+        end
+    end)
+    createButton("العودة للموقع", function()
+        if savedPosition and plr.Character then
+            plr.Character.HumanoidRootPart.CFrame = CFrame.new(savedPosition)
+        end
+    end)
+end
+
+-- الهدف
+local function showTarget()
+    clearContent()
+    headerTitle.Text = "الهدف"
+    
+    createSection("اختيار الهدف")
+    local targetInput = createInput("اسم اللاعب", function(value)
+        targetPlayer = GetPlayerFromString(value)
+        if targetPlayer then
+            CreateNotification("تم", "الهدف: " .. targetPlayer.Name, 2)
+        end
+    end)
+    
+    createButton("اختيار بالماوس", function()
+        local con
+        con = mouse.Button1Down:Connect(function()
+            local hit = mouse.Target
+            if hit then
+                local player = Players:GetPlayerFromCharacter(hit.Parent)
+                if player then
+                    targetPlayer = player
+                    targetInput.Text = player.Name
+                    CreateNotification("تم", "الهدف: " .. player.Name, 2)
+                end
+            end
+            con:Disconnect()
+        end)
+    end)
+    
+    createSection("هجوم")
+    createToggle("فلينق", false, function(state)
+        if state and targetPlayer then
+            coroutine.wrap(function()
+                while state and targetPlayer and targetPlayer.Character do
+                    local myRoot = GetRoot(plr)
+                    local targetRoot = GetRoot(targetPlayer)
+                    if myRoot and targetRoot then
+                        myRoot.CFrame = targetRoot.CFrame
+                        task.wait(0.1)
+                        myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 10, 0)
+                    end
+                    task.wait()
+                end
+            end)()
+        end
+    end)
+    
+    createToggle("بانج", false, function(state)
+        if state and targetPlayer then
+            coroutine.wrap(function()
+                while state and targetPlayer and targetPlayer.Character do
+                    local myRoot = GetRoot(plr)
+                    local targetRoot = GetRoot(targetPlayer)
+                    if myRoot and targetRoot then
+                        myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 1.1)
+                        myRoot.Velocity = Vector3.new(0, 0, 0)
+                    end
+                    task.wait()
+                end
+            end)()
+        end
+    end)
+    
+    createToggle("جلوس على الرأس", false, function(state)
+        if state and targetPlayer then
+            coroutine.wrap(function()
+                while state and targetPlayer and targetPlayer.Character do
+                    local myRoot = GetRoot(plr)
+                    local targetHead = targetPlayer.Character:FindFirstChild("Head")
+                    if myRoot and targetHead then
+                        myRoot.CFrame = targetHead.CFrame * CFrame.new(0, 2, 0)
+                        myRoot.Velocity = Vector3.new(0, 0, 0)
+                    end
+                    task.wait()
+                end
+            end)()
+        end
+    end)
+    
+    createToggle("وضعية كلب", false, function(state)
+        if state and targetPlayer then
+            coroutine.wrap(function()
+                while state and targetPlayer and targetPlayer.Character do
+                    local myRoot = GetRoot(plr)
+                    local targetTorso = targetPlayer.Character:FindFirstChild("LowerTorso")
+                    if myRoot and targetTorso then
+                        myRoot.CFrame = targetTorso.CFrame * CFrame.new(0, 0.23, 0)
+                        myRoot.Velocity = Vector3.new(0, 0, 0)
+                    end
+                    task.wait()
+                end
+            end)()
+        end
+    end)
+    
+    createToggle("سحب", false, function(state)
+        if state and targetPlayer then
+            coroutine.wrap(function()
+                while state and targetPlayer and targetPlayer.Character do
+                    local myRoot = GetRoot(plr)
+                    local targetHand = targetPlayer.Character:FindFirstChild("RightHand")
+                    if myRoot and targetHand then
+                        myRoot.CFrame = targetHand.CFrame * CFrame.new(0, -2.5, 1) * CFrame.Angles(-2, -3, 0)
+                        myRoot.Velocity = Vector3.new(0, 0, 0)
+                    end
+                    task.wait()
+                end
+            end)()
+        end
+    end)
+    
+    createToggle("متابعة", false, function(state)
+        if state and targetPlayer then
+            coroutine.wrap(function()
+                while state and targetPlayer and targetPlayer.Character do
+                    workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
+                    task.wait()
+                end
+                if plr.Character then
+                    workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+                end
+            end)()
+        end
+    end)
+    
+    createButton("تلبورت للهدف", function()
+        if targetPlayer and targetPlayer.Character then
+            plr.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 2, 0)
+        end
+    end)
+    
+    createButton("دفع الهدف", function()
+        if targetPlayer then
+            PushPlayer(targetPlayer)
+        end
+    end)
+end
+
+-- الحركات
+local function showAnimations()
+    clearContent()
+    headerTitle.Text = "الحركات"
+    
+    createSection("حركات")
+    
+    local anims = {
+        {"🧛 مصاص دماء", "1083445855"},
+        {"🦸 بطل", "616111295"},
+        {"🧟 زومبي", "616158929"},
+        {"🧙 ساحر", "707742142"},
+        {"👻 شبح", "616006778"},
+        {"👴 عجوز", "845397899"},
+        {"🕴️ تحليق", "10714347256"},
+        {"👨‍🚀 رائد فضاء", "891621366"},
+        {"🥷 نينجا", "656117400"},
+        {"🐺 مستذئب", "1083195517"},
+        {"🃏 كرتون", "742637544"},
+        {"🏴‍☠️ قرصان", "750781874"},
+        {"🥷 متخفي", "1132473842"},
+        {"🧸 لعبة", "782841498"},
+        {"⚔️ فارس", "657595757"},
+        {"😎 واثق", "1069977950"},
+        {"⭐ نجم", "1212900985"},
+        {"👸 أميرة", "941003647"},
+        {"🤠 راعي بقر", "1014390418"},
+        {"🚶 دورية", "1149612882"},
+    }
+    
+    for i = 1, #anims, 2 do
+        local rowFrame = Instance.new("Frame")
+        rowFrame.Parent = scrolling
+        rowFrame.Size = UDim2.new(0, 510, 0, 40)
+        rowFrame.BackgroundTransparency = 1
+        
+        local btn1 = Instance.new("TextButton")
+        btn1.Parent = rowFrame
+        btn1.Size = UDim2.new(0, 250, 0, 40)
+        btn1.Position = UDim2.new(0, 0, 0, 0)
+        btn1.BackgroundColor3 = colors.bg2
+        btn1.Text = anims[i][1]
+        btn1.TextColor3 = colors.text
+        btn1.TextSize = 14
+        btn1.Font = Enum.Font.Gotham
+        local btn1Corner = Instance.new("UICorner")
+        btn1Corner.CornerRadius = UDim.new(0, 8)
+        btn1Corner.Parent = btn1
+        btn1.MouseButton1Click:Connect(function()
+            PlayAnimation(anims[i][2])
+        end)
+        
+        if anims[i+1] then
+            local btn2 = Instance.new("TextButton")
+            btn2.Parent = rowFrame
+            btn2.Size = UDim2.new(0, 250, 0, 40)
+            btn2.Position = UDim2.new(1, -250, 0, 0)
+            btn2.BackgroundColor3 = colors.bg2
+            btn2.Text = anims[i+1][1]
+            btn2.TextColor3 = colors.text
+            btn2.TextSize = 14
+            btn2.Font = Enum.Font.Gotham
+            local btn2Corner = Instance.new("UICorner")
+            btn2Corner.CornerRadius = UDim.new(0, 8)
+            btn2Corner.Parent = btn2
+            btn2.MouseButton1Click:Connect(function()
+                PlayAnimation(anims[i+1][2])
+            end)
+        end
+    end
+    
+    createButton("إيقاف الكل", function()
+        StopAllAnimations()
+    end)
+end
+
+-- متنوع
+local function showMisc()
+    clearContent()
+    headerTitle.Text = "متنوع"
+    
+    createSection("حماية")
+    createToggle("مضاد AFK", false, function(state)
+        if state then
+            local connection
+            connection = plr.Idled:Connect(function()
+                game:GetService("VirtualUser"):CaptureController()
+                game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+            end)
+        end
+    end)
+    
+    createSection("شات")
+    createInput("رسالة السبام", function(value)
+        spamMessage = value
+    end, "System Broken")
+    createSlider("تأخير السبام", 0.1, 5, 0.5, function(value)
+        spamDelay = value
+    end)
+    createToggle("سبام الشات", false, function(state)
+        chatSpamActive = state
+        if state then
+            chatSpamConnection = RunService.Heartbeat:Connect(function()
+                if chatSpamActive and spamMessage then
+                    ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(spamMessage, "All")
+                    task.wait(spamDelay)
+                end
+            end)
+        elseif chatSpamConnection then
+            chatSpamConnection:Disconnect()
+        end
+    end)
+    
+    createSection("تأثيرات")
+    createButton("🌞 نهار", function()
+        Lighting.ClockTime = 14
+    end)
+    createButton("🌚 ليل", function()
+        Lighting.ClockTime = 19
+    end)
+    
+    createSection("سيرفر")
+    createButton("ريجون", function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, plr)
+    end)
+    
+    createSection("سكربتات")
+    createButton("Infinite Yield", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end)
+end
+
+-- الإعدادات
+local function showSettings()
+    clearContent()
+    headerTitle.Text = "الإعدادات"
+    
+    createSection("التحكم بالواجهة")
+    createButton("حفظ الإعدادات", function()
+        CreateNotification("تم", "تم الحفظ", 2)
+    end)
+    createButton("استعادة الإعدادات", function()
+        CreateNotification("تم", "تمت الاستعادة", 2)
+    end)
+    
+    createSection("الألوان")
+    createButton("الأزرق", function()
+        colors.accent = Color3.fromRGB(100, 200, 255)
+        colors.accent4 = Color3.fromRGB(100, 200, 255)
+        headerTitle.TextColor3 = colors.accent4
+    end)
+    createButton("الأخضر", function()
+        colors.accent = Color3.fromRGB(50, 255, 150)
+        colors.accent4 = Color3.fromRGB(50, 255, 150)
+        headerTitle.TextColor3 = colors.accent4
+    end)
+    createButton("الذهبي", function()
+        colors.accent = Color3.fromRGB(255, 215, 0)
+        colors.accent4 = Color3.fromRGB(255, 215, 0)
+        headerTitle.TextColor3 = colors.accent4
+    end)
+end
+
+-- المطور
+local function showCredits()
+    clearContent()
+    headerTitle.Text = "المطور"
+    
+    createSection("System Broken - Copper Complete")
+    
+    local creditCard = Instance.new("Frame")
+    creditCard.Parent = scrolling
+    creditCard.Size = UDim2.new(0, 510, 0, 300)
+    creditCard.BackgroundColor3 = colors.bg2
+    local creditCorner = Instance.new("UICorner")
+    creditCorner.CornerRadius = UDim.new(0, 10)
+    creditCorner.Parent = creditCard
+    
+    local title = Instance.new("TextLabel")
+    title.Parent = creditCard
+    title.Size = UDim2.new(1, 0, 0, 50)
+    title.Position = UDim2.new(0, 0, 0, 20)
+    title.BackgroundTransparency = 1
+    title.Text = "⚜️ SYSTEM BROKEN ⚜️"
+    title.TextColor3 = colors.accent4
+    title.TextSize = 24
+    title.Font = Enum.Font.GothamBold
+    
+    local version = Instance.new("TextLabel")
+    version.Parent = creditCard
+    version.Size = UDim2.new(1, 0, 0, 30)
+    version.Position = UDim2.new(0, 0, 0, 70)
+    version.BackgroundTransparency = 1
+    version.Text = "Copper Complete Edition"
+    version.TextColor3 = colors.textDark
+    version.TextSize = 18
+    version.Font = Enum.Font.Gotham
+    
+    local credits = Instance.new("TextLabel")
+    credits.Parent = creditCard
+    credits.Size = UDim2.new(1, -40, 0, 170)
+    credits.Position = UDim2.new(0, 20, 0, 110)
+    credits.BackgroundTransparency = 1
+    credits.Text = [[
+المطور: Dblack
+مطور سكربت Clock7 الأسطوري
+
+✨ المميزات:
+✓ واجهة نحاسية فخمة
+✓ بانج - Fling - Headsit
+✓ Doggy - Drag - Follow
+✓ طيران متطور
+✓ Speed - Jump - Noclip
+✓ 20 حركة مختلفة
+✓ تلبورت لمواقع متعددة
+✓ دفع الكل - دفع هدف
+✓ مضاد راجدول - حماية فراغ
+✓ سبام شات - مضاد AFK
+✓ تحكم كامل بالواجهة
+
+جميع الحقوق محفوظة
+    ]]
+    credits.TextColor3 = colors.textDark
+    credits.TextSize = 14
+    credits.Font = Enum.Font.Gotham
+    credits.TextWrapped = true
+    credits.TextXAlignment = Enum.TextXAlignment.Left
+    credits.TextYAlignment = Enum.TextYAlignment.Top
+end
+
+-- ==================================================
+-- ربط الأزرار
+-- ==================================================
+
+homeBtn.MouseButton1Click:Connect(showHome)
+gameBtn.MouseButton1Click:Connect(showGame)
+charBtn.MouseButton1Click:Connect(showCharacter)
+targetBtn.MouseButton1Click:Connect(showTarget)
+animBtn.MouseButton1Click:Connect(showAnimations)
+miscBtn.MouseButton1Click:Connect(showMisc)
+settingsBtn.MouseButton1Click:Connect(showSettings)
+creditsBtn.MouseButton1Click:Connect(showCredits)
+
+showHome()
+
+-- ==================================================
+-- شريط الأدوات السريع
+-- ==================================================
+
+local quickBar = Instance.new("Frame")
+quickBar.Parent = gui
+quickBar.Size = UDim2.new(0, 400, 0, 40)
+quickBar.Position = UDim2.new(0.5, -200, 1, -50)
+quickBar.BackgroundColor3 = colors.bg2
+quickBar.BorderSizePixel = 0
+quickBar.Visible = false
+local quickCorner = Instance.new("UICorner")
+quickCorner.CornerRadius = UDim.new(0, 10)
+quickCorner.Parent = quickBar
+local quickList = Instance.new("UIListLayout")
+quickList.Parent = quickBar
+quickList.Padding = UDim.new(0, 5)
+quickList.FillDirection = Enum.FillDirection.Horizontal
+quickList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+local quickPadding = Instance.new("UIPadding")
+quickPadding.Parent = quickBar
+quickPadding.PaddingTop = UDim.new(0, 5)
+quickPadding.PaddingBottom = UDim.new(0, 5)
+
+local quickButtons = {
+    {"🏠", showHome},
+    {"🎮", showGame},
+    {"👤", showCharacter},
+    {"🎯", showTarget},
+    {"💃", showAnimations},
+    {"⚙️", showMisc},
+    {"⚡", showSettings},
+    {"📜", showCredits}
+}
+
+for _, btnData in ipairs(quickButtons) do
+    local btn = Instance.new("TextButton")
+    btn.Parent = quickBar
+    btn.Size = UDim2.new(0, 35, 0, 30)
+    btn.BackgroundColor3 = colors.bg3
+    btn.Text = btnData[1]
+    btn.TextColor3 = colors.accent4
+    btn.TextSize = 16
+    btn.Font = Enum.Font.GothamBold
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = btn
+    btn.MouseButton1Click:Connect(btnData[2])
+end
+
+main:GetPropertyChangedSignal("Size"):Connect(function()
+    quickBar.Visible = main.Size.Y.Offset < 100
+end)
+
+-- ==================================================
+-- زر الفتح/الإغلاق
+-- ==================================================
+
+local openClose = Instance.new("ImageButton")
+openClose.Parent = gui
+openClose.Size = UDim2.new(0, 40, 0, 40)
+openClose.Position = UDim2.new(0, 0, 0.5, -20)
+openClose.BackgroundColor3 = colors.bg2
+openClose.BorderSizePixel = 0
+openClose.Image = "rbxassetid://12298407748"
+openClose.ImageColor3 = colors.accent4
+local openCloseCorner = Instance.new("UICorner")
+openCloseCorner.CornerRadius = UDim.new(0, 10)
+openCloseCorner.Parent = openClose
+openClose.MouseButton1Click:Connect(function()
+    main.Visible = not main.Visible
+    quickBar.Visible = main.Visible and main.Size.Y.Offset < 100
+    TweenService:Create(blur, TweenInfo.new(0.3), {Size = main.Visible and 5 or 0}):Play()
+end)
+
+-- ==================================================
+-- اختصار INS
+-- ==================================================
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.Insert then
+        main.Visible = not main.Visible
+        quickBar.Visible = main.Visible and main.Size.Y.Offset < 100
+        TweenService:Create(blur, TweenInfo.new(0.3), {Size = main.Visible and 5 or 0}):Play()
+    end
+end)
+
+-- ==================================================
+-- بدء التشغيل
+-- ==================================================
+
+CreateNotification("System Broken", "Copper Complete - تم التحميل", 5)
+
+print("✅ System Broken - Copper Complete Edition")
+print("👑 المطور: Dblack (مطور Clock7)")
+print("✨ جميع الوظائف جاهزة - بانج - فلينق - طيران - الخ")
