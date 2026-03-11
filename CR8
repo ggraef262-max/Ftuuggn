@@ -69,7 +69,7 @@ local espConnections = {}
 local espObjects = {}
 local chatSpamActive = false
 local chatSpamConnection = nil
-local spamMessage = "System Broken Copper"
+local spamMessage = "CR8"
 local spamDelay = 0.5
 local speedValue = 16
 local jumpValue = 50
@@ -99,7 +99,7 @@ end
 
 local function CreateNotification(title, text, duration)
     StarterGui:SetCore("SendNotification", {
-        Title = title or "System Broken",
+        Title = title or "CR8",
         Text = text or "",
         Duration = duration or 3
     })
@@ -185,7 +185,7 @@ end
 -- ==================================================
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "SystemBroken_Copper"
+gui.Name = "CR8"
 gui.Parent = game.CoreGui
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.ResetOnSpawn = false
