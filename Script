@@ -8199,7 +8199,6 @@ createBangToggle("Bang v2 | خلفي v2", -1.5, false)
 createBangToggle("Face Bang v1 | أمامي v1", 1, true)
 createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
 
--- تبويب رئيسي واحد فقط
 local Main = MakeTab({Name = "اغـانـي الـفـونـك والعربية"})
 
 -- قسم إدخال الكود العام
