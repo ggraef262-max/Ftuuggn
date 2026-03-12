@@ -12,43 +12,43 @@ local redzlib = {
  Themes = {
   Darker = {
    ["Color Hub 1"] = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(20, 12, 8)),    
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(140, 75, 40)),  
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(20, 12, 8))     
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),    
+    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(205, 127, 50)),  
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))     
    }),
-   ["Color Hub 2"] = Color3.fromRGB(0, 0, 0),     
-   ["Color Stroke"] = Color3.fromRGB(120, 70, 35),     
+   ["Color Hub 2"] = Color3.fromRGB(0, 0, 0), -- واجهة سوداء بالكامل
+   ["Color Stroke"] = Color3.fromRGB(205, 127, 50), -- لون أساسي للحواف
    ["Color Theme"] = Color3.fromRGB(205, 127, 50),     
-   ["Color Text"] = Color3.fromRGB(255, 235, 215),     
-   ["Color Dark Text"] = Color3.fromRGB(210, 180, 140) 
+   ["Color Text"] = Color3.fromRGB(255, 255, 255), -- نص أبيض
+   ["Color Dark Text"] = Color3.fromRGB(180, 180, 180) -- نص رمادي فاتح
   },
   Dark = {
    ["Color Hub 1"] = ColorSequence.new({
     ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),  
     ColorSequenceKeypoint.new(0.50, Color3.fromRGB(30, 20, 15)),    
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(20, 12, 8))      
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))      
    }),
-   ["Color Hub 2"] = Color3.fromRGB(205, 127, 50),     
+   ["Color Hub 2"] = Color3.fromRGB(0, 0, 0),     
    ["Color Stroke"] = Color3.fromRGB(205, 127, 50),    
    ["Color Theme"] = Color3.fromRGB(205, 127, 50),     
-   ["Color Text"] = Color3.fromRGB(255, 235, 215),     
+   ["Color Text"] = Color3.fromRGB(255, 255, 255),     
    ["Color Dark Text"] = Color3.fromRGB(40, 40, 40)
   },
   Purple = {
    ["Color Hub 1"] = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(25, 10, 15)),    
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),    
     ColorSequenceKeypoint.new(0.50, Color3.fromRGB(140, 75, 40)),   
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(25, 10, 15))     
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))     
    }),
-   ["Color Hub 2"] = Color3.fromRGB(205, 127, 50),     
-   ["Color Stroke"] = Color3.fromRGB(90, 50, 90),      
+   ["Color Hub 2"] = Color3.fromRGB(0, 0, 0),     
+   ["Color Stroke"] = Color3.fromRGB(180, 100, 255),      
    ["Color Theme"] = Color3.fromRGB(180, 100, 255),    
-   ["Color Text"] = Color3.fromRGB(40, 40, 40),        
+   ["Color Text"] = Color3.fromRGB(255, 255, 255),        
    ["Color Dark Text"] = Color3.fromRGB(200, 150, 180) 
   }
  },
  Info = {
-  Version = "1.1.0"
+  Version = "2.0.0"
  },
  Save = {
   UISize = {460, 280},
@@ -251,59 +251,105 @@ local redzlib = {
 }
 
 -- ==================================================
--- الإضافات الجديدة (بدون تغيير أي شيء في الكود الأصلي)
+-- نظام قوس قزح للحواف والأيقونات
 -- ==================================================
 
--- إضافة 1: تأثير قوس قزح للأيقونات عند المرور
-local function AddRainbowHover(icon)
+local RainbowObjects = {} -- لتخزين العناصر التي نطبق عليها قوس قزح
+
+local function StartRainbowEffect(obj, property, speed)
+    if not obj or not property then return end
+    
     local hue = 0
     local connection
     
-    icon.MouseEnter:Connect(function()
-        connection = RunService.Heartbeat:Connect(function()
-            hue = (hue + 0.02) % 1
-            icon.ImageColor3 = Color3.fromHSV(hue, 0.9, 1)
-        end)
+    local function UpdateRainbow()
+        hue = (hue + (speed or 0.005)) % 1
+        local color = Color3.fromHSV(hue, 1, 1)
+        
+        if property == "Stroke" and obj:IsA("UIStroke") then
+            obj.Color = color
+        elseif property == "Image" and obj:IsA("ImageLabel") then
+            obj.ImageColor3 = color
+        elseif property == "Frame" and obj:IsA("Frame") then
+            obj.BackgroundColor3 = color
+        elseif property == "Text" and obj:IsA("TextLabel") then
+            obj.TextColor3 = color
+        end
+    end
+    
+    connection = RunService.Heartbeat:Connect(UpdateRainbow)
+    
+    table.insert(RainbowObjects, {
+        Object = obj,
+        Connection = connection,
+        Property = property
+    })
+    
+    return connection
+end
+
+local function StopRainbowEffect(obj)
+    for i, data in ipairs(RainbowObjects) do
+        if data.Object == obj then
+            if data.Connection then
+                data.Connection:Disconnect()
+            end
+            table.remove(RainbowObjects, i)
+            break
+        end
+    end
+end
+
+-- إضافة تأثير قوس قزح عند المرور فقط (للبساطة)
+local function AddHoverRainbow(element)
+    local hoverConnection
+    local leaveConnection
+    
+    hoverConnection = element.MouseEnter:Connect(function()
+        if not element.RainbowActive then
+            element.RainbowActive = true
+            element.RainbowHue = 0
+            
+            element.RainbowConnection = RunService.Heartbeat:Connect(function()
+                if element.RainbowActive then
+                    element.RainbowHue = (element.RainbowHue + 0.02) % 1
+                    local color = Color3.fromHSV(element.RainbowHue, 1, 1)
+                    
+                    if element:IsA("UIStroke") then
+                        element.Color = color
+                    elseif element:IsA("ImageLabel") then
+                        element.ImageColor3 = color
+                    elseif element:IsA("TextButton") or element:IsA("ImageButton") then
+                        -- للأزرار نغير لون الحواف فقط
+                        local stroke = element:FindFirstChildOfClass("UIStroke")
+                        if stroke then
+                            stroke.Color = color
+                        end
+                    end
+                end
+            end)
+        end
     end)
     
-    icon.MouseLeave:Connect(function()
-        if connection then
-            connection:Disconnect()
-            icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    leaveConnection = element.MouseLeave:Connect(function()
+        if element.RainbowActive then
+            element.RainbowActive = false
+            if element.RainbowConnection then
+                element.RainbowConnection:Disconnect()
+            end
+            
+            -- إعادة اللون الأصلي
+            if element:IsA("UIStroke") then
+                element.Color = Theme and Theme["Color Stroke"] or Color3.fromRGB(205, 127, 50)
+            elseif element:IsA("ImageLabel") then
+                element.ImageColor3 = Color3.fromRGB(255, 255, 255)
+            end
         end
     end)
 end
 
--- إضافة 2: تأثير نبض عند الضغط على الأزرار
-local function AddPulseEffect(button)
-    local pulse = Instance.new("Frame")
-    pulse.Size = UDim2.new(0, 0, 0, 0)
-    pulse.Position = UDim2.new(0.5, 0, 0.5, 0)
-    pulse.AnchorPoint = Vector2.new(0.5, 0.5)
-    pulse.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    pulse.BackgroundTransparency = 0.8
-    pulse.Parent = button
-    
-    local pulseCorner = Instance.new("UICorner")
-    pulseCorner.CornerRadius = UDim.new(0.5, 0)
-    pulseCorner.Parent = pulse
-    
-    button.MouseButton1Click:Connect(function()
-        pulse.BackgroundTransparency = 0.6
-        pulse.Size = UDim2.new(0, 0, 0, 0)
-        
-        TweenService:Create(pulse, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Size = UDim2.new(2, 0, 2, 0),
-            BackgroundTransparency = 1
-        }):Play()
-        
-        task.wait(0.4)
-        pulse.Size = UDim2.new(0, 0, 0, 0)
-    end)
-end
-
 -- ==================================================
--- باقي الكود الأصلي (بدون أي تغيير)
+-- باقي الكود الأصلي مع تعديلات بسيطة
 -- ==================================================
 
 local ViewportSize = workspace.CurrentCamera.ViewportSize
@@ -510,7 +556,7 @@ local GetFlag, SetFlag, CheckFlag do
 end
 
 local ScreenGui = Create("ScreenGui", CoreGui, {
- Name = "Nexus Library V1",
+ Name = "Nexus Library V2",
 }, {
  Create("UIScale", {
   Scale = UIScale,
@@ -531,16 +577,12 @@ task.spawn(function()
     for _, button in pairs(ScreenGui:GetDescendants()) do
         if button:IsA("TextButton") or button:IsA("ImageButton") then
             button.Activated:Connect(PlaySound)
-            -- إضافة تأثير النبض للأزرار القديمة
-            AddPulseEffect(button)
         end
     end
     ScreenGui.DescendantAdded:Connect(function(newButton)
         if newButton:IsA("TextButton") or newButton:IsA("ImageButton") then
             task.wait(0.1)
             newButton.Activated:Connect(PlaySound)
-            -- إضافة تأثير النبض للأزرار الجديدة
-            AddPulseEffect(newButton)
         end
     end)
 end)
@@ -656,9 +698,13 @@ AddEle("Stroke", function(parent, props, ...)
  local args = {...}
  local New = InsertTheme(SetProps(Create("UIStroke", parent, {
   Color = args[1] or Theme["Color Stroke"],
-  Thickness = args[2] or 1,
+  Thickness = args[2] or 1.5,
   ApplyStrokeMode = "Border"
 }), props), "Stroke")
+ 
+ -- إضافة تأثير قوس قزح عند المرور للحواف
+ AddHoverRainbow(New)
+ 
  return New
 end)
 
@@ -680,10 +726,6 @@ AddEle("Button", function(parent, props, ...)
  if args[1] then
   New.Activated:Connect(args[1])
  end
- 
- -- إضافة تأثير النبض للأزرار الجديدة
- AddPulseEffect(New)
- 
  return New
 end)
 
@@ -818,10 +860,10 @@ function redzlib:SetTheme(NewTheme)
  if not VerifyTheme(NewTheme) then return end
  
  redzlib.Save.Theme = NewTheme
- SaveJson("Nexus library V1.json", redzlib.Save)
+ SaveJson("Nexus library V2.json", redzlib.Save)
  Theme = redzlib.Themes[NewTheme]
  
- Connection:FireConnection("ThemeChanged", NewTheme)  -- تم تصحيح الخطأ هنا
+ Connection:FireConnection("ThemeChanged", NewTheme)
  table.foreach(redzlib.Instances, function(_,Val)
   if Val.Type == "Gradient" then
    Val.Instance.Color = Theme["Color Hub 1"]
@@ -872,17 +914,29 @@ function redzlib:MakeWindow(Configs)
  local MainFrame = InsertTheme(Create("ImageButton", ScreenGui, {
   Size = UDim2.fromOffset(UISizeX, UISizeY),
   Position = UDim2.new(0.5, -UISizeX/2, 0.5, -UISizeY/2),
-  BackgroundTransparency = 0.03,
+  BackgroundColor3 = Color3.fromRGB(0, 0, 0), -- أسود صريح
+  BackgroundTransparency = 0,
   Name = "Hub"
  }), "Main")
+ 
+ -- إضافة Stroke للـ MainFrame بحواف قوس قزح
+ local MainStroke = Instance.new("UIStroke")
+ MainStroke.Thickness = 2
+ MainStroke.Color = Theme["Color Stroke"]
+ MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+ MainStroke.Parent = MainFrame
+ AddHoverRainbow(MainStroke)
+ 
  Make("Gradient", MainFrame, {
-  Rotation = 45
+  Rotation = 45,
+  Color = ColorSequence.new({
+   ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+   ColorSequenceKeypoint.new(0.5, Color3.fromRGB(20, 20, 20)),
+   ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+  })
  })MakeDrag(MainFrame)
  
- -- إضافة تأثير النبض للإطار الرئيسي
- AddPulseEffect(MainFrame)
- 
- local MainCorner = Make("Corner", MainFrame)
+ local MainCorner = Make("Corner", MainFrame, UDim.new(0, 10))
  
  local Components = Create("Folder", MainFrame, {
   Name = "Components"
@@ -966,20 +1020,31 @@ function redzlib:MakeWindow(Configs)
   Position = MainFrame.Size,
   Active = true,
   AnchorPoint = Vector2.new(0.8, 0.8),
-  BackgroundTransparency = 1,
+  BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+  BackgroundTransparency = 0,
   Name = "Control Hub Size"
  })), MakeDrag(Create("ImageButton", MainFrame, {
   Size = UDim2.new(0, 20, 1, -30),
   Position = UDim2.new(0, MainScroll.Size.X.Offset, 1, 0),
   AnchorPoint = Vector2.new(0.5, 1),
   Active = true,
-  BackgroundTransparency = 1,
+  BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+  BackgroundTransparency = 0,
   Name = "Control Tab Size"
  }))
  
- -- إضافة تأثير قوس قزح لأزرار التحكم
- AddRainbowHover(ControlSize1)
- AddRainbowHover(ControlSize2)
+ -- إضافة Strokes قوس قزح لأزرار التحكم
+ local function AddRainbowStroke(btn)
+     local stroke = Instance.new("UIStroke")
+     stroke.Thickness = 1.5
+     stroke.Color = Theme["Color Stroke"]
+     stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+     stroke.Parent = btn
+     AddHoverRainbow(stroke)
+ end
+ 
+ AddRainbowStroke(ControlSize1)
+ AddRainbowStroke(ControlSize2)
  
  local function ControlSize()
   local Pos1, Pos2 = ControlSize1.Position, ControlSize2.Position
@@ -997,13 +1062,13 @@ function redzlib:MakeWindow(Configs)
  ConnectSave(ControlSize1, function()
   if not Minimized then
    redzlib.Save.UISize = {MainFrame.Size.X.Offset, MainFrame.Size.Y.Offset}
-   SaveJson("Nexus library V5.json", redzlib.Save)
+   SaveJson("Nexus library V2.json", redzlib.Save)
   end
  end)
  
  ConnectSave(ControlSize2, function()
   redzlib.Save.TabSize = MainScroll.Size.X.Offset
-  SaveJson("Nexus library V5.json", redzlib.Save)
+  SaveJson("Nexus library V2.json", redzlib.Save)
  end)
  
  local ButtonsFolder = Create("Folder", TopBar, {
@@ -1031,9 +1096,18 @@ function redzlib:MakeWindow(Configs)
   MinimizeButton
  })
  
- -- إضافة تأثير قوس قزح لأزرار الإغلاق والتصغير
- AddRainbowHover(CloseButton)
- AddRainbowHover(MinimizeButton)
+ -- إضافة Strokes قوس قزح لأزرار الإغلاق والتصغير
+ local function AddButtonStroke(btn)
+     local stroke = Instance.new("UIStroke")
+     stroke.Thickness = 1
+     stroke.Color = Theme["Color Stroke"]
+     stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+     stroke.Parent = btn
+     AddHoverRainbow(stroke)
+ end
+ 
+ AddButtonStroke(CloseButton)
+ AddButtonStroke(MinimizeButton)
  
  local Minimized, SaveSize, WaitClick
  local Window, FirstTab = {}, false
@@ -1093,13 +1167,11 @@ function redzlib:MakeWindow(Configs)
   if Configs.Stroke then
    Stroke = Make("Stroke", Button)
    SetProps(Stroke, Configs.Corner)
+   AddHoverRainbow(Stroke)
   end
   
   SetProps(Button, Configs.Button)
   Button.Activated:Connect(Window.Minimize)
-  
-  -- إضافة تأثير قوس قزح
-  AddRainbowHover(Button)
   
   return {
    Stroke = Stroke,
@@ -1131,7 +1203,8 @@ function redzlib:MakeWindow(Configs)
    Active = true,
    Size = UDim2.fromOffset(250 * 1.08, 150 * 1.08),
    Position = UDim2.fromScale(0.5, 0.5),
-   AnchorPoint = Vector2.new(0.5, 0.5)
+   AnchorPoint = Vector2.new(0.5, 0.5),
+   BackgroundColor3 = Color3.fromRGB(0, 0, 0)
   }, {
    InsertTheme(Create("TextLabel", {
     Font = Enum.Font.GothamBold,
@@ -1157,12 +1230,20 @@ function redzlib:MakeWindow(Configs)
    }), "DarkText")
   })Make("Gradient", Frame, {Rotation = 270})Make("Corner", Frame)
   
+  -- إضافة Stroke قوس قزح للـ Dialog
+  local DialogStroke = Instance.new("UIStroke")
+  DialogStroke.Thickness = 2
+  DialogStroke.Color = Theme["Color Stroke"]
+  DialogStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+  DialogStroke.Parent = Frame
+  AddHoverRainbow(DialogStroke)
+  
   local ButtonsHolder = Create("Frame", Frame, {
    Size = UDim2.fromScale(1, 0.35),
    Position = UDim2.fromScale(0, 1),
    AnchorPoint = Vector2.new(0, 1),
-   BackgroundColor3 = Theme["Color Hub 2"],
-   BackgroundTransparency = 1
+   BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+   BackgroundTransparency = 0
   }, {
    Create("UIListLayout", {
     Padding = UDim.new(0, 10),
@@ -1172,12 +1253,19 @@ function redzlib:MakeWindow(Configs)
    })
   })
   
+  -- إضافة Stroke قوس قزح لـ ButtonsHolder
+  local ButtonsStroke = Instance.new("UIStroke")
+  ButtonsStroke.Thickness = 1
+  ButtonsStroke.Color = Theme["Color Stroke"]
+  ButtonsStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+  ButtonsStroke.Parent = ButtonsHolder
+  AddHoverRainbow(ButtonsStroke)
+  
   local Screen = InsertTheme(Create("Frame", MainFrame, {
    BackgroundTransparency = 0.6,
    Active = true,
-   BackgroundColor3 = Theme["Color Hub 2"],
+   BackgroundColor3 = Color3.fromRGB(0, 0, 0),
    Size = UDim2.new(1, 0, 1, 0),
-   BackgroundColor3 = Theme["Color Stroke"],
    Name = "Dialog"
   }), "Stroke")
   
@@ -1199,8 +1287,17 @@ function redzlib:MakeWindow(Configs)
     Text = Name,
     Font = Enum.Font.GothamBold,
     TextColor3 = Theme["Color Text"],
-    TextSize = 12
+    TextSize = 12,
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
    })
+   
+   -- إضافة Stroke قوس قزح لزر الـ Dialog
+   local ButtonStroke = Instance.new("UIStroke")
+   ButtonStroke.Thickness = 1
+   ButtonStroke.Color = Theme["Color Stroke"]
+   ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+   ButtonStroke.Parent = Button
+   AddHoverRainbow(ButtonStroke)
    
    for _,Button in pairs(ButtonsHolder:GetChildren()) do
     if Button:IsA("TextButton") then
@@ -1246,8 +1343,17 @@ function redzlib:MakeWindow(Configs)
   end
   
   local TabSelect = Make("Button", MainScroll, {
-   Size = UDim2.new(1, 0, 0, 24)
+   Size = UDim2.new(1, 0, 0, 24),
+   BackgroundColor3 = Color3.fromRGB(0, 0, 0)
   })Make("Corner", TabSelect)
+  
+  -- إضافة Stroke قوس قزح للتبويب
+  local TabStroke = Instance.new("UIStroke")
+  TabStroke.Thickness = 1
+  TabStroke.Color = Theme["Color Stroke"]
+  TabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+  TabStroke.Parent = TabSelect
+  AddHoverRainbow(TabStroke)
   
   local LabelTitle = InsertTheme(Create("TextLabel", TabSelect, {
    Size = UDim2.new(1, TIcon and -25 or -15, 1),
@@ -1271,9 +1377,9 @@ function redzlib:MakeWindow(Configs)
    ImageTransparency = (FirstTab and 0.3) or 0
   }), "Text")
   
-  -- إضافة تأثير قوس قزح لأيقونة التبويب
+  -- إضافة تأثير قوس قزح للأيقونة عند المرور
   if LabelIcon and TIcon then
-   AddRainbowHover(LabelIcon)
+   AddHoverRainbow(LabelIcon)
   end
   
   local Selected = InsertTheme(Create("Frame", TabSelect, {
@@ -1435,7 +1541,7 @@ function redzlib:MakeWindow(Configs)
    })
    
    -- إضافة تأثير قوس قزح لأيقونة الزر
-   AddRainbowHover(ButtonIcon)
+   AddHoverRainbow(ButtonIcon)
    
    FButton.Activated:Connect(function()
     Funcs:FireCallback(Callback)
@@ -1472,8 +1578,16 @@ function redzlib:MakeWindow(Configs)
     Size = UDim2.new(0, 35, 0, 18),
     Position = UDim2.new(1, -10, 0.5),
     AnchorPoint = Vector2.new(1, 0.5),
-    BackgroundColor3 = Theme["Color Stroke"]
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
    }), "Stroke")Make("Corner", ToggleHolder, UDim.new(0.5, 0))
+   
+   -- إضافة Stroke قوس قزح للـ ToggleHolder
+   local ToggleHolderStroke = Instance.new("UIStroke")
+   ToggleHolderStroke.Thickness = 1
+   ToggleHolderStroke.Color = Theme["Color Stroke"]
+   ToggleHolderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+   ToggleHolderStroke.Parent = ToggleHolder
+   AddHoverRainbow(ToggleHolderStroke)
    
    local Slider = Create("Frame", ToggleHolder, {
     BackgroundTransparency = 1,
@@ -1549,8 +1663,16 @@ function redzlib:MakeWindow(Configs)
     Size = UDim2.new(0, 150, 0, 18),
     Position = UDim2.new(1, -10, 0.5),
     AnchorPoint = Vector2.new(1, 0.5),
-    BackgroundColor3 = Theme["Color Stroke"]
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
    }), "Stroke")Make("Corner", SelectedFrame, UDim.new(0, 4))
+   
+   -- إضافة Stroke قوس قزح لـ SelectedFrame
+   local SelectedFrameStroke = Instance.new("UIStroke")
+   SelectedFrameStroke.Thickness = 1
+   SelectedFrameStroke.Color = Theme["Color Stroke"]
+   SelectedFrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+   SelectedFrameStroke.Parent = SelectedFrame
+   AddHoverRainbow(SelectedFrameStroke)
    
    local ActiveLabel = InsertTheme(Create("TextLabel", SelectedFrame, {
     Size = UDim2.new(0.85, 0, 0.85, 0),
@@ -1572,7 +1694,7 @@ function redzlib:MakeWindow(Configs)
    })
    
    -- إضافة تأثير قوس قزح للسهم
-   AddRainbowHover(Arrow)
+   AddHoverRainbow(Arrow)
    
    local NoClickFrame = Create("TextButton", DropdownHolder, {
     Name = "AntiClick",
@@ -1584,13 +1706,21 @@ function redzlib:MakeWindow(Configs)
    
    local DropFrame = Create("Frame", NoClickFrame, {
     Size = UDim2.new(SelectedFrame.Size.X, 0, 0),
-    BackgroundTransparency = 0.1,
-    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 0,
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0),
     AnchorPoint = Vector2.new(0, 1),
     Name = "DropdownFrame",
     ClipsDescendants = true,
     Active = true
    })Make("Corner", DropFrame)Make("Stroke", DropFrame)Make("Gradient", DropFrame, {Rotation = 60})
+   
+   -- إضافة Stroke قوس قزح لـ DropFrame
+   local DropFrameStroke = Instance.new("UIStroke")
+   DropFrameStroke.Thickness = 1.5
+   DropFrameStroke.Color = Theme["Color Stroke"]
+   DropFrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+   DropFrameStroke.Parent = DropFrame
+   AddHoverRainbow(DropFrameStroke)
    
    local ScrollFrame = InsertTheme(Create("ScrollingFrame", DropFrame, {
     ScrollBarImageColor3 = Theme["Color Theme"],
@@ -1764,8 +1894,17 @@ function redzlib:MakeWindow(Configs)
       Name = "Option",
       Size = UDim2.new(1, 0, 0, 21),
       Position = UDim2.new(0, 0, 0.5),
-      AnchorPoint = Vector2.new(0, 0.5)
+      AnchorPoint = Vector2.new(0, 0.5),
+      BackgroundColor3 = Color3.fromRGB(0, 0, 0)
      })Make("Corner", Button, UDim.new(0, 4))
+     
+     -- إضافة Stroke قوس قزح لخيارات القائمة المنسدلة
+     local OptionStroke = Instance.new("UIStroke")
+     OptionStroke.Thickness = 1
+     OptionStroke.Color = Theme["Color Stroke"]
+     OptionStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+     OptionStroke.Parent = Button
+     AddHoverRainbow(OptionStroke)
      
      local IsSelected = InsertTheme(Create("Frame", Button, {
       Position = UDim2.new(0, 1, 0.5),
@@ -1906,11 +2045,19 @@ function redzlib:MakeWindow(Configs)
    })
    
    local SliderBar = InsertTheme(Create("Frame", SliderHolder, {
-    BackgroundColor3 = Theme["Color Stroke"],
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0),
     Size = UDim2.new(1, -20, 0, 6),
     Position = UDim2.new(0.5, 0, 0.5),
     AnchorPoint = Vector2.new(0.5, 0.5)
    }), "Stroke")Make("Corner", SliderBar)
+   
+   -- إضافة Stroke قوس قزح لشريط التمرير
+   local SliderBarStroke = Instance.new("UIStroke")
+   SliderBarStroke.Thickness = 1
+   SliderBarStroke.Color = Theme["Color Stroke"]
+   SliderBarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+   SliderBarStroke.Parent = SliderBar
+   AddHoverRainbow(SliderBarStroke)
    
    local Indicator = InsertTheme(Create("Frame", SliderBar, {
     BackgroundColor3 = Theme["Color Theme"],
@@ -2035,8 +2182,16 @@ function redzlib:MakeWindow(Configs)
     Size = UDim2.new(0, 150, 0, 18),
     Position = UDim2.new(1, -10, 0.5),
     AnchorPoint = Vector2.new(1, 0.5),
-    BackgroundColor3 = Theme["Color Stroke"]
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
    }), "Stroke")Make("Corner", SelectedFrame, UDim.new(0, 4))
+   
+   -- إضافة Stroke قوس قزح لإطار النص
+   local SelectedFrameStroke = Instance.new("UIStroke")
+   SelectedFrameStroke.Thickness = 1
+   SelectedFrameStroke.Color = Theme["Color Stroke"]
+   SelectedFrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+   SelectedFrameStroke.Parent = SelectedFrame
+   AddHoverRainbow(SelectedFrameStroke)
    
    local TextBoxInput = InsertTheme(Create("TextBox", SelectedFrame, {
     Size = UDim2.new(0.85, 0, 0.85, 0),
@@ -2060,7 +2215,7 @@ function redzlib:MakeWindow(Configs)
    })
    
    -- إضافة تأثير قوس قزح لأيقونة القلم
-   AddRainbowHover(Pencil)
+   AddHoverRainbow(Pencil)
    
    local TextBox = {}
    local function Input()
@@ -2114,8 +2269,16 @@ function redzlib:MakeWindow(Configs)
     Size = UDim2.new(1, 0, 0, 65),
     AnchorPoint = Vector2.new(0, 1),
     Position = UDim2.new(0, 0, 1),
-    BackgroundColor3 = Theme["Color Hub 2"]
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
    }), "Frame") Make("Corner", FrameHolder)
+   
+   -- إضافة Stroke قوس قزح لإطار الديسكورد
+   local FrameHolderStroke = Instance.new("UIStroke")
+   FrameHolderStroke.Thickness = 1.5
+   FrameHolderStroke.Color = Theme["Color Stroke"]
+   FrameHolderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+   FrameHolderStroke.Parent = FrameHolder
+   AddHoverRainbow(FrameHolderStroke)
    
    local ImageLabel = Create("ImageLabel", FrameHolder, {
     Size = UDim2.new(0, 30, 0, 30),
@@ -2125,7 +2288,7 @@ function redzlib:MakeWindow(Configs)
    }) Make("Corner", ImageLabel, UDim.new(0, 4)) Make("Stroke", ImageLabel)
    
    -- إضافة تأثير قوس قزح للصورة
-   AddRainbowHover(ImageLabel)
+   AddHoverRainbow(ImageLabel)
    
    local LTitle = InsertTheme(Create("TextLabel", FrameHolder, {
     Size = UDim2.new(1, -52, 0, 15),
@@ -2159,11 +2322,16 @@ function redzlib:MakeWindow(Configs)
     Font = Enum.Font.GothamBold,
     TextSize = 12,
     TextColor3 = Theme["Color Text"],
-    BackgroundColor3 = Theme["Color Theme"]
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
    }) Make("Corner", JoinButton, UDim.new(0, 5))
    
-   -- إضافة تأثير النبض لزر الانضمام
-   AddPulseEffect(JoinButton)
+   -- إضافة Stroke قوس قزح لزر الانضمام
+   local JoinButtonStroke = Instance.new("UIStroke")
+   JoinButtonStroke.Thickness = 1
+   JoinButtonStroke.Color = Theme["Color Stroke"]
+   JoinButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+   JoinButtonStroke.Parent = JoinButton
+   AddHoverRainbow(JoinButtonStroke)
    
    local ClickDelay
    JoinButton.Activated:Connect(function()
@@ -2201,7 +2369,6 @@ end
 
 return redzlib
 
--- NEXUS LIB
+-- NEXUS LIB V2 - BLACK EDITION
 -- by Shadow
--- اللون: نحاسي 🪙
--- الإضافات: تأثير قوس قزح للأيقونات + تأثير نبض عند الضغط
+-- الحواف قوس قزح 🌈 + واجهة سوداء أنيقة
