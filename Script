@@ -400,7 +400,7 @@ UniversalTab:AddButton({
    end
 })
 
-local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
+local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://135851813855145" })
 
 
 TrollTab:AddSection({ "ثقب اسود" })
@@ -933,7 +933,7 @@ end
     end
 })
 
-local Troll = Window:MakeTab({ Title = "تخريب على اللاعبين", Icon = "rbxassetid://131153193945220" })
+local Troll = Window:MakeTab({ Title = "تخريب على اللاعبين", Icon = "rbxassetid://135851813855145" })
 
 
 local Players = game:GetService("Players")
