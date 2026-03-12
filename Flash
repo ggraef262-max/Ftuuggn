@@ -250,6 +250,62 @@ local redzlib = {
  end)()
 }
 
+-- ==================================================
+-- الإضافات الجديدة (بدون تغيير أي شيء في الكود الأصلي)
+-- ==================================================
+
+-- إضافة 1: تأثير قوس قزح للأيقونات عند المرور
+local function AddRainbowHover(icon)
+    local hue = 0
+    local connection
+    
+    icon.MouseEnter:Connect(function()
+        connection = RunService.Heartbeat:Connect(function()
+            hue = (hue + 0.02) % 1
+            icon.ImageColor3 = Color3.fromHSV(hue, 0.9, 1)
+        end)
+    end)
+    
+    icon.MouseLeave:Connect(function()
+        if connection then
+            connection:Disconnect()
+            icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end
+
+-- إضافة 2: تأثير نبض عند الضغط على الأزرار
+local function AddPulseEffect(button)
+    local pulse = Instance.new("Frame")
+    pulse.Size = UDim2.new(0, 0, 0, 0)
+    pulse.Position = UDim2.new(0.5, 0, 0.5, 0)
+    pulse.AnchorPoint = Vector2.new(0.5, 0.5)
+    pulse.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    pulse.BackgroundTransparency = 0.8
+    pulse.Parent = button
+    
+    local pulseCorner = Instance.new("UICorner")
+    pulseCorner.CornerRadius = UDim.new(0.5, 0)
+    pulseCorner.Parent = pulse
+    
+    button.MouseButton1Click:Connect(function()
+        pulse.BackgroundTransparency = 0.6
+        pulse.Size = UDim2.new(0, 0, 0, 0)
+        
+        TweenService:Create(pulse, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Size = UDim2.new(2, 0, 2, 0),
+            BackgroundTransparency = 1
+        }):Play()
+        
+        task.wait(0.4)
+        pulse.Size = UDim2.new(0, 0, 0, 0)
+    end)
+end
+
+-- ==================================================
+-- باقي الكود الأصلي (بدون أي تغيير)
+-- ==================================================
+
 local ViewportSize = workspace.CurrentCamera.ViewportSize
 local UIScale = ViewportSize.Y / 450
 
@@ -475,12 +531,16 @@ task.spawn(function()
     for _, button in pairs(ScreenGui:GetDescendants()) do
         if button:IsA("TextButton") or button:IsA("ImageButton") then
             button.Activated:Connect(PlaySound)
+            -- إضافة تأثير النبض للأزرار القديمة
+            AddPulseEffect(button)
         end
     end
     ScreenGui.DescendantAdded:Connect(function(newButton)
         if newButton:IsA("TextButton") or newButton:IsA("ImageButton") then
             task.wait(0.1)
             newButton.Activated:Connect(PlaySound)
+            -- إضافة تأثير النبض للأزرار الجديدة
+            AddPulseEffect(newButton)
         end
     end)
 end)
@@ -620,6 +680,10 @@ AddEle("Button", function(parent, props, ...)
  if args[1] then
   New.Activated:Connect(args[1])
  end
+ 
+ -- إضافة تأثير النبض للأزرار الجديدة
+ AddPulseEffect(New)
+ 
  return New
 end)
 
@@ -815,6 +879,9 @@ function redzlib:MakeWindow(Configs)
   Rotation = 45
  })MakeDrag(MainFrame)
  
+ -- إضافة تأثير النبض للإطار الرئيسي
+ AddPulseEffect(MainFrame)
+ 
  local MainCorner = Make("Corner", MainFrame)
  
  local Components = Create("Folder", MainFrame, {
@@ -910,6 +977,10 @@ function redzlib:MakeWindow(Configs)
   Name = "Control Tab Size"
  }))
  
+ -- إضافة تأثير قوس قزح لأزرار التحكم
+ AddRainbowHover(ControlSize1)
+ AddRainbowHover(ControlSize2)
+ 
  local function ControlSize()
   local Pos1, Pos2 = ControlSize1.Position, ControlSize2.Position
   ControlSize1.Position = UDim2.fromOffset(math.clamp(Pos1.X.Offset, 430, 1000), math.clamp(Pos1.Y.Offset, 200, 500))
@@ -959,6 +1030,10 @@ function redzlib:MakeWindow(Configs)
   CloseButton,
   MinimizeButton
  })
+ 
+ -- إضافة تأثير قوس قزح لأزرار الإغلاق والتصغير
+ AddRainbowHover(CloseButton)
+ AddRainbowHover(MinimizeButton)
  
  local Minimized, SaveSize, WaitClick
  local Window, FirstTab = {}, false
@@ -1022,6 +1097,9 @@ function redzlib:MakeWindow(Configs)
   
   SetProps(Button, Configs.Button)
   Button.Activated:Connect(Window.Minimize)
+  
+  -- إضافة تأثير قوس قزح
+  AddRainbowHover(Button)
   
   return {
    Stroke = Stroke,
@@ -1193,6 +1271,11 @@ function redzlib:MakeWindow(Configs)
    ImageTransparency = (FirstTab and 0.3) or 0
   }), "Text")
   
+  -- إضافة تأثير قوس قزح لأيقونة التبويب
+  if LabelIcon and TIcon then
+   AddRainbowHover(LabelIcon)
+  end
+  
   local Selected = InsertTheme(Create("Frame", TabSelect, {
    Size = FirstTab and UDim2.new(0, 4, 0, 4) or UDim2.new(0, 4, 0, 13),
    Position = UDim2.new(0, 1, 0.5),
@@ -1351,6 +1434,9 @@ function redzlib:MakeWindow(Configs)
     Image = "rbxassetid://10709791437"
    })
    
+   -- إضافة تأثير قوس قزح لأيقونة الزر
+   AddRainbowHover(ButtonIcon)
+   
    FButton.Activated:Connect(function()
     Funcs:FireCallback(Callback)
    end)
@@ -1484,6 +1570,9 @@ function redzlib:MakeWindow(Configs)
     Image = "rbxassetid://10709791523",
     BackgroundTransparency = 1
    })
+   
+   -- إضافة تأثير قوس قزح للسهم
+   AddRainbowHover(Arrow)
    
    local NoClickFrame = Create("TextButton", DropdownHolder, {
     Name = "AntiClick",
@@ -1970,6 +2059,9 @@ function redzlib:MakeWindow(Configs)
     BackgroundTransparency = 1
    })
    
+   -- إضافة تأثير قوس قزح لأيقونة القلم
+   AddRainbowHover(Pencil)
+   
    local TextBox = {}
    local function Input()
     local Text = TextBoxInput.Text
@@ -2032,6 +2124,9 @@ function redzlib:MakeWindow(Configs)
     BackgroundTransparency = 1
    }) Make("Corner", ImageLabel, UDim.new(0, 4)) Make("Stroke", ImageLabel)
    
+   -- إضافة تأثير قوس قزح للصورة
+   AddRainbowHover(ImageLabel)
+   
    local LTitle = InsertTheme(Create("TextLabel", FrameHolder, {
     Size = UDim2.new(1, -52, 0, 15),
     Position = UDim2.new(0, 44, 0, 7),
@@ -2066,6 +2161,9 @@ function redzlib:MakeWindow(Configs)
     TextColor3 = Theme["Color Text"],
     BackgroundColor3 = Theme["Color Theme"]
    }) Make("Corner", JoinButton, UDim.new(0, 5))
+   
+   -- إضافة تأثير النبض لزر الانضمام
+   AddPulseEffect(JoinButton)
    
    local ClickDelay
    JoinButton.Activated:Connect(function()
@@ -2106,3 +2204,4 @@ return redzlib
 -- NEXUS LIB
 -- by Shadow
 -- اللون: نحاسي 🪙
+-- الإضافات: تأثير قوس قزح للأيقونات + تأثير نبض عند الضغط
