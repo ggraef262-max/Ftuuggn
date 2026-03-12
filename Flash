@@ -1,3 +1,7 @@
+-- NEXUS LIB V2 - BLACK EDITION
+-- by Shadow
+-- الحواف قوس قزح 🌈 + واجهة سوداء أنيقة
+
 local MarketplaceService = game:GetService("MarketplaceService")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
@@ -16,35 +20,11 @@ local redzlib = {
     ColorSequenceKeypoint.new(0.50, Color3.fromRGB(205, 127, 50)),  
     ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))     
    }),
-   ["Color Hub 2"] = Color3.fromRGB(0, 0, 0), -- واجهة سوداء بالكامل
-   ["Color Stroke"] = Color3.fromRGB(205, 127, 50), -- لون أساسي للحواف
+   ["Color Hub 2"] = Color3.fromRGB(0, 0, 0),
+   ["Color Stroke"] = Color3.fromRGB(205, 127, 50),
    ["Color Theme"] = Color3.fromRGB(205, 127, 50),     
-   ["Color Text"] = Color3.fromRGB(255, 255, 255), -- نص أبيض
-   ["Color Dark Text"] = Color3.fromRGB(180, 180, 180) -- نص رمادي فاتح
-  },
-  Dark = {
-   ["Color Hub 1"] = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),  
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(30, 20, 15)),    
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))      
-   }),
-   ["Color Hub 2"] = Color3.fromRGB(0, 0, 0),     
-   ["Color Stroke"] = Color3.fromRGB(205, 127, 50),    
-   ["Color Theme"] = Color3.fromRGB(205, 127, 50),     
-   ["Color Text"] = Color3.fromRGB(255, 255, 255),     
-   ["Color Dark Text"] = Color3.fromRGB(40, 40, 40)
-  },
-  Purple = {
-   ["Color Hub 1"] = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),    
-    ColorSequenceKeypoint.new(0.50, Color3.fromRGB(140, 75, 40)),   
-    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))     
-   }),
-   ["Color Hub 2"] = Color3.fromRGB(0, 0, 0),     
-   ["Color Stroke"] = Color3.fromRGB(180, 100, 255),      
-   ["Color Theme"] = Color3.fromRGB(180, 100, 255),    
-   ["Color Text"] = Color3.fromRGB(255, 255, 255),        
-   ["Color Dark Text"] = Color3.fromRGB(200, 150, 180) 
+   ["Color Text"] = Color3.fromRGB(255, 255, 255),
+   ["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
   }
  },
  Info = {
@@ -64,62 +44,24 @@ local redzlib = {
  Tabs = {},
  Icons = (function()
   return {
-   ["accessibility"] = "rbxassetid://10709751939",
-   ["activity"] = "rbxassetid://10709752035",
-   ["airvent"] = "rbxassetid://10709752131",
-   ["airplay"] = "rbxassetid://10709752254",
-   ["alarmcheck"] = "rbxassetid://10709752405",
-   ["alarmclock"] = "rbxassetid://10709752630",
-   ["alarmclockoff"] = "rbxassetid://10709752508",
-   ["alarmminus"] = "rbxassetid://10709752732",
-   ["alarmplus"] = "rbxassetid://10709752825",
-   ["album"] = "rbxassetid://10709752906",
-   ["alertcircle"] = "rbxassetid://10709752996",
-   ["alertoctagon"] = "rbxassetid://10709753064",
-   ["alerttriangle"] = "rbxassetid://10709753149",
-   ["aligncenter"] = "rbxassetid://10709753570",
-   ["aligncenterhorizontal"] = "rbxassetid://10709753272",
-   ["aligncentervertical"] = "rbxassetid://10709753421",
-   ["alignendhorizontal"] = "rbxassetid://10709753692",
-   ["alignendvertical"] = "rbxassetid://10709753808",
-   ["archive"] = "rbxassetid://10709762233",
-   ["arrowdown"] = "rbxassetid://10709767827",
-   ["arrowleft"] = "rbxassetid://10709768114",
-   ["arrowright"] = "rbxassetid://10709768347",
-   ["arrowup"] = "rbxassetid://10709768939",
+   ["home"] = "rbxassetid://10723407389",
+   ["settings"] = "rbxassetid://10734950309",
+   ["user"] = "rbxassetid://10747373176",
+   ["users"] = "rbxassetid://10747373426",
+   ["shield"] = "rbxassetid://10734951847",
    ["award"] = "rbxassetid://10709769406",
-   ["barchart"] = "rbxassetid://10709773755",
-   ["battery"] = "rbxassetid://10709774640",
-   ["bell"] = "rbxassetid://10709775704",
-   ["book"] = "rbxassetid://10709781824",
    ["bookmark"] = "rbxassetid://10709782154",
-   ["box"] = "rbxassetid://10709782497",
-   ["briefcase"] = "rbxassetid://10709782662",
-   ["building"] = "rbxassetid://10709783051",
-   ["calendar"] = "rbxassetid://10709789505",
-   ["camera"] = "rbxassetid://10709789686",
    ["check"] = "rbxassetid://10709790644",
-   ["checkcircle"] = "rbxassetid://10709790387",
-   ["chevronleft"] = "rbxassetid://10709791281",
-   ["chevronright"] = "rbxassetid://10709791437",
    ["circle"] = "rbxassetid://10709798174",
-   ["clipboard"] = "rbxassetid://10709799288",
    ["clock"] = "rbxassetid://10709805144",
-   ["cloud"] = "rbxassetid://10709806740",
-   ["code"] = "rbxassetid://10709810463",
    ["cog"] = "rbxassetid://10709810948",
    ["coins"] = "rbxassetid://10709811110",
-   ["compass"] = "rbxassetid://10709811445",
-   ["copy"] = "rbxassetid://10709812159",
-   ["cpu"] = "rbxassetid://10709813383",
    ["crown"] = "rbxassetid://10709818626",
-   ["database"] = "rbxassetid://10709818996",
    ["delete"] = "rbxassetid://10709819059",
    ["diamond"] = "rbxassetid://10709819149",
    ["download"] = "rbxassetid://10723344270",
    ["edit"] = "rbxassetid://10734883598",
    ["eye"] = "rbxassetid://10723346959",
-   ["eyeoff"] = "rbxassetid://10723346871",
    ["file"] = "rbxassetid://10723374641",
    ["flag"] = "rbxassetid://10723375890",
    ["folder"] = "rbxassetid://10723387563",
@@ -127,24 +69,11 @@ local redzlib = {
    ["gift"] = "rbxassetid://10723396402",
    ["globe"] = "rbxassetid://10723404337",
    ["hammer"] = "rbxassetid://10723405360",
-   ["headphones"] = "rbxassetid://10723406165",
    ["heart"] = "rbxassetid://10723406885",
-   ["helpcircle"] = "rbxassetid://10723406988",
-   ["hexagon"] = "rbxassetid://10723407092",
-   ["history"] = "rbxassetid://10723407335",
-   ["home"] = "rbxassetid://10723407389",
-   ["hourglass"] = "rbxassetid://10723407498",
-   ["image"] = "rbxassetid://10723415040",
-   ["inbox"] = "rbxassetid://10723415335",
    ["info"] = "rbxassetid://10723415903",
    ["key"] = "rbxassetid://10723416652",
-   ["lamp"] = "rbxassetid://10723417513",
    ["laptop"] = "rbxassetid://10723423881",
    ["layers"] = "rbxassetid://10723424505",
-   ["layout"] = "rbxassetid://10723425376",
-   ["leaf"] = "rbxassetid://10723425539",
-   ["lifebuoy"] = "rbxassetid://10723425685",
-   ["lightbulb"] = "rbxassetid://10723425852",
    ["link"] = "rbxassetid://10723426722",
    ["list"] = "rbxassetid://10723433811",
    ["lock"] = "rbxassetid://10723434711",
@@ -156,31 +85,19 @@ local redzlib = {
    ["maximize"] = "rbxassetid://10734886735",
    ["medal"] = "rbxassetid://10734887072",
    ["menu"] = "rbxassetid://10734887784",
-   ["messagecircle"] = "rbxassetid://10734888000",
    ["mic"] = "rbxassetid://10734888864",
    ["micoff"] = "rbxassetid://10734888646",
    ["minimize"] = "rbxassetid://10734895698",
    ["minus"] = "rbxassetid://10734896206",
    ["monitor"] = "rbxassetid://10734896881",
    ["moon"] = "rbxassetid://10734897102",
-   ["morehorizontal"] = "rbxassetid://10734897250",
-   ["morevertical"] = "rbxassetid://10734897387",
    ["mouse"] = "rbxassetid://10734898592",
    ["move"] = "rbxassetid://10734900011",
    ["music"] = "rbxassetid://10734905958",
-   ["navigation"] = "rbxassetid://10734906744",
-   ["newspaper"] = "rbxassetid://10734907168",
-   ["octagon"] = "rbxassetid://10734907361",
-   ["package"] = "rbxassetid://10734909540",
-   ["paintbrush"] = "rbxassetid://10734910187",
-   ["palette"] = "rbxassetid://10734910430",
-   ["paperclip"] = "rbxassetid://10734910927",
    ["pause"] = "rbxassetid://10734919336",
    ["pencil"] = "rbxassetid://10734919691",
    ["percent"] = "rbxassetid://10734919919",
    ["phone"] = "rbxassetid://10734921524",
-   ["piechart"] = "rbxassetid://10734921727",
-   ["pin"] = "rbxassetid://10734922324",
    ["play"] = "rbxassetid://10734923549",
    ["plus"] = "rbxassetid://10734924532",
    ["power"] = "rbxassetid://10734930466",
@@ -194,7 +111,6 @@ local redzlib = {
    ["ruler"] = "rbxassetid://10734941018",
    ["save"] = "rbxassetid://10734941499",
    ["scale"] = "rbxassetid://10734941912",
-   ["scissors"] = "rbxassetid://10734942778",
    ["search"] = "rbxassetid://10734943674",
    ["send"] = "rbxassetid://10734943902",
    ["settings"] = "rbxassetid://10734950309",
@@ -250,57 +166,9 @@ local redzlib = {
  end)()
 }
 
--- ==================================================
--- نظام قوس قزح للحواف والأيقونات
--- ==================================================
+-- نظام قوس قزح
+local RainbowObjects = {}
 
-local RainbowObjects = {} -- لتخزين العناصر التي نطبق عليها قوس قزح
-
-local function StartRainbowEffect(obj, property, speed)
-    if not obj or not property then return end
-    
-    local hue = 0
-    local connection
-    
-    local function UpdateRainbow()
-        hue = (hue + (speed or 0.005)) % 1
-        local color = Color3.fromHSV(hue, 1, 1)
-        
-        if property == "Stroke" and obj:IsA("UIStroke") then
-            obj.Color = color
-        elseif property == "Image" and obj:IsA("ImageLabel") then
-            obj.ImageColor3 = color
-        elseif property == "Frame" and obj:IsA("Frame") then
-            obj.BackgroundColor3 = color
-        elseif property == "Text" and obj:IsA("TextLabel") then
-            obj.TextColor3 = color
-        end
-    end
-    
-    connection = RunService.Heartbeat:Connect(UpdateRainbow)
-    
-    table.insert(RainbowObjects, {
-        Object = obj,
-        Connection = connection,
-        Property = property
-    })
-    
-    return connection
-end
-
-local function StopRainbowEffect(obj)
-    for i, data in ipairs(RainbowObjects) do
-        if data.Object == obj then
-            if data.Connection then
-                data.Connection:Disconnect()
-            end
-            table.remove(RainbowObjects, i)
-            break
-        end
-    end
-end
-
--- إضافة تأثير قوس قزح عند المرور فقط (للبساطة)
 local function AddHoverRainbow(element)
     local hoverConnection
     local leaveConnection
@@ -319,12 +187,6 @@ local function AddHoverRainbow(element)
                         element.Color = color
                     elseif element:IsA("ImageLabel") then
                         element.ImageColor3 = color
-                    elseif element:IsA("TextButton") or element:IsA("ImageButton") then
-                        -- للأزرار نغير لون الحواف فقط
-                        local stroke = element:FindFirstChildOfClass("UIStroke")
-                        if stroke then
-                            stroke.Color = color
-                        end
                     end
                 end
             end)
@@ -338,7 +200,6 @@ local function AddHoverRainbow(element)
                 element.RainbowConnection:Disconnect()
             end
             
-            -- إعادة اللون الأصلي
             if element:IsA("UIStroke") then
                 element.Color = Theme and Theme["Color Stroke"] or Color3.fromRGB(205, 127, 50)
             elseif element:IsA("ImageLabel") then
@@ -349,7 +210,7 @@ local function AddHoverRainbow(element)
 end
 
 -- ==================================================
--- باقي الكود الأصلي مع تعديلات بسيطة
+-- الدوال الأساسية
 -- ==================================================
 
 local ViewportSize = workspace.CurrentCamera.ViewportSize
@@ -403,156 +264,6 @@ local SetProps, SetChildren, InsertTheme, Create do
   end
   return new
  end
- 
- local function Save(file)
-  if readfile and isfile and isfile(file) then
-   local decode = HttpService:JSONDecode(readfile(file))
-   
-   if type(decode) == "table" then
-    if rawget(decode, "UISize") then redzlib.Save["UISize"] = decode["UISize"] end
-    if rawget(decode, "TabSize") then redzlib.Save["TabSize"] = decode["TabSize"] end
-    if rawget(decode, "Theme") and VerifyTheme(decode["Theme"]) then redzlib.Save["Theme"] = decode["Theme"] end
-   end
-  end
- end
- 
- pcall(Save, "Nexus library V1.json")
-end
-
-local Funcs = {} do
- function Funcs:InsertCallback(tab, func)
-  if type(func) == "function" then
-   table.insert(tab, func)
-  end
-  return func
- end
- 
- function Funcs:FireCallback(tab, ...)
-  for _,v in ipairs(tab) do
-   if type(v) == "function" then
-    task.spawn(v, ...)
-   end
-  end
- end
- 
- function Funcs:ToggleVisible(Obj, Bool)
-  Obj.Visible = Bool ~= nil and Bool or Obj.Visible
- end
- 
- function Funcs:ToggleParent(Obj, Parent)
-  if Bool ~= nil then
-   Obj.Parent = Bool
-  else
-   Obj.Parent = not Obj.Parent and Parent
-  end
- end
- 
- function Funcs:GetConnectionFunctions(ConnectedFuncs, func)
-  local Connected = { Function = func, Connected = true }
-  
-  function Connected:Disconnect()
-   if self.Connected then
-    table.remove(ConnectedFuncs, table.find(ConnectedFuncs, self.Function))
-    self.Connected = false
-   end
-  end
-  
-  function Connected:Fire(...)
-   if self.Connected then
-    task.spawn(self.Function, ...)
-   end
-  end
-  
-  return Connected
- end
- 
- function Funcs:GetCallback(Configs, index)
-  local func = Configs[index] or Configs.Callback or function()end
-  
-  if type(func) == "table" then
-   return ({function(Value) func[1][func[2]] = Value end})
-  end
-  return {func}
- end
-end
-
-local Connections, Connection = {}, redzlib.Connection do
- local function NewConnectionList(List)
-  if type(List) ~= "table" then return end
-  
-  for _,CoName in ipairs(List) do
-   local ConnectedFuncs, Connect = {}, {}
-   Connection[CoName] = Connect
-   Connections[CoName] = ConnectedFuncs
-   Connect.Name = CoName
-   
-   function Connect:Connect(func)
-    if type(func) == "function" then
-     table.insert(ConnectedFuncs, func)
-     return Funcs:GetConnectionFunctions(ConnectedFuncs, func)
-    end
-   end
-   
-   function Connect:Once(func)
-    if type(func) == "function" then
-     local Connected;
-     
-     local _NFunc;_NFunc = function(...)
-      task.spawn(func, ...)
-      Connected:Disconnect()
-     end
-     
-     Connected = Funcs:GetConnectionFunctions(ConnectedFuncs, _NFunc)
-     return Connected
-    end
-   end
-  end
- end
- 
- function Connection:FireConnection(CoName, ...)
-  local Connection = type(CoName) == "string" and Connections[CoName] or Connections[CoName.Name]
-  for _,Func in pairs(Connection) do
-   task.spawn(Func, ...)
-  end
- end
- 
- NewConnectionList({"FlagsChanged", "ThemeChanged", "FileSaved", "ThemeChanging", "OptionAdded"})
-end
-
-local GetFlag, SetFlag, CheckFlag do
- CheckFlag = function(Name)
-  return type(Name) == "string" and Flags[Name] ~= nil
- end
- 
- GetFlag = function(Name)
-  return type(Name) == "string" and Flags[Name]
- end
- 
- SetFlag = function(Flag, Value)
-  if Flag and (Value ~= Flags[Flag] or type(Value) == "table") then
-   Flags[Flag] = Value
-   Connection:FireConnection("FlagsChanged", Flag, Value)
-  end
- end
- 
- local db
- Connection.FlagsChanged:Connect(function(Flag, Value)
-  local ScriptFile = Settings.ScriptFile
-  if not db and ScriptFile and writefile then
-   db=true;task.wait(0.1);db=false
-   
-   local Success, Encoded = pcall(function()
-    return HttpService:JSONEncode(Flags)
-   end)
-   
-   if Success then
-    local Success = pcall(writefile, ScriptFile, Encoded)
-    if Success then
-     Connection:FireConnection("FileSaved", "Script-Flags", ScriptFile, Encoded)
-    end
-   end
-  end
- end)
 end
 
 local ScreenGui = Create("ScreenGui", CoreGui, {
@@ -564,29 +275,6 @@ local ScreenGui = Create("ScreenGui", CoreGui, {
  })
 })
 
-local ClickSound = Instance.new("Sound", ScreenGui)
-ClickSound.SoundId = "rbxassetid://1412830636"
-ClickSound.Volume = 0.5
-
-local function PlaySound()
-    ClickSound:Play()
-end
-
-task.spawn(function()
-    task.wait(2)
-    for _, button in pairs(ScreenGui:GetDescendants()) do
-        if button:IsA("TextButton") or button:IsA("ImageButton") then
-            button.Activated:Connect(PlaySound)
-        end
-    end
-    ScreenGui.DescendantAdded:Connect(function(newButton)
-        if newButton:IsA("TextButton") or newButton:IsA("ImageButton") then
-            task.wait(0.1)
-            newButton.Activated:Connect(PlaySound)
-        end
-    end)
-end)
-
 local ScreenFind = CoreGui:FindFirstChild(ScreenGui.Name)
 if ScreenFind and ScreenFind ~= ScreenGui then
  ScreenFind:Destroy()
@@ -597,16 +285,6 @@ local function GetStr(val)
   return val()
  end
  return val
-end
-
-local function ConnectSave(Instance, func)
- Instance.InputBegan:Connect(function(Input)
-  if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-   while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do task.wait()
-   end
-  end
-  func()
- end)
 end
 
 local function CreateTween(Configs)
@@ -702,7 +380,6 @@ AddEle("Stroke", function(parent, props, ...)
   ApplyStrokeMode = "Border"
 }), props), "Stroke")
  
- -- إضافة تأثير قوس قزح عند المرور للحواف
  AddHoverRainbow(New)
  
  return New
@@ -770,7 +447,8 @@ local function ButtonFrame(Instance, Title, Description, HolderSize)
  local Frame = Make("Button", Instance, {
   Size = UDim2.new(1, 0, 0, 25),
   AutomaticSize = "Y",
-  Name = "Option"
+  Name = "Option",
+  BackgroundColor3 = Color3.fromRGB(0, 0, 0)
  })Make("Corner", Frame, UDim.new(0, 6))
  
  LabelHolder = Create("Frame", Frame, {
@@ -863,7 +541,6 @@ function redzlib:SetTheme(NewTheme)
  SaveJson("Nexus library V2.json", redzlib.Save)
  Theme = redzlib.Themes[NewTheme]
  
- Connection:FireConnection("ThemeChanged", NewTheme)
  table.foreach(redzlib.Instances, function(_,Val)
   if Val.Type == "Gradient" then
    Val.Instance.Color = Theme["Color Hub 1"]
@@ -883,43 +560,19 @@ function redzlib:SetTheme(NewTheme)
  end)
 end
 
-function redzlib:SetScale(NewScale)
- NewScale = ViewportSize.Y / math.clamp(NewScale, 300, 2000)
- UIScale, ScreenGui.Scale.Scale = NewScale, NewScale
-end
-
 function redzlib:MakeWindow(Configs)
  local WTitle = Configs[1] or Configs.Name or Configs.Title or "NEXUS LIBRARY"
  local WMiniText = Configs[2] or Configs.SubTitle or "by : Shadow"
- 
- Settings.ScriptFile = Configs[3] or Configs.SaveFolder or false
- 
- local function LoadFile()
-  local File = Settings.ScriptFile
-  if type(File) ~= "string" then return end
-  if not readfile or not isfile then return end
-  local s, r = pcall(isfile, File)
-  
-  if s and r then
-   local s, _Flags = pcall(readfile, File)
-   
-   if s and type(_Flags) == "string" then
-    local s,r = pcall(function() return HttpService:JSONDecode(_Flags) end)
-    Flags = s and r or {}
-   end
-  end
- end;LoadFile()
  
  local UISizeX, UISizeY = unpack(redzlib.Save.UISize)
  local MainFrame = InsertTheme(Create("ImageButton", ScreenGui, {
   Size = UDim2.fromOffset(UISizeX, UISizeY),
   Position = UDim2.new(0.5, -UISizeX/2, 0.5, -UISizeY/2),
-  BackgroundColor3 = Color3.fromRGB(0, 0, 0), -- أسود صريح
+  BackgroundColor3 = Color3.fromRGB(0, 0, 0),
   BackgroundTransparency = 0,
   Name = "Hub"
  }), "Main")
  
- -- إضافة Stroke للـ MainFrame بحواف قوس قزح
  local MainStroke = Instance.new("UIStroke")
  MainStroke.Thickness = 2
  MainStroke.Color = Theme["Color Stroke"]
@@ -1013,8 +666,6 @@ function redzlib:MakeWindow(Configs)
   Name = "Containers"
  })
 
- -- تم إزالة الجزيئات (Particles) نهائياً لحل مشكلة الـ Lag
-
  local ControlSize1, ControlSize2 = MakeDrag(Create("ImageButton", MainFrame, {
   Size = UDim2.new(0, 35, 0, 35),
   Position = MainFrame.Size,
@@ -1033,7 +684,6 @@ function redzlib:MakeWindow(Configs)
   Name = "Control Tab Size"
  }))
  
- -- إضافة Strokes قوس قزح لأزرار التحكم
  local function AddRainbowStroke(btn)
      local stroke = Instance.new("UIStroke")
      stroke.Thickness = 1.5
@@ -1059,18 +709,6 @@ function redzlib:MakeWindow(Configs)
  ControlSize1:GetPropertyChangedSignal("Position"):Connect(ControlSize)
  ControlSize2:GetPropertyChangedSignal("Position"):Connect(ControlSize)
  
- ConnectSave(ControlSize1, function()
-  if not Minimized then
-   redzlib.Save.UISize = {MainFrame.Size.X.Offset, MainFrame.Size.Y.Offset}
-   SaveJson("Nexus library V2.json", redzlib.Save)
-  end
- end)
- 
- ConnectSave(ControlSize2, function()
-  redzlib.Save.TabSize = MainScroll.Size.X.Offset
-  SaveJson("Nexus library V2.json", redzlib.Save)
- end)
- 
  local ButtonsFolder = Create("Folder", TopBar, {
   Name = "Buttons"
  })
@@ -1082,21 +720,17 @@ function redzlib:MakeWindow(Configs)
   BackgroundTransparency = 1,
   Image = "rbxassetid://10747384394",
   AutoButtonColor = false,
-  Name = "Close"
+  Name = "Close",
+  Parent = ButtonsFolder
  })
  
  local MinimizeButton = SetProps(CloseButton:Clone(), {
   Position = UDim2.new(1, -35, 0.5),
   Image = "rbxassetid://10734896206",
-  Name = "Minimize"
+  Name = "Minimize",
+  Parent = ButtonsFolder
  })
  
- SetChildren(ButtonsFolder, {
-  CloseButton,
-  MinimizeButton
- })
- 
- -- إضافة Strokes قوس قزح لأزرار الإغلاق والتصغير
  local function AddButtonStroke(btn)
      local stroke = Instance.new("UIStroke")
      stroke.Thickness = 1
@@ -1111,17 +745,9 @@ function redzlib:MakeWindow(Configs)
  
  local Minimized, SaveSize, WaitClick
  local Window, FirstTab = {}, false
+ 
  function Window:CloseBtn()
-  local Dialog = Window:Dialog({
-   Title = "إغلاق",  
-   Text = "هل حقا تريد غلق سكربت NEXUS?",
-   Options = {
-    {"نعم", function()
-     ScreenGui:Destroy()
-    end},
-    {"لا"}
-   }
-  })
+  ScreenGui:Destroy()
  end
  
  function Window:MinimizeBtn()
@@ -1144,40 +770,6 @@ function redzlib:MakeWindow(Configs)
   end
   
   WaitClick = false
- end
- 
- function Window:Minimize()
-  MainFrame.Visible = not MainFrame.Visible
- end
- 
- function Window:AddMinimizeButton(Configs)
-  local Button = MakeDrag(Create("ImageButton", ScreenGui, {
-   Size = UDim2.fromOffset(35, 35),
-   Position = UDim2.fromScale(0.15, 0.15),
-   BackgroundTransparency = 1,
-   BackgroundColor3 = Theme["Color Hub 2"],
-   AutoButtonColor = false
-  }))
-  
-  local Stroke, Corner
-  if Configs.Corner then
-   Corner = Make("Corner", Button)
-   SetProps(Corner, Configs.Corner)
-  end
-  if Configs.Stroke then
-   Stroke = Make("Stroke", Button)
-   SetProps(Stroke, Configs.Corner)
-   AddHoverRainbow(Stroke)
-  end
-  
-  SetProps(Button, Configs.Button)
-  Button.Activated:Connect(Window.Minimize)
-  
-  return {
-   Stroke = Stroke,
-   Corner = Corner,
-   Button = Button
-  }
  end
  
  function Window:Set(Val1, Val2)
@@ -1230,7 +822,6 @@ function redzlib:MakeWindow(Configs)
    }), "DarkText")
   })Make("Gradient", Frame, {Rotation = 270})Make("Corner", Frame)
   
-  -- إضافة Stroke قوس قزح للـ Dialog
   local DialogStroke = Instance.new("UIStroke")
   DialogStroke.Thickness = 2
   DialogStroke.Color = Theme["Color Stroke"]
@@ -1253,7 +844,6 @@ function redzlib:MakeWindow(Configs)
    })
   })
   
-  -- إضافة Stroke قوس قزح لـ ButtonsHolder
   local ButtonsStroke = Instance.new("UIStroke")
   ButtonsStroke.Thickness = 1
   ButtonsStroke.Color = Theme["Color Stroke"]
@@ -1291,7 +881,6 @@ function redzlib:MakeWindow(Configs)
     BackgroundColor3 = Color3.fromRGB(0, 0, 0)
    })
    
-   -- إضافة Stroke قوس قزح لزر الـ Dialog
    local ButtonStroke = Instance.new("UIStroke")
    ButtonStroke.Thickness = 1
    ButtonStroke.Color = Theme["Color Stroke"]
@@ -1332,8 +921,7 @@ function redzlib:MakeWindow(Configs)
  end
  
  local ContainerList = {}
- function Window:MakeTab(paste, Configs)
-  if type(paste) == "table" then Configs = paste end
+ function Window:MakeTab(Configs)
   local TName = Configs[1] or Configs.Title or "Tab!"
   local TIcon = Configs[2] or Configs.Icon or ""
   
@@ -1347,7 +935,6 @@ function redzlib:MakeWindow(Configs)
    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
   })Make("Corner", TabSelect)
   
-  -- إضافة Stroke قوس قزح للتبويب
   local TabStroke = Instance.new("UIStroke")
   TabStroke.Thickness = 1
   TabStroke.Color = Theme["Color Stroke"]
@@ -1377,7 +964,6 @@ function redzlib:MakeWindow(Configs)
    ImageTransparency = (FirstTab and 0.3) or 0
   }), "Text")
   
-  -- إضافة تأثير قوس قزح للأيقونة عند المرور
   if LabelIcon and TIcon then
    AddHoverRainbow(LabelIcon)
   end
@@ -1456,79 +1042,26 @@ function redzlib:MakeWindow(Configs)
    Tabs()
   end
   function Tab:Visible(Bool)
-   Funcs:ToggleVisible(TabSelect, Bool)
-   Funcs:ToggleParent(Container, Bool, Containers)
+   if Bool == nil then
+    TabSelect.Visible = not TabSelect.Visible
+    if not TabSelect.Visible then
+     Container.Parent = nil
+    end
+   else
+    TabSelect.Visible = Bool
+    if Bool then
+     Container.Parent = Containers
+    else
+     Container.Parent = nil
+    end
+   end
   end
   function Tab:Destroy() TabSelect:Destroy() Container:Destroy() end
-  
-  function Tab:AddSection(Configs)
-   local SectionName = type(Configs) == "string" and Configs or Configs[1] or Configs.Name or Configs.Title or Configs.Section
-   
-   local SectionFrame = Create("Frame", Container, {
-    Size = UDim2.new(1, 0, 0, 20),
-    BackgroundTransparency = 1,
-    Name = "Option"
-   })
-   
-   local SectionLabel = InsertTheme(Create("TextLabel", SectionFrame, {
-    Font = Enum.Font.GothamBold,
-    Text = SectionName,
-    TextColor3 = Theme["Color Text"],
-    Size = UDim2.new(1, -25, 1, 0),
-    Position = UDim2.new(0, 5),
-    BackgroundTransparency = 1,
-    TextTruncate = "AtEnd",
-    TextSize = 14,
-    TextXAlignment = "Left"
-   }), "Text")
-   
-   local Section = {}
-   table.insert(redzlib.Options, {type = "Section", Name = SectionName, func = Section})
-   function Section:Visible(Bool)
-    if Bool == nil then SectionFrame.Visible = not SectionFrame.Visible return end
-    SectionFrame.Visible = Bool
-   end
-   function Section:Destroy()
-    SectionFrame:Destroy()
-   end
-   function Section:Set(New)
-    if New then
-     SectionLabel.Text = GetStr(New)
-    end
-   end
-   return Section
-  end
-  
-  function Tab:AddParagraph(Configs)
-   local PName = Configs[1] or Configs.Title or "Paragraph"
-   local PDesc = Configs[2] or Configs.Text or ""
-   
-   local Frame, LabelFunc = ButtonFrame(Container, PName, PDesc, UDim2.new(1, -20))
-   
-   local Paragraph = {}
-   function Paragraph:Visible(...) Funcs:ToggleVisible(Frame, ...) end
-   function Paragraph:Destroy() Frame:Destroy() end
-   function Paragraph:SetTitle(Val)
-    LabelFunc:SetTitle(GetStr(Val))
-   end
-   function Paragraph:SetDesc(Val)
-    LabelFunc:SetDesc(GetStr(Val))
-   end
-   function Paragraph:Set(Val1, Val2)
-    if Val1 and Val2 then
-     LabelFunc:SetTitle(GetStr(Val1))
-     LabelFunc:SetDesc(GetStr(Val2))
-    elseif Val1 then
-     LabelFunc:SetDesc(GetStr(Val1))
-    end
-   end
-   return Paragraph
-  end
   
   function Tab:AddButton(Configs)
    local BName = Configs[1] or Configs.Name or Configs.Title or "Button!"
    local BDescription = Configs.Desc or Configs.Description or ""
-   local Callback = Funcs:GetCallback(Configs, 2)
+   local Callback = Configs.Callback or function() end
    
    local FButton, LabelFunc = ButtonFrame(Container, BName, BDescription, UDim2.new(1, -20))
    
@@ -1540,25 +1073,18 @@ function redzlib:MakeWindow(Configs)
     Image = "rbxassetid://10709791437"
    })
    
-   -- إضافة تأثير قوس قزح لأيقونة الزر
    AddHoverRainbow(ButtonIcon)
    
    FButton.Activated:Connect(function()
-    Funcs:FireCallback(Callback)
+    Callback()
    end)
    
    local Button = {}
-   function Button:Visible(...) Funcs:ToggleVisible(FButton, ...) end
-   function Button:Destroy() FButton:Destroy() end
-   function Button:Callback(...) Funcs:InsertCallback(Callback, ...) end
-   function Button:Set(Val1, Val2)
-    if type(Val1) == "string" and type(Val2) == "string" then
-     LabelFunc:SetTitle(Val1)
-     LabelFunc:SetDesc(Val2)
-    elseif type(Val1) == "string" then
-     LabelFunc:SetTitle(Val1)
-    elseif type(Val1) == "function" then
-     Callback = Val1
+   function Button:Set(Val)
+    if type(Val) == "string" then
+     LabelFunc:SetTitle(Val)
+    elseif type(Val) == "function" then
+     Callback = Val
     end
    end
    return Button
@@ -1567,10 +1093,9 @@ function redzlib:MakeWindow(Configs)
   function Tab:AddToggle(Configs)
    local TName = Configs[1] or Configs.Name or Configs.Title or "Toggle"
    local TDesc = Configs.Desc or Configs.Description or ""
-   local Callback = Funcs:GetCallback(Configs, 3)
-   local Flag = Configs[4] or Configs.Flag or false
-   local Default = Configs[2] or Configs.Default or false
-   if CheckFlag(Flag) then Default = GetFlag(Flag) end
+   local Default = Configs.Default or false
+   local Callback = Configs.Callback or function() end
+   local toggled = Default
    
    local Button, LabelFunc = ButtonFrame(Container, TName, TDesc, UDim2.new(1, -38))
    
@@ -1581,7 +1106,6 @@ function redzlib:MakeWindow(Configs)
     BackgroundColor3 = Color3.fromRGB(0, 0, 0)
    }), "Stroke")Make("Corner", ToggleHolder, UDim.new(0.5, 0))
    
-   -- إضافة Stroke قوس قزح للـ ToggleHolder
    local ToggleHolderStroke = Instance.new("UIStroke")
    ToggleHolderStroke.Thickness = 1
    ToggleHolderStroke.Color = Theme["Color Stroke"]
@@ -1598,765 +1122,37 @@ function redzlib:MakeWindow(Configs)
    
    local Toggle = InsertTheme(Create("Frame", Slider, {
     Size = UDim2.new(0, 12, 0, 12),
-    Position = UDim2.new(0, 0, 0.5),
-    AnchorPoint = Vector2.new(0, 0.5),
+    Position = UDim2.new(toggled and 1 or 0, toggled and -12 or 0, 0.5),
+    AnchorPoint = Vector2.new(toggled and 1 or 0, 0.5),
     BackgroundColor3 = Theme["Color Theme"]
    }), "Theme")Make("Corner", Toggle, UDim.new(0.5, 0))
    
-   local WaitClick
    local function SetToggle(Val)
-    if WaitClick then return end
-    
-    WaitClick, Default = true, Val
-    SetFlag(Flag, Default)
-    Funcs:FireCallback(Callback, Default)
-    if Default then
-     CreateTween({Toggle, "Position", UDim2.new(1, 0, 0.5), 0.25})
-     CreateTween({Toggle, "BackgroundTransparency", 0, 0.25})
-     CreateTween({Toggle, "AnchorPoint", Vector2.new(1, 0.5), 0.25, Wait or false})
-    else
-     CreateTween({Toggle, "Position", UDim2.new(0, 0, 0.5), 0.25})
-     CreateTween({Toggle, "BackgroundTransparency", 0.8, 0.25})
-     CreateTween({Toggle, "AnchorPoint", Vector2.new(0, 0.5), 0.25, Wait or false})
-    end
-    WaitClick = false
-   end;task.spawn(SetToggle, Default)
+    toggled = Val
+    CreateTween({Toggle, "Position", UDim2.new(toggled and 1 or 0, toggled and -12 or 0, 0.5), 0.25})
+    CreateTween({Toggle, "AnchorPoint", Vector2.new(toggled and 1 or 0, 0.5), 0.25})
+    CreateTween({Toggle, "BackgroundTransparency", toggled and 0 or 0.8, 0.25})
+    Callback(toggled)
+   end
+   
+   SetToggle(Default)
    
    Button.Activated:Connect(function()
-    SetToggle(not Default)
+    SetToggle(not toggled)
    end)
    
    local Toggle = {}
-   function Toggle:Visible(...) Funcs:ToggleVisible(Button, ...) end
-   function Toggle:Destroy() Button:Destroy() end
-   function Toggle:Callback(...) Funcs:InsertCallback(Callback, ...)() end
-   function Toggle:Set(Val1, Val2)
-    if type(Val1) == "string" and type(Val2) == "string" then
-     LabelFunc:SetTitle(Val1)
-     LabelFunc:SetDesc(Val2)
-    elseif type(Val1) == "string" then
-     LabelFunc:SetTitle(Val1, false, true)
-    elseif type(Val1) == "boolean" then
-     if WaitClick and Val2 then
-      repeat task.wait() until not WaitClick
-     end
-     task.spawn(SetToggle, Val1)
-    elseif type(Val1) == "function" then
-     Callback = Val1
+   function Toggle:Set(Val)
+    if type(Val) == "boolean" then
+     SetToggle(Val)
+    elseif type(Val) == "string" then
+     LabelFunc:SetTitle(Val)
     end
+   end
+   function Toggle:Get()
+    return toggled
    end
    return Toggle
-  end
-  
-  function Tab:AddDropdown(Configs)
-   local DName = Configs[1] or Configs.Name or Configs.Title or "Dropdown"
-   local DDesc = Configs.Desc or Configs.Description or ""
-   local DOptions = Configs[2] or Configs.Options or {}
-   local OpDefault = Configs[3] or Configs.Default or {}
-   local Flag = Configs[5] or Configs.Flag or false
-   local DMultiSelect = Configs.MultiSelect or false
-   local Callback = Funcs:GetCallback(Configs, 4)
-   
-   local Button, LabelFunc = ButtonFrame(Container, DName, DDesc, UDim2.new(1, -180))
-   
-   local SelectedFrame = InsertTheme(Create("Frame", Button, {
-    Size = UDim2.new(0, 150, 0, 18),
-    Position = UDim2.new(1, -10, 0.5),
-    AnchorPoint = Vector2.new(1, 0.5),
-    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-   }), "Stroke")Make("Corner", SelectedFrame, UDim.new(0, 4))
-   
-   -- إضافة Stroke قوس قزح لـ SelectedFrame
-   local SelectedFrameStroke = Instance.new("UIStroke")
-   SelectedFrameStroke.Thickness = 1
-   SelectedFrameStroke.Color = Theme["Color Stroke"]
-   SelectedFrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-   SelectedFrameStroke.Parent = SelectedFrame
-   AddHoverRainbow(SelectedFrameStroke)
-   
-   local ActiveLabel = InsertTheme(Create("TextLabel", SelectedFrame, {
-    Size = UDim2.new(0.85, 0, 0.85, 0),
-    AnchorPoint = Vector2.new(0.5, 0.5),
-    Position = UDim2.new(0.5, 0, 0.5, 0),
-    BackgroundTransparency = 1,
-    Font = Enum.Font.GothamBold,
-    TextScaled = true,
-    TextColor3 = Theme["Color Text"],
-    Text = "..."
-   }), "Text")
-   
-   local Arrow = Create("ImageLabel", SelectedFrame, {
-    Size = UDim2.new(0, 15, 0, 15),
-    Position = UDim2.new(0, -5, 0.5),
-    AnchorPoint = Vector2.new(1, 0.5),
-    Image = "rbxassetid://10709791523",
-    BackgroundTransparency = 1
-   })
-   
-   -- إضافة تأثير قوس قزح للسهم
-   AddHoverRainbow(Arrow)
-   
-   local NoClickFrame = Create("TextButton", DropdownHolder, {
-    Name = "AntiClick",
-    Size = UDim2.new(1, 0, 1, 0),
-    BackgroundTransparency = 1,
-    Visible = false,
-    Text = ""
-   })
-   
-   local DropFrame = Create("Frame", NoClickFrame, {
-    Size = UDim2.new(SelectedFrame.Size.X, 0, 0),
-    BackgroundTransparency = 0,
-    BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-    AnchorPoint = Vector2.new(0, 1),
-    Name = "DropdownFrame",
-    ClipsDescendants = true,
-    Active = true
-   })Make("Corner", DropFrame)Make("Stroke", DropFrame)Make("Gradient", DropFrame, {Rotation = 60})
-   
-   -- إضافة Stroke قوس قزح لـ DropFrame
-   local DropFrameStroke = Instance.new("UIStroke")
-   DropFrameStroke.Thickness = 1.5
-   DropFrameStroke.Color = Theme["Color Stroke"]
-   DropFrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-   DropFrameStroke.Parent = DropFrame
-   AddHoverRainbow(DropFrameStroke)
-   
-   local ScrollFrame = InsertTheme(Create("ScrollingFrame", DropFrame, {
-    ScrollBarImageColor3 = Theme["Color Theme"],
-    Size = UDim2.new(1, 0, 1, 0),
-    ScrollBarThickness = 1.5,
-    BackgroundTransparency = 1,
-    BorderSizePixel = 0,
-    CanvasSize = UDim2.new(),
-    ScrollingDirection = "Y",
-    AutomaticCanvasSize = "Y",
-    Active = true
-   }, {
-    Create("UIPadding", {
-     PaddingLeft = UDim.new(0, 8),
-     PaddingRight = UDim.new(0, 8),
-     PaddingTop = UDim.new(0, 5),
-     PaddingBottom = UDim.new(0, 5)
-    }), Create("UIListLayout", {
-     Padding = UDim.new(0, 4)
-    })
-   }), "ScrollBar")
-   
-   local ScrollSize, WaitClick = 5
-   local function Disable()
-    WaitClick = true
-    CreateTween({Arrow, "Rotation", 0, 0.2})
-    CreateTween({DropFrame, "Size", UDim2.new(0, 152, 0, 0), 0.2, true})
-    CreateTween({Arrow, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
-    Arrow.Image = "rbxassetid://10709791523"
-    NoClickFrame.Visible = false
-    WaitClick = false
-   end
-   
-   local function GetFrameSize()
-    return UDim2.fromOffset(152, ScrollSize)
-   end
-   
-   local function CalculateSize()
-    local Count = 0
-    for _,Frame in pairs(ScrollFrame:GetChildren()) do
-     if Frame:IsA("Frame") or Frame.Name == "Option" then
-      Count = Count + 1
-     end
-    end
-    ScrollSize = (math.clamp(Count, 0, 10) * 25) + 10
-    if NoClickFrame.Visible then
-     NoClickFrame.Visible = true
-     CreateTween({DropFrame, "Size", GetFrameSize(), 0.2, true})
-    end
-   end
-   
-   local function Minimize()
-    if WaitClick then return end
-    WaitClick = true
-    if NoClickFrame.Visible then
-     Arrow.Image = "rbxassetid://10709791523"
-     CreateTween({Arrow, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
-     CreateTween({DropFrame, "Size", UDim2.new(0, 152, 0, 0), 0.2, true})
-     NoClickFrame.Visible = false
-    else
-     NoClickFrame.Visible = true
-     Arrow.Image = "rbxassetid://10709790948"
-     CreateTween({Arrow, "ImageColor3", Theme["Color Theme"], 0.2})
-     CreateTween({DropFrame, "Size", GetFrameSize(), 0.2, true})
-    end
-    WaitClick = false
-   end
-   
-   local function CalculatePos()
-    local FramePos = SelectedFrame.AbsolutePosition
-    local ScreenSize = ScreenGui.AbsoluteSize
-    local ClampX = math.clamp((FramePos.X / UIScale), 0, ScreenSize.X / UIScale - DropFrame.Size.X.Offset)
-    local ClampY = math.clamp((FramePos.Y / UIScale) , 0, ScreenSize.Y / UIScale)
-    
-    local NewPos = UDim2.fromOffset(ClampX, ClampY)
-    local AnchorPoint = FramePos.Y > ScreenSize.Y / 1.4 and 1 or ScrollSize > 80 and 0.5 or 0
-    DropFrame.AnchorPoint = Vector2.new(0, AnchorPoint)
-    CreateTween({DropFrame, "Position", NewPos, 0.1})
-   end
-   
-   local AddNewOptions, GetOptions, AddOption, RemoveOption, Selected do
-    local Default = type(OpDefault) ~= "table" and {OpDefault} or OpDefault
-    local MultiSelect = DMultiSelect
-    local Options = {}
-    Selected = MultiSelect and {} or CheckFlag(Flag) and GetFlag(Flag) or Default[1]
-    
-    if MultiSelect then
-     for index, Value in pairs(CheckFlag(Flag) and GetFlag(Flag) or Default) do
-      if type(index) == "string" and (DOptions[index] or table.find(DOptions, index)) then
-       Selected[index] = Value
-      elseif DOptions[Value] then
-       Selected[Value] = true
-      end
-     end
-    end
-    
-    local function CallbackSelected()
-     SetFlag(Flag, MultiSelect and Selected or tostring(Selected))
-     Funcs:FireCallback(Callback, Selected)
-    end
-    
-    local function UpdateLabel()
-     if MultiSelect then
-      local list = {}
-      for index, Value in pairs(Selected) do
-       if Value then
-        table.insert(list, index)
-       end
-      end
-      ActiveLabel.Text = #list > 0 and table.concat(list, ", ") or "..."
-     else
-      ActiveLabel.Text = tostring(Selected or "...")
-     end
-    end
-    
-    local function UpdateSelected()
-     if MultiSelect then
-      for _,v in pairs(Options) do
-       local nodes, Stats = v.nodes, v.Stats
-       CreateTween({nodes[2], "BackgroundTransparency", Stats and 0 or 0.8, 0.35})
-       CreateTween({nodes[2], "Size", Stats and UDim2.fromOffset(4, 12) or UDim2.fromOffset(4, 4), 0.35})
-       CreateTween({nodes[3], "TextTransparency", Stats and 0 or 0.4, 0.35})
-      end
-     else
-      for _,v in pairs(Options) do
-       local Slt = v.Value == Selected
-       local nodes = v.nodes
-       CreateTween({nodes[2], "BackgroundTransparency", Slt and 0 or 1, 0.35})
-       CreateTween({nodes[2], "Size", Slt and UDim2.fromOffset(4, 14) or UDim2.fromOffset(4, 4), 0.35})
-       CreateTween({nodes[3], "TextTransparency", Slt and 0 or 0.4, 0.35})
-      end
-     end
-     UpdateLabel()
-    end
-    
-    local function Select(Option)
-     if MultiSelect then
-      Option.Stats = not Option.Stats
-      Option.LastCB = tick()
-      
-      Selected[Option.Name] = Option.Stats
-      CallbackSelected()
-     else
-      Option.LastCB = tick()
-      
-      Selected = Option.Value
-      CallbackSelected()
-     end
-     UpdateSelected()
-    end
-    
-    AddOption = function(index, Value)
-     local Name = tostring(type(index) == "string" and index or Value)
-     
-     if Options[Name] then return end
-     Options[Name] = {
-      index = index,
-      Value = Value,
-      Name = Name,
-      Stats = false,
-      LastCB = 0
-     }
-     
-     if MultiSelect then
-      local Stats = Selected[Name]
-      Selected[Name] = Stats or false
-      Options[Name].Stats = Stats
-     end
-     
-     local Button = Make("Button", ScrollFrame, {
-      Name = "Option",
-      Size = UDim2.new(1, 0, 0, 21),
-      Position = UDim2.new(0, 0, 0.5),
-      AnchorPoint = Vector2.new(0, 0.5),
-      BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-     })Make("Corner", Button, UDim.new(0, 4))
-     
-     -- إضافة Stroke قوس قزح لخيارات القائمة المنسدلة
-     local OptionStroke = Instance.new("UIStroke")
-     OptionStroke.Thickness = 1
-     OptionStroke.Color = Theme["Color Stroke"]
-     OptionStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-     OptionStroke.Parent = Button
-     AddHoverRainbow(OptionStroke)
-     
-     local IsSelected = InsertTheme(Create("Frame", Button, {
-      Position = UDim2.new(0, 1, 0.5),
-      Size = UDim2.new(0, 4, 0, 4),
-      BackgroundColor3 = Theme["Color Theme"],
-      BackgroundTransparency = 1,
-      AnchorPoint = Vector2.new(0, 0.5)
-     }), "Theme")Make("Corner", IsSelected, UDim.new(0.5, 0))
-     
-     local OptioneName = InsertTheme(Create("TextLabel", Button, {
-      Size = UDim2.new(1, 0, 1),
-      Position = UDim2.new(0, 10),
-      Text = Name,
-      TextColor3 = Theme["Color Text"],
-      Font = Enum.Font.GothamBold,
-      TextXAlignment = "Left",
-      BackgroundTransparency = 1,
-      TextTransparency = 0.4
-     }), "Text")
-     
-     Button.Activated:Connect(function()
-      Select(Options[Name])
-     end)
-     
-     Options[Name].nodes = {Button, IsSelected, OptioneName}
-    end
-    
-    RemoveOption = function(index, Value)
-     local Name = tostring(type(index) == "string" and index or Value)
-     if Options[Name] then
-      if MultiSelect then Selected[Name] = nil else Selected = nil end
-      Options[Name].nodes[1]:Destroy()
-      table.clear(Options[Name])
-      Options[Name] = nil
-     end
-    end
-    
-    GetOptions = function()
-     return Options
-    end
-    
-    AddNewOptions = function(List, Clear)
-     if Clear then
-      table.foreach(Options, RemoveOption)
-     end
-     table.foreach(List, AddOption)
-     CallbackSelected()
-     UpdateSelected()
-    end
-    
-    table.foreach(DOptions, AddOption)
-    CallbackSelected()
-    UpdateSelected()
-   end
-   
-   Button.Activated:Connect(Minimize)
-   NoClickFrame.MouseButton1Down:Connect(Disable)
-   NoClickFrame.MouseButton1Click:Connect(Disable)
-   MainFrame:GetPropertyChangedSignal("Visible"):Connect(Disable)
-   SelectedFrame:GetPropertyChangedSignal("AbsolutePosition"):Connect(CalculatePos)
-   
-   Button.Activated:Connect(CalculateSize)
-   ScrollFrame.ChildAdded:Connect(CalculateSize)
-   ScrollFrame.ChildRemoved:Connect(CalculateSize)
-   CalculatePos()
-   CalculateSize()
-   
-   local Dropdown = {}
-   function Dropdown:Visible(...) Funcs:ToggleVisible(Button, ...) end
-   function Dropdown:Destroy() Button:Destroy() end
-   function Dropdown:Callback(...) Funcs:InsertCallback(Callback, ...)(Selected) end
-   
-   function Dropdown:Add(...)
-    local NewOptions = {...}
-    if type(NewOptions[1]) == "table" then
-     table.foreach(Option, function(_,Name)
-      AddOption(Name)
-     end)
-    else
-     table.foreach(NewOptions, function(_,Name)
-      AddOption(Name)
-     end)
-    end
-   end
-   function Dropdown:Remove(Option)
-    for index, Value in pairs(GetOptions()) do
-     if type(Option) == "number" and index == Option or Value.Name == "Option" then
-      RemoveOption(index, Value.Value)
-     end
-    end
-   end
-   function Dropdown:Select(Option)
-    if type(Option) == "string" then
-     for _,Val in pairs(Options) do
-      if Val.Name == Option then
-       Val.Active()
-      end
-     end
-    elseif type(Option) == "number" then
-     for ind,Val in pairs(Options) do
-      if ind == Option then
-       Val.Active()
-      end
-     end
-    end
-   end
-   function Dropdown:Set(Val1, Clear)
-    if type(Val1) == "table" then
-     AddNewOptions(Val1, not Clear)
-    elseif type(Val1) == "function" then
-     Callback = Val1
-    end
-   end
-   return Dropdown
-  end
-  
-  function Tab:AddSlider(Configs)
-   local SName = Configs[1] or Configs.Name or Configs.Title or "Slider!"
-   local SDesc = Configs.Desc or Configs.Description or ""
-   local Min = Configs[2] or Configs.MinValue or Configs.Min or 10
-   local Max = Configs[3] or Configs.MaxValue or Configs.Max or 100
-   local Increase = Configs[4] or Configs.Increase or 1
-   local Callback = Funcs:GetCallback(Configs, 6)
-   local Flag = Configs[7] or Configs.Flag or false
-   local Default = Configs[5] or Configs.Default or 25
-   if CheckFlag(Flag) then Default = GetFlag(Flag) end
-   Min, Max = Min / Increase, Max / Increase
-   
-   local Button, LabelFunc = ButtonFrame(Container, SName, SDesc, UDim2.new(1, -180))
-   
-   local SliderHolder = Create("TextButton", Button, {
-    Size = UDim2.new(0.45, 0, 1),
-    Position = UDim2.new(1),
-    AnchorPoint = Vector2.new(1, 0),
-    AutoButtonColor = false,
-    Text = "",
-    BackgroundTransparency = 1
-   })
-   
-   local SliderBar = InsertTheme(Create("Frame", SliderHolder, {
-    BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-    Size = UDim2.new(1, -20, 0, 6),
-    Position = UDim2.new(0.5, 0, 0.5),
-    AnchorPoint = Vector2.new(0.5, 0.5)
-   }), "Stroke")Make("Corner", SliderBar)
-   
-   -- إضافة Stroke قوس قزح لشريط التمرير
-   local SliderBarStroke = Instance.new("UIStroke")
-   SliderBarStroke.Thickness = 1
-   SliderBarStroke.Color = Theme["Color Stroke"]
-   SliderBarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-   SliderBarStroke.Parent = SliderBar
-   AddHoverRainbow(SliderBarStroke)
-   
-   local Indicator = InsertTheme(Create("Frame", SliderBar, {
-    BackgroundColor3 = Theme["Color Theme"],
-    Size = UDim2.fromScale(0.3, 1),
-    BorderSizePixel = 0
-   }), "Theme")Make("Corner", Indicator)
-   
-   local SliderIcon = Create("Frame", SliderBar, {
-    Size = UDim2.new(0, 6, 0, 12),
-    BackgroundColor3 = Color3.fromRGB(220, 220, 220),
-    Position = UDim2.fromScale(0.3, 0.5),
-    AnchorPoint = Vector2.new(0.5, 0.5),
-    BackgroundTransparency = 0.2
-   })Make("Corner", SliderIcon)
-   
-   local LabelVal = InsertTheme(Create("TextLabel", SliderHolder, {
-    Size = UDim2.new(0, 14, 0, 14),
-    AnchorPoint = Vector2.new(1, 0.5),
-    Position = UDim2.new(0, 0, 0.5),
-    BackgroundTransparency = 1,
-    TextColor3 = Theme["Color Text"],
-    Font = Enum.Font.FredokaOne,
-    TextSize = 12
-   }), "Text")
-   
-   local UIScale = Create("UIScale", LabelVal)
-   
-   local BaseMousePos = Create("Frame", SliderBar, {
-    Position = UDim2.new(0, 0, 0.5, 0),
-    Visible = false
-   })
-   
-   local function UpdateLabel(NewValue)
-    local Number = tonumber(NewValue * Increase)
-    Number = math.floor(Number * 100) / 100
-    
-    Default, LabelVal.Text = Number, tostring(Number)
-    Funcs:FireCallback(Callback, Default)
-   end
-   
-   local function ControlPos()
-    local MousePos = Player:GetMouse()
-    local APos = MousePos.X - BaseMousePos.AbsolutePosition.X
-    local ConfigureDpiPos = APos / SliderBar.AbsoluteSize.X
-    
-    SliderIcon.Position = UDim2.new(math.clamp(ConfigureDpiPos, 0, 1), 0, 0.5, 0)
-   end
-   
-   local function UpdateValues()
-    Indicator.Size = UDim2.new(SliderIcon.Position.X.Scale, 0, 1, 0)
-    local SliderPos = SliderIcon.Position.X.Scale
-    local NewValue = math.floor(((SliderPos * Max) / Max) * (Max - Min) + Min)
-    UpdateLabel(NewValue)
-   end
-   
-   SliderHolder.MouseButton1Down:Connect(function()
-    CreateTween({SliderIcon, "Transparency", 0, 0.3})
-    Container.ScrollingEnabled = false
-    while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do task.wait()
-     ControlPos()
-    end
-    CreateTween({SliderIcon, "Transparency", 0.2, 0.3})
-    Container.ScrollingEnabled = true
-    SetFlag(Flag, Default)
-   end)
-   
-   LabelVal:GetPropertyChangedSignal("Text"):Connect(function()
-    UIScale.Scale = 0.3
-    CreateTween({UIScale, "Scale", 1.2, 0.1})
-    CreateTween({LabelVal, "Rotation", math.random(-1, 1) * 5, 0.15, true})
-    CreateTween({UIScale, "Scale", 1, 0.2})
-    CreateTween({LabelVal, "Rotation", 0, 0.1})
-   end)
-   
-   function SetSlider(NewValue)
-    if type(NewValue) ~= "number" then return end
-    
-    local Min, Max = Min * Increase, Max * Increase
-    
-    local SliderPos = (NewValue - Min) / (Max - Min)
-    
-    SetFlag(Flag, NewValue)
-    CreateTween({ SliderIcon, "Position", UDim2.fromScale(math.clamp(SliderPos, 0, 1), 0.5), 0.3, true })
-   end;SetSlider(Default)
-   
-   SliderIcon:GetPropertyChangedSignal("Position"):Connect(UpdateValues)UpdateValues()
-   
-   local Slider = {}
-   function Slider:Set(NewVal1, NewVal2)
-    if NewVal1 and NewVal2 then
-     LabelFunc:SetTitle(NewVal1)
-     LabelFunc:SetDesc(NewVal2)
-    elseif type(NewVal1) == "string" then
-     LabelFunc:SetTitle(NewVal1)
-    elseif type(NewVal1) == "function" then
-     Callback = NewVal1
-    elseif type(NewVal1) == "number" then
-     SetSlider(NewVal1)
-    end
-   end
-   function Slider:Callback(...) Funcs:InsertCallback(Callback, ...)(tonumber(Default)) end
-   function Slider:Visible(...) Funcs:ToggleVisible(Button, ...) end
-   function Slider:Destroy() Button:Destroy() end
-   return Slider
-  end
-  
-  function Tab:AddTextBox(Configs)
-   local TName = Configs[1] or Configs.Name or Configs.Title or "Text Box"
-   local TDesc = Configs.Desc or Configs.Description or ""
-   local TDefault = Configs[2] or Configs.Default or ""
-   local TPlaceholderText = Configs[5] or Configs.PlaceholderText or "Input"
-   local TClearText = Configs[3] or Configs.ClearText or false
-   local Callback = Funcs:GetCallback(Configs, 4)
-   
-   if type(TDefault) ~= "string" or TDefault:gsub(" ", ""):len() < 1 then
-    TDefault = false
-   end
-   
-   local Button, LabelFunc = ButtonFrame(Container, TName, TDesc, UDim2.new(1, -38))
-   
-   local SelectedFrame = InsertTheme(Create("Frame", Button, {
-    Size = UDim2.new(0, 150, 0, 18),
-    Position = UDim2.new(1, -10, 0.5),
-    AnchorPoint = Vector2.new(1, 0.5),
-    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-   }), "Stroke")Make("Corner", SelectedFrame, UDim.new(0, 4))
-   
-   -- إضافة Stroke قوس قزح لإطار النص
-   local SelectedFrameStroke = Instance.new("UIStroke")
-   SelectedFrameStroke.Thickness = 1
-   SelectedFrameStroke.Color = Theme["Color Stroke"]
-   SelectedFrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-   SelectedFrameStroke.Parent = SelectedFrame
-   AddHoverRainbow(SelectedFrameStroke)
-   
-   local TextBoxInput = InsertTheme(Create("TextBox", SelectedFrame, {
-    Size = UDim2.new(0.85, 0, 0.85, 0),
-    AnchorPoint = Vector2.new(0.5, 0.5),
-    Position = UDim2.new(0.5, 0, 0.5, 0),
-    BackgroundTransparency = 1,
-    Font = Enum.Font.GothamBold,
-    TextScaled = true,
-    TextColor3 = Theme["Color Text"],
-    ClearTextOnFocus = TClearText,
-    PlaceholderText = TPlaceholderText,
-    Text = TDefault or ""
-   }), "Text")
-   
-   local Pencil = Create("ImageLabel", SelectedFrame, {
-    Size = UDim2.new(0, 12, 0, 12),
-    Position = UDim2.new(0, -5, 0.5),
-    AnchorPoint = Vector2.new(1, 0.5),
-    Image = "rbxassetid://15637081879",
-    BackgroundTransparency = 1
-   })
-   
-   -- إضافة تأثير قوس قزح لأيقونة القلم
-   AddHoverRainbow(Pencil)
-   
-   local TextBox = {}
-   local function Input()
-    local Text = TextBoxInput.Text
-    if Text:gsub(" ", ""):len() > 0 then
-     if TextBox.OnChanging then Text = TextBox.OnChanging(Text) or Text end
-     Funcs:FireCallback(Callback, Text)
-     TextBoxInput.Text = Text
-    end
-   end
-   
-   TextBoxInput.FocusLost:Connect(Input)
-   
-   TextBoxInput.FocusLost:Connect(function()
-    CreateTween({Pencil, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
-   end)
-   TextBoxInput.Focused:Connect(function()
-    CreateTween({Pencil, "ImageColor3", Theme["Color Theme"], 0.2})
-   end)
-   
-   TextBox.OnChanging = false
-   function TextBox:Visible(...) Funcs:ToggleVisible(Button, ...) end
-   function TextBox:Destroy() Button:Destroy() end
-   return TextBox
-  end
-  
-  function Tab:AddDiscordInvite(Configs)
-   local Title = Configs[1] or Configs.Name or Configs.Title or "Discord"
-   local Desc = Configs.Desc or Configs.Description or ""
-   local Logo = Configs[2] or Configs.Logo or ""
-   local Invite = Configs[3] or Configs.Invite or ""
-   
-   local InviteHolder = Create("Frame", Container, {
-    Size = UDim2.new(1, 0, 0, 80),
-    Name = "Option",
-    BackgroundTransparency = 1
-   })
-   
-   local InviteLabel = Create("TextLabel", InviteHolder, {
-    Size = UDim2.new(1, 0, 0, 15),
-    Position = UDim2.new(0, 5),
-    TextColor3 = Theme["Color Theme"],
-    Font = Enum.Font.GothamBold,
-    TextXAlignment = "Left",
-    BackgroundTransparency = 1,
-    TextSize = 10,
-    Text = Invite
-   })
-   
-   local FrameHolder = InsertTheme(Create("Frame", InviteHolder, {
-    Size = UDim2.new(1, 0, 0, 65),
-    AnchorPoint = Vector2.new(0, 1),
-    Position = UDim2.new(0, 0, 1),
-    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-   }), "Frame") Make("Corner", FrameHolder)
-   
-   -- إضافة Stroke قوس قزح لإطار الديسكورد
-   local FrameHolderStroke = Instance.new("UIStroke")
-   FrameHolderStroke.Thickness = 1.5
-   FrameHolderStroke.Color = Theme["Color Stroke"]
-   FrameHolderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-   FrameHolderStroke.Parent = FrameHolder
-   AddHoverRainbow(FrameHolderStroke)
-   
-   local ImageLabel = Create("ImageLabel", FrameHolder, {
-    Size = UDim2.new(0, 30, 0, 30),
-    Position = UDim2.new(0, 7, 0, 7),
-    Image = Logo,
-    BackgroundTransparency = 1
-   }) Make("Corner", ImageLabel, UDim.new(0, 4)) Make("Stroke", ImageLabel)
-   
-   -- إضافة تأثير قوس قزح للصورة
-   AddHoverRainbow(ImageLabel)
-   
-   local LTitle = InsertTheme(Create("TextLabel", FrameHolder, {
-    Size = UDim2.new(1, -52, 0, 15),
-    Position = UDim2.new(0, 44, 0, 7),
-    Font = Enum.Font.GothamBold,
-    TextColor3 = Theme["Color Text"],
-    TextXAlignment = "Left",
-    BackgroundTransparency = 1,
-    TextSize = 10,
-    Text = Title
-   }), "Text")
-   
-   local LDesc = InsertTheme(Create("TextLabel", FrameHolder, {
-    Size = UDim2.new(1, -52, 0, 0),
-    Position = UDim2.new(0, 44, 0, 22),
-    TextWrapped = true,
-    AutomaticSize = "Y",
-    Font = Enum.Font.Gotham,
-    TextColor3 = Theme["Color Dark Text"],
-    TextXAlignment = "Left",
-    BackgroundTransparency = 1,
-    TextSize = 8,
-    Text = Desc
-   }), "DarkText")
-   
-   local JoinButton = Create("TextButton", FrameHolder, {
-    Size = UDim2.new(1, -14, 0, 16),
-    AnchorPoint = Vector2.new(0.5, 1),
-    Position = UDim2.new(0.5, 0, 1, -7),
-    Text = "Join",
-    Font = Enum.Font.GothamBold,
-    TextSize = 12,
-    TextColor3 = Theme["Color Text"],
-    BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-   }) Make("Corner", JoinButton, UDim.new(0, 5))
-   
-   -- إضافة Stroke قوس قزح لزر الانضمام
-   local JoinButtonStroke = Instance.new("UIStroke")
-   JoinButtonStroke.Thickness = 1
-   JoinButtonStroke.Color = Theme["Color Stroke"]
-   JoinButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-   JoinButtonStroke.Parent = JoinButton
-   AddHoverRainbow(JoinButtonStroke)
-   
-   local ClickDelay
-   JoinButton.Activated:Connect(function()
-    setclipboard(Invite)
-    if ClickDelay then return end
-    
-    ClickDelay = true
-    SetProps(JoinButton, {
-     Text = "Copied!",
-     BackgroundColor3 = Color3.fromRGB(90, 90, 90)
-    }) task.wait(2)
-    SetProps(JoinButton, {
-     Text = "Join",
-     BackgroundColor3 = Theme["Color Theme"]
-    }) ClickDelay = false
-   end)
-   
-   local DiscordInvite = {}
-   function DiscordInvite:Destroy()
-    InviteHolder:Destroy()
-   end
-   function DiscordInvite:Visible(...)
-    Funcs:ToggleVisible(InviteHolder, ...)
-   end
-   return DiscordInvite
   end
   
   return Tab
@@ -2367,8 +1163,55 @@ function redzlib:MakeWindow(Configs)
  return Window
 end
 
-return redzlib
+-- ==================================================
+-- هنا يبدأ الاستخدام الفعلي (مهم جداً)
+-- ==================================================
 
--- NEXUS LIB V2 - BLACK EDITION
--- by Shadow
--- الحواف قوس قزح 🌈 + واجهة سوداء أنيقة
+local Window = redzlib:MakeWindow({
+    Name = "نافذتي الرائعة",
+    SubTitle = "الإصدار الأسود 🌈"
+})
+
+local Tab1 = Window:MakeTab({
+    Name = "الرئيسية",
+    Icon = "home"
+})
+
+Tab1:AddButton({
+    Name = "زر تجريبي",
+    Desc = "اضغط هنا",
+    Callback = function()
+        print("تم الضغط!")
+        Window:Dialog({
+            Title = "مرحباً",
+            Text = "تم الضغط على الزر بنجاح!",
+            Options = {
+                {"حسناً", function() print("تم الإغلاق") end}
+            }
+        })
+    end
+})
+
+Tab1:AddToggle({
+    Name = "تفعيل الوضع",
+    Desc = "تشغيل/إيقاف",
+    Default = true,
+    Callback = function(value)
+        print("الحالة:", value)
+    end
+})
+
+local Tab2 = Window:MakeTab({
+    Name = "الإعدادات",
+    Icon = "settings"
+})
+
+Tab2:AddButton({
+    Name = "زر في التبويب الثاني",
+    Desc = "وصف",
+    Callback = function()
+        print("التبويب الثاني")
+    end
+})
+
+return redzlib
