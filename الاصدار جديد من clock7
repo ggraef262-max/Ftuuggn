@@ -21,6 +21,11 @@ local CurrentCamera = Workspace.CurrentCamera
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ======================
+-- ثابت الصورة الرئيسي - غير الرقم هنا مرة وحدة بس والباقي يشتغل
+-- ======================
+local IMAGE_ID = "90798133906684"  -- <--- حطيت صورتك هنا، غير الرقم لو تبي صورة ثانية
+
+-- ======================
 -- دوال مساعدة عامة
 -- ======================
 local function safeFind(parent, name, waitTime)
@@ -67,7 +72,7 @@ local function sendNotification(title, text, icon, duration)
     StarterGui:SetCore("SendNotification", {
         Title = tostring(title),
         Text = tostring(text),
-        Icon = icon or "rbxasset://textures/ui/GuiImagePlaceholder.png", -- رابط افتراضي آمن
+        Icon = icon or "rbxassetid://" .. IMAGE_ID,  -- هنا يستخدم الصورة تلقائياً
         Duration = duration or 5
     })
 end
@@ -111,24 +116,24 @@ local function createIntro()
     darkFrame.BorderSizePixel = 0
     darkFrame.Parent = screenGui
 
-    -- صورة النجمة المصححة
+    -- صورة النجمة - تستخدم الصورة الثابتة
     local starImage = Instance.new("ImageLabel")
     starImage.Size = UDim2.new(0, 170, 0, 170)
     starImage.Position = UDim2.new(0.5, 0, 0.35, 0)
     starImage.AnchorPoint = Vector2.new(0.5, 0.5)
     starImage.BackgroundTransparency = 1
-    starImage.Image = "rbxassetid://90798133906684" -- رابط نجمة صحيح
+    starImage.Image = "rbxassetid://" .. IMAGE_ID  -- <-- صورتك هنا
     starImage.ImageColor3 = Color3.fromRGB(147, 112, 219)
     starImage.ImageTransparency = 0.7
     starImage.Parent = screenGui
 
-    -- صورة اللوجو المصححة
+    -- صورة اللوجو - تستخدم الصورة الثابتة
     local logoImage = Instance.new("ImageLabel")
     logoImage.Size = UDim2.new(0, 150, 0, 150)
     logoImage.Position = UDim2.new(0.5, 0, 0.35, 0)
     logoImage.AnchorPoint = Vector2.new(0.5, 0.5)
     logoImage.BackgroundTransparency = 1
-    logoImage.Image = "rbxassetid://90798133906684" -- صورة افتراضية مؤقتة
+    logoImage.Image = "rbxassetid://" .. IMAGE_ID  -- <-- صورتك هنا
     logoImage.Parent = screenGui
 
     local titleLabel = Instance.new("TextLabel")
@@ -136,7 +141,7 @@ local function createIntro()
     titleLabel.Position = UDim2.new(-0.6, 0, 0.58, 0)
     titleLabel.AnchorPoint = Vector2.new(0.5, 0)
     titleLabel.BackgroundTransparency = 1
-    titleLabel.Text = "منتظر Clock7 RP"
+    titleLabel.Text = " Clock7 مرحبا بك"
     titleLabel.TextColor3 = Color3.fromRGB(147, 112, 219)
     titleLabel.Font = Enum.Font.GothamBold
     titleLabel.TextScaled = true
@@ -305,7 +310,7 @@ local function setRPBioColor(color)
 end
 
 setRPName("Clock7")
-setRPNameColor(Color3.fromRGB(113, 8, 187))
+setRPNameColor(Color3.fromRGB(0, 0, 139))
 wait(0.2)
 setRPBio("البحت:CLOCK7")
 setRPBioColor(Color3.new(0, 0, 0))
@@ -315,15 +320,14 @@ setRPBioColor(Color3.new(0, 0, 0))
 -- ======================
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
 local Window = Library:MakeWindow({
-    Title = "Clock7 RP",
+    Title = "Clock7",
     SubTitle = "by DBLACK",
-    SaveFolder = "Clock7_RP_Config"
 })
 
--- زر التصغير مع صورة مصححة
+-- زر التصغير - يستخدم الصورة الثابتة
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxassetid://90798133906684", -- رابط صحيح
+        Image = "rbxassetid://" .. IMAGE_ID,  -- <-- صورتك هنا
         BackgroundTransparency = 0
     },
     Corner = {
@@ -357,13 +361,13 @@ local gamepasses = {}
 -- ======================
 local infoTab = Window:MakeTab({
     Title = "معلومات السكربت",
-    Icon = "rbxassetid://90798133906684" -- رابط صحيح
+    Icon = "rbxassetid://" .. IMAGE_ID  -- <-- صورتك هنا
 })
 
 infoTab:AddDiscordInvite({
     Name = "قناة التليجرام ",
     Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات Clock7",
-    Logo = "rbxassetid://90798133906684", -- رابط صحيح
+    Logo = "rbxassetid://" .. IMAGE_ID,  -- <-- صورتك هنا
     Invite = ""
 })
 
