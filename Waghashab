@@ -80,7 +80,7 @@ local redzlib = {
 	Icons = (function()
 	  -- This file was @Engoy by Tarmac. It is not intended for manual editing.
 		return {	
-["accessibility"] = "rbxassetid://10709751939",
+            ["accessibility"] = "rbxassetid://10709751939",
 			["activity"] = "rbxassetid://10709752035",
 			["airvent"] = "rbxassetid://10709752131",
 			["airplay"] = "rbxassetid://10709752254",
