@@ -113,7 +113,7 @@ setRPBioColor(Color3.new(0, 0, 0))
 -- ======================
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
 local Window = Library:MakeWindow({
-    Title = "Clock7",
+    Title = "Clock7 v2.0",
     SubTitle = "by DBLACK",
 })
 
@@ -591,7 +591,7 @@ end
 -- إنشاء تاب "الأغراض"
 local Section1 = Window:MakeTab({
     Title = "الأغراض",
-    Icon = "box"
+    Icon = ""
 })
 
 -- إنشاء قسم "الأغراض"
@@ -881,7 +881,7 @@ createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
 -- ======================
 local rpTab = Window:MakeTab({ 
     Title = "الأسماء الوهمية والبايو",
-    Icon = "rbxassetid://10747382750" 
+    Icon = "rbxassetid://" 
 })
 
 local rpNameRGBActive = false
@@ -998,7 +998,7 @@ rpTab:AddButton({
 rpTab:AddButton({
     Name = "بايو Tubers93",
     Callback = function()
-        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "tҸҺҷҸҡҶҺ93")
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "BLACK|hub")
         sendNotification("بايو", "تم تغيير البايو", nil, 2)
     end
 })
@@ -1006,7 +1006,7 @@ rpTab:AddButton({
 rpTab:AddButton({
     Name = "بايو 666",
     Callback = function()
-        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "666ҷҺҸҡҸҡҶҺ666")
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "CLOCK7|hub")
         sendNotification("بايو", "تم تغيير البايو", nil, 2)
     end
 })
@@ -1014,7 +1014,7 @@ rpTab:AddButton({
 rpTab:AddButton({
     Name = "بايو Berkegamer6212",
     Callback = function()
-        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "Berkegamer6212ҷҺҸҡҸҡҶҺ")
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "$$$")
         sendNotification("بايو", "تم تغيير البايو", nil, 2)
     end
 })
@@ -1022,7 +1022,7 @@ rpTab:AddButton({
 rpTab:AddButton({
     Name = "بايو <AYOUB<3",
     Callback = function()
-        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "<AYOUB<3")
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "<RAEF<3")
         sendNotification("بايو", "تم تغيير البايو", nil, 2)
     end
 })
@@ -1035,12 +1035,12 @@ rpTab:AddButton({
     end
 })
 
-local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://135851813855145" })
+local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://" })
 
 
 TrollTab:AddSection({ "ثقب اسود" })
 TrollTab:AddButton({
-    Name = "V2(هالة ابواب💥)",
+    Name = "V2(هالة ابواب)",
     Description = "تدوير الابواب والسيارات حول اللاعب",
     Callback = function()
     local Players, RunService, LocalPlayer, Workspace = game:GetService("Players"), game:GetService("RunService"), game:GetService("Players").LocalPlayer, game:GetService("Workspace")
@@ -1178,7 +1178,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/DezomXHub/DemozX/main
 TrollTab:AddSection({ "تدبيل طيارات" })
 TrollTab:AddButton({
     Name = "تدبيل طيارات عل سبون",
-    Description = "تدبيل طيارات يصمط السيرفر😉",
+    Description = "تدبيل طيارات يصمط السيرفر",
     Callback = function()
 -- === ✅ سكربت تشغيل تدبير الطائرات (يعمل فورًا) ===
 
