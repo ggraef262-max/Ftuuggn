@@ -453,3 +453,308 @@ charactersTab:AddButton({
         end
     end
 })
+
+-- ======================
+-- تبويب السبام في الشات
+-- ======================
+local chatTab = Window:MakeTab({ 
+    Title = "سبام في الشات",
+    Icon = "rbxassetid://10747382750" 
+})
+
+local chatMessages = {}
+local chatSpeeds = {0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0, 3.5, 5.0, 10.0}
+local chatActive = {}
+
+local function sendChatMessage(msg)
+    if TextChatService.ChatVersion ~= Enum.ChatVersion.LegacyChatService then
+        TextChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(msg)
+    else
+        local chatRemote = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+        if chatRemote then
+            local sayMsg = chatRemote:FindFirstChild("SayMessageRequest")
+            if sayMsg then
+                sayMsg:FireServer(msg, "All")
+            end
+        end
+    end
+end
+
+for i, speed in ipairs(chatSpeeds) do
+    local sectionName = "سرعة " .. tostring(speed) .. " ثانية"
+    chatTab:AddSection({ sectionName })
+    
+    local msgVar = nil
+    
+    chatTab:AddTextBox({
+        Name = "النص المرسل",
+        Description = "أدخل النص الذي تريد إرساله",
+        Default = "",
+        PlaceholderText = "اكتب النص هنا",
+        ClearText = true,
+        Callback = function(value)
+            msgVar = value
+        end
+    })
+    
+    chatTab:AddToggle({
+        Name = "تشغيل الإرسال",
+        Description = "بدء إرسال النص بشكل متكرر",
+        Default = false,
+        Flag = "chat_toggle_" .. i,
+        Callback = function(value)
+            chatActive[i] = value
+            
+            if value and msgVar then
+                coroutine.wrap(function()
+                    while chatActive[i] do
+                        sendChatMessage(msgVar)
+                        wait(speed)
+                    end
+                end)()
+            end
+        end
+    })
+end
+
+-- ======================
+-- تبويب الإعدادات العامة
+-- ======================
+local settingsTab = Window:MakeTab({ 
+    Title = "إعدادات عامة [سرعة وقفز]",
+    Icon = "rbxassetid://10747382750" 
+})
+
+settingsTab:AddTextBox({
+    Name = "سرعة المشي",
+    Default = "16",
+    PlaceholderText = "أدخل السرعة",
+    ClearText = true,
+    Callback = function(value)
+        local speed = tonumber(value)
+        if speed then
+            local hum = getHumanoid()
+            if hum then
+                hum.WalkSpeed = speed
+                sendNotification("سرعة", "تم تغيير السرعة إلى " .. speed, nil, 2)
+            end
+        end
+    end
+})
+
+settingsTab:AddTextBox({
+    Name = "قوة القفز",
+    Default = "50",
+    PlaceholderText = "أدخل قوة القفز",
+    ClearText = true,
+    Callback = function(value)
+        local jump = tonumber(value)
+        if jump then
+            local hum = getHumanoid()
+            if hum then
+                hum.JumpPower = jump
+                sendNotification("قفز", "تم تغيير قوة القفز إلى " .. jump, nil, 2)
+            end
+        end
+    end
+})
+
+settingsTab:AddTextBox({
+    Name = "مجال الرؤية (FOV)",
+    Default = "70",
+    PlaceholderText = "أدخل مجال الرؤية",
+    ClearText = true,
+    Callback = function(value)
+        local fov = tonumber(value)
+        if fov then
+            CurrentCamera.FieldOfView = fov
+            sendNotification("رؤية", "تم تغيير مجال الرؤية إلى " .. fov, nil, 2)
+        end
+    end
+})
+
+settingsTab:AddTextBox({
+    Name = "سرعة الدوران",
+    Default = "100",
+    PlaceholderText = "أدخل سرعة الدوران",
+    ClearText = true,
+    Callback = function(value)
+        local spin = tonumber(value)
+        if spin then
+            getgenv().Spinspeed = spin
+            local root = getRootPart()
+            if root then
+                local bav = Instance.new("BodyAngularVelocity")
+                bav.Parent = root
+                bav.MaxTorque = Vector3.new(0, math.huge, 100)
+                wait(0.1)
+                bav.AngularVelocity = Vector3.new(100, spin, 0)
+            end
+        end
+    end
+})
+
+settingsTab:AddButton({
+    Name = "الشفاء في المستشفى",
+    Callback = function()
+        local root = getRootPart()
+        if root then
+            local pos = root.Position
+            root.CFrame = CFrame.new(-347.7337646484375, 2.397120475769043, 98.97232818603516)
+            wait(1)
+            
+            local pool = Workspace.WorkspaceCom and Workspace.WorkspaceCom["001_Hospital"] and Workspace.WorkspaceCom["001_Hospital"].PoolClick
+            if pool and pool.ClickDetector then
+                fireclickdetector(pool.ClickDetector)
+            end
+            
+            wait(1)
+            root.CFrame = CFrame.new(pos)
+            sendNotification("شفاء", "تم الشفاء في المستشفى", nil, 2)
+        end
+    end
+})
+
+settingsTab:AddButton({
+    Name = "أداة الطيران",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/vvVIRUSss1/ViRuS_Scrip12/refs/heads/main/fly%20SAHUB.txt"))()
+    end
+})
+
+settingsTab:AddButton({
+    Name = "أداة الكنبة",
+    Callback = function()
+        invokeRemote({"RE", "1Too1l"}, "PickingTools", "Couch")
+        sendNotification("أداة", "تم الحصول على الكنبة", nil, 2)
+    end
+})
+
+-- Infinite Jump
+local infiniteJumpConn = nil
+
+settingsTab:AddToggle({
+    Name = "قفز لا نهائي",
+    Default = false,
+    Callback = function(value)
+        infiniteJumpActive = value
+        
+        if value then
+            if not infiniteJumpConn then
+                infiniteJumpConn = UserInputService.JumpRequest:Connect(function()
+                    if infiniteJumpActive then
+                        local hum = getHumanoid()
+                        if hum then
+                            hum:ChangeState("Jumping")
+                        end
+                    end
+                end)
+            end
+            sendNotification("قفز", "تم تفعيل القفز اللانهائي", nil, 2)
+        else
+            if infiniteJumpConn then
+                infiniteJumpConn:Disconnect()
+                infiniteJumpConn = nil
+            end
+            sendNotification("قفز", "تم إيقاف القفز اللانهائي", nil, 2)
+        end
+    end
+})
+
+-- مشاهدة اللاعبين
+local spectateTarget = nil
+local spectateConn = nil
+
+settingsTab:AddTextBox({
+    Name = "اسم اللاعب للمشاهدة (أول 3 أحرف)",
+    Default = "",
+    PlaceholderText = "أدخل اسم اللاعب",
+    ClearText = true,
+    Callback = function(value)
+        if value == "" then
+            if spectateConn then
+                spectateConn:Disconnect()
+                spectateConn = nil
+            end
+            CurrentCamera.CameraSubject = getHumanoid()
+            sendNotification("مشاهدة", "تم إيقاف المشاهدة", nil, 2)
+            return
+        end
+        
+        -- البحث عن اللاعب
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player.Name:lower():find(value:lower(), 1, true) or 
+               (player.DisplayName and player.DisplayName:lower():find(value:lower(), 1, true)) then
+                spectateTarget = player
+                break
+            end
+        end
+        
+        if spectateTarget then
+            if spectateConn then
+                spectateConn:Disconnect()
+            end
+            
+            spectateConn = RunService.Heartbeat:Connect(function()
+                if spectateTarget and spectateTarget.Character then
+                    local hum = spectateTarget.Character:FindFirstChildOfClass("Humanoid")
+                    if hum then
+                        CurrentCamera.CameraSubject = hum
+                    end
+                end
+            end)
+            
+            sendNotification("مشاهدة", "جاري مشاهدة " .. spectateTarget.Name, nil, 2)
+        else
+            sendNotification("خطأ", "لم يتم العثور على اللاعب", nil, 3)
+        end
+    end
+})
+
+-- Noclip
+local noclipConn = nil
+
+local function setCollision(obj, state)
+    for _, descendant in ipairs(obj:GetDescendants()) do
+        if descendant:IsA("BasePart") then
+            descendant.CanCollide = state
+        end
+    end
+end
+
+settingsTab:AddToggle({
+    Name = "نو كليب (المرور عبر الجدران)",
+    Default = false,
+    Callback = function(value)
+        noclipActive = value
+        
+        if value then
+            local char = getCharacter()
+            if char then
+                noclipConn = RunService.Stepped:Connect(function()
+                    if noclipActive and char then
+                        setCollision(char, false)
+                    end
+                end)
+            end
+            sendNotification("نو كليب", "تم التفعيل", nil, 2)
+        else
+            if noclipConn then
+                noclipConn:Disconnect()
+                noclipConn = nil
+            end
+            local char = getCharacter()
+            if char then
+                setCollision(char, true)
+            end
+            sendNotification("نو كليب", "تم الإيقاف", nil, 2)
+        end
+    end
+})
+
+settingsTab:AddButton({
+    Name = "محسن الأداء (FPS)",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
+    end
+})
