@@ -67,7 +67,7 @@ local function sendNotification(title, text, icon, duration)
     StarterGui:SetCore("SendNotification", {
         Title = tostring(title),
         Text = tostring(text),
-        Icon = icon or "rbxthumb://type=Asset&id=123219039049746&w=150&h=150",
+        Icon = icon or "rbxassetid://90798133906684"",
         Duration = duration or 5
     })
 end
@@ -116,7 +116,7 @@ local function createIntro()
     starImage.Position = UDim2.new(0.5, 0, 0.35, 0)
     starImage.AnchorPoint = Vector2.new(0.5, 0.5)
     starImage.BackgroundTransparency = 1
-    starImage.Image = "rbxassetid://12436606445"
+    starImage.Image = "rbxassetid://90798133906684""
     starImage.ImageColor3 = Color3.fromRGB(147, 112, 219)
     starImage.ImageTransparency = 0.7
     starImage.Parent = screenGui
@@ -126,7 +126,7 @@ local function createIntro()
     logoImage.Position = UDim2.new(0.5, 0, 0.35, 0)
     logoImage.AnchorPoint = Vector2.new(0.5, 0.5)
     logoImage.BackgroundTransparency = 1
-    logoImage.Image = "rbxthumb://type=Asset&id=90798133906684=150&h=150"
+    logoImage.Image = "rbxassetid://90798133906684""
     logoImage.Parent = screenGui
 
     local titleLabel = Instance.new("TextLabel")
@@ -315,12 +315,12 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggrae
 local Window = Library:MakeWindow({
     Title = "Clock7 RP",
     SubTitle = "by DBLACK",
-    SaveFolder = "Clock7_RP_Config"
+    SaveFolder = "Clock7"
 })
 
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxthumb://type=Asset&id=90798133906684=150&h=150",
+        Image = "rbxassetid://90798133906684"",
         BackgroundTransparency = 0
     },
     Corner = {
@@ -360,7 +360,7 @@ local infoTab = Window:MakeTab({
 infoTab:AddDiscordInvite({
     Name = "قناة التليجرام ",
     Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات Clock7",
-    Logo = "rbxthumb://type=Asset&id=90798133906684=150&h=150",
+    Logo = "rbxassetid://90798133906684"",
     Invite = ""
 })
 
