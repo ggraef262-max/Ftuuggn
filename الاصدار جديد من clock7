@@ -875,3 +875,163 @@ createBangToggle("Bang v1 | خلفي v1", -1, false)
 createBangToggle("Bang v2 | خلفي v2", -1.5, false)
 createBangToggle("Face Bang v1 | أمامي v1", 1, true)
 createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
+
+-- ======================
+-- تبويب الأسماء الوهمية
+-- ======================
+local rpTab = Window:MakeTab({ 
+    Title = "الأسماء الوهمية والبايو",
+    Icon = "rbxassetid://10747382750" 
+})
+
+local rpNameRGBActive = false
+local rpBioRGBActive = false
+
+local rgbColors = {
+    Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 0, 255),
+    Color3.fromRGB(255, 255, 0), Color3.fromRGB(255, 0, 255), Color3.fromRGB(0, 255, 255),
+    Color3.fromRGB(255, 165, 0), Color3.fromRGB(128, 0, 128), Color3.fromRGB(255, 20, 147)
+}
+
+rpTab:AddToggle({
+    Name = "تغيير لون الاسم تلقائياً (RGB)",
+    Default = false,
+    Callback = function(value)
+        rpNameRGBActive = value
+        if value then
+            sendNotification("اسم", "تم تفعيل RGB للاسم", nil, 2)
+        else
+            sendNotification("اسم", "تم إيقاف RGB للاسم", nil, 2)
+        end
+    end
+})
+
+rpTab:AddSection({ "الاسم الوهمي" })
+
+rpTab:AddTextBox({
+    Name = "تغيير الاسم الوهمي",
+    Default = "",
+    PlaceholderText = "أدخل الاسم الجديد",
+    ClearText = true,
+    Callback = function(value)
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", value)
+    end
+})
+
+rpTab:AddToggle({
+    Name = "تغيير لون البايو تلقائياً (RGB)",
+    Default = false,
+    Callback = function(value)
+        rpBioRGBActive = value
+        if value then
+            sendNotification("بايو", "تم تفعيل RGB للبايو", nil, 2)
+        else
+            sendNotification("بايو", "تم إيقاف RGB للبايو", nil, 2)
+        end
+    end
+})
+
+-- حلقة RGB للاسم
+coroutine.wrap(function()
+    while true do
+        if rpNameRGBActive then
+            local color = rgbColors[math.random(#rgbColors)]
+            fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPNameColor", color)
+        end
+        wait(0.7)
+    end
+end)()
+
+-- حلقة RGB للبايو
+coroutine.wrap(function()
+    while true do
+        if rpBioRGBActive then
+            local color = rgbColors[math.random(#rgbColors)]
+            fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPBioColor", color)
+        end
+        wait(0.7)
+    end
+end)()
+
+rpTab:AddButton({
+    Name = "إخفاء الاسم",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", " ")
+        sendNotification("اسم", "تم إخفاء الاسم", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "اسم مميز M",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", "MҷҿҡҺҶҶҷҷҡҺҷҺҸҡҸҡҶҺ")
+        sendNotification("اسم", "تم تغيير الاسم", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "اسم مميز A",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", "AҷҺҸҡҸҡҶҺ")
+        sendNotification("اسم", "تم تغيير الاسم", nil, 2)
+    end
+})
+
+rpTab:AddSection({ "البايو" })
+
+rpTab:AddButton({
+    Name = "بايو مميز 1",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "♡♡♡")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو مميز 2",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "♥♥♥")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو Tubers93",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "tҸҺҷҸҡҶҺ93")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو 666",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "666ҷҺҸҡҸҡҶҺ666")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو Berkegamer6212",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "Berkegamer6212ҷҺҸҡҸҡҶҺ")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو <AYOUB<3",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "<AYOUB<3")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو <_HooR_>",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "<_HooR_>")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
