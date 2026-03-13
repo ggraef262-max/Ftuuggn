@@ -67,7 +67,7 @@ local function sendNotification(title, text, icon, duration)
     StarterGui:SetCore("SendNotification", {
         Title = tostring(title),
         Text = tostring(text),
-        Icon = icon or "rbxassetid://90798133906684"",
+        Icon = icon or "rbxasset://textures/ui/GuiImagePlaceholder.png", -- رابط افتراضي آمن
         Duration = duration or 5
     })
 end
@@ -111,22 +111,24 @@ local function createIntro()
     darkFrame.BorderSizePixel = 0
     darkFrame.Parent = screenGui
 
+    -- صورة النجمة المصححة
     local starImage = Instance.new("ImageLabel")
     starImage.Size = UDim2.new(0, 170, 0, 170)
     starImage.Position = UDim2.new(0.5, 0, 0.35, 0)
     starImage.AnchorPoint = Vector2.new(0.5, 0.5)
     starImage.BackgroundTransparency = 1
-    starImage.Image = "rbxassetid://90798133906684""
+    starImage.Image = "rbxassetid://90798133906684" -- رابط نجمة صحيح
     starImage.ImageColor3 = Color3.fromRGB(147, 112, 219)
     starImage.ImageTransparency = 0.7
     starImage.Parent = screenGui
 
+    -- صورة اللوجو المصححة
     local logoImage = Instance.new("ImageLabel")
     logoImage.Size = UDim2.new(0, 150, 0, 150)
     logoImage.Position = UDim2.new(0.5, 0, 0.35, 0)
     logoImage.AnchorPoint = Vector2.new(0.5, 0.5)
     logoImage.BackgroundTransparency = 1
-    logoImage.Image = "rbxassetid://90798133906684""
+    logoImage.Image = "rbxassetid://90798133906684" -- صورة افتراضية مؤقتة
     logoImage.Parent = screenGui
 
     local titleLabel = Instance.new("TextLabel")
@@ -315,12 +317,13 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggrae
 local Window = Library:MakeWindow({
     Title = "Clock7 RP",
     SubTitle = "by DBLACK",
-    SaveFolder = "Clock7"
+    SaveFolder = "Clock7_RP_Config"
 })
 
+-- زر التصغير مع صورة مصححة
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxassetid://90798133906684"",
+        Image = "rbxassetid://90798133906684", -- رابط صحيح
         BackgroundTransparency = 0
     },
     Corner = {
@@ -354,13 +357,13 @@ local gamepasses = {}
 -- ======================
 local infoTab = Window:MakeTab({
     Title = "معلومات السكربت",
-    Icon = "rbxassetid://90798133906684"
+    Icon = "rbxassetid://90798133906684" -- رابط صحيح
 })
 
 infoTab:AddDiscordInvite({
     Name = "قناة التليجرام ",
     Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات Clock7",
-    Logo = "rbxassetid://90798133906684"",
+    Logo = "rbxassetid://90798133906684", -- رابط صحيح
     Invite = ""
 })
 
