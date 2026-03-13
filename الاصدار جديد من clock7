@@ -1,17 +1,13 @@
 -- Clock7 RP - النسخة المحسنة والمصقولة بالكامل
--- تم إعادة هيكلته وتعديله بواسطة DBLACK
+-- تم إزالة المقدمة بالكامل - يعمل مباشرة
 
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local VirtualInputManager = game:GetService("VirtualInputManager")
 local TextChatService = game:GetService("TextChatService")
 local TeleportService = game:GetService("TeleportService")
-local Debris = game:GetService("Debris")
-local Lighting = game:GetService("Lighting")
-local SoundService = game:GetService("SoundService")
 local StarterGui = game:GetService("StarterGui")
 local Workspace = game:GetService("Workspace")
 local CoreGui = game:GetService("CoreGui")
@@ -21,12 +17,12 @@ local CurrentCamera = Workspace.CurrentCamera
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ======================
--- ثابت الصورة الرئيسي - غير الرقم هنا مرة وحدة بس والباقي يشتغل
+-- ثابت الصورة الرئيسي
 -- ======================
-local IMAGE_ID = "90798133906684"  -- <--- حطيت صورتك هنا، غير الرقم لو تبي صورة ثانية
+local IMAGE_ID = "90798133906684"  -- غير الرقم لو تبي صورة ثانية
 
 -- ======================
--- دوال مساعدة عامة
+-- دوال مساعدة
 -- ======================
 local function safeFind(parent, name, waitTime)
     if waitTime then
@@ -59,20 +55,11 @@ local function invokeRemote(path, ...)
     return nil
 end
 
-local function playSound(id, volume, parent)
-    local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://" .. tostring(id)
-    sound.Volume = volume or 0.5
-    sound.Parent = parent or SoundService
-    sound:Play()
-    return sound
-end
-
 local function sendNotification(title, text, icon, duration)
     StarterGui:SetCore("SendNotification", {
         Title = tostring(title),
         Text = tostring(text),
-        Icon = icon or "rbxassetid://" .. IMAGE_ID,  -- هنا يستخدم الصورة تلقائياً
+        Icon = icon or "rbxassetid://" .. IMAGE_ID,
         Duration = duration or 5
     })
 end
@@ -91,204 +78,10 @@ local function getHumanoid()
     return char and char:FindFirstChildOfClass("Humanoid")
 end
 
-local function safeTween(obj, props, time, style, direction)
-    style = style or Enum.EasingStyle.Linear
-    direction = direction or Enum.EasingDirection.Out
-    local tween = TweenService:Create(obj, TweenInfo.new(time or 1, style, direction), props)
-    tween:Play()
-    return tween
-end
-
 -- ======================
--- جزء الاستقبال (Intro)
+-- إشعارات البدء (سريعة جداً)
 -- ======================
-local function createIntro()
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "IntroStarsGui"
-    screenGui.IgnoreGuiInset = true
-    screenGui.ResetOnSpawn = false
-    screenGui.Parent = PlayerGui
-
-    local darkFrame = Instance.new("Frame")
-    darkFrame.Size = UDim2.new(1, 0, 1, 0)
-    darkFrame.BackgroundColor3 = Color3.new(0, 0, 0)
-    darkFrame.BackgroundTransparency = 0.6
-    darkFrame.BorderSizePixel = 0
-    darkFrame.Parent = screenGui
-
-    -- صورة النجمة - تستخدم الصورة الثابتة
-    local starImage = Instance.new("ImageLabel")
-    starImage.Size = UDim2.new(0, 170, 0, 170)
-    starImage.Position = UDim2.new(0.5, 0, 0.35, 0)
-    starImage.AnchorPoint = Vector2.new(0.5, 0.5)
-    starImage.BackgroundTransparency = 1
-    starImage.Image = "rbxassetid://" .. IMAGE_ID  -- <-- صورتك هنا
-    starImage.ImageColor3 = Color3.fromRGB(147, 112, 219)
-    starImage.ImageTransparency = 0.7
-    starImage.Parent = screenGui
-
-    -- صورة اللوجو - تستخدم الصورة الثابتة
-    local logoImage = Instance.new("ImageLabel")
-    logoImage.Size = UDim2.new(0, 150, 0, 150)
-    logoImage.Position = UDim2.new(0.5, 0, 0.35, 0)
-    logoImage.AnchorPoint = Vector2.new(0.5, 0.5)
-    logoImage.BackgroundTransparency = 1
-    logoImage.Image = "rbxassetid://" .. IMAGE_ID  -- <-- صورتك هنا
-    logoImage.Parent = screenGui
-
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Size = UDim2.new(0.6, 0, 0.07, 0)
-    titleLabel.Position = UDim2.new(-0.6, 0, 0.58, 0)
-    titleLabel.AnchorPoint = Vector2.new(0.5, 0)
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Text = " Clock7 مرحبا بك"
-    titleLabel.TextColor3 = Color3.fromRGB(147, 112, 219)
-    titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.TextScaled = true
-    titleLabel.Parent = screenGui
-
-    local progressBarFrame = Instance.new("Frame")
-    progressBarFrame.Size = UDim2.new(0.45, 0, 0.04, 0)
-    progressBarFrame.Position = UDim2.new(0.5, 0, 0.68, 0)
-    progressBarFrame.AnchorPoint = Vector2.new(0.5, 0)
-    progressBarFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    progressBarFrame.BackgroundTransparency = 0.4
-    progressBarFrame.BorderSizePixel = 0
-    progressBarFrame.ClipsDescendants = true
-    progressBarFrame.Parent = screenGui
-
-    local progressBarCorner = Instance.new("UICorner")
-    progressBarCorner.CornerRadius = UDim.new(0, 12)
-    progressBarCorner.Parent = progressBarFrame
-
-    local progressFill = Instance.new("Frame")
-    progressFill.Size = UDim2.new(0, 0, 1, 0)
-    progressFill.Position = UDim2.new(0, 0, 0, 0)
-    progressFill.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
-    progressFill.BorderSizePixel = 0
-    progressFill.Parent = progressBarFrame
-
-    local progressFillCorner = Instance.new("UICorner")
-    progressFillCorner.CornerRadius = UDim.new(0, 12)
-    progressFillCorner.Parent = progressFill
-
-    local shineEffect = Instance.new("Frame")
-    shineEffect.Size = UDim2.new(0.2, 0, 1, 0)
-    shineEffect.Position = UDim2.new(-0.2, 0, 0, 0)
-    shineEffect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    shineEffect.BackgroundTransparency = 0.8
-    shineEffect.BorderSizePixel = 0
-    shineEffect.Parent = progressBarFrame
-
-    local shineCorner = Instance.new("UICorner")
-    shineCorner.CornerRadius = UDim.new(0, 12)
-    shineCorner.Parent = shineEffect
-
-    TweenService:Create(titleLabel, TweenInfo.new(1.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-        Position = UDim2.new(0.5, 0, 0.58, 0)
-    }):Play()
-
-    TweenService:Create(starImage, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-        ImageTransparency = 0.3
-    }):Play()
-
-    local progressTween = TweenService:Create(progressFill, TweenInfo.new(5, Enum.EasingStyle.Linear), {
-        Size = UDim2.new(1, 0, 1, 0),
-        BackgroundColor3 = Color3.fromRGB(147, 112, 219)
-    })
-    progressTween:Play()
-
-    coroutine.wrap(function()
-        while true do
-            local shineTween = TweenService:Create(shineEffect, TweenInfo.new(2, Enum.EasingStyle.Linear), {
-                Position = UDim2.new(1, 0, 0, 0)
-            })
-            shineTween:Play()
-            shineTween.Completed:Wait()
-            shineEffect.Position = UDim2.new(-0.2, 0, 0, 0)
-        end
-    end)()
-
-    local isIntroActive = true
-    coroutine.wrap(function()
-        while isIntroActive do
-            local star = Instance.new("Frame")
-            local size = math.random(2, 3)
-            star.Size = UDim2.new(0, size, 0, size)
-            star.Position = UDim2.new(math.random(), 0, 0, -10)
-            star.BackgroundColor3 = Color3.new(1, 1, 1)
-            star.BorderSizePixel = 0
-            star.BackgroundTransparency = 0
-            star.AnchorPoint = Vector2.new(0.5, 0.5)
-            star.Parent = darkFrame
-
-            TweenService:Create(star, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                BackgroundTransparency = 0.6
-            }):Play()
-
-            local rotationAngle = 0
-            local rotationConnection = RunService.RenderStepped:Connect(function(delta)
-                rotationAngle = rotationAngle + 60 * delta
-                star.Rotation = rotationAngle
-                if not star.Parent then
-                    rotationConnection:Disconnect()
-                end
-            end)
-
-            local fallTime = math.random(2, 4)
-            local fallTween = TweenService:Create(star, TweenInfo.new(fallTime, Enum.EasingStyle.Linear), {
-                Position = UDim2.new(star.Position.X.Scale, 0, 1, 10)
-            })
-            fallTween:Play()
-            fallTween.Completed:Connect(function()
-                star:Destroy()
-            end)
-
-            wait(0.02)
-        end
-    end)()
-
-    progressTween.Completed:Wait()
-    isIntroActive = false
-
-    local fadeOutElements = {darkFrame, starImage, logoImage, titleLabel, progressBarFrame, progressFill, shineEffect}
-    for _, element in ipairs(fadeOutElements) do
-        local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-        local fadeProps = {}
-        
-        if element.BackgroundTransparency ~= nil then
-            fadeProps.BackgroundTransparency = 1
-        end
-        if element:IsA("TextLabel") then
-            fadeProps.TextTransparency = 1
-        end
-        if element:IsA("ImageLabel") then
-            fadeProps.ImageTransparency = 1
-        end
-        
-        local fadeTween = TweenService:Create(element, fadeInfo, fadeProps)
-        fadeTween:Play()
-        fadeTween.Completed:Wait()
-    end
-
-    screenGui:Destroy()
-end
-
-local success, err = pcall(createIntro)
-if not success then
-    warn("خطأ في الاستقبال: " .. tostring(err))
-end
-
-playSound("9086208751", 0.5)
-
-wait(0.3)
-
-sendNotification("مرحبا", "تم التحميل بنجاح")
-wait(1)
-sendNotification("اهلا Clock7", "تم التفعيل")
-wait(2)
-sendNotification("تم التفعيل بنجاح", "السكربت جاهز للاستخدام")
-wait(0.2)
+sendNotification("Clock7", "تم التفعيل", nil, 2)
 
 -- ======================
 -- إعدادات RP الأساسية
@@ -311,12 +104,12 @@ end
 
 setRPName("Clock7")
 setRPNameColor(Color3.fromRGB(0, 0, 139))
-wait(0.2)
+wait(0.1)
 setRPBio("البحت:CLOCK7")
 setRPBioColor(Color3.new(0, 0, 0))
 
 -- ======================
--- تحميل واجهة المستخدم الرئيسية
+-- تحميل واجهة المستخدم
 -- ======================
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
 local Window = Library:MakeWindow({
@@ -324,10 +117,10 @@ local Window = Library:MakeWindow({
     SubTitle = "by DBLACK",
 })
 
--- زر التصغير - يستخدم الصورة الثابتة
+-- زر التصغير
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxassetid://" .. IMAGE_ID,  -- <-- صورتك هنا
+        Image = "rbxassetid://" .. IMAGE_ID,
         BackgroundTransparency = 0
     },
     Corner = {
@@ -336,7 +129,7 @@ Window:AddMinimizeButton({
 })
 
 -- ======================
--- متغيرات عامة للتبويبات
+-- متغيرات عامة
 -- ======================
 local selectedPlayer = nil
 local selectedMethod = "Couch"
@@ -354,20 +147,19 @@ local carSpawnLoopActive = false
 local audioLoopActive = false
 local selectedAudioID = nil
 local houseRGBActive = false
-local gamepasses = {}
 
 -- ======================
 -- تبويب المعلومات
 -- ======================
 local infoTab = Window:MakeTab({
     Title = "معلومات السكربت",
-    Icon = "rbxassetid://" .. IMAGE_ID  -- <-- صورتك هنا
+    Icon = "rbxassetid://" .. IMAGE_ID
 })
 
 infoTab:AddDiscordInvite({
-    Name = "قناة التليجرام ",
-    Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات Clock7",
-    Logo = "rbxassetid://" .. IMAGE_ID,  -- <-- صورتك هنا
+    Name = "قناة التليجرام",
+    Description = "انضم لقناتنا على التليجرام",
+    Logo = "rbxassetid://" .. IMAGE_ID,
     Invite = ""
 })
 
@@ -681,7 +473,6 @@ settingsTab:AddTextBox({
             return
         end
         
-        -- البحث عن اللاعب
         for _, player in ipairs(Players:GetPlayers()) do
             if player.Name:lower():find(value:lower(), 1, true) or 
                (player.DisplayName and player.DisplayName:lower():find(value:lower(), 1, true)) then
