@@ -1077,8 +1077,6 @@ local GetFlag, SetFlag, CheckFlag do
 			db=true;task.wait(0.1);db=false
 			
 			local Success, Encoded = pcall(function()
-				-- local _Flags = {}
-				-- for _,Flag in pairs(Flags) do _Flags[_] = Flag.Value end
 				return HttpService:JSONEncode(Flags)
 			end)
 			
@@ -1151,7 +1149,6 @@ local function MakeDrag(Instance)
 		local function Update(Input)
 			local delta = Input.Position - DragStart
 			local Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + delta.X / UIScale, StartPos.Y.Scale, StartPos.Y.Offset + delta.Y / UIScale)
-			-- Instance.Position = Position
 			CreateTween({Instance, "Position", Position, 0.35})
 		end
 		
@@ -1346,7 +1343,6 @@ local function GetColor(Instance)
 	return ""
 end
 
--- /////////// --
 function redzlib:GetIcon(index)
 	if type(index) ~= "string" or index:find("rbxassetid://") or #index == 0 then
 		return index
@@ -1377,7 +1373,7 @@ function redzlib:SetTheme(NewTheme)
 	SaveJson("redz library V5.json", redzlib.Save)
 	Theme = redzlib.Themes[NewTheme]
 	
-	Comnection:FireConnection("ThemeChanged", NewTheme)
+	Connection:FireConnection("ThemeChanged", NewTheme)
 	table.foreach(redzlib.Instances, function(_,Val)
 		if Val.Type == "Gradient" then
 			Val.Instance.Color = Theme["Color Hub 1"]
@@ -1402,11 +1398,10 @@ function redzlib:SetScale(NewScale)
 	UIScale, ScreenGui.Scale.Scale = NewScale, NewScale
 end
 
--- دالة الإشعارات
 function redzlib:Notification(Configs)
     local Text = Configs.Text or "Notification"
     local Duration = Configs.Duration or 3
-    local Type = Configs.Type or "info" -- info, success, error
+    local Type = Configs.Type or "info"
     
     local Colors = {
         info = Theme["Color Theme"],
@@ -1442,22 +1437,18 @@ function redzlib:Notification(Configs)
         TextWrapped = true
     })
     
-    -- حركة الدخول
     Notif.Position = UDim2.new(1, 0, 0, 20)
     CreateTween({Notif, "Position", UDim2.new(1, -220, 0, 20), 0.3})
     
-    -- شريط التقدم
     for i = 1, 0, -0.01 do
         Line.Size = UDim2.new(i, 0, 0, 3)
         task.wait(Duration/100)
     end
     
-    -- حركة الخروج
     CreateTween({Notif, "Position", UDim2.new(1, 0, 0, 20), 0.3, true})
     Notif:Destroy()
 end
 
--- دالة الاهتزاز
 local function Shake(Instance)
     local originalPos = Instance.Position
     for i = 1, 5 do
@@ -1467,7 +1458,6 @@ local function Shake(Instance)
     Instance.Position = originalPos
 end
 
--- دالة النبض
 local function Pulse(Instance)
     local originalSize = Instance.Size
     CreateTween({Instance, "Size", originalSize * 1.1, 0.1})
@@ -1475,7 +1465,6 @@ local function Pulse(Instance)
     CreateTween({Instance, "Size", originalSize, 0.1})
 end
 
--- دالة إضافة Tooltip
 local function AddTooltip(Button, Text)
     Button.MouseEnter:Connect(function()
         local Tooltip = Create("TextLabel", ScreenGui, {
@@ -1540,7 +1529,6 @@ function redzlib:MakeWindow(Configs)
 		Rotation = 45
 	})MakeDrag(MainFrame)
 	
-	-- إضافة علامة مائية
 	local Watermark = Create("TextLabel", MainFrame, {
 		Size = UDim2.new(0, 100, 0, 20),
 		Position = UDim2.new(1, -110, 1, -25),
@@ -1554,7 +1542,6 @@ function redzlib:MakeWindow(Configs)
 		ZIndex = 0
 	})
 	
-	-- حركة المارك
 	task.spawn(function()
 		while Watermark and Watermark.Parent do
 			CreateTween({Watermark, "Rotation", 5, 0.5})
@@ -1564,7 +1551,6 @@ function redzlib:MakeWindow(Configs)
 		end
 	end)
 	
-	-- تأثير المطر
 	local RainEffect = Create("Frame", MainFrame, {
 		Size = UDim2.new(1, 0, 1, 0),
 		BackgroundTransparency = 1,
@@ -1633,7 +1619,6 @@ function redzlib:MakeWindow(Configs)
 		}), "DarkText")
 	}), "Text")
 	
-	-- إضافة شريط بحث للتبويبات
 	local SearchBox = Create("TextBox", Components, {
 		Size = UDim2.new(0, redzlib.Save.TabSize - 20, 0, 25),
 		Position = UDim2.new(0, 10, 0, 35),
@@ -1645,15 +1630,16 @@ function redzlib:MakeWindow(Configs)
 		TextColor3 = Theme["Color Text"],
 		Font = Enum.Font.GothamMedium,
 		TextSize = 12,
-		Visible = false
+		Visible = false,
+		ZIndex = 5
 	})
 	Make("Corner", SearchBox, UDim.new(0, 6))
 	
 	local MainScroll = InsertTheme(Create("ScrollingFrame", Components, {
-		Size = UDim2.new(0, redzlib.Save.TabSize, 1, -TopBar.Size.Y.Offset - 35),
+		Size = UDim2.new(0, redzlib.Save.TabSize, 1, -TopBar.Size.Y.Offset - 40),
 		ScrollBarImageColor3 = Theme["Color Theme"],
-		Position = UDim2.new(0, 0, 0, 65),
-		AnchorPoint = Vector2.new(0, 0),
+		Position = UDim2.new(0, 0, 1, -5),
+		AnchorPoint = Vector2.new(0, 1),
 		ScrollBarThickness = 1.5,
 		BackgroundTransparency = 1,
 		ScrollBarImageTransparency = 0.2,
@@ -1666,14 +1652,13 @@ function redzlib:MakeWindow(Configs)
 		Create("UIPadding", {
 			PaddingLeft = UDim.new(0, 10),
 			PaddingRight = UDim.new(0, 10),
-			PaddingTop = UDim.new(0, 10),
+			PaddingTop = UDim.new(0, 45),
 			PaddingBottom = UDim.new(0, 10)
 		}), Create("UIListLayout", {
 			Padding = UDim.new(0, 5)
 		})
 	}), "ScrollBar")
 	
-	-- تمرير سلس
 	local ScrollVelocity = 0
 	local TargetPosition = 0
 	
@@ -1690,7 +1675,6 @@ function redzlib:MakeWindow(Configs)
 		MainScroll.CanvasPosition = Vector2.new(0, MainScroll.CanvasPosition.Y + ScrollVelocity)
 	end)
 	
-	-- وظيفة البحث
 	SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
 		local searchText = SearchBox.Text:lower()
 		for _, tab in pairs(MainScroll:GetChildren()) do
@@ -1733,7 +1717,7 @@ function redzlib:MakeWindow(Configs)
 		ControlSize1.Position = UDim2.fromOffset(math.clamp(Pos1.X.Offset, 430, 1000), math.clamp(Pos1.Y.Offset, 200, 500))
 		ControlSize2.Position = UDim2.new(0, math.clamp(Pos2.X.Offset, 135, 250), 1, 0)
 		
-		MainScroll.Size = UDim2.new(0, ControlSize2.Position.X.Offset, 1, -TopBar.Size.Y.Offset - 35)
+		MainScroll.Size = UDim2.new(0, ControlSize2.Position.X.Offset, 1, -TopBar.Size.Y.Offset - 40)
 		SearchBox.Size = UDim2.new(0, ControlSize2.Position.X.Offset - 20, 0, 25)
 		Containers.Size = UDim2.new(1, -MainScroll.Size.X.Offset, 1, -TopBar.Size.Y.Offset)
 		MainFrame.Size = ControlSize1.Position
@@ -1780,7 +1764,7 @@ function redzlib:MakeWindow(Configs)
 	local SearchButton = SetProps(CloseButton:Clone(), {
 		Position = UDim2.new(1, -68, 0.5),
 		BackgroundColor3 = Theme["Color Theme"],
-		Image = "rbxassetid://10734943674", -- أيقونة بحث
+		Image = "rbxassetid://10734943674",
 		Name = "Search"
 	})
 	
@@ -1800,7 +1784,6 @@ function redzlib:MakeWindow(Configs)
 	local Minimized, SaveSize, WaitClick
 	local Window, FirstTab = {}, false
 	
-	-- إضافة Tooltips للأزرار
 	AddTooltip(CloseButton, "إغلاق")
 	AddTooltip(MinimizeButton, "تصغير")
 	AddTooltip(SearchButton, "بحث")
@@ -1964,7 +1947,7 @@ function redzlib:MakeWindow(Configs)
 			
 			for _,Button in pairs(ButtonsHolder:GetChildren()) do
 				if Button:IsA("TextButton") then
-					Button.Size = UDim2.new(1 / ButtonCount, -(((ButtonCount - 1) * 20) / ButtonCount), 0, 32) -- Fluent Library :)
+					Button.Size = UDim2.new(1 / ButtonCount, -(((ButtonCount - 1) * 20) / ButtonCount), 0, 32)
 				end
 			end
 			Button.Activated:Connect(Dialog.Close)
@@ -1993,7 +1976,6 @@ function redzlib:MakeWindow(Configs)
 		end
 	end
 	
-	-- دوال للوصول من الخارج
 	Window.Notification = redzlib.Notification
 	Window.Shake = Shake
 	Window.Pulse = Pulse
@@ -2047,9 +2029,8 @@ function redzlib:MakeWindow(Configs)
 		}), "Theme")
 		Make("Corner", Selected, UDim.new(0.5, 0))
 		
-		-- تأثير Hover
 		TabSelect.MouseEnter:Connect(function()
-			if Container.Parent == nil then  -- إذا كان التبويب غير نشط
+			if Container.Parent == nil then
 				CreateTween({TabSelect, "BackgroundTransparency", 0.05, 0.2})
 				CreateTween({LabelTitle, "TextTransparency", 0, 0.2})
 				CreateTween({LabelIcon, "ImageTransparency", 0, 0.2})
@@ -2057,7 +2038,7 @@ function redzlib:MakeWindow(Configs)
 		end)
 		
 		TabSelect.MouseLeave:Connect(function()
-			if Container.Parent == nil then  -- إذا كان التبويب غير نشط
+			if Container.Parent == nil then
 				CreateTween({TabSelect, "BackgroundTransparency", 0.1, 0.2})
 				CreateTween({LabelTitle, "TextTransparency", 0.15, 0.2})
 				CreateTween({LabelIcon, "ImageTransparency", 0.15, 0.2})
@@ -2095,7 +2076,6 @@ function redzlib:MakeWindow(Configs)
 		local function Tabs()
 			if Container.Parent then return end
 			
-			-- إضافة شريط تحميل
 			local LoadingBar = Create("Frame", Container, {
 				Size = UDim2.new(0, 0, 0, 2),
 				Position = UDim2.new(0, 0, 0, 0),
@@ -2226,7 +2206,7 @@ function redzlib:MakeWindow(Configs)
 			})
 			
 			FButton.Activated:Connect(function()
-				Pulse(FButton) -- تأثير نبض عند النقر
+				Pulse(FButton)
 				Funcs:FireCallback(Callback)
 			end)
 			
@@ -2285,7 +2265,6 @@ function redzlib:MakeWindow(Configs)
 				SetFlag(Flag, Default)
 				Funcs:FireCallback(Callback, Default)
 				if Default then
-					-- تأثير توهج عند التفعيل
 					local Glow = Create("ImageLabel", Toggle, {
 						Size = UDim2.new(2, 0, 2, 0),
 						Position = UDim2.new(0.5, 0, 0.5, 0),
@@ -2301,17 +2280,17 @@ function redzlib:MakeWindow(Configs)
 					
 					CreateTween({Toggle, "Position", UDim2.new(1, 0, 0.5), 0.25})
 					CreateTween({Toggle, "BackgroundTransparency", 0, 0.25})
-					CreateTween({Toggle, "AnchorPoint", Vector2.new(1, 0.5), 0.25, Wait or false})
+					CreateTween({Toggle, "AnchorPoint", Vector2.new(1, 0.5), 0.25})
 				else
 					CreateTween({Toggle, "Position", UDim2.new(0, 0, 0.5), 0.25})
 					CreateTween({Toggle, "BackgroundTransparency", 0.8, 0.25})
-					CreateTween({Toggle, "AnchorPoint", Vector2.new(0, 0.5), 0.25, Wait or false})
+					CreateTween({Toggle, "AnchorPoint", Vector2.new(0, 0.5), 0.25})
 				end
 				WaitClick = false
 			end;task.spawn(SetToggle, Default)
 			
 			Button.Activated:Connect(function()
-				Pulse(Button) -- تأثير نبض عند النقر
+				Pulse(Button)
 				SetToggle(not Default)
 			end)
 			
@@ -2324,7 +2303,7 @@ function redzlib:MakeWindow(Configs)
 					LabelFunc:SetTitle(Val1)
 					LabelFunc:SetDesc(Val2)
 				elseif type(Val1) == "string" then
-					LabelFunc:SetTitle(Val1, false, true)
+					LabelFunc:SetTitle(Val1)
 				elseif type(Val1) == "boolean" then
 					if WaitClick and Val2 then
 						repeat task.wait() until not WaitClick
