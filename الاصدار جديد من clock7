@@ -1677,3 +1677,98 @@ musicTab:AddToggle({
         end
     end
 })
+
+local UniversalTab = Window:MakeTab({"سكربتات متنوعة", "plane"})
+
+-- Seção para Scripts Universais
+Section = UniversalTab:AddSection({
+    Name = "سكربتات مفيدة"
+})
+
+-- Botão para ShiftLock
+UniversalTab:AddButton({
+    Name = "سكربت قفل",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/N2tiHgyv"))()
+    end
+})
+
+UniversalTab:AddButton({
+  Name = "سكربـت الـرقـصـات",
+  Callback = function()
+    -- line: [0, 0] id: 126
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Baseplate-Fe-All-Emote-7386"))()
+  end,
+})
+
+UniversalTab:AddButton({
+  Name = "سكربـت الـرحـمة",
+  Callback = function()
+    -- line: [0, 0] id: 120
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/n0kc/AtomicHub/main/Map-Al-Biout.lua"))()
+  end,
+})
+
+UniversalTab:AddButton({
+  Name = "سكربـت طـيـران السيارة",
+  Callback = function()
+    -- line: [0, 0] id: 28
+    loadstring(game:HttpGet("https://abre.ai/fly-gui"))()
+  end,
+})
+
+-- Botão para Ghost Hub
+UniversalTab:AddButton({
+    Name = "Ghost Hub سكربت الشبح",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-GhostHub-16534"))()
+    end
+})
+
+-- Botão para Infinite Yield
+UniversalTab:AddButton({
+    Name = "InfiniteYield - ادمن انفنتي",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+})
+
+-- Botão para Fly Gui
+UniversalTab:AddButton({
+    Name = "طيران",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Fly"))()
+    end
+})
+
+-- Botão para Nameless Admin 
+UniversalTab:AddButton({
+    Name = "Namelesسكربت ادمن",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source"))()
+    end
+})
+
+
+UniversalTab:AddButton({
+    Name = "تحكم بالسيارات",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md", true))()
+    end
+})
+
+
+UniversalTab:AddButton({
+   Name = "سـكربـت ضـرب  +18",
+   Callback = function()
+       loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+   end
+})
+
+
+UniversalTab:AddButton({
+   Name = "سـكـربـت حـضـن",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/martinng5/martin/refs/heads/main/martin.lua.txt"))()
+   end
+})
