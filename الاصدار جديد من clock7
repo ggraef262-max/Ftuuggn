@@ -765,3 +765,113 @@ Section1:AddButton({
         end)
     end
 })
+
+local UniversalTab = Window:MakeTab({"سكربتات مضادات", "plane"})
+
+-- Seção para Scripts Universais
+Section = UniversalTab:AddSection({
+    Name = "سكربتات مضادات قويه"
+})
+
+UniversalTab:AddButton({
+  Name = "مضاد بانج",
+  Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%E2%80%8Fint%20bang"))()
+  end,
+})
+
+UniversalTab:AddButton({
+  Name = "مضاد فلنق",
+  Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Fling"))()
+  end,
+})
+
+BangTab = Window:MakeTab({"بانق","rbxassetid://"})
+Players = game:GetService("Players")
+RunService = game:GetService("RunService")
+LocalPlayer = Players.LocalPlayer
+getgenv().selectedPlayer = nil
+Dropdown = nil
+
+function rebuildDropdown()
+    if Dropdown then Dropdown:Destroy() end
+    playerNames = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then table.insert(playerNames, player.Name) end
+    end
+    Dropdown = BangTab:AddDropdown({
+        Name = "حدد لاعب", 
+        Options = playerNames, 
+        Default = "", 
+        Callback = function(Value) 
+            getgenv().selectedPlayer = Value 
+        end
+    })
+end
+
+rebuildDropdown()
+Players.PlayerAdded:Connect(rebuildDropdown)
+Players.PlayerRemoving:Connect(rebuildDropdown)
+
+function createBangToggle(name, yOffset, faceBang)
+    local bangActive = false
+    local connection = nil
+    local togglePosition = false
+    
+    BangTab:AddToggle({
+        Name = name, 
+        Default = false, 
+        Callback = function(Value)
+            bangActive = Value
+            local char = LocalPlayer.Character
+            if not char then return end
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if not humanoid then return end
+            
+            if Value then
+                humanoid.PlatformStand = true
+                if connection then connection:Disconnect() end
+                
+                connection = RunService.Heartbeat:Connect(function()
+                    if bangActive and getgenv().selectedPlayer then
+                        local targetPlayer = Players:FindFirstChild(getgenv().selectedPlayer)
+                        if targetPlayer and targetPlayer.Character and targetPlayer.Character.PrimaryPart then
+                            local targetHead = targetPlayer.Character:FindFirstChild("Head")
+                            if targetHead and char.PrimaryPart then
+                                local offset = (togglePosition and 1) or 4
+                                
+                                if faceBang then
+                                    char:SetPrimaryPartCFrame(
+                                        targetHead.CFrame * 
+                                        CFrame.new(0, 1, -offset) * 
+                                        CFrame.Angles(0, math.rad(180), 0)
+                                    )
+                                else
+                                    char:SetPrimaryPartCFrame(
+                                        targetHead.CFrame * 
+                                        CFrame.new(0, yOffset, offset)
+                                    )
+                                end
+                                
+                                togglePosition = not togglePosition
+                                task.wait(1)
+                            end
+                        end
+                    end
+                end)
+            else
+                humanoid.PlatformStand = false
+                if connection then 
+                    connection:Disconnect()
+                    connection = nil
+                end
+            end
+        end
+    })
+end
+
+createBangToggle("Bang v1 | خلفي v1", -1, false)
+createBangToggle("Bang v2 | خلفي v2", -1.5, false)
+createBangToggle("Face Bang v1 | أمامي v1", 1, true)
+createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
