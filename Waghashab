@@ -1149,7 +1149,7 @@ local function MakeDrag(Instance)
 		local function Update(Input)
 			local delta = Input.Position - DragStart
 			local Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + delta.X / UIScale, StartPos.Y.Scale, StartPos.Y.Offset + delta.Y / UIScale)
-			CreateTween({Instance, "Position", Position, 0.35})
+			Instance.Position = Position -- بدون Tween للسرعة
 		end
 		
 		Instance.MouseButton1Down:Connect(function()
@@ -1216,6 +1216,7 @@ AddEle("Stroke", function(parent, props, ...)
 	return New
 end)
 
+-- تعديل عنصر الزر ليكون أسرع
 AddEle("Button", function(parent, props, ...)
 	local args = {...}
 	local New = InsertTheme(SetProps(Create("TextButton", parent, {
@@ -1225,13 +1226,14 @@ AddEle("Button", function(parent, props, ...)
 		AutoButtonColor = false
 	}), props), "Frame")
 	
+	-- بدون Tween للسرعة المباشرة
 	New.MouseEnter:Connect(function()
-		CreateTween({New, "BackgroundTransparency", 0.3, 0.2})
-		CreateTween({New, "BackgroundColor3", Theme["Color Theme"], 0.2})
+		New.BackgroundTransparency = 0.3
+		New.BackgroundColor3 = Theme["Color Theme"]
 	end)
 	New.MouseLeave:Connect(function()
-		CreateTween({New, "BackgroundTransparency", 0, 0.2})
-		CreateTween({New, "BackgroundColor3", Theme["Color Hub 2"], 0.2})
+		New.BackgroundTransparency = 0
+		New.BackgroundColor3 = Theme["Color Hub 2"]
 	end)
 	if args[1] then
 		New.Activated:Connect(args[1])
@@ -1460,9 +1462,9 @@ end
 
 local function Pulse(Instance)
     local originalSize = Instance.Size
-    CreateTween({Instance, "Size", originalSize * 1.1, 0.1})
-    task.wait(0.1)
-    CreateTween({Instance, "Size", originalSize, 0.1})
+    Instance.Size = originalSize * 1.1 -- بدون Tween للسرعة
+    task.wait(0.05)
+    Instance.Size = originalSize
 end
 
 local function AddTooltip(Button, Text)
@@ -1544,9 +1546,9 @@ function redzlib:MakeWindow(Configs)
 	
 	task.spawn(function()
 		while Watermark and Watermark.Parent do
-			CreateTween({Watermark, "Rotation", 5, 0.5})
+			Watermark.Rotation = 5
 			task.wait(0.5)
-			CreateTween({Watermark, "Rotation", -5, 0.5})
+			Watermark.Rotation = -5
 			task.wait(0.5)
 		end
 	end)
@@ -1790,7 +1792,7 @@ function redzlib:MakeWindow(Configs)
 		
 		if Minimized then
 			MinimizeButton.Image = "rbxassetid://10734896206"
-			CreateTween({MainFrame, "Size", SaveSize, 0.25, true})
+			MainFrame.Size = SaveSize -- بدون Tween للسرعة
 			ControlSize1.Visible = true
 			ControlSize2.Visible = true
 			Minimized = false
@@ -1799,7 +1801,7 @@ function redzlib:MakeWindow(Configs)
 			SaveSize = MainFrame.Size
 			ControlSize1.Visible = false
 			ControlSize2.Visible = false
-			CreateTween({MainFrame, "Size", UDim2.fromOffset(MainFrame.Size.X.Offset, 28), 0.25, true})
+			MainFrame.Size = UDim2.fromOffset(MainFrame.Size.X.Offset, 28) -- بدون Tween
 			Minimized = true
 		end
 		
@@ -1910,9 +1912,9 @@ function redzlib:MakeWindow(Configs)
 		
 		MainCorner:Clone().Parent = Screen
 		Frame.Parent = Screen
-		CreateTween({Frame, "Size", UDim2.fromOffset(250, 150), 0.2})
-		CreateTween({Frame, "Transparency", 0, 0.15})
-		CreateTween({Screen, "Transparency", 0.3, 0.15})
+		Frame.Size = UDim2.fromOffset(250, 150) -- مباشرة
+		Frame.Transparency = 0
+		Screen.Transparency = 0.3
 		
 		local ButtonCount, Dialog = 1, {}
 		function Dialog:Button(Configs)
@@ -1938,9 +1940,10 @@ function redzlib:MakeWindow(Configs)
 			Button.Activated:Connect(Callback)
 		end
 		function Dialog:Close()
-			CreateTween({Frame, "Size", UDim2.fromOffset(250 * 1.08, 150 * 1.08), 0.2})
-			CreateTween({Screen, "Transparency", 1, 0.15})
-			CreateTween({Frame, "Transparency", 1, 0.15, true})
+			Frame.Size = UDim2.fromOffset(250 * 1.08, 150 * 1.08)
+			Screen.Transparency = 1
+			Frame.Transparency = 1
+			task.wait(0.15)
 			Screen:Destroy()
 		end
 		table.foreach(DOptions, function(_,Button)
@@ -2015,17 +2018,17 @@ function redzlib:MakeWindow(Configs)
 		
 		TabSelect.MouseEnter:Connect(function()
 			if Container.Parent == nil then
-				CreateTween({TabSelect, "BackgroundTransparency", 0.05, 0.2})
-				CreateTween({LabelTitle, "TextTransparency", 0, 0.2})
-				CreateTween({LabelIcon, "ImageTransparency", 0, 0.2})
+				TabSelect.BackgroundTransparency = 0.05
+				LabelTitle.TextTransparency = 0
+				LabelIcon.ImageTransparency = 0
 			end
 		end)
 		
 		TabSelect.MouseLeave:Connect(function()
 			if Container.Parent == nil then
-				CreateTween({TabSelect, "BackgroundTransparency", 0.1, 0.2})
-				CreateTween({LabelTitle, "TextTransparency", 0.15, 0.2})
-				CreateTween({LabelIcon, "ImageTransparency", 0.15, 0.2})
+				TabSelect.BackgroundTransparency = 0.1
+				LabelTitle.TextTransparency = 0.15
+				LabelIcon.ImageTransparency = 0.15
 			end
 		end)
 		
@@ -2066,9 +2069,8 @@ function redzlib:MakeWindow(Configs)
 				BackgroundColor3 = Theme["Color Theme"],
 				ZIndex = 10
 			})
-			CreateTween({LoadingBar, "Size", UDim2.new(1, 0, 0, 2), 0.5})
-			task.wait(0.5)
-			CreateTween({LoadingBar, "BackgroundTransparency", 1, 0.3})
+			LoadingBar.Size = UDim2.new(1, 0, 0, 2) -- مباشرة
+			task.wait(0.3)
 			LoadingBar:Destroy()
 			
 			for _,Frame in pairs(ContainerList) do
@@ -2083,11 +2085,11 @@ function redzlib:MakeWindow(Configs)
 					Tab.func:Disable()
 				end
 			end)
-			CreateTween({Container, "Size", UDim2.new(1, 0, 1, 0), 0.3})
-			CreateTween({LabelTitle, "TextTransparency", 0, 0.35})
-			CreateTween({LabelIcon, "ImageTransparency", 0, 0.35})
-			CreateTween({Selected, "Size", UDim2.new(0, 4, 0, 18), 0.35})
-			CreateTween({Selected, "BackgroundTransparency", 0.2, 0.35})
+			Container.Size = UDim2.new(1, 0, 1, 0) -- مباشرة
+			LabelTitle.TextTransparency = 0
+			LabelIcon.ImageTransparency = 0
+			Selected.Size = UDim2.new(0, 4, 0, 18)
+			Selected.BackgroundTransparency = 0.2
 		end
 		TabSelect.Activated:Connect(Tabs)
 		
@@ -2098,10 +2100,10 @@ function redzlib:MakeWindow(Configs)
 		
 		function Tab:Disable()
 			Container.Parent = nil
-			CreateTween({LabelTitle, "TextTransparency", 0.15, 0.35})
-			CreateTween({LabelIcon, "ImageTransparency", 0.15, 0.35})
-			CreateTween({Selected, "Size", UDim2.new(0, 4, 0, 4), 0.35})
-			CreateTween({Selected, "BackgroundTransparency", 0.5, 0.35})
+			LabelTitle.TextTransparency = 0.15
+			LabelIcon.ImageTransparency = 0.15
+			Selected.Size = UDim2.new(0, 4, 0, 4)
+			Selected.BackgroundTransparency = 0.5
 		end
 		function Tab:Enable()
 			Tabs()
@@ -2258,17 +2260,17 @@ function redzlib:MakeWindow(Configs)
 						ImageColor3 = Theme["Color Theme"],
 						ImageTransparency = 0.5
 					})
-					CreateTween({Glow, "ImageTransparency", 0.8, 0.5})
+					Glow.ImageTransparency = 0.8
 					task.wait(0.5)
 					Glow:Destroy()
 					
-					CreateTween({Toggle, "Position", UDim2.new(1, 0, 0.5), 0.25})
-					CreateTween({Toggle, "BackgroundTransparency", 0, 0.25})
-					CreateTween({Toggle, "AnchorPoint", Vector2.new(1, 0.5), 0.25})
+					Toggle.Position = UDim2.new(1, 0, 0.5)
+					Toggle.BackgroundTransparency = 0
+					Toggle.AnchorPoint = Vector2.new(1, 0.5)
 				else
-					CreateTween({Toggle, "Position", UDim2.new(0, 0, 0.5), 0.25})
-					CreateTween({Toggle, "BackgroundTransparency", 0.8, 0.25})
-					CreateTween({Toggle, "AnchorPoint", Vector2.new(0, 0.5), 0.25})
+					Toggle.Position = UDim2.new(0, 0, 0.5)
+					Toggle.BackgroundTransparency = 0.8
+					Toggle.AnchorPoint = Vector2.new(0, 0.5)
 				end
 				WaitClick = false
 			end;task.spawn(SetToggle, Default)
@@ -2378,9 +2380,9 @@ function redzlib:MakeWindow(Configs)
 			local ScrollSize, WaitClick = 5
 			local function Disable()
 				WaitClick = true
-				CreateTween({Arrow, "Rotation", 0, 0.2})
-				CreateTween({DropFrame, "Size", UDim2.new(0, 152, 0, 0), 0.2, true})
-				CreateTween({Arrow, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
+				Arrow.Rotation = 0
+				DropFrame.Size = UDim2.new(0, 152, 0, 0)
+				Arrow.ImageColor3 = Color3.fromRGB(255, 255, 255)
 				Arrow.Image = "rbxassetid://10709791523"
 				NoClickFrame.Visible = false
 				WaitClick = false
@@ -2400,7 +2402,7 @@ function redzlib:MakeWindow(Configs)
 				ScrollSize = (math.clamp(Count, 0, 10) * 25) + 10
 				if NoClickFrame.Visible then
 					NoClickFrame.Visible = true
-					CreateTween({DropFrame, "Size", GetFrameSize(), 0.2, true})
+					DropFrame.Size = GetFrameSize()
 				end
 			end
 			
@@ -2409,14 +2411,14 @@ function redzlib:MakeWindow(Configs)
 				WaitClick = true
 				if NoClickFrame.Visible then
 					Arrow.Image = "rbxassetid://10709791523"
-					CreateTween({Arrow, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
-					CreateTween({DropFrame, "Size", UDim2.new(0, 152, 0, 0), 0.2, true})
+					Arrow.ImageColor3 = Color3.fromRGB(255, 255, 255)
+					DropFrame.Size = UDim2.new(0, 152, 0, 0)
 					NoClickFrame.Visible = false
 				else
 					NoClickFrame.Visible = true
 					Arrow.Image = "rbxassetid://10709790948"
-					CreateTween({Arrow, "ImageColor3", Theme["Color Theme"], 0.2})
-					CreateTween({DropFrame, "Size", GetFrameSize(), 0.2, true})
+					Arrow.ImageColor3 = Theme["Color Theme"]
+					DropFrame.Size = GetFrameSize()
 				end
 				WaitClick = false
 			end
@@ -2430,7 +2432,7 @@ function redzlib:MakeWindow(Configs)
 				local NewPos = UDim2.fromOffset(ClampX, ClampY)
 				local AnchorPoint = FramePos.Y > ScreenSize.Y / 1.4 and 1 or ScrollSize > 80 and 0.5 or 0
 				DropFrame.AnchorPoint = Vector2.new(0, AnchorPoint)
-				CreateTween({DropFrame, "Position", NewPos, 0.1})
+				DropFrame.Position = NewPos
 			end
 			
 			local AddNewOptions, GetOptions, AddOption, RemoveOption, Selected do
@@ -2472,17 +2474,17 @@ function redzlib:MakeWindow(Configs)
 					if MultiSelect then
 						for _,v in pairs(Options) do
 							local nodes, Stats = v.nodes, v.Stats
-							CreateTween({nodes[2], "BackgroundTransparency", Stats and 0 or 0.8, 0.35})
-							CreateTween({nodes[2], "Size", Stats and UDim2.fromOffset(4, 12) or UDim2.fromOffset(4, 4), 0.35})
-							CreateTween({nodes[3], "TextTransparency", Stats and 0 or 0.4, 0.35})
+							nodes[2].BackgroundTransparency = Stats and 0 or 0.8
+							nodes[2].Size = Stats and UDim2.fromOffset(4, 12) or UDim2.fromOffset(4, 4)
+							nodes[3].TextTransparency = Stats and 0 or 0.4
 						end
 					else
 						for _,v in pairs(Options) do
 							local Slt = v.Value == Selected
 							local nodes = v.nodes
-							CreateTween({nodes[2], "BackgroundTransparency", Slt and 0 or 1, 0.35})
-							CreateTween({nodes[2], "Size", Slt and UDim2.fromOffset(4, 14) or UDim2.fromOffset(4, 4), 0.35})
-							CreateTween({nodes[3], "TextTransparency", Slt and 0 or 0.4, 0.35})
+							nodes[2].BackgroundTransparency = Slt and 0 or 1
+							nodes[2].Size = Slt and UDim2.fromOffset(4, 14) or UDim2.fromOffset(4, 4)
+							nodes[3].TextTransparency = Slt and 0 or 0.4
 						end
 					end
 					UpdateLabel()
@@ -2728,22 +2730,23 @@ function redzlib:MakeWindow(Configs)
 			end
 			
 			SliderHolder.MouseButton1Down:Connect(function()
-				CreateTween({SliderIcon, "Transparency", 0, 0.3})
+				SliderIcon.BackgroundTransparency = 0
 				Container.ScrollingEnabled = false
 				while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do task.wait()
 					ControlPos()
 				end
-				CreateTween({SliderIcon, "Transparency", 0.2, 0.3})
+				SliderIcon.BackgroundTransparency = 0.2
 				Container.ScrollingEnabled = true
 				SetFlag(Flag, Default)
 			end)
 			
 			LabelVal:GetPropertyChangedSignal("Text"):Connect(function()
 				UIScale.Scale = 0.3
-				CreateTween({UIScale, "Scale", 1.2, 0.1})
-				CreateTween({LabelVal, "Rotation", math.random(-1, 1) * 5, 0.15, true})
-				CreateTween({UIScale, "Scale", 1, 0.2})
-				CreateTween({LabelVal, "Rotation", 0, 0.1})
+				UIScale.Scale = 1.2
+				LabelVal.Rotation = math.random(-1, 1) * 5
+				task.wait(0.1)
+				UIScale.Scale = 1
+				LabelVal.Rotation = 0
 			end)
 			
 			function SetSlider(NewValue)
@@ -2754,7 +2757,7 @@ function redzlib:MakeWindow(Configs)
 				local SliderPos = (NewValue - Min) / (Max - Min)
 				
 				SetFlag(Flag, NewValue)
-				CreateTween({ SliderIcon, "Position", UDim2.fromScale(math.clamp(SliderPos, 0, 1), 0.5), 0.3, true })
+				SliderIcon.Position = UDim2.fromScale(math.clamp(SliderPos, 0, 1), 0.5)
 			end;SetSlider(Default)
 			
 			SliderIcon:GetPropertyChangedSignal("Position"):Connect(UpdateValues)UpdateValues()
@@ -2832,10 +2835,10 @@ function redzlib:MakeWindow(Configs)
 			TextBoxInput.FocusLost:Connect(Input)Input()
 			
 			TextBoxInput.FocusLost:Connect(function()
-				CreateTween({Pencil, "ImageColor3", Color3.fromRGB(255, 255, 255), 0.2})
+				Pencil.ImageColor3 = Color3.fromRGB(255, 255, 255)
 			end)
 			TextBoxInput.Focused:Connect(function()
-				CreateTween({Pencil, "ImageColor3", Theme["Color Theme"], 0.2})
+				Pencil.ImageColor3 = Theme["Color Theme"]
 			end)
 			
 			TextBox.OnChanging = false
