@@ -1518,3 +1518,162 @@ end)
 
     end
 })
+
+-- ======================
+-- تبويب الموسيقى والصوتيات
+-- ======================
+local musicTab = Window:MakeTab({ 
+    Title = "سبامات والصوتيات",
+    Icon = "rbxassetid://" 
+})
+
+local audioList = {
+    {Name = "Yamete Kudasai", ID = 108494476595033},
+    {Name = "Gritinho", ID = 5710016194},
+    {Name = "Jumpscare Horroroso", ID = 85435253347146},
+    {Name = "صوت عالي", ID = 6855150757},
+    {Name = "ضوضاء", ID = 120034877160791},
+    {Name = "Jumpscare 2", ID = 110637995610528},
+    {Name = "ضحكة الساحرة", ID = 116214940486087},
+    {Name = "The Boiled One", ID = 137177653817621},
+    {Name = "صوت مخيف", ID = 128669424001766},
+    {Name = "Mandrake Detected", ID = 9068077052},
+    {Name = "صراخ", ID = 80156405968805},
+    {Name = "AAAHHHH", ID = 9084006093},
+    {Name = "amongus", ID = 6651571134},
+    {Name = "Sus", ID = 6701126635},
+    {Name = "Gritao", ID = 5853668794},
+    {Name = "UHHHHH", ID = 7056720271},
+    {Name = "Sonic.exe", ID = 2496367477},
+    {Name = "Tubers93 1", ID = 270145703},
+    {Name = "Tubers93 2", ID = 18131809532},
+    {Name = "John's Laugh", ID = 130759239},
+    {Name = "صوت غريب", ID = 7705506391},
+    {Name = "Gay, gay", ID = 18786647417},
+    {Name = "Bat Hit", ID = 7129073354},
+    {Name = "Nuclear Siren", ID = 675587093},
+    {Name = "صوت غريب 2", ID = 7520729342},
+    {Name = "صراخ 2", ID = 91412024101709},
+    {Name = "صوت مؤذي", ID = 268116333},
+    {Name = "[ Content Deleted ]", ID = 106835463235574},
+    {Name = "Toma Jack", ID = 132603645477541},
+    {Name = "Pede ifood", ID = 133843750864059},
+    {Name = "I Ghost The down", ID = 84663543883498},
+    {Name = "Compre OnLine", ID = 8747441609},
+    {Name = "Uh Que Nojo", ID = 103440368630269},
+    {Name = "Sai dai Lava Prato", ID = 101232400175829},
+    {Name = "Seloko", ID = 78442476709262},
+    {Name = "Chimpanzini Bananini", ID = 137148228908678},
+    {Name = "Candyland", ID = 118939739460633},
+    {Name = "What the hell", ID = 100656590080703},
+    {Name = "صوت مشهور", ID = 7962533987}
+}
+
+musicTab:AddTextBox({
+    Name = "معرف الصوت",
+    Description = "أدخل معرف الصوت الذي تريد تشغيله",
+    PlaceholderText = "أدخل معرف الصوت",
+    Callback = function(value)
+        selectedAudioID = tonumber(value)
+    end
+})
+
+local audioNames = {}
+for _, audio in ipairs(audioList) do
+    table.insert(audioNames, audio.Name)
+end
+
+musicTab:AddDropdown({
+    Name = "اختر الصوت من القائمة",
+    Description = "اختر صوتاً من القائمة",
+    Options = audioNames,
+    Default = audioNames[1],
+    Flag = "selected_audio",
+    Callback = function(value)
+        for _, audio in ipairs(audioList) do
+            if audio.Name == value then
+                selectedAudioID = audio.ID
+                break
+            end
+        end
+    end
+})
+
+musicTab:AddSection({ "تشغيل الصوت بشكل متكرر" })
+
+musicTab:AddToggle({
+    Name = "تكرار تشغيل الصوت",
+    Description = "يقوم بتشغيل الصوت بشكل متكرر كل 0.5 ثانية",
+    Default = false,
+    Flag = "audio_loop",
+    Callback = function(value)
+        audioLoopActive = value
+        
+        if value then
+            if not selectedAudioID then
+                sendNotification("خطأ", "الرجاء اختيار صوت أولاً", nil, 3)
+                audioLoopActive = false
+                return
+            end
+            
+            coroutine.wrap(function()
+                while audioLoopActive do
+                    if selectedAudioID then
+                        fireRemote({"RE", "1Gu1nSound1s"}, Workspace, selectedAudioID, 1)
+                        local sound = Instance.new("Sound")
+                        sound.SoundId = "rbxassetid://" .. selectedAudioID
+                        sound.Parent = getRootPart() or Workspace
+                        sound:Play()
+                    end
+                    wait(0.5)
+                end
+            end)()
+        end
+    end
+})
+
+musicTab:AddParagraph({ "تحذير:", "قد يؤدي تشغيل الصوت بشكل متكرر إلى إزعاج الآخرين" })
+
+musicTab:AddSection({ "تشغيل الصوت لمرة واحدة" })
+
+musicTab:AddButton({ 
+    "تشغيل الصوت", 
+    function()
+        if selectedAudioID then
+            fireRemote({"RE", "1Gu1nSound1s"}, Workspace, selectedAudioID, 1)
+            local sound = Instance.new("Sound")
+            sound.SoundId = "rbxassetid://" .. selectedAudioID
+            sound.Parent = getRootPart() or Workspace
+            sound:Play()
+            sendNotification("صوت", "تم تشغيل الصوت", nil, 2)
+        else
+            sendNotification("خطأ", "الرجاء اختيار صوت أولاً", nil, 3)
+        end
+    end 
+})
+
+musicTab:AddToggle({
+    Name = "تشغيل سريع للصوت (سبام)",
+    Description = "تشغيل الصوت بسرعة عالية للجميع",
+    Default = false,
+    Flag = "audio_spam",
+    Callback = function(value)
+        getgenv().Audio_All_loop_fast = value
+        
+        if value then
+            coroutine.wrap(function()
+                while getgenv().Audio_All_loop_fast do
+                    if selectedAudioID then
+                        fireRemote({"RE", "1Gu1nSound1s"}, Workspace, selectedAudioID, 1)
+                        -- تشغيل محلي أيضاً
+                        local sound = Instance.new("Sound")
+                        sound.SoundId = "rbxassetid://" .. selectedAudioID
+                        sound.Parent = getRootPart() or Workspace
+                        sound:Play()
+                        wait(0.03)
+                    end
+                end
+            end)()
+        end
+    end
+})
