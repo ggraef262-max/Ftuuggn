@@ -311,7 +311,7 @@ setRPBioColor(Color3.new(0, 0, 0))
 -- ======================
 -- تحميل واجهة المستخدم الرئيسية
 -- ======================
-local Library = loadstring(game:HttpGet("https://pastefy.app/7vqxhuxq/raw"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
 local Window = Library:MakeWindow({
     Title = "Clock7 RP",
     SubTitle = "by DBLACK",
