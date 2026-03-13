@@ -126,7 +126,7 @@ local function createIntro()
     logoImage.Position = UDim2.new(0.5, 0, 0.35, 0)
     logoImage.AnchorPoint = Vector2.new(0.5, 0.5)
     logoImage.BackgroundTransparency = 1
-    logoImage.Image = "rbxthumb://type=Asset&id=123219039049746&w=150&h=150"
+    logoImage.Image = "rbxthumb://type=Asset&id=90798133906684=150&h=150"
     logoImage.Parent = screenGui
 
     local titleLabel = Instance.new("TextLabel")
@@ -302,10 +302,10 @@ local function setRPBioColor(color)
     fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPBioColor", color)
 end
 
-setRPName("Clock7 RP")
+setRPName("Clock7")
 setRPNameColor(Color3.fromRGB(113, 8, 187))
 wait(0.2)
-setRPBio("منتظر/ا ENJOY")
+setRPBio("البحت:CLOCK7")
 setRPBioColor(Color3.new(0, 0, 0))
 
 -- ======================
@@ -320,7 +320,7 @@ local Window = Library:MakeWindow({
 
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxthumb://type=Asset&id=123219039049746&w=150&h=150",
+        Image = "rbxthumb://type=Asset&id=90798133906684=150&h=150",
         BackgroundTransparency = 0
     },
     Corner = {
@@ -354,14 +354,14 @@ local gamepasses = {}
 -- ======================
 local infoTab = Window:MakeTab({
     Title = "معلومات السكربت",
-    Icon = "rbxassetid://10723415903"
+    Icon = "rbxassetid://90798133906684"
 })
 
 infoTab:AddDiscordInvite({
-    Name = "قناة التليجرام ENJOY",
+    Name = "قناة التليجرام ",
     Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات Clock7",
-    Logo = "rbxthumb://type=Asset&id=123219039049746&w=150&h=150",
-    Invite = "https://t.me/ENJOE_saHUB"
+    Logo = "rbxthumb://type=Asset&id=90798133906684=150&h=150",
+    Invite = ""
 })
 
 infoTab:AddSection({ "مطوري السكربت" })
