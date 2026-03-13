@@ -285,11 +285,11 @@ playSound("9086208751", 0.5)
 wait(0.3)
 
 sendNotification("مرحبا", "تم التحميل بنجاح")
-wait(1)
-sendNotification("اهلا/ا SAHUB", "تم التفعيل")
-wait(2)
+wait(0.1)
+sendNotification("اهلا/ا CLOCK7.2.0v", "تم التفعيل")
+wait(0.1)
 sendNotification("تم التفعيل بنجاح", "السكربت جاهز للاستخدام")
-wait(0.2)
+wait(0.1)
 
 -- ======================
 -- إعدادات RP الأساسية
@@ -319,11 +319,11 @@ setRPBioColor(Color3.new(0, 0, 0))
 -- ======================
 -- تحميل واجهة المستخدم الرئيسية
 -- ======================
-local Library = loadstring(game:HttpGet("https://pastefy.app/7vqxhuxq/raw"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
 local Window = Library:MakeWindow({
     Title = "CLOCK7",
-    SubTitle = "by redz9999 | تم التعديل بواسطة المساعد",
-    SaveFolder = "SAHUB_RP_Config"
+    SubTitle = "by DBLACK",
+    SaveFolder = "CLOCK7"
 })
 
 Window:AddMinimizeButton({
@@ -367,16 +367,15 @@ local infoTab = Window:MakeTab({
 
 infoTab:AddDiscordInvite({
     Name = ")نضم الي قناه التلجرام",
-    Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات SAHUB",
+    Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات CLOCK7",
     Logo = "rbxthumb://type=Asset&id=123219039049746&w=150&h=150",
     Invite = "https://t.me/+vae_mFHVJRBmY2Fk"
 })
 
 infoTab:AddSection({ "مطوري السكربت" })
-infoTab:AddParagraph({ "المطور / المساهمين:", "EnJOY (Telegram: @tr_74, TIKTOK: @tr_67_)" })
-infoTab:AddParagraph({ "المساعدين في التطوير:", "LA, ALFA, CAPTAIN, ZORO, HISTORIA" })
+infoTab:AddParagraph({ "المطور / المساهمين:", "EnJOY (Telegram: XlEAQ1)" })
 infoTab:AddParagraph({ "اسم السكربت الرئيسي:", "CLOCk7" })
-infoTab:AddParagraph({ "الوصف:", "سكربت متكامل لخادم SAHUB RP مع جميع الأدوات والمميزات" })
+infoTab:AddParagraph({ "الوصف:", "سكربت متكامل لخادم CLOCK7.2.0v مع جميع الأدوات والمميزات" })
 
 infoTab:AddSection({ "إعادة الدخول" })
 infoTab:AddButton({
