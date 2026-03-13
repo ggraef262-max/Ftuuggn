@@ -8,52 +8,53 @@ local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local PlayerMouse = Player:GetMouse()
 
+
 local redzlib = {
 	Themes = {
 		Darker = {
 			["Color Hub 1"] = ColorSequence.new({
 				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(25, 25, 25)),
 				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(32.5, 32.5, 32.5)),
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 0)) -- تغيير إلى أحمر غامق
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 139)) -- أرجواني (دمج أحمر + أزرق)
 			}),
 			["Color Hub 2"] = Color3.fromRGB(30, 30, 30),
-			["Color Stroke"] = Color3.fromRGB(139, 0, 0), -- أحمر غامق
-			["Color Theme"] = Color3.fromRGB(200, 50, 50), -- أحمر فاتح قليلاً
+			["Color Stroke"] = Color3.fromRGB(139, 0, 139), -- أرجواني
+			["Color Theme"] = Color3.fromRGB(147, 0, 211), -- بنفسجي غامق
 			["Color Text"] = Color3.fromRGB(255, 255, 255),
 			["Color Dark Text"] = Color3.fromRGB(180, 180, 180),
-			-- إضافة ألوان الأيقونات الجديدة
-			["Icon Color Dark Red"] = Color3.fromRGB(200, 0, 0), -- أحمر غامق واضح
-			["Icon Color Dark Blue"] = Color3.fromRGB(0, 0, 200) -- أزرق غامق واضح
+			-- ألوان الأيقونات المدمجة
+			["Icon Color Red Blue Mix"] = Color3.fromRGB(139, 0, 139), -- أرجواني (50% أحمر + 50% أزرق)
+			["Icon Color Dark Purple"] = Color3.fromRGB(128, 0, 128) -- بنفسجي غامق
 		},
 		Dark = {
 			["Color Hub 1"] = ColorSequence.new({
 				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(40, 40, 40)),
 				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(47.5, 47.5, 47.5)),
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 0)) -- أحمر غامق
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(180, 0, 180)) -- أرجواني فاتح
 			}),
 			["Color Hub 2"] = Color3.fromRGB(45, 45, 45),
-			["Color Stroke"] = Color3.fromRGB(180, 0, 0), -- أحمر غامق
-			["Color Theme"] = Color3.fromRGB(220, 60, 60), -- أحمر فاتح
+			["Color Stroke"] = Color3.fromRGB(180, 0, 180), -- أرجواني
+			["Color Theme"] = Color3.fromRGB(200, 0, 255), -- بنفسجي
 			["Color Text"] = Color3.fromRGB(245, 245, 245),
-			["Color Dark Text"] = Color3.fromRGB(139, 0, 0), -- أحمر غامق
-			-- إضافة ألوان الأيقونات الجديدة
-			["Icon Color Dark Red"] = Color3.fromRGB(220, 0, 0), -- أحمر غامق واضح
-			["Icon Color Dark Blue"] = Color3.fromRGB(0, 0, 220) -- أزرق غامق واضح
+			["Color Dark Text"] = Color3.fromRGB(139, 0, 139), -- أرجواني
+			-- ألوان الأيقونات المدمجة
+			["Icon Color Red Blue Mix"] = Color3.fromRGB(180, 0, 180), -- أرجواني فاتح
+			["Icon Color Dark Purple"] = Color3.fromRGB(150, 0, 200) -- بنفسجي
 		},
 		Purple = {
 			["Color Hub 1"] = ColorSequence.new({
 				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(27.5, 25, 30)),
 				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(32.5, 32.5, 32.5)),
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 0)) -- أحمر غامق
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(200, 0, 255)) -- بنفسجي فاتح
 			}),
 			["Color Hub 2"] = Color3.fromRGB(30, 30, 30),
-			["Color Stroke"] = Color3.fromRGB(150, 0, 0), -- أحمر غامق
-			["Color Theme"] = Color3.fromRGB(200, 0, 200), -- بنفسجي
+			["Color Stroke"] = Color3.fromRGB(200, 0, 255), -- بنفسجي
+			["Color Theme"] = Color3.fromRGB(255, 0, 255), -- أرجواني
 			["Color Text"] = Color3.fromRGB(240, 240, 240),
 			["Color Dark Text"] = Color3.fromRGB(180, 180, 180),
-			-- إضافة ألوان الأيقونات الجديدة
-			["Icon Color Dark Red"] = Color3.fromRGB(200, 0, 0), -- أحمر غامق واضح
-			["Icon Color Dark Blue"] = Color3.fromRGB(100, 0, 255) -- أزرق بنفسجي
+			-- ألوان الأيقونات المدمجة
+			["Icon Color Red Blue Mix"] = Color3.fromRGB(200, 0, 255), -- بنفسجي
+			["Icon Color Dark Purple"] = Color3.fromRGB(150, 0, 255) -- أزرق بنفسجي
 		}
 	},
 	Info = {
@@ -71,15 +72,15 @@ local redzlib = {
 	Options = {},
 	Flags = {},
 	Tabs = {},
-	-- إضافة دالة جديدة لتلوين الأيقونات
+	-- إضافة ألوان مدمجة للأيقونات
 	IconColors = {
-		DarkRed = "Icon Color Dark Red",
-		DarkBlue = "Icon Color Dark Blue"
+		RedBlueMix = "Icon Color Red Blue Mix", -- أحمر + أزرق = أرجواني
+		DarkPurple = "Icon Color Dark Purple" -- بنفسجي غامق
 	},
 	Icons = (function()
 	  -- This file was @Engoy by Tarmac. It is not intended for manual editing.
-		return {
-			["accessibility"] = "rbxassetid://10709751939",
+		return {	
+["accessibility"] = "rbxassetid://10709751939",
 			["activity"] = "rbxassetid://10709752035",
 			["airvent"] = "rbxassetid://10709752131",
 			["airplay"] = "rbxassetid://10709752254",
