@@ -1035,3 +1035,486 @@ rpTab:AddButton({
     end
 })
 
+local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://135851813855145" })
+
+
+TrollTab:AddSection({ "ثقب اسود" })
+TrollTab:AddButton({
+    Name = "V2(هالة ابواب💥)",
+    Description = "تدوير الابواب والسيارات حول اللاعب",
+    Callback = function()
+    local Players, RunService, LocalPlayer, Workspace = game:GetService("Players"), game:GetService("RunService"), game:GetService("Players").LocalPlayer, game:GetService("Workspace")
+
+local gui = Instance.new("ScreenGui", game.CoreGui)
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 300, 0, 200)
+frame.Position = UDim2.new(0.4, 0, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(110, 0, 0)
+frame.Active = true
+frame.Draggable = true
+
+local nameBox = Instance.new("TextBox", frame)
+nameBox.Size = UDim2.new(0, 280, 0, 30)
+nameBox.Position = UDim2.new(0, 10, 0, 10)
+nameBox.PlaceholderText = "اكتب اسم اللاعب"
+nameBox.TextScaled = true
+
+local radiusBox = Instance.new("TextBox", frame)
+radiusBox.Size = UDim2.new(0, 280, 0, 30)
+radiusBox.Position = UDim2.new(0, 10, 0, 50)
+radiusBox.PlaceholderText = "اكتب نصف القطر"
+radiusBox.Text = "10"
+radiusBox.TextScaled = true
+
+local toggleButton = Instance.new("TextButton", frame)
+toggleButton.Size = UDim2.new(0, 280, 0, 30)
+toggleButton.Position = UDim2.new(0, 10, 0, 90)
+toggleButton.Text = "Bring | مطفي"
+toggleButton.TextScaled = true
+
+local modeButton = Instance.new("TextButton", frame)
+modeButton.Size = UDim2.new(0, 280, 0, 30)
+modeButton.Position = UDim2.new(0, 10, 0, 130)
+modeButton.Text = "الوضع : تجميع"
+modeButton.TextScaled = true
+
+local parts, active, rotateMode, connection = {}, false, false, nil
+local targetPlayer, hrp
+
+local function getPlayer(name)
+	for _, p in ipairs(Players:GetPlayers()) do
+		if p.Name:lower():find(name:lower()) or p.DisplayName:lower():find(name:lower()) then
+			return p
+		end
+	end
+end
+
+local function forcePart(part)
+	if part:IsA("BasePart") and not part.Anchored and not part.Parent:FindFirstChildOfClass("Humanoid") and part.Name ~= "Handle" then
+		for _, c in ipairs(part:GetChildren()) do
+			if c:IsA("BodyMover") or c:IsA("AlignPosition") then
+				c:Destroy()
+			end
+		end
+		part.CanCollide = false
+		local att = Instance.new("Attachment", part)
+		local align = Instance.new("AlignPosition", part)
+		align.Attachment0 = att
+		align.RigidityEnabled = false
+		align.Mode = Enum.PositionAlignmentMode.OneAttachment
+		align.MaxForce = 1e9
+		align.Responsiveness = 200
+		table.insert(parts, {part=part, att=att, align=align})
+	end
+end
+
+local function startBring()
+	active = true
+	toggleButton.Text = "Bring | شغال"
+	for _, v in ipairs(Workspace:GetDescendants()) do forcePart(v) end
+	connection = Workspace.DescendantAdded:Connect(forcePart)
+end
+
+local function stopBring()
+	active = false
+	toggleButton.Text = "Bring | مطفي"
+	if connection then connection:Disconnect() end
+	for _, p in ipairs(parts) do
+		if p.part and p.part:IsDescendantOf(Workspace) then
+			p.part.CanCollide = true
+			p.att:Destroy()
+			p.align:Destroy()
+		end
+	end
+	parts = {}
+end
+
+toggleButton.MouseButton1Click:Connect(function()
+	targetPlayer = getPlayer(nameBox.Text)
+	if targetPlayer then
+		hrp = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+		if hrp then
+			if not active then
+				startBring()
+			else
+				stopBring()
+			end
+		end
+	end
+end)
+
+modeButton.MouseButton1Click:Connect(function()
+	rotateMode = not rotateMode
+	modeButton.Text = rotateMode and "الوضع : دوران" or "الوضع : تجميع"
+end)
+
+RunService.Heartbeat:Connect(function()
+	if active and hrp then
+		local radius = tonumber(radiusBox.Text) or 10
+		local timeNow = tick()
+		for i, data in ipairs(parts) do
+			local part, att, align = data.part, data.att, data.align
+			if rotateMode then
+				local angle = (2 * math.pi / #parts) * i + timeNow*1.5
+				local pos = hrp.Position + Vector3.new(math.cos(angle)*radius, 3, math.sin(angle)*radius)
+				align.Position = pos
+			else
+				align.Position = hrp.Position + Vector3.new(0, 3, 0)
+			end
+		end
+	end
+end)
+
+    end
+})
+TrollTab:AddButton({
+    Name = "تجميد لاعبoff/on",
+    Description = "تجميد لاعب فقطoff/on",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/DezomXHub/DemozX/main/freezing.txt"))()
+    end
+})
+
+TrollTab:AddSection({ "تدبيل طيارات" })
+TrollTab:AddButton({
+    Name = "تدبيل طيارات عل سبون",
+    Description = "تدبيل طيارات يصمط السيرفر😉",
+    Callback = function()
+-- === ✅ سكربت تشغيل تدبير الطائرات (يعمل فورًا) ===
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local TextChatService = game:GetService("TextChatService")
+local player = Players.LocalPlayer
+
+-- === حفظ الموقع الأصلي فورًا ===
+local Character = player.Character or player.CharacterAdded:Wait()
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+local originalPosition = HumanoidRootPart.Position
+print("✅ تم حفظ الموقع الأصلي:", originalPosition)
+
+-- إعدادات الطائرات
+local clickDetector = Workspace.WorkspaceCom["001_Airport"].AirportHanger["001_JetCloneButton"].Button.ClickDetector
+local jetStorage = Workspace.WorkspaceCom["001_Airport"].AirportHanger["001_JetStorage"]
+local buttonPosition = Vector3.new(498.99, -19.52, 278.73)
+local targetPosition = Vector3.new(-26.20, 98.02, 17.45)
+local voidPosition = Vector3.new(0, -1000, 0)
+
+-- دالة: إيجاد أول جزء فيطري للطائرة
+local function getFirstPart(jet)
+    for _, part in ipairs(jet:GetDescendants()) do
+        if part:IsA("BasePart") then
+            return part
+        end
+    end
+    return nil
+end
+
+-- دالة: نقل الطائرة وتثبيتها
+local function teleportAndStabilizeJet(jet, position)
+    local primaryPart = getFirstPart(jet)
+    if not primaryPart then return false end
+    for _ = 1, 5 do
+        pcall(function()
+            jet.PrimaryPart = primaryPart
+            primaryPart.Anchored = false
+            jet:SetPrimaryPartCFrame(CFrame.new(position) * CFrame.Angles(0, math.rad(90), 0))
+            task.wait(0.5)
+            primaryPart.Velocity = Vector3.new(0, 0, 0)
+            primaryPart.RotVelocity = Vector3.new(0, 0, 0)
+        end)
+        if jet.PrimaryPart and (jet.PrimaryPart.Position - position).Magnitude < 10 then
+            return true
+        end
+        task.wait(0.5)
+    end
+    return false
+end
+
+-- إزالة الطائرات القديمة
+for _, jet in ipairs(jetStorage:GetChildren()) do
+    if jet:IsA("Model") then
+        local primaryPart = getFirstPart(jet)
+        if primaryPart and (primaryPart.Position - buttonPosition).Magnitude < 50 then
+            teleportAndStabilizeJet(jet, voidPosition)
+            task.wait(0.5)
+        end
+    end
+end
+
+-- إرسال رسالة في الشات
+if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("hi\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer:🚀[DemoZHub]")
+else 
+    print("Nadaa")
+end
+
+-- === بدء سبام الطائرات ===
+local running = true
+local loop = RunService.Heartbeat:Connect(function()
+    if not running then return end
+
+    -- النقر على زر إنشاء الطائرة
+    fireclickdetector(clickDetector)
+
+    -- نقل اللاعب إلى زر الطائرة
+    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        player.Character:SetPrimaryPartCFrame(CFrame.new(buttonPosition))
+    end
+
+    task.wait(0.5)
+
+    -- انتظار طائرة جديدة
+    local newJet = nil
+    for _ = 1, 10 do
+        for _, jet in ipairs(jetStorage:GetChildren()) do
+            if jet:IsA("Model") and not newJet then
+                local primaryPart = getFirstPart(jet)
+                if primaryPart and (primaryPart.Position - buttonPosition).Magnitude < 100 then
+                    newJet = jet
+                    break
+                end
+            end
+        end
+        if newJet then break end
+        task.wait(0.5)
+    end
+
+    -- نقل الطائرة إلى الهدف
+    if newJet then
+        while running and not teleportAndStabilizeJet(newJet, targetPosition) do
+            task.wait(0.5)
+        end
+    else
+        task.wait(0.5)
+    end
+end)
+
+-- حفظ الحلقة والموقع للاستخدام لاحقًا (مفيد للإيقاف)
+_G.AirplaneSpam = {
+    Loop = loop,
+    OriginalPosition = originalPosition,
+    Running = running
+}
+
+print("🚀 تم تشغيل تدبير الطائرات!")
+  end
+})
+TrollTab:AddButton({
+    Name = "ايقاف",
+    Description = "",
+    Callback = function()
+-- 🛑 لإيقاف السبام وإعادة اللاعب:
+if _G.AirplaneSpam and _G.AirplaneSpam.Loop then
+    _G.AirplaneSpam.Loop:Disconnect()
+    game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(_G.AirplaneSpam.OriginalPosition))
+    print("🛑 تم الإيقاف")
+end
+    end
+})
+
+
+TrollTab:AddSection({ "سكربت الابواب" })
+TrollTab:AddButton({
+    Name = " سكربت ابواب الجديدV2",
+    Description = "اكتب هنا اسم لاعب وشغل اذا ما صار شي فعل طيران وجمع ابواب ",
+    Callback = function()
+        -- Gui to
+-- Version: 3.2
+
+-- Gui to Lua - إصدار كامل مع زر Toggle وBring Parts
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+
+-- GUI
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "Gui"
+Gui.Parent = gethui and gethui() or game.CoreGui
+Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Parent = Gui
+Main.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+Main.BorderColor3 = Color3.fromRGB(120, 0, 0)
+Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.33, 0, 0.54, 0)
+Main.Size = UDim2.new(0.24, 0, 0.17, 0)
+Main.Active = true
+Main.Draggable = true
+
+local Box = Instance.new("TextBox")
+Box.Name = "Box"
+Box.Parent = Main
+Box.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
+Box.BorderSizePixel = 0
+Box.Position = UDim2.new(0.1, 0, 0.22, 0)
+Box.Size = UDim2.new(0.8, 0, 0.37, 0)
+Box.Font = Enum.Font.SourceSansBold
+Box.PlaceholderText = "Player here"
+Box.Text = ""
+Box.TextColor3 = Color3.fromRGB(255, 255, 255)
+Box.TextScaled = true
+Box.TextWrapped = true
+local UITextSizeConstraint = Instance.new("UITextSizeConstraint", Box)
+UITextSizeConstraint.MaxTextSize = 31
+
+local Label = Instance.new("TextLabel")
+Label.Name = "Label"
+Label.Parent = Main
+Label.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+Label.BorderSizePixel = 2
+Label.Size = UDim2.new(1, 0, 0.16, 0)
+Label.Font = Enum.Font.Nunito
+Label.Text = "المطور: Rami | BY @Sajwaad"
+Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+Label.TextScaled = true
+Label.TextWrapped = true
+local UITextSizeConstraint_2 = Instance.new("UITextSizeConstraint", Label)
+UITextSizeConstraint_2.MaxTextSize = 21
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Parent = Main
+Button.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+Button.BorderSizePixel = 2
+Button.Position = UDim2.new(0.18, 0, 0.65, 0)
+Button.Size = UDim2.new(0.63, 0, 0.28, 0)
+Button.Font = Enum.Font.Nunito
+Button.Text = "Bring | مطفي"
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.TextWrapped = true
+local UITextSizeConstraint_3 = Instance.new("UITextSizeConstraint", Button)
+UITextSizeConstraint_3.MaxTextSize = 28
+
+local ToggleButton = Instance.new("ImageButton")
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Parent = Gui
+ToggleButton.BackgroundTransparency = 0.3
+ToggleButton.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Position = UDim2.new(0.01, 0, 0.45, 0)
+ToggleButton.Size = UDim2.new(0.05, 0, 0.09, 0)
+ToggleButton.Image = "rbxassetid://107728948792167"
+ToggleButton.Active = true
+ToggleButton.Draggable = true
+
+-- Bring Parts System
+local character
+local humanoidRootPart
+local player = nil
+local blackHoleActive = false
+local DescendantAddedConnection
+
+local Folder = Instance.new("Folder", Workspace)
+local Part = Instance.new("Part", Folder)
+local Attachment1 = Instance.new("Attachment", Part)
+Part.Anchored = true
+Part.CanCollide = false
+Part.Transparency = 1
+
+getgenv().Network = getgenv().Network or {
+    BaseParts = {},
+    Velocity = Vector3.new(14.46, 14.46, 14.46)
+}
+
+local function RetainPart(Part)
+    if Part:IsA("BasePart") and Part:IsDescendantOf(Workspace) then
+        table.insert(Network.BaseParts, Part)
+        Part.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+        Part.CanCollide = false
+    end
+end
+
+RunService.Heartbeat:Connect(function()
+    sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
+    for _, Part in pairs(Network.BaseParts) do
+        if Part:IsDescendantOf(Workspace) then
+            Part.Velocity = Network.Velocity
+        end
+    end
+end)
+
+local function ForcePart(v)
+    if v:IsA("BasePart") and not v.Anchored and not v.Parent:FindFirstChildOfClass("Humanoid") and not v.Parent:FindFirstChild("Head") and v.Name ~= "Handle" then
+        for _, x in ipairs(v:GetChildren()) do
+            if x:IsA("BodyMover") or x:IsA("RocketPropulsion") then
+                x:Destroy()
+            end
+        end
+        for _, name in pairs({"Attachment", "AlignPosition", "Torque"}) do
+            if v:FindFirstChild(name) then v:FindFirstChild(name):Destroy() end
+        end
+        v.CanCollide = false
+        local Torque = Instance.new("Torque", v)
+        Torque.Torque = Vector3.new(100000, 100000, 100000)
+        local AlignPosition = Instance.new("AlignPosition", v)
+        local Attachment2 = Instance.new("Attachment", v)
+        Torque.Attachment0 = Attachment2
+        AlignPosition.MaxForce = math.huge
+        AlignPosition.MaxVelocity = math.huge
+        AlignPosition.Responsiveness = 200
+        AlignPosition.Attachment0 = Attachment2
+        AlignPosition.Attachment1 = Attachment1
+    end
+end
+
+local function toggleBlackHole()
+    blackHoleActive = not blackHoleActive
+    if blackHoleActive then
+        Button.Text = "Bring | شغال"
+        for _, v in ipairs(Workspace:GetDescendants()) do
+            ForcePart(v)
+        end
+        DescendantAddedConnection = Workspace.DescendantAdded:Connect(function(v)
+            if blackHoleActive then ForcePart(v) end
+        end)
+        spawn(function()
+            while blackHoleActive and RunService.RenderStepped:Wait() do
+                Attachment1.WorldCFrame = humanoidRootPart.CFrame
+            end
+        end)
+    else
+        Button.Text = "Bring | مطفي"
+        if DescendantAddedConnection then DescendantAddedConnection:Disconnect() end
+    end
+end
+
+local function getPlayer(name)
+    local lowerName = string.lower(name)
+    for _, p in pairs(Players:GetPlayers()) do
+        if string.find(string.lower(p.Name), lowerName) or string.find(string.lower(p.DisplayName), lowerName) then
+            return p
+        end
+    end
+end
+
+Box.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        player = getPlayer(Box.Text)
+        if player then
+            Box.Text = player.Name
+        end
+    end
+end)
+
+Button.MouseButton1Click:Connect(function()
+    if player then
+        character = player.Character or player.CharacterAdded:Wait()
+        humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        toggleBlackHole()
+    end
+end)
+
+ToggleButton.MouseButton1Click:Connect(function()
+    Main.Visible = not Main.Visible
+end)
+
+    end
+})
