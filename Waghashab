@@ -1619,8 +1619,24 @@ function redzlib:MakeWindow(Configs)
 		}), "DarkText")
 	}), "Text")
 	
+	local SearchBox = Create("TextBox", Components, {
+		Size = UDim2.new(0, redzlib.Save.TabSize - 20, 0, 25),
+		Position = UDim2.new(0, 10, 0, 35),
+		BackgroundColor3 = Theme["Color Hub 2"],
+		BackgroundTransparency = 0.2,
+		PlaceholderText = "🔍 بحث...",
+		PlaceholderColor3 = Theme["Color Dark Text"],
+		Text = "",
+		TextColor3 = Theme["Color Text"],
+		Font = Enum.Font.GothamMedium,
+		TextSize = 12,
+		Visible = false,
+		ZIndex = 5
+	})
+	Make("Corner", SearchBox, UDim.new(0, 6))
+	
 	local MainScroll = InsertTheme(Create("ScrollingFrame", Components, {
-		Size = UDim2.new(0, redzlib.Save.TabSize, 1, -TopBar.Size.Y.Offset),
+		Size = UDim2.new(0, redzlib.Save.TabSize, 1, -TopBar.Size.Y.Offset - 35),
 		ScrollBarImageColor3 = Theme["Color Theme"],
 		Position = UDim2.new(0, 0, 1, 0),
 		AnchorPoint = Vector2.new(0, 1),
@@ -1673,7 +1689,8 @@ function redzlib:MakeWindow(Configs)
 		ControlSize1.Position = UDim2.fromOffset(math.clamp(Pos1.X.Offset, 430, 1000), math.clamp(Pos1.Y.Offset, 200, 500))
 		ControlSize2.Position = UDim2.new(0, math.clamp(Pos2.X.Offset, 135, 250), 1, 0)
 		
-		MainScroll.Size = UDim2.new(0, ControlSize2.Position.X.Offset, 1, -TopBar.Size.Y.Offset)
+		MainScroll.Size = UDim2.new(0, ControlSize2.Position.X.Offset, 1, -TopBar.Size.Y.Offset - 35)
+		SearchBox.Size = UDim2.new(0, ControlSize2.Position.X.Offset - 20, 0, 25)
 		Containers.Size = UDim2.new(1, -MainScroll.Size.X.Offset, 1, -TopBar.Size.Y.Offset)
 		MainFrame.Size = ControlSize1.Position
 	end
@@ -1716,9 +1733,24 @@ function redzlib:MakeWindow(Configs)
 		Name = "Minimize"
 	})
 	
+	local SearchButton = SetProps(CloseButton:Clone(), {
+		Position = UDim2.new(1, -68, 0.5),
+		BackgroundColor3 = Theme["Color Theme"],
+		Image = "rbxassetid://10734943674",
+		Name = "Search"
+	})
+	
+	SearchButton.MouseButton1Click:Connect(function()
+		SearchBox.Visible = not SearchBox.Visible
+		if SearchBox.Visible then
+			SearchBox:CaptureFocus()
+		end
+	end)
+	
 	SetChildren(ButtonsFolder, {
 		CloseButton,
-		MinimizeButton
+		MinimizeButton,
+		SearchButton
 	})
 	
 	local Minimized, SaveSize, WaitClick
@@ -1726,6 +1758,19 @@ function redzlib:MakeWindow(Configs)
 	
 	AddTooltip(CloseButton, "إغلاق")
 	AddTooltip(MinimizeButton, "تصغير")
+	AddTooltip(SearchButton, "بحث")
+	
+	SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+		local searchText = SearchBox.Text:lower()
+		for _, tab in pairs(MainScroll:GetChildren()) do
+			if tab:IsA("TextButton") then
+				local title = tab:FindFirstChild("TextLabel")
+				if title then
+					tab.Visible = searchText == "" or title.Text:lower():find(searchText)
+				end
+			end
+		end
+	end)
 	
 	function Window:CloseBtn()
 		local Dialog = Window:Dialog({
