@@ -1,5 +1,5 @@
--- SAHUB RP - النسخة المحسنة والمصقولة بالكامل
--- تم إعادة هيكلته وإصلاح جميع الأخطاء بواسطة المساعد
+-- Clock7 RP - النسخة المحسنة والمصقولة بالكامل
+-- تم إعادة هيكلته وتعديله بواسطة DBLACK
 
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
@@ -134,7 +134,7 @@ local function createIntro()
     titleLabel.Position = UDim2.new(-0.6, 0, 0.58, 0)
     titleLabel.AnchorPoint = Vector2.new(0.5, 0)
     titleLabel.BackgroundTransparency = 1
-    titleLabel.Text = "منتظر SAHUB RP"
+    titleLabel.Text = "منتظر Clock7 RP"
     titleLabel.TextColor3 = Color3.fromRGB(147, 112, 219)
     titleLabel.Font = Enum.Font.GothamBold
     titleLabel.TextScaled = true
@@ -177,7 +177,6 @@ local function createIntro()
     shineCorner.CornerRadius = UDim.new(0, 12)
     shineCorner.Parent = shineEffect
 
-    -- Animations
     TweenService:Create(titleLabel, TweenInfo.new(1.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
         Position = UDim2.new(0.5, 0, 0.58, 0)
     }):Play()
@@ -192,7 +191,6 @@ local function createIntro()
     })
     progressTween:Play()
 
-    -- تأثير اللمعان المتحرك
     coroutine.wrap(function()
         while true do
             local shineTween = TweenService:Create(shineEffect, TweenInfo.new(2, Enum.EasingStyle.Linear), {
@@ -204,7 +202,6 @@ local function createIntro()
         end
     end)()
 
-    -- تأثير النجوم المتساقطة
     local isIntroActive = true
     coroutine.wrap(function()
         while isIntroActive do
@@ -247,7 +244,6 @@ local function createIntro()
     progressTween.Completed:Wait()
     isIntroActive = false
 
-    -- تأثير الخروج
     local fadeOutElements = {darkFrame, starImage, logoImage, titleLabel, progressBarFrame, progressFill, shineEffect}
     for _, element in ipairs(fadeOutElements) do
         local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
@@ -271,25 +267,21 @@ local function createIntro()
     screenGui:Destroy()
 end
 
--- تشغيل الاستقبال
 local success, err = pcall(createIntro)
 if not success then
     warn("خطأ في الاستقبال: " .. tostring(err))
 end
 
--- ======================
--- الأصوات والإشعارات
--- ======================
 playSound("9086208751", 0.5)
 
 wait(0.3)
 
 sendNotification("مرحبا", "تم التحميل بنجاح")
-wait(0.1)
-sendNotification("اهلا/ا CLOCK7.2.0v", "تم التفعيل")
-wait(0.1)
+wait(1)
+sendNotification("اهلا Clock7", "تم التفعيل")
+wait(2)
 sendNotification("تم التفعيل بنجاح", "السكربت جاهز للاستخدام")
-wait(0.1)
+wait(0.2)
 
 -- ======================
 -- إعدادات RP الأساسية
@@ -310,7 +302,7 @@ local function setRPBioColor(color)
     fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPBioColor", color)
 end
 
-setRPName("CLOCK7")
+setRPName("Clock7 RP")
 setRPNameColor(Color3.fromRGB(113, 8, 187))
 wait(0.2)
 setRPBio("منتظر/ا ENJOY")
@@ -321,9 +313,9 @@ setRPBioColor(Color3.new(0, 0, 0))
 -- ======================
 local Library = loadstring(game:HttpGet("https://pastefy.app/7vqxhuxq/raw"))()
 local Window = Library:MakeWindow({
-    Title = "CLOCK7",
+    Title = "Clock7 RP",
     SubTitle = "by DBLACK",
-    SaveFolder = "CLOCK7"
+    SaveFolder = "Clock7_RP_Config"
 })
 
 Window:AddMinimizeButton({
@@ -366,16 +358,14 @@ local infoTab = Window:MakeTab({
 })
 
 infoTab:AddDiscordInvite({
-    Name = ")نضم الي قناه التلجرام",
-    Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات CLOCK7",
+    Name = "قناة التليجرام ENJOY",
+    Description = "انضم لقناتنا على التليجرام للحصول على آخر التحديثات Clock7",
     Logo = "rbxthumb://type=Asset&id=123219039049746&w=150&h=150",
-    Invite = "https://t.me/+vae_mFHVJRBmY2Fk"
+    Invite = "https://t.me/ENJOE_saHUB"
 })
 
 infoTab:AddSection({ "مطوري السكربت" })
-infoTab:AddParagraph({ "المطور / المساهمين:", "EnJOY (Telegram: XlEAQ1)" })
-infoTab:AddParagraph({ "اسم السكربت الرئيسي:", "CLOCk7" })
-infoTab:AddParagraph({ "الوصف:", "سكربت متكامل لخادم CLOCK7.2.0v مع جميع الأدوات والمميزات" })
+infoTab:AddParagraph({ "المطور:", "DBLACK" })
 
 infoTab:AddSection({ "إعادة الدخول" })
 infoTab:AddButton({
