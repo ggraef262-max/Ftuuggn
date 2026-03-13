@@ -381,3 +381,75 @@ infoTab:AddButton({
         TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
     end
 })
+
+-- ======================
+-- تبويب الشخصيات
+-- ======================
+local charactersTab = Window:MakeTab({ 
+    Title = "الشخصيات [الملابس والإكسسوارات]",
+    Icon = "rbxassetid://10747382750" 
+})
+
+charactersTab:AddSection({ "شخصيات مميزة" })
+
+charactersTab:AddButton({
+    Name = "تغيير الشخصية الافتراضية",
+    Callback = function()
+        local remote = safeGetRemote({"Remotes", "ChangeCharacterBody"})
+        if remote then
+            remote:InvokeServer({0, 0, 0, 0, 0, 3210773801})
+            sendNotification("شخصية", "تم تغيير الشخصية", nil, 2)
+        end
+    end
+})
+
+charactersTab:AddButton({
+    Name = "شخصية ديناميت",
+    Callback = function()
+        local remote = safeGetRemote({"Remotes", "ChangeCharacterBody"})
+        if remote then
+            remote:InvokeServer({0, 0, 0, 0, 0, 134082579})
+            sendNotification("شخصية", "تم تغيير الشخصية", nil, 2)
+        end
+    end
+})
+
+charactersTab:AddButton({
+    Name = "شخصية روبلوكس",
+    Callback = function()
+        fireRemote({"RE", "1Avata1rOrigina1l"}, "CharacterChange", {1, 1, 1, 1, 1, 746767604}, "Roblox20")
+        sendNotification("شخصية", "تم تغيير الشخصية", nil, 2)
+    end
+})
+
+charactersTab:AddButton({
+    Name = "شخصية المهرج",
+    Callback = function()
+        local remote = safeGetRemote({"Remotes", "ChangeCharacterBody"})
+        if remote then
+            remote:InvokeServer({0, 0, 0, 0, 0, 16580493236})
+            sendNotification("شخصية", "تم تغيير الشخصية", nil, 2)
+        end
+    end
+})
+
+charactersTab:AddButton({
+    Name = "شخصية غامضة",
+    Callback = function()
+        fireRemote({"RE", "1Avata1rOrigina1l"}, "CharacterChange", {16367059899, 16367059899, 16367059899, 16367059899, 16367059899, 0}, "Boy")
+        sendNotification("شخصية", "تم تغيير الشخصية", nil, 2)
+    end
+})
+
+charactersTab:AddSection({ "ملابس للجسد" })
+
+charactersTab:AddButton({
+    Name = "تيشرت اسود للجسد",
+    Callback = function()
+        local remote = safeGetRemote({"Remotes", "ChangeCharacterBody"})
+        if remote then
+            remote:InvokeServer({0, 0, 0, 0, 14547141120, 1})
+            sendNotification("ملابس", "تم تغيير الملابس", nil, 2)
+        end
+    end
+})
