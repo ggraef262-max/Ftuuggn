@@ -47,7 +47,6 @@ local redzlib = {
 			["Color Text"] = Color3.fromRGB(240, 240, 240),
 			["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
 		},
-		-- إضافة ثيمات جديدة مذهلة ✨
 		Neon = {
 			["Color Hub 1"] = ColorSequence.new({
 				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 10, 20)),
@@ -83,6 +82,21 @@ local redzlib = {
 			["Color Theme"] = Color3.fromRGB(0, 150, 200),
 			["Color Text"] = Color3.fromRGB(200, 240, 255),
 			["Color Dark Text"] = Color3.fromRGB(100, 180, 200)
+		},
+		-- ثيم البوليس (نصف احمر ونصف ازرق) ✨
+		Police = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(20, 20, 40)),
+				ColorSequenceKeypoint.new(0.48, Color3.fromRGB(30, 30, 60)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(200, 0, 0)),
+				ColorSequenceKeypoint.new(0.52, Color3.fromRGB(30, 30, 60)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 139))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(25, 25, 45),
+			["Color Stroke"] = Color3.fromRGB(200, 0, 0),
+			["Color Theme"] = Color3.fromRGB(0, 0, 255),
+			["Color Text"] = Color3.fromRGB(255, 255, 255),
+			["Color Dark Text"] = Color3.fromRGB(200, 200, 200)
 		}
 	},
 	Info = {
