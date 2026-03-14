@@ -179,7 +179,7 @@ infoTab:AddButton({
 -- ======================
 local charactersTab = Window:MakeTab({ 
     Title = "الشخصيات [الملابس والإكسسوارات]",
-    Icon = "rbxassetid://10747382750" 
+    Icon = "rbxassetid://90798133906684" 
 })
 
 charactersTab:AddSection({ "شخصيات مميزة" })
@@ -251,7 +251,7 @@ charactersTab:AddButton({
 -- ======================
 local chatTab = Window:MakeTab({ 
     Title = "سبام في الشات",
-    Icon = "rbxassetid://10747382750" 
+    Icon = "rbxassetid://90798133906684" 
 })
 
 local chatMessages = {}
@@ -314,7 +314,7 @@ end
 -- ======================
 local settingsTab = Window:MakeTab({ 
     Title = "إعدادات عامة [سرعة وقفز]",
-    Icon = "rbxassetid://10747382750" 
+    Icon = "rbxassetid://90798133906684" 
 })
 
 settingsTab:AddTextBox({
@@ -787,7 +787,7 @@ UniversalTab:AddButton({
   end,
 })
 
-BangTab = Window:MakeTab({"بانق","rbxassetid://"})
+BangTab = Window:MakeTab({"بانق","rbxassetid://90798133906684"})
 Players = game:GetService("Players")
 RunService = game:GetService("RunService")
 LocalPlayer = Players.LocalPlayer
@@ -871,9 +871,9 @@ function createBangToggle(name, yOffset, faceBang)
     })
 end
 
-createBangToggle("Bang v1 | خلفي v1", -1, false)
+createBangToggle("Bang v1 | خلفي v2", -1, false)
 createBangToggle("Bang v2 | خلفي v2", -1.5, false)
-createBangToggle("Face Bang v1 | أمامي v1", 1, true)
+createBangToggle("Face Bang v2 | أمامي v2", 1, true)
 createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
 
 -- ======================
@@ -881,7 +881,7 @@ createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
 -- ======================
 local rpTab = Window:MakeTab({ 
     Title = "الأسماء الوهمية والبايو",
-    Icon = "rbxassetid://" 
+    Icon = "rbxassetid://90798133906684" 
 })
 
 local rpNameRGBActive = false
@@ -996,7 +996,7 @@ rpTab:AddButton({
 })
 
 rpTab:AddButton({
-    Name = "بايو Tubers93",
+    Name = "BLACK|hub",
     Callback = function()
         fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "BLACK|hub")
         sendNotification("بايو", "تم تغيير البايو", nil, 2)
@@ -1004,7 +1004,7 @@ rpTab:AddButton({
 })
 
 rpTab:AddButton({
-    Name = "بايو 666",
+    Name = "CLOCK7|hub",
     Callback = function()
         fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "CLOCK7|hub")
         sendNotification("بايو", "تم تغيير البايو", nil, 2)
@@ -1020,7 +1020,7 @@ rpTab:AddButton({
 })
 
 rpTab:AddButton({
-    Name = "بايو <AYOUB<3",
+    Name = "بايو <RAEF<3",
     Callback = function()
         fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "<RAEF<3")
         sendNotification("بايو", "تم تغيير البايو", nil, 2)
@@ -1035,7 +1035,7 @@ rpTab:AddButton({
     end
 })
 
-local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://" })
+local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://90798133906684" })
 
 
 TrollTab:AddSection({ "ثقب اسود" })
@@ -1524,7 +1524,7 @@ end)
 -- ======================
 local musicTab = Window:MakeTab({ 
     Title = "سبامات والصوتيات",
-    Icon = "rbxassetid://" 
+    Icon = "rbxassetid://90798133906684" 
 })
 
 local audioList = {
@@ -1678,7 +1678,7 @@ musicTab:AddToggle({
     end
 })
 
-local UniversalTab = Window:MakeTab({"سكربتات متنوعة", "plane"})
+local UniversalTab = Window:MakeTab({"سكربتات", "plane"})
 
 -- Seção para Scripts Universais
 Section = UniversalTab:AddSection({
@@ -2501,4 +2501,3 @@ ClothingTab:CreateButton({
         WearItem(13463355223) 
     end
 })
-
