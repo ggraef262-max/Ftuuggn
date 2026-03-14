@@ -2316,3 +2316,189 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("
 end
 })
 
+
+-- 1. قسم الرؤوس
+local HeadsTab = Window:CreateTab("الرؤوس", 4483362458)
+HeadsTab:CreateSection("الرؤوس المخيفة")
+HeadsTab:CreateButton({
+    Name = "رأس الفرعون", 
+    Callback = function() 
+        WearItem(3210773801) 
+    end
+}) 
+
+HeadsTab:CreateButton({
+    Name = "رأس مومياء", 
+    Callback = function() 
+        WearItem(134082579) 
+    end
+})
+
+-- 2. قسم إضافات الملابس
+local ClothingTab = Window:CreateTab("إضافات ملابس", 4483362458)
+
+ClothingTab:CreateSection("إكسسوارات اليد")
+ClothingTab:CreateButton({
+    Name = "قفازات يد إسفنجية", 
+    Callback = function() 
+        WearItem(9239689111) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "ساعات يد", 
+    Callback = function() 
+        WearItem(89892588488089) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "ساعات كلاسيك بيضاء", 
+    Callback = function() 
+        WearItem(99429391843259) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "قفازات يد رياضية 1", 
+    Callback = function() 
+        WearItem(10789914680) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "قفازات يد رياضية 2", 
+    Callback = function() 
+        WearItem(11363898043) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "قفازات يد رياضية 3", 
+    Callback = function() 
+        WearItem(10791180072) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "قفازات يد أرجوان مخملي", 
+    Callback = function() 
+        WearItem(10871965173) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "قفازات يد كلاسيك", 
+    Callback = function() 
+        WearItem(10789939838) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "قفازات يد ألماس", 
+    Callback = function() 
+        WearItem(12379676852) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "إسفنج يد", 
+    Callback = function() 
+        WearItem(12825022709) 
+    end
+})
+
+ClothingTab:CreateSection("إكسسوارات الرقبة")
+ClothingTab:CreateButton({
+    Name = "سلاسل الشيطان كلاسيك", 
+    Callback = function() 
+        WearItem(14388006902) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "سلاسل الشيطان ألماس", 
+    Callback = function() 
+        WearItem(14388019333) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "سلاسل الشيطان أرجوان", 
+    Callback = function() 
+        WearItem(14387999337) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "سلاسل الشيطان يد", 
+    Callback = function() 
+        WearItem(14388004031) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "سلسلة فضية يد", 
+    Callback = function() 
+        WearItem(11433864064) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "سلسلة فضية أرجوان", 
+    Callback = function() 
+        WearItem(11111279400) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "سلسلة فضية أرجوان و ألماس", 
+    Callback = function() 
+        WearItem(11708887517) 
+    end
+})
+
+ClothingTab:CreateSection("أوشحة لليد")
+ClothingTab:CreateButton({
+    Name = "وشاح يد", 
+    Callback = function() 
+        WearItem(12465465333) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "وشاح أرجوان", 
+    Callback = function() 
+        WearItem(12465472210) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "وشاح ألماس", 
+    Callback = function() 
+        WearItem(12465376206) 
+    end
+})
+
+ClothingTab:CreateSection("الأوشحة")
+ClothingTab:CreateButton({
+    Name = "وشاح 1", 
+    Callback = function() 
+        WearItem(13463287248) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "وشاح 2", 
+    Callback = function() 
+        WearItem(3463272877) 
+    end
+})
+
+ClothingTab:CreateButton({
+    Name = "وشاح 4", 
+    Callback = function() 
+        WearItem(13463355223) 
+    end
+})
+
