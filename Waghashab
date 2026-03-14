@@ -5,6 +5,7 @@ local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
 local Player = Players.LocalPlayer
 local PlayerMouse = Player:GetMouse()
 
@@ -45,6 +46,43 @@ local redzlib = {
 			["Color Theme"] = Color3.fromRGB(150, 0, 255),
 			["Color Text"] = Color3.fromRGB(240, 240, 240),
 			["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
+		},
+		-- إضافة ثيمات جديدة مذهلة ✨
+		Neon = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 10, 20)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(20, 20, 40)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 255, 255))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(15, 15, 25),
+			["Color Stroke"] = Color3.fromRGB(0, 255, 255),
+			["Color Theme"] = Color3.fromRGB(0, 255, 255),
+			["Color Text"] = Color3.fromRGB(255, 255, 255),
+			["Color Dark Text"] = Color3.fromRGB(150, 255, 255)
+		},
+		Sunset = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(50, 20, 30)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(80, 30, 50)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 100, 50))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(40, 15, 25),
+			["Color Stroke"] = Color3.fromRGB(255, 100, 50),
+			["Color Theme"] = Color3.fromRGB(255, 80, 100),
+			["Color Text"] = Color3.fromRGB(255, 220, 200),
+			["Color Dark Text"] = Color3.fromRGB(200, 150, 150)
+		},
+		Ocean = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 30, 50)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 50, 80)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 200, 200))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(0, 25, 45),
+			["Color Stroke"] = Color3.fromRGB(0, 200, 200),
+			["Color Theme"] = Color3.fromRGB(0, 150, 200),
+			["Color Text"] = Color3.fromRGB(200, 240, 255),
+			["Color Dark Text"] = Color3.fromRGB(100, 180, 200)
 		}
 	},
 	Info = {
@@ -1375,7 +1413,7 @@ function redzlib:SetTheme(NewTheme)
 	SaveJson("redz library V5.json", redzlib.Save)
 	Theme = redzlib.Themes[NewTheme]
 	
-	Comnection:FireConnection("ThemeChanged", NewTheme)
+	Connection:FireConnection("ThemeChanged", NewTheme)
 	table.foreach(redzlib.Instances, function(_,Val)
 		if Val.Type == "Gradient" then
 			Val.Instance.Color = Theme["Color Hub 1"]
@@ -2693,6 +2731,389 @@ function redzlib:MakeWindow(Configs)
 			function DiscordInvite:Visible(...) Funcs:ToggleVisible(InviteHolder, ...) end
 			return DiscordInvite
 		end
+
+		-- ========== الإضافات الإبداعية الجديدة ==========
+		
+		-- 1. مؤقت زمني متحرك (Animated Timer)
+		function Tab:AddTimer(Configs)
+			local TimerName = Configs[1] or Configs.Name or "⏱️ Timer"
+			local TimerDesc = Configs.Desc or "Countdown timer"
+			local DefaultTime = Configs[2] or Configs.Default or 60
+			local Callback = Configs[3] or Configs.Callback or function() end
+			
+			local Frame, LabelFunc = ButtonFrame(Container, TimerName, TimerDesc, UDim2.new(1, -180))
+			
+			local TimerHolder = Create("Frame", Frame, {
+				Size = UDim2.new(0, 150, 0, 25),
+				Position = UDim2.new(1, -10, 0.5),
+				AnchorPoint = Vector2.new(1, 0.5),
+				BackgroundTransparency = 1
+			})
+			
+			local TimeLabel = InsertTheme(Create("TextLabel", TimerHolder, {
+				Size = UDim2.new(0.6, 0, 1, 0),
+				Position = UDim2.new(0, 0, 0.5),
+				AnchorPoint = Vector2.new(0, 0.5),
+				BackgroundTransparency = 1,
+				Text = tostring(DefaultTime),
+				TextColor3 = Theme["Color Theme"],
+				Font = Enum.Font.FredokaOne,
+				TextSize = 14
+			}), "Theme")
+			
+			local StartBtn = Create("TextButton", TimerHolder, {
+				Size = UDim2.new(0.35, 0, 1, 0),
+				Position = UDim2.new(1, 0, 0.5),
+				AnchorPoint = Vector2.new(1, 0.5),
+				Text = "▶",
+				Font = Enum.Font.GothamBold,
+				TextSize = 12,
+				BackgroundColor3 = Color3.fromRGB(50, 150, 50),
+				TextColor3 = Color3.fromRGB(255, 255, 255)
+			})Make("Corner", StartBtn, UDim.new(0, 4))
+			
+			local isRunning = false
+			local currentTime = DefaultTime
+			local connection
+			
+			local function UpdateTimer()
+				TimeLabel.Text = tostring(currentTime)
+				if currentTime <= 0 then
+					isRunning = false
+					StartBtn.Text = "▶"
+					StartBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+					Callback()
+					if connection then connection:Disconnect() end
+				end
+			end
+			
+			StartBtn.MouseButton1Click:Connect(function()
+				isRunning = not isRunning
+				if isRunning then
+					StartBtn.Text = "⏸"
+					StartBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+					connection = RunService.Heartbeat:Connect(function(dt)
+						if isRunning then
+							currentTime = currentTime - dt
+							UpdateTimer()
+						end
+					end)
+				else
+					StartBtn.Text = "▶"
+					StartBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+					if connection then connection:Disconnect() end
+				end
+			end)
+			
+			local Timer = {}
+			function Timer:SetTime(newTime)
+				currentTime = newTime
+				UpdateTimer()
+			end
+			function Timer:Visible(...) Funcs:ToggleVisible(Frame, ...) end
+			function Timer:Destroy() 
+				if connection then connection:Disconnect() end
+				Frame:Destroy() 
+			end
+			return Timer
+		end
+
+		-- 2. عداد النقرات (Click Counter)
+		function Tab:AddClickCounter(Configs)
+			local CName = Configs[1] or Configs.Name or "🖱️ Click Counter"
+			local CDesc = Configs.Desc or "Click the button!"
+			local Callback = Configs[2] or Configs.Callback or function() end
+			
+			local Frame, LabelFunc = ButtonFrame(Container, CName, CDesc, UDim2.new(1, -150))
+			
+			local CounterHolder = Create("Frame", Frame, {
+				Size = UDim2.new(0, 120, 0, 25),
+				Position = UDim2.new(1, -10, 0.5),
+				AnchorPoint = Vector2.new(1, 0.5),
+				BackgroundTransparency = 1
+			})
+			
+			local CountLabel = InsertTheme(Create("TextLabel", CounterHolder, {
+				Size = UDim2.new(0.4, 0, 1, 0),
+				Position = UDim2.new(0, 0, 0.5),
+				AnchorPoint = Vector2.new(0, 0.5),
+				BackgroundTransparency = 1,
+				Text = "0",
+				TextColor3 = Theme["Color Theme"],
+				Font = Enum.Font.FredokaOne,
+				TextSize = 16
+			}), "Theme")
+			
+			local ClickBtn = Create("TextButton", CounterHolder, {
+				Size = UDim2.new(0.55, 0, 1, 0),
+				Position = UDim2.new(1, 0, 0.5),
+				AnchorPoint = Vector2.new(1, 0.5),
+				Text = "Click!",
+				Font = Enum.Font.GothamBold,
+				TextSize = 10,
+				BackgroundColor3 = Theme["Color Theme"],
+				TextColor3 = Color3.fromRGB(255, 255, 255)
+			})Make("Corner", ClickBtn, UDim.new(0, 4))
+			
+			local count = 0
+			ClickBtn.MouseButton1Click:Connect(function()
+				count = count + 1
+				CountLabel.Text = tostring(count)
+				CreateTween({ClickBtn, "BackgroundColor3", Color3.fromRGB(255, 100, 100), 0.1})
+				CreateTween({ClickBtn, "BackgroundColor3", Theme["Color Theme"], 0.2})
+				Callback(count)
+			end)
+			
+			local Counter = {}
+			function Counter:Reset()
+				count = 0
+				CountLabel.Text = "0"
+			end
+			function Counter:Visible(...) Funcs:ToggleVisible(Frame, ...) end
+			return Counter
+		end
+
+		-- 3. مؤشر تقدم متحرك (Progress Bar)
+		function Tab:AddProgressBar(Configs)
+			local PName = Configs[1] or Configs.Name or "📊 Progress"
+			local PDesc = Configs.Desc or "Task completion"
+			local MaxValue = Configs[2] or Configs.Max or 100
+			local Default = Configs[3] or Configs.Default or 0
+			local Callback = Funcs:GetCallback(Configs, 4)
+			
+			local Frame, LabelFunc = ButtonFrame(Container, PName, PDesc, UDim2.new(1, -20))
+			
+			local ProgressHolder = Create("Frame", Frame, {
+				Size = UDim2.new(1, -20, 0, 12),
+				Position = UDim2.new(0, 10, 1, -15),
+				AnchorPoint = Vector2.new(0, 1),
+				BackgroundColor3 = Theme["Color Stroke"],
+				BackgroundTransparency = 0.5
+			})Make("Corner", ProgressHolder, UDim.new(0, 6))
+			
+			local ProgressFill = InsertTheme(Create("Frame", ProgressHolder, {
+				Size = UDim2.new(Default/MaxValue, 0, 1, 0),
+				BackgroundColor3 = Theme["Color Theme"]
+			}), "Theme")Make("Corner", ProgressFill, UDim.new(0, 6))
+			
+			local PercentLabel = InsertTheme(Create("TextLabel", ProgressHolder, {
+				Size = UDim2.new(1, 0, 1, 0),
+				BackgroundTransparency = 1,
+				Text = math.floor(Default).."%",
+				TextColor3 = Theme["Color Text"],
+				Font = Enum.Font.GothamBold,
+				TextSize = 8
+			}), "Text")
+			
+			local current = Default
+			local Progress = {}
+			function Progress:Set(value)
+				current = math.clamp(value, 0, MaxValue)
+				local percent = current / MaxValue
+				CreateTween({ProgressFill, "Size", UDim2.new(percent, 0, 1, 0), 0.3})
+				PercentLabel.Text = math.floor(current).."%"
+				Funcs:FireCallback(Callback, current)
+			end
+			function Progress:Add(value)
+				self:Set(current + value)
+			end
+			function Progress:Visible(...) Funcs:ToggleVisible(Frame, ...) end
+			return Progress
+		end
+
+		-- 4. عداد تنازلي أنيق (Elegant Countdown)
+		function Tab:AddCountdown(Configs)
+			local CName = Configs[1] or Configs.Name or "⏳ Countdown"
+			local CDesc = Configs.Desc or "Time remaining"
+			local StartTime = Configs[2] or Configs.Start or 10
+			local Callback = Configs[3] or Configs.Callback or function() end
+			
+			local Frame, LabelFunc = ButtonFrame(Container, CName, CDesc, UDim2.new(1, -150))
+			
+			local CountdownHolder = Create("Frame", Frame, {
+				Size = UDim2.new(0, 120, 0, 40),
+				Position = UDim2.new(1, -10, 0.5),
+				AnchorPoint = Vector2.new(1, 0.5),
+				BackgroundTransparency = 1
+			})
+			
+			local TimeCircle = Create("Frame", CountdownHolder, {
+				Size = UDim2.new(0, 35, 0, 35),
+				Position = UDim2.new(0.5, 0, 0.5, 0),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundColor3 = Theme["Color Theme"],
+				BackgroundTransparency = 0.2
+			})Make("Corner", TimeCircle, UDim.new(0.5, 0))
+			
+			local TimeLabel = InsertTheme(Create("TextLabel", TimeCircle, {
+				Size = UDim2.new(1, 0, 1, 0),
+				BackgroundTransparency = 1,
+				Text = tostring(StartTime),
+				TextColor3 = Theme["Color Text"],
+				Font = Enum.Font.FredokaOne,
+				TextSize = 14
+			}), "Text")
+			
+			local StartBtn = Create("TextButton", CountdownHolder, {
+				Size = UDim2.new(0, 25, 0, 25),
+				Position = UDim2.new(1, 0, 0.5),
+				AnchorPoint = Vector2.new(1, 0.5),
+				Text = "▶",
+				Font = Enum.Font.GothamBold,
+				TextSize = 12,
+				BackgroundColor3 = Color3.fromRGB(50, 150, 50),
+				TextColor3 = Color3.fromRGB(255, 255, 255)
+			})Make("Corner", StartBtn, UDim.new(0.5, 0))
+			
+			local ResetBtn = Create("TextButton", CountdownHolder, {
+				Size = UDim2.new(0, 25, 0, 25),
+				Position = UDim2.new(0, 0, 0.5),
+				AnchorPoint = Vector2.new(0, 0.5),
+				Text = "↺",
+				Font = Enum.Font.GothamBold,
+				TextSize = 14,
+				BackgroundColor3 = Color3.fromRGB(100, 100, 100),
+				TextColor3 = Color3.fromRGB(255, 255, 255)
+			})Make("Corner", ResetBtn, UDim.new(0.5, 0))
+			
+			local remaining = StartTime
+			local isActive = false
+			local connection
+			
+			local function UpdateDisplay()
+				TimeLabel.Text = tostring(math.floor(remaining))
+				if remaining <= 0 then
+					isActive = false
+					StartBtn.Text = "▶"
+					StartBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+					Callback()
+					if connection then connection:Disconnect() end
+				end
+			end
+			
+			StartBtn.MouseButton1Click:Connect(function()
+				isActive = not isActive
+				if isActive then
+					StartBtn.Text = "⏸"
+					StartBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+					connection = RunService.Heartbeat:Connect(function(dt)
+						if isActive and remaining > 0 then
+							remaining = remaining - dt
+							UpdateDisplay()
+						end
+					end)
+				else
+					StartBtn.Text = "▶"
+					StartBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+					if connection then connection:Disconnect() end
+				end
+			end)
+			
+			ResetBtn.MouseButton1Click:Connect(function()
+				remaining = StartTime
+				UpdateDisplay()
+				if isActive then
+					isActive = false
+					StartBtn.Text = "▶"
+					StartBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+					if connection then connection:Disconnect() end
+				end
+			end)
+			
+			local Countdown = {}
+			function Countdown:Reset()
+				remaining = StartTime
+				UpdateDisplay()
+			end
+			function Countdown:Visible(...) Funcs:ToggleVisible(Frame, ...) end
+			return Countdown
+		end
+
+		-- 5. أداة الرسم البسيط (Simple Paint)
+		function Tab:AddPaintTool(Configs)
+			local PName = Configs[1] or Configs.Name or "🎨 Paint Tool"
+			local PDesc = Configs.Desc or "Draw something!"
+			
+			local Frame, LabelFunc = ButtonFrame(Container, PName, PDesc, UDim2.new(1, -20))
+			Frame.Size = UDim2.new(1, 0, 0, 120)
+			
+			local Canvas = Create("Frame", Frame, {
+				Size = UDim2.new(1, -20, 0, 70),
+				Position = UDim2.new(0, 10, 0, 35),
+				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+				BackgroundTransparency = 0.1
+			})Make("Corner", Canvas, UDim.new(0, 4))
+			
+			local Drawing = Create("Frame", Canvas, {
+				Size = UDim2.new(1, -2, 1, -2),
+				Position = UDim2.new(0.5, 0, 0.5, 0),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundColor3 = Color3.fromRGB(30, 30, 30),
+				ClipsDescendants = true
+			})Make("Corner", Drawing, UDim.new(0, 4))
+			
+			local ClearBtn = Create("TextButton", Frame, {
+				Size = UDim2.new(0, 50, 0, 20),
+				Position = UDim2.new(1, -60, 1, -5),
+				AnchorPoint = Vector2.new(1, 1),
+				Text = "Clear",
+				Font = Enum.Font.GothamBold,
+				TextSize = 8,
+				BackgroundColor3 = Color3.fromRGB(200, 50, 50),
+				TextColor3 = Color3.fromRGB(255, 255, 255)
+			})Make("Corner", ClearBtn, UDim.new(0, 4))
+			
+			local isDrawing = false
+			local lastPoint = nil
+			
+			Drawing.InputBegan:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 then
+					isDrawing = true
+					local pos = Drawing.AbsolutePosition
+					local mousePos = Vector2.new(input.Position.X - pos.X, input.Position.Y - pos.Y)
+					lastPoint = mousePos
+				end
+			end)
+			
+			Drawing.InputEnded:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 then
+					isDrawing = false
+					lastPoint = nil
+				end
+			end)
+			
+			Drawing.InputChanged:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseMovement and isDrawing then
+					local pos = Drawing.AbsolutePosition
+					local mousePos = Vector2.new(input.Position.X - pos.X, input.Position.Y - pos.Y)
+					
+					if lastPoint and (mousePos - lastPoint).Magnitude > 5 then
+						local pixel = Create("Frame", Drawing, {
+							Size = UDim2.new(0, 4, 0, 4),
+							Position = UDim2.fromOffset(mousePos.X - 2, mousePos.Y - 2),
+							BackgroundColor3 = Theme["Color Theme"],
+							BorderSizePixel = 0
+						})Make("Corner", pixel, UDim.new(0.5, 0))
+						
+						lastPoint = mousePos
+					end
+				end
+			end)
+			
+			ClearBtn.MouseButton1Click:Connect(function()
+				for _, child in pairs(Drawing:GetChildren()) do
+					if child:IsA("Frame") then
+						child:Destroy()
+					end
+				end
+			end)
+			
+			local Paint = {}
+			function Paint:Clear() ClearBtn.MouseButton1Click:Fire() end
+			function Paint:Visible(...) Funcs:ToggleVisible(Frame, ...) end
+			return Paint
+		end
+
 		return Tab
 	end
 	
