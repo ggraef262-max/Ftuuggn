@@ -5689,3 +5689,401 @@ shadersTab:AddButton({
                 end
             end)
         end
+        
+        -- إضافة المؤثرات الصوتية
+        local anchorPart = Instance.new("Part")
+        anchorPart.Size = Vector3.new(1, 1, 1)
+        anchorPart.Transparency = 1
+        anchorPart.Anchored = true
+        anchorPart.CanCollide = false
+        anchorPart.Parent = Workspace
+        table.insert(shaderObjects, anchorPart)
+        
+        local function getRootPart()
+            local char = LocalPlayer.Character
+            return char and char:FindFirstChild("HumanoidRootPart")
+        end
+        
+        local rootPart = getRootPart()
+        if rootPart then
+            local birdSound = Instance.new("Sound")
+            birdSound.Name = "BirdsSound"
+            birdSound.SoundId = "rbxassetid://1237969272"
+            birdSound.Looped = true
+            birdSound.Volume = 0.05
+            birdSound.Parent = anchorPart
+            table.insert(shaderObjects, birdSound)
+            
+            local cricketSound = Instance.new("Sound")
+            cricketSound.SoundId = "rbxassetid://6654360741"
+            cricketSound.Volume = 0.05
+            cricketSound.Looped = false
+            cricketSound.Parent = Workspace
+            table.insert(shaderObjects, cricketSound)
+            
+            -- متابعة موقع اللاعب
+            local heartbeatConn = RunService.Heartbeat:Connect(function()
+                local currentRoot = getRootPart()
+                if currentRoot and currentRoot.Parent then
+                    anchorPart.Position = currentRoot.Position + Vector3.new(0, 10, 0)
+                end
+            end)
+            table.insert(shaderObjects, {Disconnect = heartbeatConn.Disconnect})
+            
+            -- التحكم بالأصوات حسب الوقت
+            coroutine.wrap(function()
+                while shadersEnabled do
+                    local clockTime = Lighting.ClockTime
+                    local isNight = clockTime >= 18 or clockTime <= 6
+                    
+                    if isNight then
+                        if birdSound.IsPlaying then birdSound:Stop() end
+                        if not cricketSound.IsPlaying then cricketSound:Play() end
+                    else
+                        if cricketSound.IsPlaying then cricketSound:Stop() end
+                        if not birdSound.IsPlaying then birdSound:Play() end
+                    end
+                    wait(20)
+                end
+            end)()
+        end
+        
+        -- صوت النافورة
+        local fountainPart = Instance.new("Part")
+        fountainPart.Anchored = true
+        fountainPart.CanCollide = false
+        fountainPart.Transparency = 1
+        fountainPart.Size = Vector3.new(1, 1, 1)
+        fountainPart.Position = Vector3.new(-27, 19, 15)
+        fountainPart.Parent = Workspace
+        table.insert(shaderObjects, fountainPart)
+        
+        local fountainAttach = Instance.new("Attachment")
+        fountainAttach.Position = Vector3.new(-27, 19, 15)
+        fountainAttach.Parent = fountainPart
+        table.insert(shaderObjects, fountainAttach)
+        
+        local fountainSound = Instance.new("Sound")
+        fountainSound.Name = "FountainSound"
+        fountainSound.SoundId = "rbxassetid://4766793559"
+        fountainSound.Looped = true
+        fountainSound.Volume = 0.03
+        fountainSound.EmitterSize = 10
+        fountainSound.RollOffMode = Enum.RollOffMode.Linear
+        fountainSound.MaxDistance = 100
+        fountainSound.Parent = fountainAttach
+        table.insert(shaderObjects, fountainSound)
+        fountainSound:Play()
+        
+        -- صوت خلفية
+        local bgSound = Instance.new("Sound")
+        bgSound.Name = "MyCustomSound"
+        bgSound.SoundId = "rbxassetid://9048659736"
+        bgSound.Volume = 0.01
+        bgSound.Looped = true
+        bgSound.Parent = Workspace
+        table.insert(shaderObjects, bgSound)
+        bgSound:Play()
+        
+        -- تأثير النجوم
+        local starFolder = Instance.new("Folder", Workspace)
+        starFolder.Name = "ShootingStars"
+        table.insert(shaderObjects, starFolder)
+        
+        local spaceSound = Instance.new("Sound")
+        spaceSound.SoundId = "rbxassetid://1843520836"
+        spaceSound.Volume = 0.3
+        spaceSound.Looped = true
+        spaceSound.Name = "SpaceAmbience"
+        spaceSound.Parent = Workspace
+        table.insert(shaderObjects, spaceSound)
+        
+        local starParticles = {}
+        local starsActive = true
+        
+        local function createStar()
+            local size = math.random(1, 3) * 0.5
+            local star = Instance.new("Part")
+            star.Size = Vector3.new(size, size, size)
+            star.Position = Vector3.new(math.random(-1000, 1000), math.random(300, 700), math.random(-1000, 1000))
+            star.Anchored = true
+            star.CanCollide = false
+            star.Material = Enum.Material.Neon
+            star.Color = ({Color3.fromRGB(255, 255, 255), Color3.fromRGB(255, 255, 180), Color3.fromRGB(180, 200, 255)})[math.random(1, 3)]
+            star.Name = "Star"
+            star.Parent = Workspace
+            table.insert(starParticles, star)
+            
+            local light = Instance.new("PointLight", star)
+            light.Brightness = 2 + math.random() * 1.5
+            light.Range = 12
+            
+            coroutine.wrap(function()
+                while star.Parent and starsActive do
+                    star.Transparency = 0.2 + math.sin(tick() * math.random(2, 5)) * 0.2
+                    RunService.Heartbeat:Wait()
+                end
+            end)()
+        end
+        
+        local shootingStarsActive = false
+        local function createShootingStar()
+            if not starsActive then return end
+            
+            local startPos = Vector3.new(math.random(-1000, 1000), math.random(350, 600), math.random(-1000, 1000))
+            local direction = Vector3.new(math.random(-1, 1), math.random(-0.1, 0.1), math.random(-1, 1)).Unit
+            local lifespan = math.random(350, 550)
+            local isFire = math.random() <= 0.3
+            local mainColor = isFire and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(255, 255, 220)
+            local trailColor = isFire and ColorSequence.new(Color3.fromRGB(255, 120, 0), Color3.fromRGB(255, 230, 50)) or 
+                ColorSequence.new(Color3.fromRGB(255, 255, 255), Color3.fromRGB(255, 255, 180))
+            
+            local star = Instance.new("Part")
+            star.Size = Vector3.new(0.5, 0.5, 3)
+            star.Position = startPos
+            star.Anchored = true
+            star.CanCollide = false
+            star.Material = Enum.Material.Neon
+            star.Color = mainColor
+            star.Name = "ShootingStar"
+            star.Parent = starFolder
+            
+            local att1 = Instance.new("Attachment", star)
+            local att2 = Instance.new("Attachment", star)
+            att2.Position = Vector3.new(0, 0, -3)
+            
+            local trail = Instance.new("Trail", star)
+            trail.Attachment0 = att1
+            trail.Attachment1 = att2
+            trail.Lifetime = 0.35
+            trail.Color = trailColor
+            trail.LightEmission = 1
+            trail.WidthScale = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(1, 0)})
+            
+            local light = Instance.new("PointLight", star)
+            light.Brightness = isFire and 12 or 7
+            light.Range = 35
+            light.Color = mainColor
+            
+            if isFire then
+                local fire = Instance.new("Fire", star)
+                fire.Heat = 15
+                fire.Size = 3.5
+                fire.Color = Color3.fromRGB(255, 110, 0)
+                fire.SecondaryColor = Color3.fromRGB(255, 210, 0)
+            end
+            
+            local elapsed = 0
+            local lifetime = math.random(1, 1.5)
+            local connection = RunService.Heartbeat:Connect(function(delta)
+                if not starsActive then
+                    connection:Disconnect()
+                    if star.Parent then star:Destroy() end
+                    return
+                end
+                
+                elapsed = elapsed + delta
+                if lifetime > elapsed then
+                    local sway = math.sin(elapsed * 20) * 0.5
+                    star.Position = star.Position + (direction + Vector3.new(0, sway, 0)).Unit * lifespan * delta
+                else
+                    connection:Disconnect()
+                    if star.Parent then star:Destroy() end
+                end
+            end)
+            
+            Debris:AddItem(star, 4)
+        end
+        
+        local function updateStarEffects()
+            local clockTime = Lighting.ClockTime
+            local isNight = clockTime >= 18 or clockTime < 6
+            
+            if isNight and not starsActive then
+                starsActive = true
+                Lighting.FogColor = Color3.fromRGB(10, 10, 30)
+                Lighting.FogEnd = 5000
+                Lighting.Brightness = 2
+                
+                -- حذف النجوم القديمة
+                for _, star in ipairs(starParticles) do
+                    if star and star.Parent then star:Destroy() end
+                end
+                starParticles = {}
+                
+                for _, child in ipairs(starFolder:GetChildren()) do
+                    child:Destroy()
+                end
+                
+                -- إنشاء نجوم جديدة
+                for i = 1, 300 do
+                    createStar()
+                end
+                
+                spaceSound:Play()
+                
+            elseif not isNight and starsActive then
+                starsActive = false
+                
+                for _, star in ipairs(starParticles) do
+                    if star and star.Parent then star:Destroy() end
+                end
+                starParticles = {}
+                
+                for _, child in ipairs(starFolder:GetChildren()) do
+                    child:Destroy()
+                end
+                
+                spaceSound:Stop()
+                Lighting.FogColor = Color3.fromRGB(192, 192, 192)
+                Lighting.FogEnd = 100000
+                Lighting.Brightness = 2
+            end
+        end
+        
+        coroutine.wrap(function()
+            while shadersEnabled do
+                while starsActive do
+                    for i = 1, 12 do
+                        createShootingStar()
+                        task.wait(0.1)
+                    end
+                end
+                task.wait(1)
+            end
+        end)()
+        
+        coroutine.wrap(function()
+            while shadersEnabled do
+                updateStarEffects()
+                task.wait(1)
+            end
+        end)()
+        
+        -- تأثير المطر
+        local rainFolder = Instance.new("Folder", Workspace)
+        rainFolder.Name = "FakeRain"
+        table.insert(shaderObjects, rainFolder)
+        
+        local rainSound = Instance.new("Sound")
+        rainSound.SoundId = "rbxassetid://9111139882"
+        rainSound.Volume = 0.2
+        rainSound.Looped = true
+        rainSound.Parent = SoundService
+        table.insert(shaderObjects, rainSound)
+        rainSound:Play()
+        
+        local rainSound2 = Instance.new("Sound")
+        rainSound2.SoundId = "rbxassetid://9118823106"
+        rainSound2.Volume = 0.3
+        rainSound2.Looped = true
+        rainSound2.Parent = SoundService
+        table.insert(shaderObjects, rainSound2)
+        rainSound2:Play()
+        
+        local thunderSound = Instance.new("Sound")
+        thunderSound.SoundId = "rbxassetid://9120018695"
+        thunderSound.Volume = 0.4
+        thunderSound.Parent = SoundService
+        table.insert(shaderObjects, thunderSound)
+        
+        local rainActive = false
+        
+        local function createRain()
+            rainActive = true
+            for i = 1, 120 do
+                local drop = Instance.new("Part")
+                drop.Size = Vector3.new(0.1, 2, 0.1)
+                drop.Anchored = true
+                drop.CanCollide = false
+                drop.Material = Enum.Material.Glass
+                drop.Transparency = 0.5
+                drop.Color = Color3.fromRGB(160, 160, 255)
+                drop.Position = Vector3.new(math.random(-150, 150), 100, math.random(-150, 150))
+                drop.Parent = rainFolder
+                table.insert(shaderObjects, drop)
+                
+                TweenService:Create(drop, TweenInfo.new(1), {
+                    Position = drop.Position - Vector3.new(0, 60, 0)
+                }):Play()
+                
+                Debris:AddItem(drop, 1.5)
+            end
+            wait(1.5)
+            rainActive = false
+        end
+        
+        local function createThunder()
+            local flash = Instance.new("Part")
+            flash.Size = Vector3.new(1, 1000, 1)
+            flash.Anchored = true
+            flash.CanCollide = false
+            flash.Transparency = 0.4
+            flash.Material = Enum.Material.Neon
+            flash.Color = Color3.new(1, 1, 1)
+            flash.Position = Vector3.new(math.random(-100, 100), 500, math.random(-100, 100))
+            flash.Parent = Workspace
+            table.insert(shaderObjects, flash)
+            
+            Lighting.Brightness = Lighting.Brightness + 1.5
+            thunderSound:Play()
+            wait(0.1)
+            Lighting.Brightness = Lighting.Brightness - 1.5
+            flash:Destroy()
+        end
+        
+        coroutine.wrap(function()
+            while shadersEnabled do
+                createRain()
+                if math.random() < 0.2 then
+                    createThunder()
+                end
+                wait(1)
+            end
+        end)()
+        
+        -- تعديل الإضاءة العامة
+        Lighting.Brightness = 2
+        Lighting.GlobalShadows = true
+        Lighting.OutdoorAmbient = Color3.fromRGB(70, 70, 70)
+        Lighting.FogColor = Color3.fromRGB(120, 130, 140)
+        Lighting.FogStart = 80
+        Lighting.FogEnd = 600
+        Lighting.EnvironmentSpecularScale = 1
+        Lighting.EnvironmentDiffuseScale = 0.5
+        
+        -- السماء
+        local sky = Instance.new("Sky")
+        sky.SkyboxBk = "rbxassetid://159454299"
+        sky.SkyboxDn = "rbxassetid://159454296"
+        sky.SkyboxFt = "rbxassetid://159454293"
+        sky.SkyboxLf = "rbxassetid://159454286"
+        sky.SkyboxRt = "rbxassetid://159454300"
+        sky.SkyboxUp = "rbxassetid://159454304"
+        sky.Parent = Lighting
+        table.insert(shaderObjects, sky)
+        
+        -- مؤثرات اللون
+        local colorCorrection = Instance.new("ColorCorrectionEffect", Lighting)
+        colorCorrection.Brightness = 0.03
+        colorCorrection.Contrast = 0.15
+        colorCorrection.Saturation = 0.05
+        colorCorrection.TintColor = Color3.fromRGB(255, 240, 220)
+        table.insert(shaderObjects, colorCorrection)
+        
+        local bloom = Instance.new("BloomEffect", Lighting)
+        bloom.Intensity = 0.8
+        bloom.Size = 56
+        bloom.Threshold = 0.9
+        table.insert(shaderObjects, bloom)
+        
+        local sunRays = Instance.new("SunRaysEffect", Lighting)
+        sunRays.Intensity = 0.05
+        sunRays.Spread = 0.8
+        table.insert(shaderObjects, sunRays)
+        
+        Instance.new("BlurEffect", Lighting).Size = 0
+        
+        sendNotification("شادر", "تم تطبيق الشادر بنجاح", nil, 3)
+    end 
+})
