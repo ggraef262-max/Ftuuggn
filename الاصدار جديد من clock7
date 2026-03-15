@@ -6087,7 +6087,6 @@ shadersTab:AddButton({
         sendNotification("شادر", "تم تطبيق الشادر بنجاح", nil, 3)
     end 
 })
-
 -- ======================
 -- تبويب السكوتر
 -- ======================
@@ -6182,4 +6181,3 @@ for _, phonk in ipairs(phonkIDs) do
         end
     })
 end
-})
