@@ -6092,16 +6092,16 @@ shadersTab:AddButton({
 local ChildTab = Window:MakeTab({"الروبوت", "robot"})
 
 local Section = ChildTab:AddSection({
-    Name = "نظام الروبوت المتطور"
+    Name = "نظام الروبوت الحقيقي"
 })
 
-ChildTab:AddParagraph({"معلومة:", "نظام متكامل للروبوت مع إشعارات وتتبع المرسل"}) 
+ChildTab:AddParagraph({"معلومة:", "روبوت حقيقي يشتغل في أي لعبة"}) 
 
 -- متغيرات عامة
 local chasingplayer = nil
 local playerDropdown = nil
-local robotEffects = {}
-local sentRobots = {}  -- لتخزين الروبوتات المرسلة
+local robot = nil  -- الروبوت الحقيقي
+local runConnection = nil
 local notificationEnabled = true
 
 -- دالة تحديث قائمة اللاعبين
@@ -6114,91 +6114,213 @@ local function updatePlayerList()
 end
 
 -- دالة إظهار إشعار
-local function showNotification(title, text)
+local function showNotification(text)
     if not notificationEnabled then return end
-    
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
-    
-    if LocalPlayer.PlayerGui then
-        pcall(function()
-            game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents"):FindFirstChild("SayMessageRequest"):FireServer("[ " .. title .. " ] " .. text, "All")
-        end)
-        
-        print(title .. ": " .. text)
-    end
+    print("[نظام الروبوت] " .. text)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "الروبوت",
+        Text = text,
+        Duration = 3
+    })
 end
 
--- دالة للتحقق من الروبوتات المرسلة
-local function checkForRobots()
+-- دالة صنع روبوت حقيقي
+local function createRealRobot()
+    -- حذف الروبوت القديم إذا وجد
+    if robot and robot.Parent then
+        robot:Destroy()
+    end
+    
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
     local workspace = game:GetService("Workspace")
     
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            local robot = workspace[player.Name] and workspace[player.Name]:FindFirstChild("FollowCharacter")
-            if robot and not sentRobots[robot] then
-                -- روبوت جديد
-                sentRobots[robot] = {
-                    target = player.Name,
-                    time = tick(),
-                    sender = "غير معروف",
-                    object = robot
-                }
-                
-                showNotification("تنبيه", "تم إرسال روبوت إلى " .. player.Name)
-                
-                -- محاولة تحديد المرسل
-                task.wait(0.5)
-                detectRobotSender(robot, player.Name)
-            end
-        end
+    -- صنع روبوت جديد
+    robot = Instance.new("Model")
+    robot.Name = "RealRobot_" .. LocalPlayer.Name
+    
+    -- صنع الأجزاء
+    local head = Instance.new("Part")
+    head.Name = "Head"
+    head.Size = Vector3.new(2, 2, 2)
+    head.BrickColor = BrickColor.new("Bright red")
+    head.Material = Enum.Material.Neon
+    head.Parent = robot
+    head.CanCollide = true
+    head.Anchored = false
+    
+    local torso = Instance.new("Part")
+    torso.Name = "Torso"
+    torso.Size = Vector3.new(3, 4, 2)
+    torso.BrickColor = BrickColor.new("Really red")
+    torso.Material = Enum.Material.Metal
+    torso.Parent = robot
+    torso.CanCollide = true
+    torso.Anchored = false
+    
+    local leftArm = Instance.new("Part")
+    leftArm.Name = "Left Arm"
+    leftArm.Size = Vector3.new(1.5, 3, 1.5)
+    leftArm.BrickColor = BrickColor.new("Bright red")
+    leftArm.Material = Enum.Material.Metal
+    leftArm.Parent = robot
+    leftArm.CanCollide = true
+    leftArm.Anchored = false
+    
+    local rightArm = Instance.new("Part")
+    rightArm.Name = "Right Arm"
+    rightArm.Size = Vector3.new(1.5, 3, 1.5)
+    rightArm.BrickColor = BrickColor.new("Bright red")
+    rightArm.Material = Enum.Material.Metal
+    rightArm.Parent = robot
+    rightArm.CanCollide = true
+    rightArm.Anchored = false
+    
+    local leftLeg = Instance.new("Part")
+    leftLeg.Name = "Left Leg"
+    leftLeg.Size = Vector3.new(1.5, 3, 1.5)
+    leftLeg.BrickColor = BrickColor.new("Bright red")
+    leftLeg.Material = Enum.Material.Metal
+    leftLeg.Parent = robot
+    leftLeg.CanCollide = true
+    leftLeg.Anchored = false
+    
+    local rightLeg = Instance.new("Part")
+    rightLeg.Name = "Right Leg"
+    rightLeg.Size = Vector3.new(1.5, 3, 1.5)
+    rightLeg.BrickColor = BrickColor.new("Bright red")
+    rightLeg.Material = Enum.Material.Metal
+    rightLeg.Parent = robot
+    rightLeg.CanCollide = true
+    rightLeg.Anchored = false
+    
+    -- إضافة إضاءة
+    local light = Instance.new("PointLight")
+    light.Parent = head
+    light.Color = Color3.new(1, 0, 0)
+    light.Brightness = 2
+    light.Range = 15
+    
+    -- إضافة Humanoid
+    local humanoid = Instance.new("Humanoid")
+    humanoid.Parent = robot
+    humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+    humanoid.WalkSpeed = 16
+    
+    -- ربط الأجزاء
+    local rootPart = torso
+    robot.PrimaryPart = rootPart
+    
+    -- إضافة علامة فوق الروبوت
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "RobotTag"
+    billboard.Parent = robot
+    billboard.Size = UDim2.new(0, 150, 0, 40)
+    billboard.StudsOffset = Vector3.new(0, 4, 0)
+    billboard.AlwaysOnTop = true
+    
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Parent = billboard
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = "روبوت ملاحق"
+    textLabel.TextColor3 = Color3.new(1, 0, 0)
+    textLabel.TextScaled = true
+    textLabel.Font = Enum.Font.GothamBold
+    
+    -- وضع الروبوت في موقع اللاعب
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        robot:SetPrimaryPartCFrame(LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -5))
     end
+    
+    -- جعل الروبوت يظهر للكل
+    robot.Parent = workspace
+    
+    -- إضافة weld لجعل الأجزاء متصلة
+    local function weld(part0, part1, cframe)
+        local weld = Instance.new("Weld")
+        weld.Part0 = part0
+        weld.Part1 = part1
+        weld.C0 = cframe or CFrame.new()
+        weld.Parent = part0
+    end
+    
+    weld(torso, head, CFrame.new(0, 2, 0))
+    weld(torso, leftArm, CFrame.new(-2, 0.5, 0))
+    weld(torso, rightArm, CFrame.new(2, 0.5, 0))
+    weld(torso, leftLeg, CFrame.new(-1, -2.5, 0))
+    weld(torso, rightLeg, CFrame.new(1, -2.5, 0))
+    
+    showNotification("تم صنع الروبوت")
+    return robot
 end
 
--- دالة لتحديد مرسل الروبوت
-local function detectRobotSender(robot, targetName)
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
+-- دالة مطاردة اللاعب
+local function startChasing(targetName)
+    if runConnection then
+        runConnection:Disconnect()
+        runConnection = nil
+    end
     
-    -- التحقق من الروبوت الخاص بنا
-    if workspace[LocalPlayer.Name] and workspace[LocalPlayer.Name]:FindFirstChild("FollowCharacter") then
-        if workspace[LocalPlayer.Name].FollowCharacter == robot then
-            sentRobots[robot].sender = LocalPlayer.Name
-            showNotification("معلومات", "هذا الروبوت الذي أرسلته أنت إلى " .. targetName)
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local target = Players:FindFirstChild(targetName)
+    
+    if not target or not target.Character or not target.Character:FindFirstChild("HumanoidRootPart") then
+        showNotification("اللاعب غير موجود")
+        return
+    end
+    
+    if not robot or not robot.Parent then
+        robot = createRealRobot()
+    end
+    
+    showNotification("الروبوت يطارد " .. targetName)
+    
+    runConnection = RunService.Heartbeat:Connect(function()
+        if not robot or not robot.Parent then return end
+        if not target or not target.Character or not target.Character:FindFirstChild("HumanoidRootPart") then
+            -- اللاعب خرج، نوقف المطاردة
+            if runConnection then
+                runConnection:Disconnect()
+                runConnection = nil
+            end
             return
         end
-    end
-    
-    -- البحث عن المرسل
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Name ~= targetName then
-            if workspace[player.Name] and workspace[player.Name]:FindFirstChild("FollowCharacter") then
-                if workspace[player.Name].FollowCharacter == robot then
-                    sentRobots[robot].sender = player.Name
-                    showNotification("تحذير", "اللاعب " .. player.Name .. " أرسل لك روبوت!")
-                    return
-                end
+        
+        local targetRoot = target.Character.HumanoidRootPart
+        local robotRoot = robot.PrimaryPart
+        
+        if robotRoot and targetRoot then
+            -- حساب الاتجاه
+            local direction = (targetRoot.Position - robotRoot.Position).unit
+            local distance = (targetRoot.Position - robotRoot.Position).magnitude
+            
+            if distance > 5 then
+                -- التحرك نحو اللاعب
+                robotRoot.Velocity = direction * 20
+            elseif distance < 3 then
+                -- الابتعاد قليلاً
+                robotRoot.Velocity = -direction * 10
+            else
+                robotRoot.Velocity = Vector3.new(0, 0, 0)
             end
+            
+            -- النظر إلى اللاعب
+            robot:SetPrimaryPartCFrame(CFrame.new(robotRoot.Position, targetRoot.Position))
         end
-    end
+    end)
 end
 
--- مراقبة مستمرة للروبوتات
-game:GetService("RunService").Heartbeat:Connect(function()
-    checkForRobots()
-end)
-
--- إنشاء القائمة المنسدلة للاعبين
+-- إنشاء القائمة المنسدلة
 playerDropdown = ChildTab:AddDropdown({
-    Name = "اختر اللاعب المستهدف",
+    Name = "اختر اللاعب",
     Options = updatePlayerList(),
     Default = "",
     Callback = function(selected)
         if game:GetService("Players"):FindFirstChild(selected) then
             chasingplayer = selected
-            print("تم اختيار اللاعب: " .. selected)
+            showNotification("تم اختيار " .. selected)
         else
             chasingplayer = nil
         end
@@ -6207,7 +6329,7 @@ playerDropdown = ChildTab:AddDropdown({
 
 -- زر تحديث القائمة
 ChildTab:AddButton({
-    Name = "تحديث قائمة اللاعبين",
+    Name = "تحديث القائمة",
     Callback = function()
         local newList = updatePlayerList()
         if playerDropdown then
@@ -6215,17 +6337,87 @@ ChildTab:AddButton({
                 playerDropdown:Refresh(newList)
             end)
         end
+    end
+})
+
+-- زر صنع الروبوت
+ChildTab:AddButton({
+    Name = "1. صنع الروبوت",
+    Callback = function()
+        robot = createRealRobot()
+    end
+})
+
+-- زر إرسال الروبوت
+ChildTab:AddButton({
+    Name = "2. إرسال الروبوت للاعب",
+    Callback = function()
+        if not chasingplayer then
+            showNotification("اختر لاعباً أولاً")
+            return
+        end
         
-        if chasingplayer and not game:GetService("Players"):FindFirstChild(chasingplayer) then
-            chasingplayer = nil
-            pcall(function()
-                playerDropdown:Set("")
-            end)
+        if not robot or not robot.Parent then
+            robot = createRealRobot()
+        end
+        
+        startChasing(chasingplayer)
+    end
+})
+
+-- زر إيقاف الروبوت
+ChildTab:AddButton({
+    Name = "3. إيقاف وإرجاع الروبوت",
+    Callback = function()
+        if runConnection then
+            runConnection:Disconnect()
+            runConnection = nil
+        end
+        
+        if robot and robot.Parent then
+            -- إرجاع الروبوت إليك
+            local LocalPlayer = game:GetService("Players").LocalPlayer
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                robot:SetPrimaryPartCFrame(LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -5))
+            end
+            showNotification("تم إرجاع الروبوت")
         end
     end
 })
 
--- تحديث تلقائي عند دخول وخروج اللاعبين
+-- زر حذف الروبوت
+ChildTab:AddButton({
+    Name = "حذف الروبوت نهائياً",
+    Callback = function()
+        if runConnection then
+            runConnection:Disconnect()
+            runConnection = nil
+        end
+        
+        if robot and robot.Parent then
+            robot:Destroy()
+            robot = nil
+            showNotification("تم حذف الروبوت")
+        end
+    end
+})
+
+-- تفعيل الإشعارات
+ChildTab:AddToggle({
+    Name = "تفعيل الإشعارات",
+    Default = true,
+    Callback = function(Value)
+        notificationEnabled = Value
+    end
+})
+
+-- معلومات
+ChildTab:AddParagraph({
+    Name = "كيفية الاستخدام",
+    Text = "1. اضغط على 'صنع الروبوت'\n2. اختر لاعباً\n3. اضغط على 'إرسال الروبوت'\n4. الروبوت سيطارده أينما ذهب"
+})
+
+-- تحديث تلقائي عند دخول اللاعبين
 game:GetService("Players").PlayerAdded:Connect(function()
     task.wait(0.5)
     if playerDropdown then
@@ -6245,273 +6437,11 @@ game:GetService("Players").PlayerRemoving:Connect(function(player)
     
     if chasingplayer == player.Name then
         chasingplayer = nil
-        pcall(function()
-            playerDropdown:Set("")
-        end)
+        if runConnection then
+            runConnection:Disconnect()
+            runConnection = nil
+        end
     end
 end)
 
--- دالة لإضافة تأثيرات بصرية للروبوت
-local function addVisualEffects(robot)
-    if not robot then return end
-    
-    -- هالايت ملون
-    local highlight = Instance.new("Highlight")
-    highlight.Name = "RobotHighlight"
-    highlight.Parent = robot
-    highlight.FillColor = Color3.fromRGB(255, 0, 0)
-    highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-    highlight.FillTransparency = 0.3
-    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-    
-    -- جعل كل الأجزاء مرئية
-    for _, part in ipairs(robot:GetDescendants()) do
-        if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("Part") then
-            part.Transparency = 0
-            part.Visible = true
-            part.CanCollide = true
-            part.Material = Enum.Material.Neon
-            
-            -- إضافة ضوء
-            local pointLight = Instance.new("PointLight")
-            pointLight.Parent = part
-            pointLight.Color = Color3.fromRGB(255, 0, 0)
-            pointLight.Brightness = 2
-            pointLight.Range = 10
-        end
-    end
-    
-    -- إضافة لوحة اسم
-    local primaryPart = robot:FindFirstChild("Torso") or robot:FindFirstChild("HumanoidRootPart") or robot.PrimaryPart
-    if primaryPart then
-        local billboard = Instance.new("BillboardGui")
-        billboard.Name = "RobotNameTag"
-        billboard.Parent = robot
-        billboard.Size = UDim2.new(0, 200, 0, 50)
-        billboard.StudsOffset = Vector3.new(0, 5, 0)
-        billboard.AlwaysOnTop = true
-        
-        local textLabel = Instance.new("TextLabel")
-        textLabel.Parent = billboard
-        textLabel.Size = UDim2.new(1, 0, 1, 0)
-        textLabel.BackgroundTransparency = 1
-        textLabel.Text = "روبوت ملاحق"
-        textLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
-        textLabel.TextScaled = true
-        textLabel.Font = Enum.Font.GothamBold
-    end
-    
-    table.insert(robotEffects, robot)
-    return robot
-end
-
--- دالة إزالة التأثيرات
-local function removeVisualEffects()
-    for _, robot in ipairs(robotEffects) do
-        if robot and robot.Parent then
-            local highlight = robot:FindFirstChild("RobotHighlight")
-            if highlight then highlight:Destroy() end
-            
-            local billboard = robot:FindFirstChild("RobotNameTag")
-            if billboard then billboard:Destroy() end
-            
-            for _, part in ipairs(robot:GetDescendants()) do
-                if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("Part") then
-                    for _, child in ipairs(part:GetChildren()) do
-                        if child:IsA("PointLight") then
-                            child:Destroy()
-                        end
-                    end
-                    part.Material = Enum.Material.Plastic
-                end
-            end
-        end
-    end
-    robotEffects = {}
-end
-
--- زر إرسال الروبوت
-ChildTab:AddButton({
-    Name = "ارسال الروبوت للاعب",
-    Callback = function()
-        if not chasingplayer then
-            warn("لم تختار لاعباً")
-            return
-        end
-        
-        local LocalPlayer = game:GetService("Players").LocalPlayer
-        local target = chasingplayer
-        
-        if rawget(getgenv(), "RunService") then
-            getgenv().RunService:Disconnect()
-            getgenv().RunService = nil
-        end
-        
-        removeVisualEffects()
-        
-        -- إرسال الروبوت
-        local args = {
-            [1] = "CharacterFollowSpawnPlayer",
-            [2] = "BabyBoy"
-        }
-        
-        local success, err = pcall(function()
-            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
-        end)
-        
-        if not success then
-            warn("فشل إرسال الروبوت: " .. tostring(err))
-            return
-        end
-        
-        showNotification("نجاح", "تم إرسال الروبوت إلى " .. target)
-        task.wait(0.5)
-        
-        if workspace:FindFirstChild(target) and workspace[LocalPlayer.Name] and workspace[LocalPlayer.Name]:FindFirstChild("FollowCharacter") then
-            workspace[LocalPlayer.Name].FollowCharacter.Parent = workspace[target]
-            
-            local robot = workspace[target] and workspace[target]:FindFirstChild("FollowCharacter")
-            if robot then
-                addVisualEffects(robot)
-                sentRobots[robot] = {
-                    target = target,
-                    time = tick(),
-                    sender = LocalPlayer.Name,
-                    object = robot
-                }
-            end
-            
-            getgenv().RunService = game:GetService("RunService").Heartbeat:Connect(function()
-                local followCharacter = workspace[target]:FindFirstChild("FollowCharacter")
-                if followCharacter and followCharacter:FindFirstChild("Torso") and followCharacter.Torso:FindFirstChild("BodyPosition") then
-                    local humanoidRootPart = workspace[target]:FindFirstChild("HumanoidRootPart")
-                    if humanoidRootPart then
-                        followCharacter.Torso.BodyPosition.Position = humanoidRootPart.Position - (humanoidRootPart.CFrame.LookVector * 4)
-                        followCharacter.Torso.BodyGyro.CFrame = humanoidRootPart.CFrame
-                    end
-                end
-            end)
-        end
-    end
-})
-
--- زر إرجاع الروبوت
-ChildTab:AddButton({
-    Name = "ارجاع الروبوت",
-    Callback = function()
-        if rawget(getgenv(), "RunService") then
-            getgenv().RunService:Disconnect()
-            getgenv().RunService = nil
-        end
-        
-        removeVisualEffects()
-        sentRobots = {}
-        
-        local args = { [1] = "DeleteFollowCharacter" }
-        pcall(function()
-            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
-        end)
-        
-        task.wait(0.2)
-        local args1 = { [1] = "CharacterFollowSpawnPlayer", [2] = "BabyBoy" }
-        pcall(function()
-            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args1))
-        end)
-        
-        chasingplayer = nil
-        if playerDropdown then
-            pcall(function()
-                playerDropdown:Set("")
-            end)
-        end
-        
-        showNotification("معلومات", "تم ارجاع الروبوت")
-    end
-})
-
--- زر لعرض الروبوتات المرسلة
-ChildTab:AddButton({
-    Name = "عرض الروبوتات المرسلة",
-    Callback = function()
-        print("===== الروبوتات المرسلة =====")
-        local count = 0
-        for robot, data in pairs(sentRobots) do
-            if robot and robot.Parent then
-                count = count + 1
-                print(count .. ". إلى: " .. data.target .. " | من: " .. data.sender)
-            else
-                sentRobots[robot] = nil
-            end
-        end
-        
-        if count == 0 then
-            print("لا يوجد روبوتات مرسلة")
-        end
-        print("==============================")
-    end
-})
-
--- تفعيل/تعطيل الإشعارات
-ChildTab:AddToggle({
-    Name = "تفعيل الإشعارات",
-    Default = true,
-    Callback = function(Value)
-        notificationEnabled = Value
-        if Value then
-            showNotification("معلومات", "تم تفعيل الإشعارات")
-        else
-            print("تم تعطيل الإشعارات")
-        end
-    end
-})
-
--- زر لتجسس على اللاعب
-ChildTab:AddToggle({
-    Name = "تجسس على اللاعب المستهدف",
-    Default = false,
-    Callback = function(Value)
-        local Players = game:GetService("Players")
-        local RunService = game:GetService("RunService")
-        local LocalPlayer = Players.LocalPlayer
-        local Camera = workspace.CurrentCamera
-
-        if Value then
-            if not chasingplayer then
-                warn("لم تختار لاعباً للتجسس")
-                return false
-            end
-
-            if not rawget(getgenv(), "CameraConnection") then
-                getgenv().CameraConnection = RunService.Heartbeat:Connect(function()
-                    local targetPlayer = Players:FindFirstChild(chasingplayer)
-                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
-                        Camera.CameraSubject = targetPlayer.Character.Humanoid
-                    else
-                        if rawget(getgenv(), "CameraConnection") then
-                            getgenv().CameraConnection:Disconnect()
-                            getgenv().CameraConnection = nil
-                        end
-                        Camera.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") or nil
-                    end
-                end)
-                showNotification("معلومات", "بدأ التجسس على " .. chasingplayer)
-            end
-        else
-            if rawget(getgenv(), "CameraConnection") then
-                getgenv().CameraConnection:Disconnect()
-                getgenv().CameraConnection = nil
-            end
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-                Camera.CameraSubject = LocalPlayer.Character.Humanoid
-            end
-        end
-    end
-})
-
--- معلومات
-ChildTab:AddParagraph({
-    Name = "معلومات النظام",
-    Text = "• الروبوت يشوفه كل اللاعبين\n• إشعارات عند وصول روبوت\n• معرفة مرسل الروبوت\n• قائمة بالروبوتات المرسلة"
-})
-
-print("تم تحميل نظام الروبوت بنجاح")
+print("✅ نظام الروبوت الحقيقي جاهز للعمل!")
