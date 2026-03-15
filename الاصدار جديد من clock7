@@ -165,6 +165,7 @@ infoTab:AddDiscordInvite({
 
 infoTab:AddSection({ "مطوري السكربت" })
 infoTab:AddParagraph({ "المطور:", "DBLACK" })
+infoTab:AddParagraph({ "للتواصل او لي اعطاء نصائح:", "التلجرام:-XlEAQ1" })
 
 infoTab:AddSection({ "إعادة الدخول" })
 infoTab:AddButton({
