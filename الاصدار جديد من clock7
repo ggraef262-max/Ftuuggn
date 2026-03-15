@@ -6180,4 +6180,3 @@ for _, phonk in ipairs(phonkIDs) do
             sendNotification("فونك", "تم تشغيل " .. phonk.Name, nil, 2)
         end
     })
-end
