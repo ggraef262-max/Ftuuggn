@@ -6088,187 +6088,98 @@ shadersTab:AddButton({
     end 
 })
 
-local ChildTab = Window:MakeTab({"الطفل", "baby"})
-
-local Section = ChildTab:AddSection({
-    Name = "عفريت"
+-- ======================
+-- تبويب السكوتر
+-- ======================
+local scooterTab = Window:MakeTab({ 
+    Title = "السكوتر والموسيقى",
+    Icon = "rbxassetid://10747382750" 
 })
 
-ChildTab:AddParagraph({"معلومة:", "هنا تبعث عفاريت للناس."}) 
-local chasingplayer = nil
-local playerChild = ChildTab:AddDropdown({
-    Name = "اختار لاعب تبعث له عفاريت",
-    Options = players,
-    Default = "",
-    Callback = function(selected)
-        if game.Players:FindFirstChild(selected) then
-            chasingplayer = selected
-        else
-            chasingplayer = nil
+local scooterMusicIDs = {
+    "86818715772064", "118881473167610", "88752932884277", "98224127892587",
+    "93620598835551", "113546449124802", "135646286229973", "87760761356725",
+    "106099918876009", "89188088729776", "125693571824719", "72918998227337",
+    "73632319736202", "119630965566559", "111256095783364", "135911328646170",
+    "131004009162099", "99988554071618", "132378395114388", "93216750024622",
+    "119437864395329", "98640789490482", "131507511127909", "99123490695024"
+}
+
+scooterTab:AddSection({ "موسيقى السكوتر" })
+
+for i, id in ipairs(scooterMusicIDs) do
+    scooterTab:AddButton({
+        Name = "موسيقى " .. i,
+        Callback = function()
+            fireRemote({"RE", "1NoMoto1rVehicle1s"}, "SkateBoard")
+            fireRemote({"RE", "1NoMoto1rVehicle1s"}, "PickingScooterMusicText", id)
+            sendNotification("سكوتر", "تم تشغيل الموسيقى " .. i, nil, 2)
         end
-    end
-})
+    })
+end
 
-ChildTab:AddButton({
-    Name = "حدث قائمة اللاعبين",
-    Callback = function()
-        local updatedPlayers = updatePlayerList()
-        if playerChild and updatedPlayers then
-            pcall(function()
-                playerChild:Refresh(updatedPlayers)
-            end)
-            if chasingplayer and not game.Players:FindFirstChild(chasingplayer) then
-                chasingplayer = nil
-                pcall(function()
-                    playerChild:Set("")
-                end)
-            end
+scooterTab:AddSection({ "موسيقى متنوعة" })
+
+local miscMusicIDs = {
+    {Name = "موسيقى غريبة", ID = "7979342351"},
+    {Name = "موسيقى قديمة", ID = "8208582752"},
+    {Name = "موسيقى هادئة", ID = "4776398821"},
+    {Name = "موسيقى سريعة", ID = "7764369437"},
+    {Name = "فانك 1", ID = "107843593938430"},
+    {Name = "فانك 2", ID = "125010099904472"},
+    {Name = "فانك 3", ID = "106156896149671"},
+    {Name = "فانك 4", ID = "90855134922033"},
+    {Name = "فانك 5", ID = "82344457989962"},
+    {Name = "فانك 6", ID = "102402883551679"},
+    {Name = "فانك 7", ID = "135286582331883"},
+    {Name = "فانك 8", ID = "97819883348155"},
+    {Name = "فانك 9", ID = "120742374395277"},
+    {Name = "فانك 10", ID = "89907278904871"}
+}
+
+for _, music in ipairs(miscMusicIDs) do
+    scooterTab:AddButton({
+        Name = music.Name,
+        Callback = function()
+            fireRemote({"RE", "1NoMoto1rVehicle1s"}, "SkateBoard")
+            fireRemote({"RE", "1NoMoto1rVehicle1s"}, "PickingScooterMusicText", music.ID)
+            sendNotification("موسيقى", "تم تشغيل " .. music.Name, nil, 2)
         end
-    end
-})
+    })
+end
 
--- Eventos de entrada/saída de players
-game.Players.PlayerAdded:Connect(function()
-    task.wait(0.1)
-    local updatedPlayers = updatePlayerList()
-    if playerChild and updatedPlayers then
-        pcall(function()
-            playerChild:Refresh(updatedPlayers)
-        end)
-    end
-end)
+scooterTab:AddSection({ "فونك" })
 
-game.Players.PlayerRemoving:Connect(function(player)
-    task.wait(0.1)
-    local updatedPlayers = updatePlayerList()
-    if playerChild and updatedPlayers then
-        pcall(function()
-            playerChild:Refresh(updatedPlayers)
-        end)
-        if chasingplayer == player.Name then
-            chasingplayer = nil
-            pcall(function()
-                playerChild:Set("")
-            end)
+local phonkIDs = {
+    {Name = "BrazilPhonk", ID = "107560211653736"},
+    {Name = "PhonkeR", ID = "71609631244271"},
+    {Name = "punpunPhonk", ID = "71609631244271"},
+    {Name = "BrazilPhonkeD", ID = "135667903253566"},
+    {Name = "HanPhonk", ID = "77874619166101"},
+    {Name = "GhostPhonk", ID = "139477537381956"},
+    {Name = "IspanShPhonk", ID = "93786060174790"},
+    {Name = "Brazil", ID = "130639440247661"},
+    {Name = "Rare Unleakkk 2", ID = "118767914595173"},
+    {Name = "SupraPhonk", ID = "110519234838026"},
+    {Name = "Kid Phonk", ID = "75468112718541"},
+    {Name = "Strongest phonk", ID = "118831715656801"},
+    {Name = "Phonk", ID = "13530438045"},
+    {Name = "crap Ware", ID = "5410086218"},
+    {Name = "baller phonk", ID = "13530439660"},
+    {Name = "catch my drift", ID = "14145627857"},
+    {Name = "no lights", ID = "14145623221"},
+    {Name = "Dark phonk", ID = "13530437708"},
+    {Name = "RemiX", ID = "15689445424"}
+}
+
+for _, phonk in ipairs(phonkIDs) do
+    scooterTab:AddButton({
+        Name = phonk.Name,
+        Callback = function()
+            fireRemote({"RE", "1NoMoto1rVehicle1s"}, "SkateBoard")
+            fireRemote({"RE", "1NoMoto1rVehicle1s"}, "PickingScooterMusicText", phonk.ID)
+            sendNotification("فونك", "تم تشغيل " .. phonk.Name, nil, 2)
         end
-    end
-end)
-
-ChildTab:AddButton({
-    Name = "ارسال الطفل للشخص",
-    Callback = function()
-        if not chasingplayer then
-            warn("Nenhum jogador selecionado!")
-            return
-        end
-        if not workspace:FindFirstChild(pl.Name) or not workspace[pl.Name]:FindFirstChild("FollowCharacter") then
-            local args = {
-                [1] = "CharacterFollowSpawnPlayer",
-                [2] = "BabyBoy"
-            }
-            local success, err = pcall(function()
-                game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
-            end)
-            if not success then
-                warn("Erro ao enviar criança: " .. err)
-            end
-        end
-        
-        task.wait(0.2)
-        
-        if workspace:FindFirstChild(pl.Name) then
-            for _, v in pairs(workspace[pl.Name]:GetChildren()) do
-                if v:IsA("BasePart") then
-                    v.CanCollide = true
-                end
-            end
-        end
-
-        local target = chasingplayer
-        if workspace:FindFirstChild(target) and workspace:FindFirstChild(pl.Name) and workspace[pl.Name]:FindFirstChild("FollowCharacter") then
-            workspace[pl.Name].FollowCharacter.Parent = workspace[target]
-
-            if rawget(getgenv(), "RunService") then
-                return
-            end
-
-            getgenv().RunService = game:GetService("RunService").Heartbeat:Connect(function()
-                local followCharacter = workspace[target]:FindFirstChild("FollowCharacter")
-                if followCharacter and followCharacter:FindFirstChild("Torso") and followCharacter.Torso:FindFirstChild("BodyPosition") then
-                    local humanoidRootPart = workspace[target]:FindFirstChild("HumanoidRootPart")
-                    if humanoidRootPart then
-                        followCharacter.Torso.BodyPosition.Position = humanoidRootPart.Position - (humanoidRootPart.CFrame.LookVector * 3)
-                        followCharacter.Torso.BodyGyro.CFrame = humanoidRootPart.CFrame
-                    end
-                end
-            end)
-        end
-    end
-})
-
-ChildTab:AddButton({
-    Name = "رسبون الطفل(لازم بالبداية تضغط هذي) ",
-    Callback = function()
-        if rawget(getgenv(), "RunService") then
-            getgenv().RunService:Disconnect()
-            getgenv().RunService = nil
-        end
-
-        local args = { [1] = "DeleteFollowCharacter" }
-        local success, err = pcall(function()
-            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
-        end)
-        if not success then
-            warn("Erro ao retornar criança: " .. err)
-        end
-
-        local args1 = { [1] = "CharacterFollowSpawnPlayer", [2] = "BabyBoy" }
-        success, err = pcall(function()
-            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args1))
-        end)
-        if not success then
-            warn("Erro ao spawnar criança: " .. err)
-        end
-    end
-})
-
-ChildTab:AddToggle({
-    Name = "تجسس على اللاعب الذي تم ارسال له طفل",
-    Default = false,
-    Callback = function(Value)
-        local Players = game:GetService("Players")
-        local RunService = game:GetService("RunService")
-        local LocalPlayer = Players.LocalPlayer
-        local Camera = workspace.CurrentCamera
-
-        if Value then
-            if not chasingplayer then
-                warn("Nenhum jogador selecionado para spectar!")
-                return false
-            end
-
-            if not rawget(getgenv(), "CameraConnection") then
-                getgenv().CameraConnection = RunService.Heartbeat:Connect(function()
-                    local targetPlayer = Players:FindFirstChild(chasingplayer)
-                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
-                        Camera.CameraSubject = targetPlayer.Character.Humanoid
-                    else
-                        if rawget(getgenv(), "CameraConnection") then
-                            getgenv().CameraConnection:Disconnect()
-                            getgenv().CameraConnection = nil
-                        end
-                        Camera.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") or nil
-                    end
-                end)
-            end
-        else
-            if rawget(getgenv(), "CameraConnection") then
-                getgenv().CameraConnection:Disconnect()
-                getgenv().CameraConnection = nil
-            end
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-                Camera.CameraSubject = LocalPlayer.Character.Humanoid
-            end
-        end
-    end
+    })
+end
 })
