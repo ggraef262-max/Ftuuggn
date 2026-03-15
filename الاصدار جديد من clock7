@@ -6087,3 +6087,235 @@ shadersTab:AddButton({
         sendNotification("شادر", "تم تطبيق الشادر بنجاح", nil, 3)
     end 
 })
+
+local ChildTab = Window:MakeTab({"الطفل", "baby"})
+
+local Section = ChildTab:AddSection({
+    Name = "الروبوت"
+})
+
+ChildTab:AddParagraph({"معلومة:", "هنا تبعث روبوت للناس ويشوفه الكل."}) 
+
+local chasingplayer = nil
+local playerChild = ChildTab:AddDropdown({
+    Name = "اختار لاعب تبعث له الروبوت",
+    Options = players,
+    Default = "",
+    Callback = function(selected)
+        if game.Players:FindFirstChild(selected) then
+            chasingplayer = selected
+        else
+            chasingplayer = nil
+        end
+    end
+})
+
+-- دالة تحديث قائمة اللاعبين
+local function updatePlayerList()
+    local playersList = {}
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        table.insert(playersList, player.Name)
+    end
+    return playersList
+end
+
+ChildTab:AddButton({
+    Name = "حدث قائمة اللاعبين",
+    Callback = function()
+        local updatedPlayers = updatePlayerList()
+        if playerChild and updatedPlayers then
+            pcall(function()
+                playerChild:Refresh(updatedPlayers)
+            end)
+            if chasingplayer and not game.Players:FindFirstChild(chasingplayer) then
+                chasingplayer = nil
+                pcall(function()
+                    playerChild:Set("")
+                end)
+            end
+        end
+    end
+})
+
+-- Eventos de entrada/saída de players
+game.Players.PlayerAdded:Connect(function()
+    task.wait(0.1)
+    local updatedPlayers = updatePlayerList()
+    if playerChild and updatedPlayers then
+        pcall(function()
+            playerChild:Refresh(updatedPlayers)
+        end)
+    end
+end)
+
+game.Players.PlayerRemoving:Connect(function(player)
+    task.wait(0.1)
+    local updatedPlayers = updatePlayerList()
+    if playerChild and updatedPlayers then
+        pcall(function()
+            playerChild:Refresh(updatedPlayers)
+        end)
+        if chasingplayer == player.Name then
+            chasingplayer = nil
+            pcall(function()
+                playerChild:Set("")
+            end)
+        end
+    end
+end)
+
+ChildTab:AddButton({
+    Name = "ارسال الروبوت للشخص",
+    Callback = function()
+        if not chasingplayer then
+            warn("No player selected!")
+            return
+        end
+        
+        local LocalPlayer = game.Players.LocalPlayer
+        
+        -- إرسال الروبوت (بدلاً من الطفل)
+        local args = {
+            [1] = "CharacterFollowSpawnPlayer",
+            [2] = "BabyBoy"  -- يمكن تغيير هذا إذا كان فيه نوع آخر للروبوت
+        }
+        local success, err = pcall(function()
+            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
+        end)
+        if not success then
+            warn("Error sending robot: " .. err)
+        end
+        
+        task.wait(0.2)
+        
+        -- جعل الروبوت مرئي للكل
+        if workspace:FindFirstChild(LocalPlayer.Name) then
+            for _, v in pairs(workspace[LocalPlayer.Name]:GetChildren()) do
+                if v:IsA("BasePart") or v:IsA("MeshPart") or v:IsA("Part") then
+                    v.CanCollide = true
+                    v.Transparency = 0  -- جعله مرئي
+                end
+            end
+        end
+
+        local target = chasingplayer
+        if workspace:FindFirstChild(target) and workspace:FindFirstChild(LocalPlayer.Name) and workspace[LocalPlayer.Name]:FindFirstChild("FollowCharacter") then
+            -- نقل الروبوت للشخص المستهدف
+            workspace[LocalPlayer.Name].FollowCharacter.Parent = workspace[target]
+            
+            -- تعديل خصائص الروبوت ليكون مرئي للكل
+            local robot = workspace[target]:FindFirstChild("FollowCharacter")
+            if robot then
+                -- جعل كل أجزاء الروبوت مرئية
+                for _, part in ipairs(robot:GetDescendants()) do
+                    if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("Part") then
+                        part.Transparency = 0
+                        part.Visible = true
+                        part.CanCollide = true
+                    end
+                end
+                
+                -- إضافة تأثيرات بصرية (اختياري)
+                local highlight = Instance.new("Highlight")
+                highlight.Parent = robot
+                highlight.FillColor = Color3.fromRGB(0, 255, 255)  -- لون سماوي
+                highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                highlight.FillTransparency = 0.5
+                highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            end
+
+            if rawget(getgenv(), "RunService") then
+                return
+            end
+
+            -- متابعة تحريك الروبوت مع اللاعب المستهدف
+            getgenv().RunService = game:GetService("RunService").Heartbeat:Connect(function()
+                local followCharacter = workspace[target]:FindFirstChild("FollowCharacter")
+                if followCharacter and followCharacter:FindFirstChild("Torso") and followCharacter.Torso:FindFirstChild("BodyPosition") then
+                    local humanoidRootPart = workspace[target]:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        followCharacter.Torso.BodyPosition.Position = humanoidRootPart.Position - (humanoidRootPart.CFrame.LookVector * 3)
+                        followCharacter.Torso.BodyGyro.CFrame = humanoidRootPart.CFrame
+                    end
+                end
+            end)
+        end
+    end
+})
+
+ChildTab:AddButton({
+    Name = "رجوع الروبوت (اضغط أولاً)",
+    Callback = function()
+        if rawget(getgenv(), "RunService") then
+            getgenv().RunService:Disconnect()
+            getgenv().RunService = nil
+        end
+
+        -- حذف الروبوت
+        local args = { [1] = "DeleteFollowCharacter" }
+        local success, err = pcall(function()
+            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
+        end)
+        if not success then
+            warn("Error returning robot: " .. err)
+        end
+
+        -- إعادة spawn الروبوت
+        local args1 = { [1] = "CharacterFollowSpawnPlayer", [2] = "BabyBoy" }
+        success, err = pcall(function()
+            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args1))
+        end)
+        if not success then
+            warn("Error spawning robot: " .. err)
+        end
+        
+        -- إعادة تعيين chasingplayer
+        chasingplayer = nil
+        if playerChild then
+            pcall(function()
+                playerChild:Set("")
+            end)
+        end
+    end
+})
+
+ChildTab:AddToggle({
+    Name = "تجسس على اللاعب الذي تم ارسال له الروبوت",
+    Default = false,
+    Callback = function(Value)
+        local Players = game:GetService("Players")
+        local RunService = game:GetService("RunService")
+        local LocalPlayer = Players.LocalPlayer
+        local Camera = workspace.CurrentCamera
+
+        if Value then
+            if not chasingplayer then
+                warn("No player selected for spectating!")
+                return false
+            end
+
+            if not rawget(getgenv(), "CameraConnection") then
+                getgenv().CameraConnection = RunService.Heartbeat:Connect(function()
+                    local targetPlayer = Players:FindFirstChild(chasingplayer)
+                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+                        Camera.CameraSubject = targetPlayer.Character.Humanoid
+                    else
+                        if rawget(getgenv(), "CameraConnection") then
+                            getgenv().CameraConnection:Disconnect()
+                            getgenv().CameraConnection = nil
+                        end
+                        Camera.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") or nil
+                    end
+                end)
+            end
+        else
+            if rawget(getgenv(), "CameraConnection") then
+                getgenv().CameraConnection:Disconnect()
+                getgenv().CameraConnection = nil
+            end
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                Camera.CameraSubject = LocalPlayer.Character.Humanoid
+            end
+        end
+    end
+})
