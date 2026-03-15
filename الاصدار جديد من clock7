@@ -6273,3 +6273,300 @@ ChildTab:AddToggle({
         end
     end
 })
+
+--[====[
+    ================================================
+    علامة التبويب: SKYBOX (تغيير خلفية السماء)
+    ================================================
+]====]
+local TrollTab = Window:MakeTab({ Title = "Skybox", Icon = "cloud" })
+
+TrollTab:AddSection({ "Skybox by Bazuka" })
+
+--[====[
+    زر عادي: يطبق سكربت خارجي لتغيير شكل السماء.
+]====]
+TrollTab:AddButton({
+ Name = "Skybox",
+ Callback = function()
+   loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/qZkSict1retkqFIr/raw"))()
+   end
+})
+
+--[====[
+    متغيرات لتتبع حالة تأثير Nuke Skybox.
+]====]
+local skyboxEnabled = false
+local skyboxTrack = nil
+local rigidTrack = nil
+local savedNukeBody = {}
+
+--[====[
+    دالة مساعدة: توقف جميع الحركات (الأنيميشن) الخاصة بتأثير Nuke.
+]====]
+local function stopAllAnimations()
+    if rigidTrack then
+        pcall(function()
+            rigidTrack:Stop()
+            rigidTrack:Destroy()
+        end)
+        rigidTrack = nil
+    end
+    
+    if skyboxTrack then
+        pcall(function()
+            skyboxTrack:Stop()
+            skyboxTrack:Destroy()
+        end)
+        skyboxTrack = nil
+    end
+    
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            local animator = humanoid:FindFirstChild("Animator")
+            if animator then
+                for _, track in pairs(animator:GetPlayingAnimationTracks()) do
+                    if track.Animation then
+                        local animId = track.Animation.AnimationId
+                        if animId == "rbxassetid://70883871260184" or animId == "rbxassetid://3695333486" then
+                            pcall(function()
+                                track:Stop()
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+--[====[
+    تأثير Nuke Skybox:
+    - يغير شكل اللاعب إلى هيئة غريبة.
+    - يجعل اللاعب يقوم بحركات (أنيميشن) غير طبيعية.
+]====]
+TrollTab:AddToggle({
+    Name = "Nuke Skybox", -- اسم التأثير
+    Default = false,
+    Callback = function(value)
+        skyboxEnabled = value
+        
+        if value then -- إذا تم تفعيل التأثير
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local description = humanoid:GetAppliedDescription()
+                    
+                    -- حفظ شكل اللاعب الحالي لاستعادته لاحقًا
+                    savedNukeBody = {
+                        Torso = description.Torso,
+                        RightArm = description.RightArm,
+                        LeftArm = description.LeftArm,
+                        RightLeg = description.RightLeg,
+                        LeftLeg = description.LeftLeg,
+                        Head = description.Head
+                    }
+                    
+                    task.wait(0.2)
+                    
+                    -- تغيير شكل اللاعب إلى هيئة "النوكل"
+                    local args = {
+                        [1] = 123402086843885,
+                        [2] = 100839513065432,
+                        [3] = 78300682916056,
+                        [4] = 86276701020724,
+                        [5] = 78409653958165,
+                        [6] = 15093053680
+                    }
+                    
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(args)
+                    end)
+                    
+                    task.wait(0.3)
+                    
+                    -- تشغيل حركة (أنيميشن) غريبة
+                    local newAnim = Instance.new("Animation")
+                    newAnim.AnimationId = "rbxassetid://70883871260184"
+                    
+                    skyboxTrack = humanoid:LoadAnimation(newAnim)
+                    skyboxTrack.Priority = Enum.AnimationPriority.Action4
+                    skyboxTrack:Play(0.1, 1, 0.01)
+                    
+                    task.wait(0.5)
+                    
+                    -- تشغيل حركة إضافية
+                    local plankAnim = Instance.new("Animation")
+                    plankAnim.AnimationId = "rbxassetid://3695333486"
+                    rigidTrack = humanoid:LoadAnimation(plankAnim)
+                    rigidTrack.Priority = Enum.AnimationPriority.Movement
+                    rigidTrack:Play(0.1, 1, 0)
+                end
+            end
+        else -- إذا تم إلغاء تفعيل التأثير
+            stopAllAnimations() -- إيقاف جميع الحركات
+            
+            task.wait(0.2)
+            
+            -- استعادة شكل اللاعب الأصلي
+            if next(savedNukeBody) then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        local restoreBody = {
+                            [1] = savedNukeBody.Torso,
+                            [2] = savedNukeBody.RightArm,
+                            [3] = savedNukeBody.LeftArm,
+                            [4] = savedNukeBody.RightLeg,
+                            [5] = savedNukeBody.LeftLeg,
+                            [6] = savedNukeBody.Head
+                        }
+                        
+                        local args = {
+                            [1] = restoreBody
+                        }
+                        
+                        pcall(function()
+                            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+                        end)
+                        
+                        savedNukeBody = {}
+                    end
+                end
+            end
+        end
+    end
+})
+
+--[====[
+    تأثير Nuke FlashBack:
+    - مشابه لتأثير Nuke ولكن بحركة أسرع (Flash).
+]====]
+local nukeFlashEnabled = false
+local nukeFlashTrack = nil
+local flashRigidTrack = nil
+local savedNukeFlashBody = {}
+
+local function stopFlashAnimations()
+    if flashRigidTrack then
+        pcall(function()
+            flashRigidTrack:Stop()
+            flashRigidTrack:Destroy()
+        end)
+        flashRigidTrack = nil
+    end
+    
+    if nukeFlashTrack then
+        pcall(function()
+            nukeFlashTrack:Stop()
+            nukeFlashTrack:Destroy()
+        end)
+        nukeFlashTrack = nil
+    end
+end
+
+TrollTab:AddToggle({
+    Name = "Nuke FlashBack",
+    Default = false,
+    Callback = function(value)
+        nukeFlashEnabled = value
+        
+        if value then
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local description = humanoid:GetAppliedDescription()
+                    
+                    savedNukeFlashBody = {
+                        Torso = description.Torso,
+                        RightArm = description.RightArm,
+                        LeftArm = description.LeftArm,
+                        RightLeg = description.RightLeg,
+                        LeftLeg = description.LeftLeg,
+                        Head = description.Head
+                    }
+                    
+                    task.wait(0.2)
+                    
+                    local args = {
+                        [1] = 123402086843885,
+                        [2] = 100839513065432,
+                        [3] = 78300682916056,
+                        [4] = 86276701020724,
+                        [5] = 78409653958165,
+                        [6] = 15093053680
+                    }
+                    
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(args)
+                    end)
+                    
+                    task.wait(0.3)
+                    
+                    local newAnim = Instance.new("Animation")
+                    newAnim.AnimationId = "rbxassetid://70883871260184"
+                    
+                    nukeFlashTrack = humanoid:LoadAnimation(newAnim)
+                    nukeFlashTrack.Priority = Enum.AnimationPriority.Action4
+                    nukeFlashTrack:Play(0.1, 1, 1)
+                    
+                    task.wait(0.1)
+                    nukeFlashTrack:AdjustSpeed(5) -- زيادة سرعة الحركة
+                    
+                    task.wait(0.3)
+                    
+                    local plankAnim = Instance.new("Animation")
+                    plankAnim.AnimationId = "rbxassetid://3695333486"
+                    flashRigidTrack = humanoid:LoadAnimation(plankAnim)
+                    flashRigidTrack.Priority = Enum.AnimationPriority.Movement
+                    flashRigidTrack:Play(0.1, 1, 0)
+                end
+            end
+        else
+            stopFlashAnimations()
+            
+            task.wait(0.2)
+            
+            if next(savedNukeFlashBody) then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        local restoreBody = {
+                            [1] = savedNukeFlashBody.Torso,
+                            [2] = savedNukeFlashBody.RightArm,
+                            [3] = savedNukeFlashBody.LeftArm,
+                            [4] = savedNukeFlashBody.RightLeg,
+                            [5] = savedNukeFlashBody.LeftLeg,
+                            [6] = savedNukeFlashBody.Head
+                        }
+                        
+                        local args = {
+                            [1] = restoreBody
+                        }
+                        
+                        pcall(function()
+                            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+                        end)
+                        
+                        savedNukeFlashBody = {}
+                    end
+                end
+            end
+        end
+    end
+})
