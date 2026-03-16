@@ -3,13 +3,16 @@ local TweenService = game:GetService("TweenService")
 -- Delta Executor - Clock7 ULTIMATE 2026
 -- تصميم تيتانيوم خارق مع ثلج فقط ❄️
 
-local MAIN_SCRIPT_URL = 'https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D8%A7%D8%B1%20%D8%AC%D8%AF%D9%8A%D8%AF%20%D9%85%D9%86%20clock7'
+-- روابط السكربتات (العربي والإنجليزي)
+local ARABIC_SCRIPT_URL = 'https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D8%A7%D8%B1%20%D8%AC%D8%AF%D9%8A%D8%AF%20%D9%85%D9%86%20clock7'
+local ENGLISH_SCRIPT_URL = 'https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Bdokd'
 
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
 repeat task.wait() until LocalPlayer and LocalPlayer:FindFirstChild("PlayerGui")
@@ -98,7 +101,7 @@ end)
 -- ======================
 local TitaniumPlate = Instance.new("Frame")
 TitaniumPlate.Size = UDim2.new(0.8, 0, 0.2, 0)
-TitaniumPlate.Position = UDim2.new(0.1, 0, 0.2, 0)
+TitaniumPlate.Position = UDim2.new(0.1, 0, 0.15, 0)
 TitaniumPlate.BackgroundColor3 = Color3.fromRGB(15, 25, 40)
 TitaniumPlate.BorderSizePixel = 2
 TitaniumPlate.BorderColor3 = Color3.fromRGB(0, 150, 255)
@@ -146,61 +149,12 @@ Year.TextXAlignment = Enum.TextXAlignment.Center
 Year.Parent = InnerPlate
 
 -- ======================
--- معلومات السكربت (بتصميم تيتانيوم)
--- ======================
-local InfoPanel = Instance.new("Frame")
-InfoPanel.Size = UDim2.new(0.8, 0, 0.15, 0)
-InfoPanel.Position = UDim2.new(0.1, 0, 0.42, 0)
-InfoPanel.BackgroundColor3 = Color3.fromRGB(10, 15, 25)
-InfoPanel.BorderSizePixel = 1
-InfoPanel.BorderColor3 = Color3.fromRGB(0, 150, 255)
-InfoPanel.Parent = ScreenGui
-
-local PanelCorner = Instance.new("UICorner")
-PanelCorner.CornerRadius = UDim.new(0, 6)
-PanelCorner.Parent = InfoPanel
-
-local function createInfoLine(text, yPos, icon)
-    local lineContainer = Instance.new("Frame")
-    lineContainer.Size = UDim2.new(0.95, 0, 0.22, 0)
-    lineContainer.Position = UDim2.new(0.025, 0, yPos, 0)
-    lineContainer.BackgroundTransparency = 1
-    lineContainer.Parent = InfoPanel
-    
-    local iconLabel = Instance.new("TextLabel")
-    iconLabel.Size = UDim2.new(0, 20, 1, 0)
-    iconLabel.Position = UDim2.new(0, 0, 0, 0)
-    iconLabel.Text = icon or "⬤"
-    iconLabel.TextColor3 = Color3.fromRGB(0, 200, 255)
-    iconLabel.TextScaled = true
-    iconLabel.BackgroundTransparency = 1
-    iconLabel.Font = Enum.Font.SourceSansBold
-    iconLabel.Parent = lineContainer
-    
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Size = UDim2.new(1, -25, 1, 0)
-    textLabel.Position = UDim2.new(0, 25, 0, 0)
-    textLabel.Text = text
-    textLabel.TextColor3 = Color3.fromRGB(200, 220, 255)
-    textLabel.TextScaled = true
-    textLabel.BackgroundTransparency = 1
-    textLabel.Font = Enum.Font.SourceSans
-    textLabel.TextXAlignment = Enum.TextXAlignment.Left
-    textLabel.Parent = lineContainer
-end
-
-createInfoLine("السكربت: Clock7 RP", 0.05, "▶")
-createInfoLine("المطور: DBLACK", 0.3, "▶")
-createInfoLine("الإصدار: 2026 TITANIUM", 0.55, "▶")
-createInfoLine("التواصل: @XlEAQ1", 0.8, "▶")
-
--- ======================
--- شريط التحميل التيتانيوم
+-- شريط التحميل الذي سيظهر أولاً
 -- ======================
 local ProgressContainer = Instance.new("Frame")
 ProgressContainer.AnchorPoint = Vector2.new(0.5, 0.5)
 ProgressContainer.Size = UDim2.new(0.7, 0, 0.04, 0)
-ProgressContainer.Position = UDim2.new(0.5, 0, 0.65, 0)
+ProgressContainer.Position = UDim2.new(0.5, 0, 0.4, 0)
 ProgressContainer.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
 ProgressContainer.BorderSizePixel = 2
 ProgressContainer.BorderColor3 = Color3.fromRGB(0, 150, 255)
@@ -243,7 +197,7 @@ PercentText.Parent = ProgressContainer
 -- ======================
 local StatusFrame = Instance.new("Frame")
 StatusFrame.Size = UDim2.new(0.8, 0, 0.05, 0)
-StatusFrame.Position = UDim2.new(0.1, 0, 0.73, 0)
+StatusFrame.Position = UDim2.new(0.1, 0, 0.48, 0)
 StatusFrame.BackgroundColor3 = Color3.fromRGB(5, 10, 20)
 StatusFrame.BorderSizePixel = 1
 StatusFrame.BorderColor3 = Color3.fromRGB(0, 100, 200)
@@ -278,8 +232,62 @@ local titaniumMessages = {
 }
 
 -- ======================
--- Footer تيتانيوم
+-- خيارات اختيار اللغة (ستظهر بعد التحميل)
 -- ======================
+local LanguageSelectionFrame = Instance.new("Frame")
+LanguageSelectionFrame.Size = UDim2.new(0.8, 0, 0.25, 0)
+LanguageSelectionFrame.Position = UDim2.new(0.1, 0, 0.55, 0)
+LanguageSelectionFrame.BackgroundColor3 = Color3.fromRGB(10, 15, 25)
+LanguageSelectionFrame.BorderSizePixel = 2
+LanguageSelectionFrame.BorderColor3 = Color3.fromRGB(0, 150, 255)
+LanguageSelectionFrame.Visible = false
+LanguageSelectionFrame.Parent = ScreenGui
+
+local LangCorner = Instance.new("UICorner")
+LangCorner.CornerRadius = UDim.new(0, 8)
+LangCorner.Parent = LanguageSelectionFrame
+
+local LangTitle = Instance.new("TextLabel")
+LangTitle.Size = UDim2.new(1, 0, 0.3, 0)
+LangTitle.Position = UDim2.new(0, 0, 0, 10)
+LangTitle.Text = "اختر اللغة / Choose Language"
+LangTitle.TextColor3 = Color3.fromRGB(0, 200, 255)
+LangTitle.TextScaled = true
+LangTitle.BackgroundTransparency = 1
+LangTitle.Font = Enum.Font.GothamBold
+LangTitle.Parent = LanguageSelectionFrame
+
+-- زر العربية
+local ArabicButton = Instance.new("TextButton")
+ArabicButton.Size = UDim2.new(0.4, 0, 0.25, 0)
+ArabicButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+ArabicButton.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+ArabicButton.Text = "🇸🇦 العربية"
+ArabicButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ArabicButton.TextScaled = true
+ArabicButton.Font = Enum.Font.GothamBold
+ArabicButton.Parent = LanguageSelectionFrame
+
+local ArabicCorner = Instance.new("UICorner")
+ArabicCorner.CornerRadius = UDim.new(0, 6)
+ArabicCorner.Parent = ArabicButton
+
+-- زر English
+local EnglishButton = Instance.new("TextButton")
+EnglishButton.Size = UDim2.new(0.4, 0, 0.25, 0)
+EnglishButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+EnglishButton.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+EnglishButton.Text = "🇬🇧 English"
+EnglishButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+EnglishButton.TextScaled = true
+EnglishButton.Font = Enum.Font.GothamBold
+EnglishButton.Parent = LanguageSelectionFrame
+
+local EnglishCorner = Instance.new("UICorner")
+EnglishCorner.CornerRadius = UDim.new(0, 6)
+EnglishCorner.Parent = EnglishButton
+
+-- Footer تيتانيوم
 local Footer = Instance.new("TextLabel")
 Footer.Size = UDim2.new(1, 0, 0.03, 0)
 Footer.Position = UDim2.new(0, 0, 0.96, 0)
@@ -321,6 +329,23 @@ spawn(function()
     end
 end)
 
+-- تأثيرات hover للأزرار
+ArabicButton.MouseEnter:Connect(function()
+    TweenService:Create(ArabicButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 150, 255)}):Play()
+end)
+
+ArabicButton.MouseLeave:Connect(function()
+    TweenService:Create(ArabicButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 100, 200)}):Play()
+end)
+
+EnglishButton.MouseEnter:Connect(function()
+    TweenService:Create(EnglishButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 150, 255)}):Play()
+end)
+
+EnglishButton.MouseLeave:Connect(function()
+    TweenService:Create(EnglishButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 100, 200)}):Play()
+end)
+
 -- ======================
 -- حلقة التحميل الرئيسية
 -- ======================
@@ -330,7 +355,7 @@ local msgIndex = 1
 
 connection = RunService.RenderStepped:Connect(function()
     local elapsed = tick() - startTime
-    local progress = math.min(elapsed / 6, 1)
+    local progress = math.min(elapsed / 4, 1) -- تحميل أسرع
     
     -- تحديث الشريط
     ProgressFill.Size = UDim2.new(progress, 0, 1, 0)
@@ -353,28 +378,54 @@ connection = RunService.RenderStepped:Connect(function()
         end
     end
     
-    -- الانتهاء
+    -- الانتهاء من التحميل
     if progress >= 1 then
         connection:Disconnect()
         
-        -- انفجار ثلجي أخير
-        for i = 1, 30 do
+        -- انفجار ثلجي
+        for i = 1, 20 do
             createSnowflake()
             task.wait(0.02)
         end
         
-        StatusText.Text = "❄️ TITANIUM DEPLOYED ❄️"
-        task.wait(0.8)
+        -- إخفاء شريط التحميل وإظهار خيارات اللغة
+        ProgressContainer.Visible = false
+        StatusFrame.Visible = false
+        LanguageSelectionFrame.Visible = true
         
-        ScreenGui:Destroy()
+        StatusText.Text = "✅ SELECT LANGUAGE ✅"
         
-        -- تشغيل السكربت
-        local success, err = pcall(function()
-            loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
+        -- وظائف الأزرار
+        local function executeScript(scriptUrl)
+            -- انفجار ثلجي قبل التشغيل
+            for i = 1, 30 do
+                createSnowflake()
+                task.wait(0.02)
+            end
+            
+            LanguageSelectionFrame.Visible = false
+            StatusFrame.Visible = true
+            StatusText.Text = "🚀 DEPLOYING SCRIPT 🚀"
+            task.wait(1)
+            
+            ScreenGui:Destroy()
+            
+            -- تشغيل السكربت
+            local success, err = pcall(function()
+                loadstring(game:HttpGet(scriptUrl))()
+            end)
+            
+            if not success then
+                warn("CLOCK7 TITANIUM ERROR: " .. tostring(err))
+            end
+        end
+        
+        ArabicButton.MouseButton1Click:Connect(function()
+            executeScript(ARABIC_SCRIPT_URL)
         end)
         
-        if not success then
-            warn("CLOCK7 TITANIUM ERROR: " .. tostring(err))
-        end
+        EnglishButton.MouseButton1Click:Connect(function()
+            executeScript(ENGLISH_SCRIPT_URL)
+        end)
     end
 end)
