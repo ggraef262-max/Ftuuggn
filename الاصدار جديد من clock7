@@ -6391,7 +6391,7 @@ TrollTab:AddToggle({
     علامة التبويب: PROTECTIONS (الحماية والمضادات)
     ================================================
 ]====]
-local Tab13 = Window:MakeTab({"Protections", "rbxassetid://11322093465"})
+local Tab13 = Window:MakeTab({"مضادات بذكاء الاصطناعي", "rbxassetid://11322093465"})
 
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Workspace = game:GetService("Workspace")
@@ -6682,4 +6682,250 @@ Tab13:AddToggle({
             end
         end)
     end
+})
+
+--[====[
+    ================================================
+    علامة التبويب: CHIELD (الطفل)
+    ================================================
+    الوظيفة: التحكم بشخصية الطفل الذي يتبعك في اللعبة.
+    - إرسال الطفل لملاحقة لاعب آخر.
+    - إرجاع الطفل إليك.
+    - مشاهدة اللاعب من خلال الطفل.
+]====]
+
+-- متغيرات عامة
+local pl = game.Players.LocalPlayer
+local players = {}
+
+-- دالة لتحديث قائمة اللاعبين
+local function updatePlayerList()
+    players = {}
+    for _, player in pairs(game.Players:GetPlayers()) do
+        table.insert(players, player.Name)
+    end
+    return players
+end
+
+-- تحديث القائمة عند بدء التشغيل
+updatePlayerList()
+
+-- إنشاء التبويب
+local ChildTab = Window:MakeTab({"Chield", "baby"}) -- اسم التبويب: الطفل (Chield)
+
+-- قسم خاص بالطفل
+local Section = ChildTab:AddSection({
+    Name = "الطفل (Child)"
+})
+
+-- متغير لتخزين اسم اللاعب المطلوب ملاحقته
+local chasingplayer = nil
+
+-- قائمة منسدلة لاختيار اللاعب المراد ملاحقته
+local playerChild = ChildTab:AddDropdown({
+    Name = "اختر لاعب للملاحقة",
+    Options = players, -- قائمة اللاعبين
+    Default = "",
+    Callback = function(selected)
+        if game.Players:FindFirstChild(selected) then
+            chasingplayer = selected
+            print("👶 سيتم ملاحقة: " .. selected)
+        else
+            chasingplayer = nil
+        end
+    end
+})
+
+-- زر لتحديث قائمة اللاعبين (في حالة دخول أو خروج أحدهم)
+ChildTab:AddButton({
+    Name = "تحديث قائمة اللاعبين",
+    Callback = function()
+        local updatedPlayers = updatePlayerList()
+        if playerChild and updatedPlayers then
+            pcall(function()
+                playerChild:Refresh(updatedPlayers)
+            end)
+            -- إذا كان اللاعب المختار قد غادر، نقوم بإلغاء اختياره
+            if chasingplayer and not game.Players:FindFirstChild(chasingplayer) then
+                chasingplayer = nil
+                pcall(function()
+                    playerChild:Set("")
+                end)
+            end
+        end
+    end
+})
+
+-- ربط أحداث دخول وخروج اللاعبين لتحديث القائمة تلقائيًا
+game.Players.PlayerAdded:Connect(function()
+    task.wait(0.1)
+    local updatedPlayers = updatePlayerList()
+    if playerChild and updatedPlayers then
+        pcall(function()
+            playerChild:Refresh(updatedPlayers)
+        end)
+    end
+end)
+
+game.Players.PlayerRemoving:Connect(function(player)
+    task.wait(0.1)
+    local updatedPlayers = updatePlayerList()
+    if playerChild and updatedPlayers then
+        pcall(function()
+            playerChild:Refresh(updatedPlayers)
+        end)
+        -- إذا كان اللاعب المغادر هو نفسه المطلوب ملاحقته، نلغي الاختيار
+        if chasingplayer == player.Name then
+            chasingplayer = nil
+            pcall(function()
+                playerChild:Set("")
+            end)
+        end
+    end
+end)
+
+-- زر إرسال الطفل لملاحقة اللاعب المختار
+ChildTab:AddButton({
+    Name = "👶 إرسال الطفل",
+    Callback = function()
+        if not chasingplayer then
+            warn("⚠️ لم يتم اختيار أي لاعب!")
+            return
+        end
+        
+        -- التحقق مما إذا كان الطفل موجودًا بالفعل، إذا لم يكن، نقوم باستدعائه
+        if not workspace:FindFirstChild(pl.Name) or not workspace[pl.Name]:FindFirstChild("FollowCharacter") then
+            local args = {
+                [1] = "CharacterFollowSpawnPlayer",
+                [2] = "BabyBoy" -- نوع الطفل (ولد)
+            }
+            local success, err = pcall(function()
+                game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
+            end)
+            if not success then
+                warn("❌ خطأ في إرسال الطفل: " .. err)
+            end
+        end
+        
+        task.wait(0.2)
+        
+        -- جعل أجزاء الطفل قابلة للتصادم (اختياري)
+        if workspace:FindFirstChild(pl.Name) then
+            for _, v in pairs(workspace[pl.Name]:GetChildren()) do
+                if v:IsA("BasePart") then
+                    v.CanCollide = true
+                end
+            end
+        end
+
+        local target = chasingplayer -- اللاعب المستهدف
+        
+        -- نقل الطفل إلى اللاعب المستهدف
+        if workspace:FindFirstChild(target) and workspace:FindFirstChild(pl.Name) and workspace[pl.Name]:FindFirstChild("FollowCharacter") then
+            workspace[pl.Name].FollowCharacter.Parent = workspace[target]
+
+            -- إذا كان هناك اتصال سابق، نتأكد من عدم وجوده
+            if rawget(getgenv(), "RunService") then
+                return
+            end
+
+            -- حلقة مستمرة لجعل الطفل يلاحق اللاعب المستهدف
+            getgenv().RunService = game:GetService("RunService").Heartbeat:Connect(function()
+                local followCharacter = workspace[target]:FindFirstChild("FollowCharacter")
+                if followCharacter and followCharacter:FindFirstChild("Torso") and followCharacter.Torso:FindFirstChild("BodyPosition") then
+                    local humanoidRootPart = workspace[target]:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        -- جعل الطفل يقف خلف اللاعب المستهدف بمسافة 3 وحدات
+                        followCharacter.Torso.BodyPosition.Position = humanoidRootPart.Position - (humanoidRootPart.CFrame.LookVector * 3)
+                        followCharacter.Torso.BodyGyro.CFrame = humanoidRootPart.CFrame
+                    end
+                end
+            end)
+            
+            print("👶 الطفل يلاحق الآن: " .. chasingplayer)
+        end
+    end
+})
+
+-- زر إرجاع الطفل (إلغاء الملاحقة)
+ChildTab:AddButton({
+    Name = "🔄 إرجاع الطفل",
+    Callback = function()
+        -- إيقاف حلقة الملاحقة
+        if rawget(getgenv(), "RunService") then
+            getgenv().RunService:Disconnect()
+            getgenv().RunService = nil
+        end
+
+        -- حذف الطفل الذي يلاحق اللاعب الآخر
+        local args = { [1] = "DeleteFollowCharacter" }
+        local success, err = pcall(function()
+            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
+        end)
+        if not success then
+            warn("❌ خطأ في حذف الطفل: " .. err)
+        end
+
+        -- استدعاء طفل جديد ليتبعك أنت
+        local args1 = { [1] = "CharacterFollowSpawnPlayer", [2] = "BabyBoy" }
+        success, err = pcall(function()
+            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args1))
+        end)
+        if not success then
+            warn("❌ خطأ في استدعاء الطفل: " .. err)
+        end
+        
+        print("👶 تم إرجاع الطفل")
+    end
+})
+
+-- خاصية مشاهدة اللاعب (Spectate) من خلال الطفل أو مباشرة
+ChildTab:AddToggle({
+    Name = "👁️ مشاهدة اللاعب",
+    Default = false,
+    Callback = function(Value)
+        local Players = game:GetService("Players")
+        local RunService = game:GetService("RunService")
+        local LocalPlayer = Players.LocalPlayer
+        local Camera = workspace.CurrentCamera
+
+        if Value then
+            if not chasingplayer then
+                warn("⚠️ لم يتم اختيار أي لاعب للمشاهدة!")
+                return false
+            end
+
+            if not rawget(getgenv(), "CameraConnection") then
+                getgenv().CameraConnection = RunService.Heartbeat:Connect(function()
+                    local targetPlayer = Players:FindFirstChild(chasingplayer)
+                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+                        -- جعل الكاميرا تتبع اللاعب المستهدف
+                        Camera.CameraSubject = targetPlayer.Character.Humanoid
+                    else
+                        -- إذا اختفى اللاعب، نوقف المشاهدة
+                        if rawget(getgenv(), "CameraConnection") then
+                            getgenv().CameraConnection:Disconnect()
+                            getgenv().CameraConnection = nil
+                        end
+                        Camera.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") or nil
+                    end
+                end)
+            end
+        else
+            if rawget(getgenv(), "CameraConnection") then
+                getgenv().CameraConnection:Disconnect()
+                getgenv().CameraConnection = nil
+            end
+            -- إعادة الكاميرا إلى شخصيتك
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                Camera.CameraSubject = LocalPlayer.Character.Humanoid
+            end
+        end
+    end
+})
+
+-- فقرة توضيحية
+ChildTab:AddParagraph({
+    Title = "FE",
+    Content = "جميع وظائف هذا التبويب متوافقة مع الـ FE (يعني يراها الآخرون)"
 })
