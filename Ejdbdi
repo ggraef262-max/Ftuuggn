@@ -1,6 +1,383 @@
 local CoreGui = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
+-- Delta Executor - Clock7 ULTIMATE 2026
+-- تصميم تيتانيوم خارق مع ثلج فقط ❄️
 
+local MAIN_SCRIPT_URL = 'https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D8%A7%D9%84%D8%A7%D8%B5%D8%AF%D8%A7%D8%B1%20%D8%AC%D8%AF%D9%8A%D8%AF%20%D9%85%D9%86%20clock7'
+
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+
+repeat task.wait() until LocalPlayer and LocalPlayer:FindFirstChild("PlayerGui")
+
+-- إنشاء الواجهة التيتانيوم
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "Clock7_2026_TITANIUM"
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.IgnoreGuiInset = true
+
+-- ======================
+-- خلفية تيتانيوم معدنية
+-- ======================
+local Background = Instance.new("Frame")
+Background.Size = UDim2.new(1, 0, 1, 0)
+Background.BackgroundColor3 = Color3.fromRGB(5, 8, 15)
+Background.Parent = ScreenGui
+
+-- طبقة معدنية (تأثير كربون)
+local MetalLayer = Instance.new("Frame")
+MetalLayer.Size = UDim2.new(1, 0, 1, 0)
+MetalLayer.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
+MetalLayer.BackgroundTransparency = 0.95
+MetalLayer.Parent = Background
+
+-- توهج سفلي
+local BottomGlow = Instance.new("Frame")
+BottomGlow.Size = UDim2.new(1, 0, 0.3, 0)
+BottomGlow.Position = UDim2.new(0, 0, 0.85, 0)
+BottomGlow.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+BottomGlow.BackgroundTransparency = 0.9
+BottomGlow.BorderSizePixel = 0
+BottomGlow.Parent = Background
+
+-- ======================
+-- تأثير ثلج كثيف (بدون غيره)
+-- ======================
+local SnowContainer = Instance.new("Folder")
+SnowContainer.Parent = ScreenGui
+
+local function createSnowflake()
+    local snow = Instance.new("TextLabel")
+    snow.Size = UDim2.new(0, math.random(5, 15), 0, math.random(5, 15))
+    snow.Position = UDim2.new(math.random(), 0, 0, -math.random(10, 50))
+    snow.BackgroundTransparency = 1
+    snow.Text = "❄️"
+    snow.TextColor3 = Color3.fromRGB(220, 240, 255)
+    snow.TextScaled = true
+    snow.Font = Enum.Font.SourceSansBold
+    snow.Rotation = math.random(0, 360)
+    snow.Parent = SnowContainer
+    
+    -- خصائص إضافية للثلج
+    local transparency = math.random(0, 3) / 10
+    snow.TextTransparency = transparency
+    
+    local duration = math.random(4, 10)
+    local endX = snow.Position.X.Scale + (math.random(-10, 10) / 200)
+    
+    -- تمايل ناعم
+    local tween = TweenService:Create(snow, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
+        Position = UDim2.new(endX, 0, 1.2, 0),
+        Rotation = snow.Rotation + math.random(-90, 90)
+    })
+    tween:Play()
+    
+    tween.Completed:Connect(function()
+        snow:Destroy()
+    end)
+end
+
+-- ثلج كثيف (20 ندفة في الثانية)
+spawn(function()
+    while ScreenGui.Parent do
+        for i = 1, 4 do
+            createSnowflake()
+        end
+        task.wait(0.05)
+    end
+end)
+
+-- ======================
+-- عنوان تيتانيوم 2026
+-- ======================
+local TitaniumPlate = Instance.new("Frame")
+TitaniumPlate.Size = UDim2.new(0.8, 0, 0.2, 0)
+TitaniumPlate.Position = UDim2.new(0.1, 0, 0.2, 0)
+TitaniumPlate.BackgroundColor3 = Color3.fromRGB(15, 25, 40)
+TitaniumPlate.BorderSizePixel = 2
+TitaniumPlate.BorderColor3 = Color3.fromRGB(0, 150, 255)
+TitaniumPlate.Parent = ScreenGui
+
+local PlateCorner = Instance.new("UICorner")
+PlateCorner.CornerRadius = UDim.new(0, 8)
+PlateCorner.Parent = TitaniumPlate
+
+-- طبقة داخلية
+local InnerPlate = Instance.new("Frame")
+InnerPlate.Size = UDim2.new(0.98, 0, 0.9, 0)
+InnerPlate.Position = UDim2.new(0.01, 0, 0.05, 0)
+InnerPlate.BackgroundColor3 = Color3.fromRGB(5, 10, 20)
+InnerPlate.BorderSizePixel = 1
+InnerPlate.BorderColor3 = Color3.fromRGB(0, 100, 200)
+InnerPlate.Parent = TitaniumPlate
+
+local InnerCorner = Instance.new("UICorner")
+InnerCorner.CornerRadius = UDim.new(0, 6)
+InnerCorner.Parent = InnerPlate
+
+-- النص الرئيسي
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0.6, 0)
+Title.Position = UDim2.new(0, 0, 0, 5)
+Title.Text = "CLOCK7"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextScaled = true
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBlack
+Title.TextXAlignment = Enum.TextXAlignment.Center
+Title.Parent = InnerPlate
+
+-- سنة 2026
+local Year = Instance.new("TextLabel")
+Year.Size = UDim2.new(1, 0, 0.3, 0)
+Year.Position = UDim2.new(0, 0, 0.6, -5)
+Year.Text = "⚡ 2026 EDITION ⚡"
+Year.TextColor3 = Color3.fromRGB(0, 200, 255)
+Year.TextScaled = true
+Year.BackgroundTransparency = 1
+Year.Font = Enum.Font.SourceSansBold
+Year.TextXAlignment = Enum.TextXAlignment.Center
+Year.Parent = InnerPlate
+
+-- ======================
+-- معلومات السكربت (بتصميم تيتانيوم)
+-- ======================
+local InfoPanel = Instance.new("Frame")
+InfoPanel.Size = UDim2.new(0.8, 0, 0.15, 0)
+InfoPanel.Position = UDim2.new(0.1, 0, 0.42, 0)
+InfoPanel.BackgroundColor3 = Color3.fromRGB(10, 15, 25)
+InfoPanel.BorderSizePixel = 1
+InfoPanel.BorderColor3 = Color3.fromRGB(0, 150, 255)
+InfoPanel.Parent = ScreenGui
+
+local PanelCorner = Instance.new("UICorner")
+PanelCorner.CornerRadius = UDim.new(0, 6)
+PanelCorner.Parent = InfoPanel
+
+local function createInfoLine(text, yPos, icon)
+    local lineContainer = Instance.new("Frame")
+    lineContainer.Size = UDim2.new(0.95, 0, 0.22, 0)
+    lineContainer.Position = UDim2.new(0.025, 0, yPos, 0)
+    lineContainer.BackgroundTransparency = 1
+    lineContainer.Parent = InfoPanel
+    
+    local iconLabel = Instance.new("TextLabel")
+    iconLabel.Size = UDim2.new(0, 20, 1, 0)
+    iconLabel.Position = UDim2.new(0, 0, 0, 0)
+    iconLabel.Text = icon or "⬤"
+    iconLabel.TextColor3 = Color3.fromRGB(0, 200, 255)
+    iconLabel.TextScaled = true
+    iconLabel.BackgroundTransparency = 1
+    iconLabel.Font = Enum.Font.SourceSansBold
+    iconLabel.Parent = lineContainer
+    
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, -25, 1, 0)
+    textLabel.Position = UDim2.new(0, 25, 0, 0)
+    textLabel.Text = text
+    textLabel.TextColor3 = Color3.fromRGB(200, 220, 255)
+    textLabel.TextScaled = true
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = Enum.Font.SourceSans
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left
+    textLabel.Parent = lineContainer
+end
+
+createInfoLine("السكربت: Clock7 RP", 0.05, "▶")
+createInfoLine("المطور: DBLACK", 0.3, "▶")
+createInfoLine("الإصدار: 2026 TITANIUM", 0.55, "▶")
+createInfoLine("التواصل: @XlEAQ1", 0.8, "▶")
+
+-- ======================
+-- شريط التحميل التيتانيوم
+-- ======================
+local ProgressContainer = Instance.new("Frame")
+ProgressContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+ProgressContainer.Size = UDim2.new(0.7, 0, 0.04, 0)
+ProgressContainer.Position = UDim2.new(0.5, 0, 0.65, 0)
+ProgressContainer.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+ProgressContainer.BorderSizePixel = 2
+ProgressContainer.BorderColor3 = Color3.fromRGB(0, 150, 255)
+ProgressContainer.Parent = ScreenGui
+
+local ProgressCorner = Instance.new("UICorner")
+ProgressCorner.CornerRadius = UDim.new(0, 4)
+ProgressCorner.Parent = ProgressContainer
+
+local ProgressFill = Instance.new("Frame")
+ProgressFill.Size = UDim2.new(0, 0, 1, 0)
+ProgressFill.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
+ProgressFill.Parent = ProgressContainer
+
+local FillCorner = Instance.new("UICorner")
+FillCorner.CornerRadius = UDim.new(0, 4)
+FillCorner.Parent = ProgressFill
+
+-- تأثير لامع على الشريط
+local Glint = Instance.new("Frame")
+Glint.Size = UDim2.new(0, 30, 1, 0)
+Glint.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Glint.BackgroundTransparency = 0.6
+Glint.Parent = ProgressFill
+
+-- نسبة التحميل
+local PercentText = Instance.new("TextLabel")
+PercentText.AnchorPoint = Vector2.new(0.5, 0.5)
+PercentText.Size = UDim2.new(1, 0, 1, 0)
+PercentText.Position = UDim2.new(0.5, 0, 0.5, 0)
+PercentText.Text = "0%"
+PercentText.TextColor3 = Color3.fromRGB(255, 255, 255)
+PercentText.TextScaled = true
+PercentText.BackgroundTransparency = 1
+PercentText.Font = Enum.Font.GothamBold
+PercentText.Parent = ProgressContainer
+
+-- ======================
+-- الحالة (رسائل تيتانيوم)
+-- ======================
+local StatusFrame = Instance.new("Frame")
+StatusFrame.Size = UDim2.new(0.8, 0, 0.05, 0)
+StatusFrame.Position = UDim2.new(0.1, 0, 0.73, 0)
+StatusFrame.BackgroundColor3 = Color3.fromRGB(5, 10, 20)
+StatusFrame.BorderSizePixel = 1
+StatusFrame.BorderColor3 = Color3.fromRGB(0, 100, 200)
+StatusFrame.Parent = ScreenGui
+
+local StatusCorner = Instance.new("UICorner")
+StatusCorner.CornerRadius = UDim.new(0, 4)
+StatusCorner.Parent = StatusFrame
+
+local StatusText = Instance.new("TextLabel")
+StatusText.Size = UDim2.new(0.95, 0, 1, 0)
+StatusText.Position = UDim2.new(0.025, 0, 0, 0)
+StatusText.Text = "⚡ INITIALIZING TITANIUM CORE ⚡"
+StatusText.TextColor3 = Color3.fromRGB(0, 200, 255)
+StatusText.TextScaled = true
+StatusText.BackgroundTransparency = 1
+StatusText.Font = Enum.Font.SourceSansBold
+StatusText.TextXAlignment = Enum.TextXAlignment.Center
+StatusText.Parent = StatusFrame
+
+-- رسائل تيتانيوم 2026
+local titaniumMessages = {
+    "⚡ INITIALIZING TITANIUM CORE ⚡",
+    "❄️ LOADING SNOW PARTICLES ❄️",
+    "🔷 CALIBRATING 2026 ENGINE 🔷",
+    "⚙️ ACTIVATING RP SYSTEMS ⚙️",
+    "💠 CONNECTING TO DBLACK SERVER 💠",
+    "🔹 CLOCK7 TITANIUM EDITION 🔹",
+    "❄️ SNOW STORM INTENSIFYING ❄️",
+    "⚡ POWER LEVEL: OVER 9000 ⚡",
+    "🔷 READY TO DEPLOY 🔷"
+}
+
+-- ======================
+-- Footer تيتانيوم
+-- ======================
+local Footer = Instance.new("TextLabel")
+Footer.Size = UDim2.new(1, 0, 0.03, 0)
+Footer.Position = UDim2.new(0, 0, 0.96, 0)
+Footer.Text = "CLOCK7 2026 TITANIUM EDITION © DBLACK"
+Footer.TextColor3 = Color3.fromRGB(60, 80, 120)
+Footer.TextScaled = true
+Footer.BackgroundTransparency = 1
+Footer.Font = Enum.Font.SourceSans
+Footer.TextXAlignment = Enum.TextXAlignment.Center
+Footer.Parent = ScreenGui
+
+-- ======================
+-- أنيميشنات تيتانيوم
+-- ======================
+
+-- نبض العنوان
+spawn(function()
+    while ScreenGui.Parent do
+        TweenService:Create(TitaniumPlate, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            BorderColor3 = Color3.fromRGB(100, 200, 255)
+        }):Play()
+        task.wait(0.75)
+        TweenService:Create(TitaniumPlate, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            BorderColor3 = Color3.fromRGB(0, 150, 255)
+        }):Play()
+        task.wait(1.5)
+    end
+end)
+
+-- حركة الـ Glint
+spawn(function()
+    while ScreenGui.Parent do
+        TweenService:Create(Glint, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            Position = UDim2.new(1, 30, 0, 0)
+        }):Play()
+        task.wait(1.8)
+        Glint.Position = UDim2.new(0, -30, 0, 0)
+        task.wait(0.2)
+    end
+end)
+
+-- ======================
+-- حلقة التحميل الرئيسية
+-- ======================
+local startTime = tick()
+local connection
+local msgIndex = 1
+
+connection = RunService.RenderStepped:Connect(function()
+    local elapsed = tick() - startTime
+    local progress = math.min(elapsed / 6, 1)
+    
+    -- تحديث الشريط
+    ProgressFill.Size = UDim2.new(progress, 0, 1, 0)
+    PercentText.Text = math.floor(progress * 100) .. "%"
+    
+    -- تحديث الرسالة كل 0.8 ثانية
+    if math.floor(elapsed * 1.25) > math.floor((elapsed - 0.1) * 1.25) then
+        msgIndex = (msgIndex % #titaniumMessages) + 1
+        StatusText.Text = titaniumMessages[msgIndex]
+    end
+    
+    -- تأثيرات عند نقاط معينة
+    if progress > 0.33 and progress < 0.34 then
+        for i = 1, 15 do
+            createSnowflake()
+        end
+    elseif progress > 0.66 and progress < 0.67 then
+        for i = 1, 15 do
+            createSnowflake()
+        end
+    end
+    
+    -- الانتهاء
+    if progress >= 1 then
+        connection:Disconnect()
+        
+        -- انفجار ثلجي أخير
+        for i = 1, 30 do
+            createSnowflake()
+            task.wait(0.02)
+        end
+        
+        StatusText.Text = "❄️ TITANIUM DEPLOYED ❄️"
+        task.wait(0.8)
+        
+        ScreenGui:Destroy()
+        
+        -- تشغيل السكربت
+        local success, err = pcall(function()
+            loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
+        end)
+        
+        if not success then
+            warn("CLOCK7 TITANIUM ERROR: " .. tostring(err))
+        end
+    end
+end)
 -- ألوان نحاسية
 local COPPER = Color3.fromRGB(184, 115, 51)
 local DARK_COPPER = Color3.fromRGB(120, 70, 20)
