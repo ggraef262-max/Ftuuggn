@@ -83,23 +83,23 @@ local redzlib = {
 			["Color Text"] = Color3.fromRGB(200, 240, 255),
 			["Color Dark Text"] = Color3.fromRGB(100, 180, 200)
 		},
-		-- ثيم البوليس (نصف احمر ونصف ازرق) متوازن ومتناسق ✨
+		-- ثيم البوليس (أحمر فاتح وأزرق داكن) 🚔
 		Police = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 100)),     -- أزرق داكن في البداية
-				ColorSequenceKeypoint.new(0.25, Color3.fromRGB(0, 0, 180)),    -- أزرق فاتح
-				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(200, 0, 0)),    -- أحمر ساطع في المنتصف
-				ColorSequenceKeypoint.new(0.75, Color3.fromRGB(180, 0, 0)),    -- أحمر داكن
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 139))     -- أزرق داكن في النهاية
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 100)),     -- أزرق داكن
+				ColorSequenceKeypoint.new(0.30, Color3.fromRGB(0, 0, 80)),      -- أزرق داكن جداً
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 80, 80)),   -- أحمر فاتح
+				ColorSequenceKeypoint.new(0.70, Color3.fromRGB(255, 100, 100)), -- أحمر فاتح جداً
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 139))      -- أزرق داكن
 			}),
-			["Color Hub 2"] = Color3.fromRGB(25, 20, 45),  -- مزيج بنفسجي داكن للأزرار
-			["Color Stroke"] = Color3.fromRGB(200, 0, 0),  -- أحمر للحدود
-			["Color Theme"] = Color3.fromRGB(0, 100, 255), -- أزرق ساطع للعناصر الأساسية
-			["Color Text"] = Color3.fromRGB(255, 255, 255), -- أبيض ناصع للنص
-			["Color Dark Text"] = Color3.fromRGB(200, 200, 255) -- أزرق فاتح للنص الثانوي
+			["Color Hub 2"] = Color3.fromRGB(20, 20, 50),  -- أزرق داكن جداً للأزرار
+			["Color Stroke"] = Color3.fromRGB(255, 80, 80),  -- أحمر فاتح للحدود
+			["Color Theme"] = Color3.fromRGB(255, 100, 100), -- أحمر فاتح للعناصر الأساسية
+			["Color Text"] = Color3.fromRGB(255, 255, 255),  -- أبيض ناصع للنص
+			["Color Dark Text"] = Color3.fromRGB(150, 150, 255) -- أزرق فاتح للنص الثانوي
 		}
 	},
-	Info = {
+Info = {
 		Version = "1.1.0"
 	},
 	Save = {
