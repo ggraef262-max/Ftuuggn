@@ -6057,10 +6057,10 @@ shadersTab:AddButton({
         local sky = Instance.new("Sky")
         sky.SkyboxBk = "rbxassetid://159454299"
         sky.SkyboxDn = "rbxassetid://159454296"
-        sky.SkyboxFt = "rbxassetid://159454293"
-        sky.SkyboxLf = "rbxassetid://159454286"
-        sky.SkyboxRt = "rbxassetid://159454300"
-        sky.SkyboxUp = "rbxassetid://159454304"
+        sky.SkyboxFt = "rbxassetid://136350850692118"
+        sky.SkyboxLf = "rbxassetid://136350850692118"
+        sky.SkyboxRt = "rbxassetid://136350850692118"
+        sky.SkyboxUp = "rbxassetid://136350850692118"
         sky.Parent = Lighting
         table.insert(shaderObjects, sky)
         
