@@ -1774,7 +1774,7 @@ UniversalTab:AddButton({
    end
 })
 
-local Troll = Window:MakeTab({ Title = "تخريب على اللاعبين", Icon = "rbxassetid://135851813855145" })
+local Troll = Window:MakeTab({ Title = "تخريب على اللاعبين", Icon = "rbxassetid://90798133906684" })
 
 
 local Players = game:GetService("Players")
@@ -5619,8 +5619,8 @@ botaoMinimizar.MouseButton1Down:Connect(alternarBotoes)
 })
 
 local shadersTab = Window:MakeTab({
-    Title = "المؤثرات البصرية [الشادر والصوت]",
-    Icon = "rbxassetid://10747382750"
+    Title = "المؤثرات البصرية [الشادر ]",
+    Icon = "rbxassetid://90798133906684"
 })
 
 shadersTab:AddSection({ "Shaders" })
@@ -6094,15 +6094,15 @@ shadersTab:AddButton({
     علامة التبويب: SKYBOX (تغيير خلفية السماء)
     ================================================
 ]====]
-local TrollTab = Window:MakeTab({ Title = "Skybox", Icon = "cloud" })
+local TrollTab = Window:MakeTab({ Title = "سكاي بوكس", Icon = "cloud" })
 
-TrollTab:AddSection({ "Skybox by Bazuka" })
+TrollTab:AddSection({ "Skybox by DBLACK" })
 
 --[====[
     زر عادي: يطبق سكربت خارجي لتغيير شكل السماء.
 ]====]
 TrollTab:AddButton({
- Name = "Skybox",
+ Name = "سكاي بوكس",
  Callback = function()
    loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/qZkSict1retkqFIr/raw"))()
    end
@@ -6391,7 +6391,7 @@ TrollTab:AddToggle({
     علامة التبويب: PROTECTIONS (الحماية والمضادات)
     ================================================
 ]====]
-local Tab13 = Window:MakeTab({"مضادات بذكاء الاصطناعي", "rbxassetid://11322093465"})
+local Tab13 = Window:MakeTab({"مضادات By dblack", "rbxassetid://90798133906684"})
 
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Workspace = game:GetService("Workspace")
@@ -6684,57 +6684,39 @@ Tab13:AddToggle({
     end
 })
 
---[====[
-    ================================================
-    علامة التبويب: CHIELD (الطفل)
-    ================================================
-    الوظيفة: التحكم بشخصية الطفل الذي يتبعك في اللعبة.
-    - إرسال الطفل لملاحقة لاعب آخر.
-    - إرجاع الطفل إليك.
-    - مشاهدة اللاعب من خلال الطفل.
-]====]
-
--- متغيرات عامة
-local pl = game.Players.LocalPlayer
-local players = {}
-
--- دالة لتحديث قائمة اللاعبين
-local function updatePlayerList()
-    players = {}
-    for _, player in pairs(game.Players:GetPlayers()) do
-        table.insert(players, player.Name)
-    end
-    return players
-end
-
 -- تحديث القائمة عند بدء التشغيل
 updatePlayerList()
-
 local Main = MakeTab({Name = "الـكـشـف"})
-local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
-ESP:Toggle(true)
-ESP.Players = false
-ESP.Names = false
 
-local Toggle = AddToggle(Main, {
+-- تحميل مكتبة ESP
+local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
+ESP:Toggle(true) -- تشغيل ESP بشكل عام
+ESP.Players = false -- تعطيل كشف اللاعبين في البداية
+ESP.Names = false -- تعطيل كشف الأسماء في البداية
+
+-- زر تبديل تفعيل الكشف للاعبين
+local Toggle1 = AddToggle(Main, {
   Name = "تـفـعـيـل الـكـشـف",
   Default = false,
   Callback = function(Value)
-    ESP.Players = Value
+    ESP.Players = Value -- تغيير حالة كشف اللاعبين
   end
 })
 
-local Toggle = AddToggle(Main, {
+-- زر تبديل كشف أسماء اللاعبين
+local Toggle2 = AddToggle(Main, {
   Name = "كـشـف اسـامـي الـلاعـبـيـن",
   Default = false,
   Callback = function(Value)
-    ESP.Names = Value
+    ESP.Names = Value -- تغيير حالة كشف الأسماء
   end
 })
+
+-- منتقي الألوان
 AddColorPicker(Main, {
   Name = "لـون الـكـشـف",
-  Default = Color3.fromRGB(255, 255, 0),
+  Default = Color3.fromRGB(255, 255, 0), -- اللون الأصفر
   Callback = function(Value)
-    ESP.Color = Value
+    ESP.Color = Value -- تغيير لون ESP
   end
 })
