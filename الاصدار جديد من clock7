@@ -6686,45 +6686,6 @@ Tab13:AddToggle({
 
 -- تحديث القائمة عند بدء التشغيل
 updatePlayerList()
-local Main = MakeTab({Name = "الـكـشـف"})
-
--- تحميل مكتبة ESP
-local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
-ESP:Toggle(true) -- تشغيل ESP بشكل عام
-ESP.Players = false -- تعطيل كشف اللاعبين في البداية
-ESP.Names = false -- تعطيل كشف الأسماء في البداية
-
--- زر تبديل تفعيل الكشف للاعبين
-local Toggle1 = AddToggle(Main, {
-  Name = "تـفـعـيـل الـكـشـف",
-  Default = false,
-  Callback = function(Value)
-    ESP.Players = Value -- تغيير حالة كشف اللاعبين
-  end
-})
-
--- زر تبديل كشف أسماء اللاعبين
-local Toggle2 = AddToggle(Main, {
-  Name = "كـشـف اسـامـي الـلاعـبـيـن",
-  Default = false,
-  Callback = function(Value)
-    ESP.Names = Value -- تغيير حالة كشف الأسماء
-  end
-})
-
--- منتقي الألوان
-AddColorPicker(Main, {
-  Name = "لـون الـكـشـف",
-  Default = Color3.fromRGB(255, 255, 0), -- اللون الأصفر
-  Callback = function(Value)
-    ESP.Color = Value -- تغيير لون ESP
-  end
-})
-
-local MusicTab = Window:MakeTab({
-    Title = "اغاني عربية",
-    Icon = "Music"
-})
 
 MusicTab:AddSection("ادخل كود الأغنية")
 
