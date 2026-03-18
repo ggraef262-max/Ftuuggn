@@ -1,0 +1,630 @@
+--[[
+    سكربت شامل للعبة Dragon Adventures - الإصدار المطور V2
+    مخصص لـ Delta Executor
+    يحتوي على:
+    ✓ الطيران (Fly) مع فيزياء واقعية
+    ✓ السرعة الفائقة (Speed)
+    ✓ الاختراق (Noclip)
+    ✓ الجمع التلقائي الذكي (Auto Farm)
+    ✓ تتبع الصناديق ثلاثي الأبعاد (3D Chest ESP)
+    ✓ الحماية من الموت تحت الأرض (Anti Void) مع تأثيرات بصرية
+    ✓ واجهة مستخدم احترافية مع إحصائيات
+]]
+
+-- إعداد الخدمات
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
+local Lighting = game:GetService("Lighting")
+local Debris = game:GetService("Debris")
+
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local Camera = workspace.CurrentCamera
+
+-- متغيرات الحالة
+local Player = LocalPlayer
+local Character = nil
+local Humanoid = nil
+local RootPart = nil
+local HumanoidRootPart = nil
+
+local FlyState = false
+local SpeedState = false
+local NoclipState = false
+local AutoFarmState = false
+local ChestESPState = false
+local AntiVoidState = false  -- خاصية الحماية من الفراغ
+
+-- إعدادات متقدمة
+local FlySpeed = 150
+local SpeedValue = 120
+local AntiVoidHeight = 30    -- الارتفاع الآمن (إذا نزلت تحت 30 يرفعك)
+local LastPosition = nil     -- آخر موقع آمن
+
+-- المتغيرات التقنية
+local NoclipConnection = nil
+local FarmConnection = nil
+local FlyConnection = nil
+local ESPConnection = nil
+local AntiVoidConnection = nil
+local ESPObjects = {}
+
+-- ═══════════════════════════════════════════════
+-- دوال تحديث الشخصية
+-- ═══════════════════════════════════════════════
+
+local function refreshCharacter()
+    Character = Player.Character
+    if Character then
+        Humanoid = Character:WaitForChild("Humanoid")
+        RootPart = Character:WaitForChild("HumanoidRootPart")
+        HumanoidRootPart = RootPart
+        LastPosition = RootPart.Position
+    else
+        Humanoid = nil
+        RootPart = nil
+        HumanoidRootPart = nil
+    end
+end
+
+Player.CharacterAdded:Connect(function()
+    wait(1)
+    refreshCharacter()
+end)
+refreshCharacter()
+
+-- ═══════════════════════════════════════════════
+-- دالة إنشاء تأثيرات بصرية
+-- ═══════════════════════════════════════════════
+
+local function createVisualEffect(position, color, effectType)
+    if effectType == "teleport" then
+        -- تأثير الانتقال السريع
+        local part = Instance.new("Part")
+        part.Size = Vector3.new(2, 2, 2)
+        part.Position = position
+        part.Anchored = true
+        part.CanCollide = false
+        part.Transparency = 0.3
+        part.BrickColor = BrickColor.new(color)
+        part.Material = Enum.Material.Neon
+        part.Parent = workspace
+        
+        -- إضافة ضوء
+        local light = Instance.new("PointLight")
+        light.Color = color
+        light.Range = 10
+        light.Brightness = 1
+        light.Parent = part
+        
+        -- تأثير تمدد وانكماش
+        local tween1 = TweenService:Create(part, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Size = Vector3.new(4, 4, 4), Transparency = 0.7})
+        local tween2 = TweenService:Create(part, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Size = Vector3.new(1, 1, 1), Transparency = 1})
+        
+        tween1:Play()
+        tween1.Completed:Connect(function()
+            tween2:Play()
+            tween2.Completed:Connect(function()
+                part:Destroy()
+            end)
+        end)
+        
+        Debris:AddItem(part, 1)
+    end
+end
+
+-- ═══════════════════════════════════════════════
+-- دالة الحماية من الموت تحت الأرض (الميزة الجديدة)
+-- ═══════════════════════════════════════════════
+
+local function setupAntiVoid()
+    AntiVoidConnection = RunService.Heartbeat:Connect(function()
+        if not AntiVoidState or not RootPart or not Humanoid then return end
+        if Humanoid.Health <= 0 then return end
+        
+        local currentPos = RootPart.Position
+        
+        -- التحقق من السقوط في الفراغ
+        if currentPos.Y < AntiVoidHeight then
+            -- البحث عن أقرب سطح آمن
+            local ray = Ray.new(currentPos + Vector3.new(0, 10, 0), Vector3.new(0, -100, 0))
+            local hit, position = workspace:FindPartOnRay(ray, Character)
+            
+            if hit then
+                -- إذا وجد سطح، انقل له
+                local safePos = Vector3.new(currentPos.X, position.Y + 5, currentPos.Z)
+                
+                -- إنشاء تأثير انتقال
+                createVisualEffect(RootPart.Position, Color3.fromRGB(0, 255, 255), "teleport")
+                createVisualEffect(safePos, Color3.fromRGB(0, 255, 255), "teleport")
+                
+                -- نقل اللاعب
+                RootPart.CFrame = CFrame.new(safePos)
+                
+                -- إعطاء دفعة مؤقتة
+                Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                
+                -- رسالة تحذير
+                if Player.PlayerGui:FindFirstChild("DragonHackGUI") then
+                    local warning = Instance.new("Frame")
+                    warning.Size = UDim2.new(0, 200, 0, 40)
+                    warning.Position = UDim2.new(0.5, -100, 0.2, 0)
+                    warning.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+                    warning.BackgroundTransparency = 0.2
+                    warning.BorderSizePixel = 0
+                    warning.Parent = Player.PlayerGui.DragonHackGUI
+                    
+                    local corner = Instance.new("UICorner")
+                    corner.CornerRadius = UDim.new(0, 10)
+                    corner.Parent = warning
+                    
+                    local text = Instance.new("TextLabel")
+                    text.Size = UDim2.new(1, 0, 1, 0)
+                    text.BackgroundTransparency = 1
+                    text.Text = "🚫 تم إنقاذك من الموت!"
+                    text.TextColor3 = Color3.new(1, 1, 1)
+                    text.TextScaled = true
+                    text.Font = Enum.Font.GothamBold
+                    text.Parent = warning
+                    
+                    -- إخفاء بعد ثانيتين
+                    wait(2)
+                    warning:Destroy()
+                end
+            else
+                -- إذا ما في سطح، ارفعه للأعلى
+                RootPart.CFrame = RootPart.CFrame + Vector3.new(0, 20, 0)
+            end
+        end
+        
+        -- حفظ آخر موقع آمن
+        if currentPos.Y > 100 then
+            LastPosition = currentPos
+        end
+    end)
+end
+
+-- ═══════════════════════════════════════════════
+-- دالة تتبع الصناديق المحسنة (3D ESP)
+-- ═══════════════════════════════════════════════
+
+local function setupChestESP()
+    local espFolder = CoreGui:FindFirstChild("ESPChests")
+    if not espFolder then
+        espFolder = Instance.new("Folder")
+        espFolder.Name = "ESPChests"
+        espFolder.Parent = CoreGui
+    end
+
+    -- دالة إنشاء خط متوهج
+    local function createGlowLine(color)
+        local line = Instance.new("Frame")
+        line.Name = "GlowLine"
+        line.BackgroundColor3 = color
+        line.BorderSizePixel = 0
+        line.BackgroundTransparency = 0.3
+        line.Parent = espFolder
+        return line
+    end
+
+    -- دالة إنشاء مربع ثلاثي الأبعاد
+    local function create3DBox(targetPart, color)
+        local box = Instance.new("BoxHandleAdornment")
+        box.Name = "3DBox"
+        box.Size = targetPart.Size + Vector3.new(1, 1, 1)
+        box.Color3 = color
+        box.Transparency = 0.3
+        box.ZIndex = 10
+        box.Adornee = targetPart
+        box.AlwaysOnTop = true
+        box.Visible = true
+        box.Parent = espFolder
+        
+        -- إضافة توهج
+        local glow = Instance.new("BoxHandleAdornment")
+        glow.Name = "Glow"
+        glow.Size = targetPart.Size + Vector3.new(1.5, 1.5, 1.5)
+        glow.Color3 = color
+        glow.Transparency = 0.7
+        glow.ZIndex = 5
+        glow.Adornee = targetPart
+        glow.AlwaysOnTop = true
+        glow.Visible = true
+        glow.Parent = espFolder
+        
+        return {box, glow}
+    end
+
+    -- دالة البحث عن الصناديق
+    local function findChests()
+        local chests = {}
+        local chestKeywords = {"chest", "box", "treasure", "crate", "صندوق", "كنز"}
+        
+        for _, obj in pairs(workspace:GetDescendants()) do
+            local nameLower = obj.Name:lower()
+            for _, keyword in pairs(chestKeywords) do
+                if nameLower:find(keyword) then
+                    if obj:IsA("Part") and obj.Transparency < 1 then
+                        table.insert(chests, obj)
+                    elseif obj:IsA("Model") and obj.PrimaryPart then
+                        table.insert(chests, obj)
+                    end
+                    break
+                end
+            end
+        end
+        return chests
+    end
+
+    -- تحديث ESP
+    ESPConnection = RunService.RenderStepped:Connect(function()
+        -- تنظيف
+        for _, obj in pairs(ESPObjects) do
+            if obj and obj.Parent then
+                obj:Destroy()
+            end
+        end
+        ESPObjects = {}
+        
+        if ChestESPState and RootPart then
+            local chests = findChests()
+            
+            for _, chest in pairs(chests) do
+                local chestPos = chest:IsA("Model") and chest.PrimaryPart.Position or chest.Position
+                local distance = (RootPart.Position - chestPos).Magnitude
+                
+                -- تحديد اللون حسب المسافة والقيمة
+                local color
+                if distance < 50 then
+                    color = Color3.fromRGB(255, 50, 50) -- أحمر قريب
+                elseif distance < 150 then
+                    color = Color3.fromRGB(255, 200, 50) -- برتقالي
+                else
+                    color = Color3.fromRGB(50, 255, 50) -- أخضر بعيد
+                end
+                
+                -- إنشاء الخطوط
+                local line = createGlowLine(color)
+                ESPObjects[#ESPObjects + 1] = line
+                
+                -- إنشاء المربعات
+                if chest:IsA("Part") then
+                    local boxes = create3DBox(chest, color)
+                    for _, box in pairs(boxes) do
+                        ESPObjects[#ESPObjects + 1] = box
+                    end
+                end
+                
+                -- تحديث الخط في كل إطار
+                RunService.RenderStepped:Connect(function()
+                    if line and line.Parent and RootPart then
+                        local startPos = Camera:WorldToViewportPoint(RootPart.Position)
+                        local endPos = Camera:WorldToViewportPoint(chestPos)
+                        
+                        if startPos.Z > 0 and endPos.Z > 0 then
+                            local distance2D = (Vector2.new(endPos.X, endPos.Y) - Vector2.new(startPos.X, startPos.Y)).Magnitude
+                            local angle = math.atan2(endPos.Y - startPos.Y, endPos.X - startPos.X)
+                            
+                            line.Size = UDim2.new(0, distance2D, 0, 3)
+                            line.Position = UDim2.new(0, startPos.X, 0, startPos.Y)
+                            line.Rotation = math.deg(angle)
+                            line.Visible = true
+                            
+                            -- إضافة نص المسافة
+                            if not line:FindFirstChild("DistanceLabel") then
+                                local label = Instance.new("TextLabel")
+                                label.Name = "DistanceLabel"
+                                label.Size = UDim2.new(0, 50, 0, 20)
+                                label.BackgroundTransparency = 1
+                                label.TextColor3 = color
+                                label.Text = math.floor(distance) .. "m"
+                                label.TextScaled = true
+                                label.Font = Enum.Font.GothamBold
+                                label.Parent = line
+                            else
+                                line.DistanceLabel.Text = math.floor(distance) .. "m"
+                                line.DistanceLabel.Position = UDim2.new(0.5, -25, 0.5, -10)
+                            end
+                        else
+                            line.Visible = false
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+end
+
+-- ═══════════════════════════════════════════════
+-- دالة إنشاء الواجهة المحسنة
+-- ═══════════════════════════════════════════════
+
+local function createGUI()
+    -- تنظيف الواجهة القديمة
+    local existingGUI = Player.PlayerGui:FindFirstChild("DragonHackGUI")
+    if existingGUI then existingGUI:Destroy() end
+
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "DragonHackGUI"
+    screenGui.Parent = Player.PlayerGui
+    screenGui.ResetOnSpawn = false
+
+    -- الإطار الرئيسي
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 300, 0, 500)
+    frame.Position = UDim2.new(0, 20, 0, 100)
+    frame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+    frame.BackgroundTransparency = 0.05
+    frame.BorderSizePixel = 0
+    frame.Active = true
+    frame.Draggable = true
+    frame.ClipsDescendants = true
+    frame.Parent = screenGui
+
+    -- زوايا دائرية
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 15)
+    corner.Parent = frame
+
+    -- عنوان متوهج
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 50)
+    title.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+    title.Text = "✨ Delta Dragon V2 ✨"
+    title.TextColor3 = Color3.fromRGB(255, 215, 0)
+    title.TextScaled = true
+    title.Font = Enum.Font.GothamBold
+    title.BorderSizePixel = 0
+    title.Parent = frame
+    
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, 15)
+    titleCorner.Parent = title
+
+    -- إحصائيات
+    local statsFrame = Instance.new("Frame")
+    statsFrame.Size = UDim2.new(1, -20, 0, 30)
+    statsFrame.Position = UDim2.new(0, 10, 0, 60)
+    statsFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    statsFrame.BackgroundTransparency = 0.3
+    statsFrame.BorderSizePixel = 0
+    statsFrame.Parent = frame
+    
+    local statsCorner = Instance.new("UICorner")
+    statsCorner.CornerRadius = UDim.new(0, 8)
+    statsCorner.Parent = statsFrame
+    
+    local fpsLabel = Instance.new("TextLabel")
+    fpsLabel.Size = UDim2.new(0.5, -5, 1, 0)
+    fpsLabel.BackgroundTransparency = 1
+    fpsLabel.Text = "FPS: 60"
+    fpsLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
+    fpsLabel.TextScaled = true
+    fpsLabel.Font = Enum.Font.Gotham
+    fpsLabel.Parent = statsFrame
+    
+    local healthLabel = Instance.new("TextLabel")
+    healthLabel.Size = UDim2.new(0.5, -5, 1, 0)
+    healthLabel.Position = UDim2.new(0.5, 5, 0, 0)
+    healthLabel.BackgroundTransparency = 1
+    healthLabel.Text = "❤️ 100"
+    healthLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+    healthLabel.TextScaled = true
+    healthLabel.Font = Enum.Font.Gotham
+    healthLabel.Parent = statsFrame
+    
+    -- تحديث الإحصائيات
+    RunService.RenderStepped:Connect(function()
+        fpsLabel.Text = "FPS: " .. math.floor(1 / RunService.RenderStepped:Wait())
+        if Humanoid then
+            healthLabel.Text = "❤️ " .. math.floor(Humanoid.Health)
+        end
+    end)
+
+    -- قائمة الأزرار
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Padding = UDim.new(0, 8)
+    listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    listLayout.Parent = frame
+
+    local padding = Instance.new("UIPadding")
+    padding.PaddingTop = UDim.new(0, 100)
+    padding.PaddingLeft = UDim.new(0, 10)
+    padding.PaddingRight = UDim.new(0, 10)
+    padding.PaddingBottom = UDim.new(0, 10)
+    padding.Parent = frame
+
+    -- دالة إنشاء أزرار متطورة
+    local function createAdvancedButton(buttonText, icon, getStateFunc, toggleFunc)
+        local button = Instance.new("TextButton")
+        button.Size = UDim2.new(1, -20, 0, 45)
+        button.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+        button.Text = ""
+        button.BorderSizePixel = 0
+        button.Parent = frame
+
+        local buttonCorner = Instance.new("UICorner")
+        buttonCorner.CornerRadius = UDim.new(0, 10)
+        buttonCorner.Parent = button
+
+        -- أيقونة
+        local iconLabel = Instance.new("TextLabel")
+        iconLabel.Size = UDim2.new(0, 30, 1, 0)
+        iconLabel.BackgroundTransparency = 1
+        iconLabel.Text = icon
+        iconLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+        iconLabel.TextScaled = true
+        iconLabel.Font = Enum.Font.GothamBold
+        iconLabel.Parent = button
+
+        -- نص الزر
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Size = UDim2.new(1, -60, 1, 0)
+        textLabel.Position = UDim2.new(0, 40, 0, 0)
+        textLabel.BackgroundTransparency = 1
+        textLabel.Text = buttonText
+        textLabel.TextColor3 = Color3.new(1, 1, 1)
+        textLabel.TextXAlignment = Enum.TextXAlignment.Left
+        textLabel.TextScaled = true
+        textLabel.Font = Enum.Font.Gotham
+        textLabel.Parent = button
+
+        -- حالة الزر
+        local stateLabel = Instance.new("TextLabel")
+        stateLabel.Size = UDim2.new(0, 40, 1, 0)
+        stateLabel.Position = UDim2.new(1, -45, 0, 0)
+        stateLabel.BackgroundTransparency = 1
+        stateLabel.Text = "OFF"
+        stateLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
+        stateLabel.TextScaled = true
+        stateLabel.Font = Enum.Font.GothamBold
+        stateLabel.Parent = button
+
+        -- تحديث الزر
+        local function updateButton()
+            if getStateFunc() then
+                button.BackgroundColor3 = Color3.fromRGB(45, 75, 55)
+                stateLabel.Text = "ON"
+                stateLabel.TextColor3 = Color3.fromRGB(80, 255, 80)
+            else
+                button.BackgroundColor3 = Color3.fromRGB(55, 45, 45)
+                stateLabel.Text = "OFF"
+                stateLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
+            end
+        end
+
+        button.MouseButton1Click:Connect(function()
+            toggleFunc()
+            updateButton()
+        end)
+
+        updateButton()
+    end
+
+    -- إنشاء الأزرار
+    createAdvancedButton("الطيران", "🦅", function() return FlyState end, function() FlyState = not FlyState end)
+    createAdvancedButton("السرعة", "⚡", function() return SpeedState end, function() SpeedState = not SpeedState end)
+    createAdvancedButton("الاختراق", "🔮", function() return NoclipState end, function() NoclipState = not NoclipState end)
+    createAdvancedButton("الجمع التلقائي", "💰", function() return AutoFarmState end, function() AutoFarmState = not AutoFarmState end)
+    createAdvancedButton("تتبع الصناديق", "🗺️", function() return ChestESPState end, function() ChestESPState = not ChestESPState end)
+    createAdvancedButton("الحماية من الموت", "🛡️", function() return AntiVoidState end, function() AntiVoidState = not AntiVoidState end)
+
+    -- زر الإغلاق
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(1, -20, 0, 40)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+    closeBtn.Text = "✕ إغلاق"
+    closeBtn.TextColor3 = Color3.new(1, 1, 1)
+    closeBtn.TextScaled = true
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.BorderSizePixel = 0
+    closeBtn.Parent = frame
+    
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(0, 10)
+    closeCorner.Parent = closeBtn
+
+    closeBtn.MouseButton1Click:Connect(function()
+        screenGui:Destroy()
+        -- تنظيف
+        ChestESPState = false
+        AntiVoidState = false
+        FlyState = false
+        SpeedState = false
+        NoclipState = false
+        AutoFarmState = false
+    end)
+end
+
+-- ═══════════════════════════════════════════════
+-- تفعيل جميع الوظائف
+-- ═══════════════════════════════════════════════
+
+-- الطيران
+FlyConnection = RunService.Heartbeat:Connect(function(deltaTime)
+    if not FlyState or not RootPart or not Humanoid then return end
+
+    Humanoid.PlatformStand = true
+    Humanoid.WalkSpeed = 0
+
+    local moveDirection = Vector3.new(0, 0, 0)
+    local speed = FlySpeed * deltaTime * 60
+
+    if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+        moveDirection = moveDirection + Camera.CFrame.LookVector
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+        moveDirection = moveDirection - Camera.CFrame.LookVector
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+        moveDirection = moveDirection - Camera.CFrame.RightVector
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+        moveDirection = moveDirection + Camera.CFrame.RightVector
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+        moveDirection = moveDirection + Vector3.new(0, 1, 0)
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+        moveDirection = moveDirection - Vector3.new(0, 1, 0)
+    end
+
+    if moveDirection.Magnitude > 0 then
+        moveDirection = moveDirection.Unit * speed
+        RootPart.CFrame = RootPart.CFrame + moveDirection
+    end
+end)
+
+-- السرعة
+RunService.Heartbeat:Connect(function()
+    if SpeedState and Humanoid then
+        Humanoid.WalkSpeed = SpeedValue
+    elseif Humanoid and not SpeedState then
+        Humanoid.WalkSpeed = 16
+    end
+end)
+
+-- الاختراق
+NoclipConnection = RunService.Stepped:Connect(function()
+    if NoclipState and Character then
+        for _, part in pairs(Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+-- الجمع التلقائي
+FarmConnection = RunService.Heartbeat:Connect(function()
+    if not AutoFarmState or not RootPart then return end
+    
+    local closestDist = math.huge
+    local closestObj = nil
+    
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("Part") and obj:FindFirstChild("TouchInterest") and obj.Transparency < 1 then
+            local dist = (RootPart.Position - obj.Position).Magnitude
+            if dist < closestDist then
+                closestDist = dist
+                closestObj = obj
+            end
+        end
+    end
+    
+    if closestObj and closestDist > 10 then
+        local tween = TweenService:Create(RootPart, TweenInfo.new(0.3), {CFrame = CFrame.lookAt(RootPart.Position, closestObj.Position) * CFrame.new(0, 0, -5)})
+        tween:Play()
+    end
+end)
+
+-- تفعيل الميزات الجديدة
+setupChestESP()
+setupAntiVoid()
+createGUI()
+
+print("✅ تم تحميل Delta Dragon V2 بنجاح!")
+print("🛡️ خاصية الحماية من الموت تحت الأرض مفعلة!")
