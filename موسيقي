@@ -1,4 +1,4 @@
-local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
+local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
 
 local Window = Libary:MakeWindow({
     Title = "Clock7 Music V1.0",
