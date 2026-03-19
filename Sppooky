@@ -1,0 +1,373 @@
+-- SPOOKI HUB was here.
+-- ////////////
+shared.LoaderTitle = "SPOOKI HUB"
+shared.LoaderKeyFrames = {
+    [1] = {2, 20},
+    [2] = {1, 40},
+    [3] = {1, 60},
+    [4] = {1, 80},
+    [5] = {1, 100}
+}
+
+local loaderData = {
+    LoaderData = {
+        Name = shared.LoaderTitle or "SPOOKI HUB",
+        Colors = shared.LoaderColors or {
+            Main = Color3.fromRGB(255, 85, 0),      -- برتقالي
+            Topic = Color3.fromRGB(255, 255, 255),   -- أبيض
+            Title = Color3.fromRGB(255, 255, 255),   -- أبيض
+            LoaderBackground = Color3.fromRGB(30, 30, 30),    -- رمادي غامق
+            LoaderSplash = Color3.fromRGB(255, 85, 0)         -- برتقالي
+        }
+    },
+    Keyframes = shared.LoaderKeyFrames or {
+        [1] = {2, 100}
+    }
+}
+
+local stepTexts = {
+    [1] = "جاري التحميل...",
+    [2] = "تحميل الإضافات...",
+    [3] = "تجهيز القائمة...",
+    [4] = "اكتمل التحميل!",
+    [5] = "SPOOKI HUB"
+}
+
+-- دالة لتحريك العناصر
+function TweenObject(obj, duration, properties)
+    if obj and obj.Parent then
+        local tween = game:GetService("TweenService"):Create(
+            obj,
+            TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
+            properties
+        )
+        tween:Play()
+        return tween
+    end
+end
+
+-- دالة لإنشاء العناصر
+function CreateObject(className, properties)
+    local obj = Instance.new(className)
+    local parent
+    
+    for prop, value in pairs(properties) do
+        if prop ~= "Parent" then
+            pcall(function()
+                obj[prop] = value
+            end)
+        else
+            parent = value
+        end
+    end
+    
+    if parent then
+        obj.Parent = parent
+    end
+    
+    return obj
+end
+
+-- دالة لإضافة زوايا دائرية
+local function addCorner(radius, parent)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius)
+    corner.Parent = parent
+end
+
+-- إنشاء واجهة التحميل
+local screenGui = CreateObject("ScreenGui", {
+    Name = "SPOOKI_Loader",
+    Parent = game:GetService("CoreGui"),
+    DisplayOrder = 100,
+    IgnoreGuiInset = true
+})
+
+local mainFrame = CreateObject("Frame", {
+    Name = "Main",
+    Parent = screenGui,
+    BackgroundColor3 = loaderData.LoaderData.Colors.Main,
+    BorderSizePixel = 0,
+    ClipsDescendants = true,
+    Position = UDim2.new(0.5, 0, 0.5, 0),
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    Size = UDim2.new(0, 0, 0, 0)
+})
+addCorner(12, mainFrame)
+
+-- صورة المستخدم
+local userImage = CreateObject("ImageLabel", {
+    Name = "Logo",
+    Parent = mainFrame,
+    BackgroundTransparency = 1,
+    Image = "rbxassetid://126865658241127",
+    Position = UDim2.new(0, 15, 0, 10),
+    Size = UDim2.new(0, 55, 0, 55)
+})
+addCorner(25, userImage)
+
+-- اسم المستخدم
+local userNameLabel = CreateObject("TextLabel", {
+    Name = "UserName",
+    Parent = mainFrame,
+    BackgroundTransparency = 1,
+    Text = "                   | SPOOKI HUB |     ",
+    Position = UDim2.new(0, 60, 0, 20),
+    Size = UDim2.new(0, 300, 0, 70),
+    Font = Enum.Font.GothamBold,
+    TextColor3 = loaderData.LoaderData.Colors.Title,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Left
+})
+
+-- عنوان التحميل
+local topLabel = CreateObject("TextLabel", {
+    Name = "Top",
+    TextTransparency = 1,
+    Parent = mainFrame,
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 1,
+    Position = UDim2.new(10, 10, 10, 10),
+    Size = UDim2.new(10, 10, 10, 10),
+    Font = Enum.Font.Gotham,
+    Text = "SPOOKI",
+    TextColor3 = loaderData.LoaderData.Colors.Topic,
+    TextSize = 10,
+    TextXAlignment = Enum.TextXAlignment.Left
+})
+
+-- عنوان رئيسي
+local titleLabel = CreateObject("TextLabel", {
+    Name = "Title",
+    Parent = mainFrame,
+    TextTransparency = 1,
+    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0, 30, 0, 90),
+    Size = UDim2.new(0, 200, 0, 26),
+    Font = Enum.Font.Gotham,
+    RichText = true,
+    Text = "<b>" .. loaderData.LoaderData.Name .. "</b>",
+    TextColor3 = loaderData.LoaderData.Colors.Title,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Left
+})
+
+-- خلفية شريط التحميل
+local progressBg = CreateObject("Frame", {
+    Name = "ProgressBG",
+    Parent = mainFrame,
+    AnchorPoint = Vector2.new(0.5, 0),
+    BackgroundTransparency = 1,
+    BackgroundColor3 = loaderData.LoaderData.Colors.LoaderBackground,
+    BorderSizePixel = 0,
+    Position = UDim2.new(0.5, 0, 0, 70),
+    Size = UDim2.new(0.85, 0, 0, 24)
+})
+addCorner(8, progressBg)
+
+-- شريط التحميل
+local progressBar = CreateObject("Frame", {
+    Name = "ProgressBar",
+    Parent = progressBg,
+    BackgroundColor3 = loaderData.LoaderData.Colors.LoaderSplash,
+    BackgroundTransparency = 1,
+    BorderSizePixel = 0,
+    Size = UDim2.new(0, 0, 0, 24)
+})
+addCorner(8, progressBar)
+
+-- نص الخطوة
+local stepLabel = CreateObject("TextLabel", {
+    Name = "StepLabel",
+    Parent = mainFrame,
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0.5, 0, 1, -25),
+    Size = UDim2.new(1, -20, 0, 20),
+    Font = Enum.Font.Gotham,
+    Text = "",
+    TextColor3 = loaderData.LoaderData.Colors.Topic,
+    TextSize = 14,
+    TextXAlignment = Enum.TextXAlignment.Center,
+    AnchorPoint = Vector2.new(0.5, 0.5)
+})
+
+-- تحديث نص الخطوة
+function updateStepText(step)
+    stepLabel.Text = stepTexts[step] or ""
+end
+
+-- تحديث النسبة المئوية
+function updatePercentage(percentage, step)
+    TweenObject(progressBar, 0.5, {
+        Size = UDim2.new(percentage / 100, 0, 0, 24)
+    })
+    updateStepText(step)
+end
+
+-- بدء التحميل
+TweenObject(mainFrame, 0.25, {
+    Size = UDim2.new(0, 346, 0, 121)
+})
+wait(0.3)
+
+TweenObject(topLabel, 0.5, {
+    TextTransparency = 0
+})
+TweenObject(titleLabel, 0.5, {
+    TextTransparency = 0
+})
+TweenObject(progressBg, 0.5, {
+    BackgroundTransparency = 0.5
+})
+TweenObject(progressBar, 0.5, {
+    BackgroundTransparency = 0
+})
+
+-- تشغيل إطارات التحميل
+for step, keyframe in pairs(loaderData.Keyframes) do
+    wait(keyframe[1])
+    updatePercentage(keyframe[2], step)
+end
+
+-- إخفاء واجهة التحميل
+TweenObject(topLabel, 0.5, {
+    TextTransparency = 1
+})
+TweenObject(titleLabel, 0.5, {
+    TextTransparency = 1
+})
+TweenObject(progressBg, 0.5, {
+    BackgroundTransparency = 1
+})
+TweenObject(progressBar, 0.5, {
+    BackgroundTransparency = 1
+})
+
+wait(0.5)
+
+TweenObject(mainFrame, 0.25, {
+    Size = UDim2.new(0, 0, 0, 0)
+})
+wait(0.25)
+
+screenGui:Destroy()
+
+-- تشغيل صوت (اختياري - يمكن إزالته إذا تسبب بمشاكل)
+pcall(function()
+    local sound = Instance.new("Sound", game:GetService("SoundService"))
+    sound.SoundId = "rbxassetid://82845990304289"
+    sound.Volume = 0.3
+    sound:Play()
+    game:GetService("Debris"):AddItem(sound, 5)
+end)
+
+-- إشعار
+wait(0.5)
+pcall(function()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "SPOOKI HUB",
+        Text = "مرحباً بك في SPOOKI HUB",
+        Duration = 5
+    })
+end)
+
+-- تحديث الاسم في اللعبة (إذا كانت اللعبة تدعم ذلك)
+pcall(function()
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+    local RE = replicatedStorage:FindFirstChild("RE")
+    
+    if RE then
+        local nameEvent = RE:FindFirstChild("1RPNam1eTex1t")
+        if nameEvent then
+            nameEvent:FireServer("RolePlayName", "  | SPOOKI HUB |  ")
+        end
+        
+        local colorEvent = RE:FindFirstChild("1RPNam1eColo1r")
+        if colorEvent then
+            colorEvent:FireServer("PickingRPNameColor", Color3.fromRGB(255, 85, 0))
+        end
+        
+        local bioEvent = RE:FindFirstChild("1RPNam1eTex1t")
+        if bioEvent then
+            bioEvent:FireServer("RolePlayBio", "  | SPOOKI HUB |  ")
+        end
+        
+        local bioColorEvent = RE:FindFirstChild("1RPNam1eColo1r")
+        if bioColorEvent then
+            bioColorEvent:FireServer("PickingRPBioColor", Color3.fromRGB(255, 85, 0))
+        end
+    end
+end)
+
+-- تحميل المكتبة
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Flash"))()
+
+-- إنشاء النافذة الرئيسية
+local Window = redzlib:MakeWindow({
+    Title = "SPOOKI HUB",
+    SubTitle = "                      |  v1.0 |",
+    SaveFolder = "SPOOKI_HUB_Data"
+})
+
+Window:AddMinimizeButton({
+    Button = {
+        Image = "rbxassetid://126865658241127",
+        BackgroundTransparency = 0
+    },
+    Corner = {
+        CornerRadius = UDim.new(0, 6)
+    }
+})
+
+-- تبويب المعلومات
+local InfoTab = Window:MakeTab({ 
+    Title = "معلومات", 
+    Icon = "rbxassetid://126865658241127" 
+})
+
+InfoTab:AddDiscordInvite({
+    Name = "SPOOKI HUB",
+    Description = "قناة التليجرام",
+    Logo = "rbxassetid://126865658241127",
+    Invite = "https://t.me/dblack9920",
+})
+
+InfoTab:AddSection({ "معلومات السكربت" })
+
+InfoTab:AddParagraph({ 
+    Title = "المطور:", 
+    Content = "SPOOKI TEAM" 
+})
+
+InfoTab:AddParagraph({ 
+    Title = "الإصدار:", 
+    Content = "v1.0" 
+})
+
+InfoTab:AddParagraph({
+    Title = "المميزات:", 
+    Content = "واجهة تحميل أنيقة - قائمة متطورة - تصميم عصري"
+})
+
+InfoTab:AddButton({
+    Name = "تشغيل سكربت إضافي",
+    Callback = function()
+        pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/muskarnu/Projects/main/DemoNtr.txt"))()
+        end)
+    end
+})
+
+InfoTab:AddSection({ "إعادة الدخول" })
+
+InfoTab:AddButton({
+    Name = "إعادة الدخول إلى السيرفر",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local player = game:GetService("Players").LocalPlayer
+        if player then
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, player)
+        end
+    end
+})
