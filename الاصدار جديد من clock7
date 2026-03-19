@@ -6701,9 +6701,9 @@ if not allowedAdmins[LocalPlayer.Name] then return end
 
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 local Window = WindUI:CreateWindow({
-    Title =  "👾Y2 HUB  - Admins/Developers 👾 ",
+    Title =  "🫀CLOCK 7  - Admins/Developers 🫀 ",
     Icon = "shield",
-    Author = "by Shadow · v1.1.6",
+    Author = "by DBLACK · v1.1.6",
     Size = UDim2.fromOffset(600, 480),
     Transparent = true,
     Theme = "Dark",
