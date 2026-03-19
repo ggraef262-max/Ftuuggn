@@ -179,7 +179,7 @@ infoTab:AddButton({
 -- تبويب الشخصيات
 -- ======================
 local charactersTab = Window:MakeTab({ 
-    Title = "الشخصيات [الملابس والإكسسوارات]",
+    Title = "قيد تطوير",
     Icon = "rbxassetid://90798133906684" 
 })
 
@@ -220,7 +220,7 @@ charactersTab:AddButton({
     Callback = function()
         local remote = safeGetRemote({"Remotes", "ChangeCharacterBody"})
         if remote then
-            remote:InvokeServer({0, 0, 0, 0, 0, 16580493236})
+            remote:InvokeServer({0, 0, 0, 0, 0, 17767258613})
             sendNotification("شخصية", "تم تغيير الشخصية", nil, 2)
         end
     end
