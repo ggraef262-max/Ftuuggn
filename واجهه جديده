@@ -1,161 +1,335 @@
 --[[
-    ╔══════════════════════════════════════════════════════════════╗
-    ║         🔴 LEGENDARY UI PRO - RED & BLUE EDITION 🔵         ║
-    ║              تصميم أحمر وأزرق - أداء فائق - جاذبية قوية     ║
-    ╚══════════════════════════════════════════════════════════════╝
-]]
+╔═══════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                                   ║
+║                    ██╗     ███████╗ ██████╗ ███████╗███╗   ██╗██████╗  █████╗ ██████╗ ██╗   ██╗║
+║                    ██║     ██╔════╝██╔════╝ ██╔════╝████╗  ██║██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝║
+║                    ██║     █████╗  ██║  ███╗█████╗  ██╔██╗ ██║██║  ██║███████║██████╔╝ ╚████╔╝ ║
+║                    ██║     ██╔══╝  ██║   ██║██╔══╝  ██║╚██╗██║██║  ██║██╔══██║██╔══██╗  ╚██╔╝  ║
+║                    ███████╗███████╗╚██████╔╝███████╗██║ ╚████║██████╔╝██║  ██║██║  ██║   ██║   ║
+║                    ╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ║
+║                                                                                                   ║
+║                    ██████╗ ███████╗██╗   ██╗ ██████╗ ██╗   ██╗████████╗██╗   ██╗               ║
+║                    ██╔══██╗██╔════╝██║   ██║██╔═══██╗██║   ██║╚══██╔══╝╚██╗ ██╔╝               ║
+║                    ██████╔╝█████╗  ██║   ██║██║   ██║██║   ██║   ██║    ╚████╔╝                ║
+║                    ██╔══██╗██╔══╝  ██║   ██║██║   ██║██║   ██║   ██║     ╚██╔╝                 ║
+║                    ██████╔╝███████╗╚██████╔╝╚██████╔╝╚██████╔╝   ██║      ██║                  ║
+║                    ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝  ╚═════╝    ╚═╝      ╚═╝                  ║
+║                                                                                                   ║
+║                    ╔═══════════════════════════════════════════════════════════════════════════╗ ║
+║                    ║  ULTIMATE LEGENDARY UI FRAMEWORK - THE PINNACLE OF ROBLOX UI DESIGN      ║ ║
+║                    ║  Version 3.0 | Premium Edition | 3500+ Lines of Pure Excellence          ║ ║
+║                    ╚═══════════════════════════════════════════════════════════════════════════╝ ║
+║                                                                                                   ║
+║                              Created by: Legendary Developer | All Rights Reserved                ║
+╚═══════════════════════════════════════════════════════════════════════════════════════════════════╝
+--]]
 
-local LegendaryUI = {}
+local LegendaryUI = {
+    Version = "3.0.0",
+    Build = "Premium",
+    Author = "Legendary Developer",
+    Year = 2024
+}
 
--- ==================== الخدمات ====================
-local CoreGui = game:GetService("CoreGui")
+-- ==================================================== متغيرات البيئة ====================================================
+local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
-local Player = Players.LocalPlayer
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
 local HttpService = game:GetService("HttpService")
+local SoundService = game:GetService("SoundService")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local Camera = Workspace.CurrentCamera
 
--- ==================== الثيمات الحمراء والزرقاء ====================
+-- ==================================================== إعدادات الأداء ====================================================
+local Performance = {
+    RenderStepped = RunService.RenderStepped,
+    Heartbeat = RunService.Heartbeat,
+    Stepped = RunService.Stepped,
+    FrameRate = 60,
+    DeltaTime = 0
+}
+
+-- ==================================================== الثيمات الفاخرة - 12 ثيماً مختلفاً ====================================================
 local Themes = {
-    -- 🔴 ثيم أحمر ناري جذاب 🔴
-    CrimsonBlaze = {
-        Name = "Crimson Blaze",
-        ["Color Hub 1"] = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(20, 5, 5)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(100, 25, 25)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(40, 8, 8))
-        }),
-        ["Color Hub 2"] = Color3.fromRGB(15, 4, 6),
-        ["Color Stroke"] = Color3.fromRGB(255, 50, 50),
-        ["Color Theme"] = Color3.fromRGB(255, 60, 60),
-        ["Color Text"] = Color3.fromRGB(255, 220, 220),
-        ["Color Dark Text"] = Color3.fromRGB(200, 120, 120),
-        ["Color Glow"] = Color3.fromRGB(255, 80, 80),
-        ["Color Accent"] = Color3.fromRGB(220, 40, 40),
+    -- ثيم 1: Crimson Emperor (أحمر إمبراطوري)
+    CrimsonEmperor = {
+        Name = "👑 Crimson Emperor",
+        Primary = Color3.fromRGB(220, 40, 40),
+        Secondary = Color3.fromRGB(180, 30, 30),
+        Accent = Color3.fromRGB(255, 80, 80),
+        Background = Color3.fromRGB(15, 8, 8),
+        Surface = Color3.fromRGB(25, 12, 12),
+        Text = Color3.fromRGB(255, 240, 240),
+        TextDim = Color3.fromRGB(200, 150, 150),
+        Border = Color3.fromRGB(255, 60, 60),
+        Glow = Color3.fromRGB(255, 100, 100),
+        Gradient1 = Color3.fromRGB(30, 10, 10),
+        Gradient2 = Color3.fromRGB(100, 30, 30),
+        Gradient3 = Color3.fromRGB(200, 50, 50),
         Glass = 0.85,
-        GlowIntensity = 0.8
+        Blur = 0.6
     },
-    -- 🔴 ثيم أحمر غامق فاخر 🔴
-    RubyRed = {
-        Name = "Ruby Red",
-        ["Color Hub 1"] = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(25, 8, 8)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(80, 20, 20)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(35, 10, 10))
-        }),
-        ["Color Hub 2"] = Color3.fromRGB(18, 5, 7),
-        ["Color Stroke"] = Color3.fromRGB(200, 40, 40),
-        ["Color Theme"] = Color3.fromRGB(220, 45, 45),
-        ["Color Text"] = Color3.fromRGB(255, 235, 235),
-        ["Color Dark Text"] = Color3.fromRGB(180, 110, 110),
-        ["Color Glow"] = Color3.fromRGB(230, 70, 70),
-        ["Color Accent"] = Color3.fromRGB(190, 35, 35),
+    -- ثيم 2: Royal Sapphire (أزرق ملكي)
+    RoyalSapphire = {
+        Name = "💎 Royal Sapphire",
+        Primary = Color3.fromRGB(40, 80, 220),
+        Secondary = Color3.fromRGB(30, 60, 180),
+        Accent = Color3.fromRGB(80, 120, 255),
+        Background = Color3.fromRGB(8, 12, 25),
+        Surface = Color3.fromRGB(12, 18, 35),
+        Text = Color3.fromRGB(240, 245, 255),
+        TextDim = Color3.fromRGB(150, 180, 220),
+        Border = Color3.fromRGB(60, 100, 255),
+        Glow = Color3.fromRGB(80, 120, 255),
+        Gradient1 = Color3.fromRGB(10, 20, 45),
+        Gradient2 = Color3.fromRGB(30, 50, 100),
+        Gradient3 = Color3.fromRGB(50, 80, 150),
+        Glass = 0.8,
+        Blur = 0.65
+    },
+    -- ثيم 3: Emerald Kingdom (زمردي)
+    EmeraldKingdom = {
+        Name = "🌿 Emerald Kingdom",
+        Primary = Color3.fromRGB(60, 200, 80),
+        Secondary = Color3.fromRGB(40, 160, 60),
+        Accent = Color3.fromRGB(100, 220, 120),
+        Background = Color3.fromRGB(8, 20, 10),
+        Surface = Color3.fromRGB(12, 30, 15),
+        Text = Color3.fromRGB(240, 255, 240),
+        TextDim = Color3.fromRGB(150, 200, 150),
+        Border = Color3.fromRGB(80, 220, 100),
+        Glow = Color3.fromRGB(100, 255, 120),
+        Gradient1 = Color3.fromRGB(10, 35, 15),
+        Gradient2 = Color3.fromRGB(30, 80, 40),
+        Gradient3 = Color3.fromRGB(50, 130, 70),
+        Glass = 0.82,
+        Blur = 0.6
+    },
+    -- ثيم 4: Royal Gold (ذهبي ملكي)
+    RoyalGold = {
+        Name = "👑 Royal Gold",
+        Primary = Color3.fromRGB(212, 175, 55),
+        Secondary = Color3.fromRGB(180, 150, 45),
+        Accent = Color3.fromRGB(255, 215, 0),
+        Background = Color3.fromRGB(15, 12, 8),
+        Surface = Color3.fromRGB(25, 20, 12),
+        Text = Color3.fromRGB(255, 245, 220),
+        TextDim = Color3.fromRGB(180, 160, 120),
+        Border = Color3.fromRGB(212, 175, 55),
+        Glow = Color3.fromRGB(255, 200, 80),
+        Gradient1 = Color3.fromRGB(30, 20, 10),
+        Gradient2 = Color3.fromRGB(100, 70, 30),
+        Gradient3 = Color3.fromRGB(180, 130, 45),
+        Glass = 0.85,
+        Blur = 0.7
+    },
+    -- ثيم 5: Neon Phantom (نيون فانتوم)
+    NeonPhantom = {
+        Name = "👻 Neon Phantom",
+        Primary = Color3.fromRGB(0, 255, 200),
+        Secondary = Color3.fromRGB(0, 200, 150),
+        Accent = Color3.fromRGB(100, 255, 220),
+        Background = Color3.fromRGB(5, 5, 15),
+        Surface = Color3.fromRGB(10, 10, 25),
+        Text = Color3.fromRGB(200, 255, 255),
+        TextDim = Color3.fromRGB(100, 200, 200),
+        Border = Color3.fromRGB(0, 255, 200),
+        Glow = Color3.fromRGB(0, 255, 220),
+        Gradient1 = Color3.fromRGB(0, 20, 30),
+        Gradient2 = Color3.fromRGB(0, 60, 90),
+        Gradient3 = Color3.fromRGB(0, 150, 180),
+        Glass = 0.75,
+        Blur = 0.8
+    },
+    -- ثيم 6: Dark Matter (مادة مظلمة)
+    DarkMatter = {
+        Name = "🌌 Dark Matter",
+        Primary = Color3.fromRGB(100, 80, 200),
+        Secondary = Color3.fromRGB(80, 60, 160),
+        Accent = Color3.fromRGB(150, 100, 255),
+        Background = Color3.fromRGB(8, 5, 12),
+        Surface = Color3.fromRGB(12, 8, 18),
+        Text = Color3.fromRGB(220, 200, 255),
+        TextDim = Color3.fromRGB(140, 120, 180),
+        Border = Color3.fromRGB(120, 80, 220),
+        Glow = Color3.fromRGB(160, 100, 255),
+        Gradient1 = Color3.fromRGB(15, 8, 25),
+        Gradient2 = Color3.fromRGB(40, 25, 70),
+        Gradient3 = Color3.fromRGB(70, 45, 120),
         Glass = 0.9,
-        GlowIntensity = 0.7
+        Blur = 0.5
     },
-    -- 🔵 ثيم أزرق كهربائي ساطع 🔵
-    ElectricBlue = {
-        Name = "Electric Blue",
-        ["Color Hub 1"] = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(5, 5, 25)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(10, 40, 80)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 20, 50))
-        }),
-        ["Color Hub 2"] = Color3.fromRGB(6, 8, 25),
-        ["Color Stroke"] = Color3.fromRGB(0, 200, 255),
-        ["Color Theme"] = Color3.fromRGB(0, 180, 255),
-        ["Color Text"] = Color3.fromRGB(255, 255, 255),
-        ["Color Dark Text"] = Color3.fromRGB(150, 200, 255),
-        ["Color Glow"] = Color3.fromRGB(0, 150, 255),
-        ["Color Accent"] = Color3.fromRGB(0, 120, 220),
+    -- ثيم 7: Sunset Inferno (غروب ناري)
+    SunsetInferno = {
+        Name = "🌅 Sunset Inferno",
+        Primary = Color3.fromRGB(255, 100, 50),
+        Secondary = Color3.fromRGB(200, 70, 40),
+        Accent = Color3.fromRGB(255, 150, 80),
+        Background = Color3.fromRGB(20, 8, 8),
+        Surface = Color3.fromRGB(35, 12, 10),
+        Text = Color3.fromRGB(255, 220, 200),
+        TextDim = Color3.fromRGB(200, 140, 120),
+        Border = Color3.fromRGB(255, 120, 60),
+        Glow = Color3.fromRGB(255, 140, 80),
+        Gradient1 = Color3.fromRGB(40, 15, 10),
+        Gradient2 = Color3.fromRGB(120, 50, 30),
+        Gradient3 = Color3.fromRGB(200, 80, 45),
         Glass = 0.8,
-        GlowIntensity = 0.9
+        Blur = 0.65
     },
-    -- 🔵 ثيم أزرق بحري عميق 🔵
-    OceanDeep = {
-        Name = "Ocean Deep",
-        ["Color Hub 1"] = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 10, 30)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 50, 100)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 25, 60))
-        }),
-        ["Color Hub 2"] = Color3.fromRGB(4, 12, 28),
-        ["Color Stroke"] = Color3.fromRGB(0, 160, 220),
-        ["Color Theme"] = Color3.fromRGB(0, 140, 210),
-        ["Color Text"] = Color3.fromRGB(220, 240, 255),
-        ["Color Dark Text"] = Color3.fromRGB(120, 180, 220),
-        ["Color Glow"] = Color3.fromRGB(0, 120, 200),
-        ["Color Accent"] = Color3.fromRGB(0, 100, 180),
+    -- ثيم 8: Frost Ice (جليد متجمد)
+    FrostIce = {
+        Name = "❄️ Frost Ice",
+        Primary = Color3.fromRGB(100, 200, 255),
+        Secondary = Color3.fromRGB(70, 160, 220),
+        Accent = Color3.fromRGB(150, 220, 255),
+        Background = Color3.fromRGB(10, 15, 25),
+        Surface = Color3.fromRGB(15, 22, 35),
+        Text = Color3.fromRGB(240, 250, 255),
+        TextDim = Color3.fromRGB(170, 200, 220),
+        Border = Color3.fromRGB(100, 200, 255),
+        Glow = Color3.fromRGB(120, 220, 255),
+        Gradient1 = Color3.fromRGB(15, 25, 45),
+        Gradient2 = Color3.fromRGB(35, 55, 90),
+        Gradient3 = Color3.fromRGB(60, 90, 140),
+        Glass = 0.75,
+        Blur = 0.7
+    },
+    -- ثيم 9: Cherry Blossom (زهر الكرز)
+    CherryBlossom = {
+        Name = "🌸 Cherry Blossom",
+        Primary = Color3.fromRGB(255, 120, 160),
+        Secondary = Color3.fromRGB(220, 90, 130),
+        Accent = Color3.fromRGB(255, 150, 200),
+        Background = Color3.fromRGB(25, 12, 18),
+        Surface = Color3.fromRGB(35, 18, 25),
+        Text = Color3.fromRGB(255, 235, 245),
+        TextDim = Color3.fromRGB(200, 150, 170),
+        Border = Color3.fromRGB(255, 130, 180),
+        Glow = Color3.fromRGB(255, 150, 200),
+        Gradient1 = Color3.fromRGB(40, 18, 28),
+        Gradient2 = Color3.fromRGB(100, 45, 70),
+        Gradient3 = Color3.fromRGB(170, 75, 110),
+        Glass = 0.82,
+        Blur = 0.6
+    },
+    -- ثيم 10: Cyberpunk (سايبربانك)
+    Cyberpunk = {
+        Name = "🤖 Cyberpunk",
+        Primary = Color3.fromRGB(255, 50, 150),
+        Secondary = Color3.fromRGB(200, 30, 120),
+        Accent = Color3.fromRGB(0, 255, 200),
+        Background = Color3.fromRGB(8, 5, 15),
+        Surface = Color3.fromRGB(12, 8, 22),
+        Text = Color3.fromRGB(255, 200, 255),
+        TextDim = Color3.fromRGB(180, 120, 200),
+        Border = Color3.fromRGB(255, 60, 160),
+        Glow = Color3.fromRGB(255, 80, 180),
+        Gradient1 = Color3.fromRGB(20, 5, 30),
+        Gradient2 = Color3.fromRGB(70, 20, 90),
+        Gradient3 = Color3.fromRGB(130, 40, 150),
+        Glass = 0.7,
+        Blur = 0.85
+    },
+    -- ثيم 11: Galaxy Nebula (سديم مجري)
+    GalaxyNebula = {
+        Name = "🌌 Galaxy Nebula",
+        Primary = Color3.fromRGB(150, 80, 220),
+        Secondary = Color3.fromRGB(110, 50, 180),
+        Accent = Color3.fromRGB(200, 100, 255),
+        Background = Color3.fromRGB(10, 5, 20),
+        Surface = Color3.fromRGB(15, 8, 28),
+        Text = Color3.fromRGB(230, 210, 255),
+        TextDim = Color3.fromRGB(160, 130, 200),
+        Border = Color3.fromRGB(170, 90, 240),
+        Glow = Color3.fromRGB(200, 110, 255),
+        Gradient1 = Color3.fromRGB(20, 8, 40),
+        Gradient2 = Color3.fromRGB(55, 25, 100),
+        Gradient3 = Color3.fromRGB(95, 45, 160),
+        Glass = 0.78,
+        Blur = 0.72
+    },
+    -- ثيم 12: Ocean Abyss (أعماق المحيط)
+    OceanAbyss = {
+        Name = "🌊 Ocean Abyss",
+        Primary = Color3.fromRGB(30, 100, 180),
+        Secondary = Color3.fromRGB(20, 70, 140),
+        Accent = Color3.fromRGB(60, 150, 220),
+        Background = Color3.fromRGB(5, 10, 20),
+        Surface = Color3.fromRGB(8, 15, 28),
+        Text = Color3.fromRGB(200, 230, 255),
+        TextDim = Color3.fromRGB(120, 160, 200),
+        Border = Color3.fromRGB(40, 120, 200),
+        Glow = Color3.fromRGB(70, 150, 230),
+        Gradient1 = Color3.fromRGB(8, 18, 40),
+        Gradient2 = Color3.fromRGB(20, 45, 85),
+        Gradient3 = Color3.fromRGB(35, 75, 130),
         Glass = 0.85,
-        GlowIntensity = 0.75
-    },
-    -- 🔴🔵 ثيم أحمر وأزرق مزدوج (مميز) 🔴🔵
-    DualRedBlue = {
-        Name = "Dual Red Blue",
-        ["Color Hub 1"] = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(30, 5, 15)),
-            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(100, 30, 60)),
-            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 40, 80))
-        }),
-        ["Color Hub 2"] = Color3.fromRGB(12, 6, 18),
-        ["Color Stroke"] = Color3.fromRGB(255, 100, 150),
-        ["Color Theme"] = Color3.fromRGB(255, 80, 120),
-        ["Color Text"] = Color3.fromRGB(255, 240, 245),
-        ["Color Dark Text"] = Color3.fromRGB(200, 150, 180),
-        ["Color Glow"] = Color3.fromRGB(255, 100, 180),
-        ["Color Accent"] = Color3.fromRGB(0, 150, 255),
-        Glass = 0.8,
-        GlowIntensity = 0.85
+        Blur = 0.6
     }
 }
 
--- ==================== إعدادات الحفظ ====================
+-- ==================================================== إعدادات الحفظ المتقدمة ====================================================
 local SaveData = {
-    UISize = {540, 440},
-    TabSize = 155,
-    Theme = "CrimsonBlaze",  -- الثيم الافتراضي أحمر ناري
-    Notifications = true,
-    AnimationSpeed = 0.25,
-    GlassEffect = true,
-    GlowEffect = true
+    Window = {
+        Size = {600, 480},
+        Position = {0.5, 0.5},
+        TabSize = 165,
+        AnimationSpeed = 0.25,
+        GlassIntensity = 0.85,
+        BlurIntensity = 0.6
+    },
+    Theme = "CrimsonEmperor",
+    Flags = {},
+    Notifications = {
+        Enabled = true,
+        Duration = 4,
+        Position = "TopRight",
+        Sound = true
+    },
+    Animations = {
+        Enabled = true,
+        Speed = 0.3,
+        BounceEffect = true,
+        ParticleEffect = true
+    },
+    Sounds = {
+        Enabled = true,
+        Volume = 0.5,
+        ClickSound = "rbxassetid://1412830636",
+        HoverSound = "rbxassetid://9121234567"
+    },
+    Particles = {
+        Enabled = true,
+        Intensity = 0.7,
+        Type = "Sparkle"
+    }
 }
 
--- ==================== متغيرات المكتبة ====================
-local Settings = {}
-local Flags = {}
-local Instances = {}
-local Tabs = {}
-local Options = {}
-local GlowFrames = {}
+-- ==================================================== دوال مساعدة متقدمة ====================================================
+local function GetTheme()
+    return Themes[SaveData.Theme]
+end
 
-local CurrentTheme = Themes[SaveData.Theme]
-local ViewportSize = workspace.CurrentCamera.ViewportSize
-local UIScale = ViewportSize.Y / 450
-
--- ==================== دوال مساعدة متقدمة ====================
 local function GetStr(val)
     if type(val) == "function" then return val() end
     return val
 end
 
-local function CreateTween(instance, prop, value, time, style, wait)
-    local easingStyle = style or Enum.EasingStyle.Quad
-    local tweenInfo = TweenInfo.new(time or SaveData.AnimationSpeed, easingStyle, Enum.EasingDirection.Out)
-    local tween = TweenService:Create(instance, tweenInfo, {[prop] = value})
-    tween:Play()
-    if wait then tween.Completed:Wait() end
-    return tween
+local function Clamp(value, min, max)
+    return math.max(min, math.min(max, value))
 end
 
-local function CreateEasingTween(instance, prop, value, time, easing, wait)
-    local tweenInfo = TweenInfo.new(time or 0.4, easing or Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-    local tween = TweenService:Create(instance, tweenInfo, {[prop] = value})
-    tween:Play()
-    if wait then tween.Completed:Wait() end
-    return tween
+local function Lerp(a, b, t)
+    return a + (b - a) * Clamp(t, 0, 1)
 end
 
+-- ==================================================== دوال إنشاء متقدمة ====================================================
 local function Create(instanceType, parent, props)
     local new = Instance.new(instanceType)
     if parent then new.Parent = parent end
@@ -167,140 +341,179 @@ local function Create(instanceType, parent, props)
     return new
 end
 
-local function InsertTheme(instance, typeName)
-    table.insert(Instances, {Instance = instance, Type = typeName})
-    return instance
+local function CreateTween(instance, prop, value, time, easing, direction, wait)
+    local tweenInfo = TweenInfo.new(
+        time or SaveData.Animations.Speed,
+        easing or Enum.EasingStyle.Quad,
+        direction or Enum.EasingDirection.Out
+    )
+    local tween = TweenService:Create(instance, tweenInfo, {[prop] = value})
+    tween:Play()
+    if wait then tween.Completed:Wait() end
+    return tween
 end
 
--- تأثير توهج متحرك للحدود
-local function AddGlowEffect(frame, color)
-    if not SaveData.GlowEffect then return end
-    
-    local glowColor = color or CurrentTheme["Color Glow"]
-    local stroke = frame:FindFirstChildWhichIsA("UIStroke")
-    
-    if stroke then
-        local glowAnim = RunService.RenderStepped:Connect(function()
-            if stroke and stroke.Parent then
-                local intensity = (math.sin(tick() * 5) + 1) / 2
-                stroke.Transparency = 0.3 - (intensity * 0.2)
-                if stroke.Color then
-                    stroke.Color = glowColor
-                end
-            else
-                glowAnim:Disconnect()
-            end
-        end)
-        table.insert(GlowFrames, {Frame = frame, Animation = glowAnim})
-    end
+local function CreateEasingTween(instance, prop, value, time, easing, wait)
+    return CreateTween(instance, prop, value, time, easing or Enum.EasingStyle.Quint, Enum.EasingDirection.Out, wait)
 end
 
--- تأثير رائع عند hover
+local function CreateElasticTween(instance, prop, value, time, wait)
+    return CreateTween(instance, prop, value, time, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out, wait)
+end
+
+local function CreateBounceTween(instance, prop, value, time, wait)
+    return CreateTween(instance, prop, value, time, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out, wait)
+end
+
+-- ==================================================== تأثيرات متقدمة ====================================================
+local ParticleSystems = {}
+local SoundPlayers = {}
+
+local function CreateParticle(parent, position, color, size)
+    if not SaveData.Particles.Enabled then return end
+    
+    local particle = Create("Frame", parent, {
+        Size = UDim2.new(0, size or 4, 0, size or 4),
+        Position = position,
+        BackgroundColor3 = color or GetTheme().Glow,
+        BackgroundTransparency = 0.5,
+        ZIndex = 999
+    })
+    Create("UICorner", particle, {CornerRadius = UDim.new(1, 0)})
+    
+    CreateTween(particle, "Position", UDim2.new(position.X.Scale, position.X.Offset + math.random(-50, 50), 
+        position.Y.Scale, position.Y.Offset + math.random(-50, 50)), 0.5, Enum.EasingStyle.Quad)
+    CreateTween(particle, "BackgroundTransparency", 1, 0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, true)
+    particle:Destroy()
+end
+
+local function PlayClickSound()
+    if not SaveData.Sounds.Enabled then return end
+    local sound = Create("Sound", SoundService, {
+        SoundId = SaveData.Sounds.ClickSound,
+        Volume = SaveData.Sounds.Volume,
+        PlayOnRemove = true
+    })
+    sound:Play()
+    task.delay(1, function() sound:Destroy() end)
+end
+
+local function AddParticleEffect(button)
+    button.MouseButton1Click:Connect(function()
+        local pos = button.AbsolutePosition
+        local size = button.AbsoluteSize
+        for i = 1, 10 do
+            task.spawn(function()
+                CreateParticle(button, UDim2.new(0, math.random(0, size.X), 0, math.random(0, size.Y)), 
+                    GetTheme().Glow, math.random(2, 6))
+            end)
+        end
+    end)
+end
+
+local function AddRippleEffect(button)
+    button.MouseButton1Click:Connect(function()
+        local ripple = Create("Frame", button, {
+            Size = UDim2.new(0, 0, 0, 0),
+            Position = UDim2.new(0.5, 0, 0.5, 0),
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 0.7,
+            ZIndex = 10
+        })
+        Create("UICorner", ripple, {CornerRadius = UDim.new(1, 0)})
+        
+        CreateTween(ripple, "Size", UDim2.new(0, 150, 0, 150), 0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, false)
+        CreateTween(ripple, "BackgroundTransparency", 1, 0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, true)
+        ripple:Destroy()
+    end)
+end
+
 local function AddHoverEffect(button, color)
     local originalColor = button.BackgroundColor3
-    local hoverColor = color or CurrentTheme["Color Theme"]
+    local originalSize = button.Size
+    local hoverColor = color or GetTheme().Accent
     
     button.MouseEnter:Connect(function()
-        CreateTween(button, "BackgroundColor3", hoverColor, 0.15, Enum.EasingStyle.Quad, false)
-        CreateTween(button, "BackgroundTransparency", 0.2, 0.15, Enum.EasingStyle.Quad, false)
-        CreateTween(button, "Size", UDim2.new(1, 2, 1, 2), 0.1, Enum.EasingStyle.Quad, false)
+        if SaveData.Animations.Enabled then
+            CreateTween(button, "BackgroundColor3", hoverColor, 0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, false)
+            CreateTween(button, "Size", UDim2.new(originalSize.X.Scale, originalSize.X.Offset + 2, 
+                originalSize.Y.Scale, originalSize.Y.Offset + 2), 0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, false)
+        else
+            button.BackgroundColor3 = hoverColor
+        end
     end)
     
     button.MouseLeave:Connect(function()
-        CreateTween(button, "BackgroundColor3", originalColor, 0.2, Enum.EasingStyle.Quad, false)
-        CreateTween(button, "BackgroundTransparency", 0, 0.2, Enum.EasingStyle.Quad, false)
-        CreateTween(button, "Size", UDim2.new(1, 0, 1, 0), 0.1, Enum.EasingStyle.Quad, false)
+        if SaveData.Animations.Enabled then
+            CreateTween(button, "BackgroundColor3", originalColor, 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, false)
+            CreateTween(button, "Size", originalSize, 0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, false)
+        else
+            button.BackgroundColor3 = originalColor
+        end
     end)
 end
 
--- تأثير تموج عند النقر
-local function AddRippleEffect(button)
-    local ripple = Create("Frame", button, {
-        Size = UDim2.new(0, 0, 0, 0),
-        Position = UDim2.new(0.5, 0, 0.5, 0),
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BackgroundColor3 = CurrentTheme["Color Theme"],
-        BackgroundTransparency = 0.7,
-        ZIndex = 10
-    })
-    Create("UICorner", ripple, {CornerRadius = UDim.new(1, 0)})
-    
-    button.MouseButton1Click:Connect(function()
-        ripple.Size = UDim2.new(0, 0, 0, 0)
-        ripple.BackgroundTransparency = 0.6
-        CreateTween(ripple, "Size", UDim2.new(0, 150, 0, 150), 0.3, Enum.EasingStyle.Quad, false)
-        CreateTween(ripple, "BackgroundTransparency", 1, 0.3, Enum.EasingStyle.Quad, false)
-        task.wait(0.3)
-        ripple.Size = UDim2.new(0, 0, 0, 0)
-    end)
-end
+-- ==================================================== إشعارات احترافية ====================================================
+local NotificationContainer = nil
 
--- ==================== إشعارات متطورة ====================
-local NotificationFrame = nil
-
-local function CreateNotificationFrame()
-    if NotificationFrame then return end
-    NotificationFrame = Create("Frame", CoreGui, {
-        Name = "ProNotifications",
-        Size = UDim2.new(0, 350, 1, 0),
-        Position = UDim2.new(1, 0, 0, 0),
+local function CreateNotificationContainer()
+    if NotificationContainer then return end
+    NotificationContainer = Create("Frame", CoreGui, {
+        Name = "LegendaryNotifications",
+        Size = UDim2.new(0, 380, 1, 0),
+        Position = UDim2.new(1, -20, 0, 20),
         AnchorPoint = Vector2.new(1, 0),
         BackgroundTransparency = 1
     })
-    Create("UIPadding", NotificationFrame, {
-        PaddingLeft = UDim.new(0, 15),
-        PaddingTop = UDim.new(0, 15),
-        PaddingBottom = UDim.new(0, 50)
-    })
-    Create("UIListLayout", NotificationFrame, {
+    Create("UIListLayout", NotificationContainer, {
         Padding = UDim.new(0, 12),
-        VerticalAlignment = "Bottom"
+        VerticalAlignment = "Top",
+        HorizontalAlignment = "Right"
     })
 end
 
 function LegendaryUI:Notify(config)
-    CreateNotificationFrame()
+    if not SaveData.Notifications.Enabled then return end
+    
+    CreateNotificationContainer()
     
     local title = config.Title or "Legendary UI"
-    local text = config.Text or "إشعار"
-    local duration = config.Duration or 4
+    local text = config.Text or "Notification"
+    local duration = config.Duration or SaveData.Notifications.Duration
     local icon = config.Icon or "rbxassetid://10709790644"
-    local iconColor = config.IconColor or CurrentTheme["Color Theme"]
+    local iconColor = config.IconColor or GetTheme().Primary
+    local sound = config.Sound ~= false and SaveData.Sounds.Enabled
     
-    local container = Create("Frame", NotificationFrame, {
-        Size = UDim2.new(2, 0, 0, 0),
+    local container = Create("Frame", NotificationContainer, {
+        Size = UDim2.new(0, 360, 0, 0),
         BackgroundTransparency = 1,
         AutomaticSize = "Y"
     })
     
     local notification = Create("Frame", container, {
-        Size = UDim2.new(0, 330, 0, 0),
-        BackgroundColor3 = CurrentTheme["Color Hub 2"],
-        BackgroundTransparency = 0.05,
-        Position = UDim2.new(0, 360, 0, 0),
+        Size = UDim2.new(0, 360, 0, 0),
+        BackgroundColor3 = GetTheme().Surface,
+        BackgroundTransparency = 0.15,
         AutomaticSize = "Y"
     })
+    Create("UICorner", notification, {CornerRadius = UDim.new(0, 16)})
     
-    -- زاوية دائرية جميلة
-    local corner = Create("UICorner", notification, {CornerRadius = UDim.new(0, 18)})
-    
-    -- حدود متوهجة
     local stroke = Create("UIStroke", notification, {
-        Color = CurrentTheme["Color Stroke"],
-        Thickness = 2,
-        Transparency = 0.3
+        Color = GetTheme().Border,
+        Thickness = 1.5,
+        Transparency = 0.4
     })
-    InsertTheme(stroke, "Stroke")
     
-    -- تأثير زجاجي
-    if SaveData.GlassEffect then
-        notification.BackgroundTransparency = 0.85
+    -- تأثير الزجاج
+    if SaveData.Window.GlassIntensity > 0 then
+        notification.BackgroundTransparency = 1 - SaveData.Window.GlassIntensity * 0.7
     end
     
     -- أيقونة متحركة
-    local iconLabel = Create("ImageLabel", notification, {
-        Size = UDim2.new(0, 42, 0, 42),
-        Position = UDim2.new(0, 14, 0, 14),
+    local iconImg = Create("ImageLabel", notification, {
+        Size = UDim2.new(0, 44, 0, 44),
+        Position = UDim2.new(0, 12, 0, 12),
         Image = icon,
         BackgroundTransparency = 1,
         ImageColor3 = iconColor
@@ -313,126 +526,153 @@ function LegendaryUI:Notify(config)
         Text = title,
         Font = Enum.Font.GothamBold,
         TextSize = 15,
-        TextColor3 = CurrentTheme["Color Text"],
+        TextColor3 = GetTheme().Text,
         TextXAlignment = "Left",
         BackgroundTransparency = 1
     })
-    InsertTheme(titleLabel, "Text")
     
-    -- النص
+    -- نص
     local textLabel = Create("TextLabel", notification, {
         Size = UDim2.new(1, -80, 0, 0),
-        Position = UDim2.new(0, 64, 0, 40),
+        Position = UDim2.new(0, 64, 0, 42),
         Text = text,
         Font = Enum.Font.Gotham,
         TextSize = 12,
-        TextColor3 = CurrentTheme["Color Dark Text"],
+        TextColor3 = GetTheme().TextDim,
         TextXAlignment = "Left",
         TextWrapped = true,
         AutomaticSize = "Y",
         BackgroundTransparency = 1
     })
-    InsertTheme(textLabel, "DarkText")
     
-    -- شريط التقدم المتوهج
+    -- شريط تقدم متحرك
     local progressBar = Create("Frame", notification, {
-        Size = UDim2.new(1, 0, 0, 4),
-        Position = UDim2.new(0, 0, 1, -4),
-        BackgroundColor3 = CurrentTheme["Color Theme"],
+        Size = UDim2.new(1, 0, 0, 3),
+        Position = UDim2.new(0, 0, 1, -3),
+        BackgroundColor3 = GetTheme().Primary,
         BorderSizePixel = 0
     })
     
-    -- تأثير التوهج على شريط التقدم
-    local glowBar = Create("Frame", progressBar, {
+    -- تأثير توهج على شريط التقدم
+    local progressGlow = Create("Frame", progressBar, {
         Size = UDim2.new(0.2, 0, 1, 2),
         Position = UDim2.new(0, 0, -0.5, 0),
-        BackgroundColor3 = CurrentTheme["Color Glow"],
-        BackgroundTransparency = 0.4,
+        BackgroundColor3 = GetTheme().Glow,
+        BackgroundTransparency = 0.5,
         BorderSizePixel = 0
     })
-    
-    -- أنيميشن شريط التقدم
-    CreateTween(progressBar, "Size", UDim2.new(0, 0, 0, 4), duration, Enum.EasingStyle.Linear, false)
-    
-    -- أنيميشن التوهج المتحرك
-    local glowAnim
-    glowAnim = RunService.RenderStepped:Connect(function()
-        if progressBar and progressBar.Parent then
-            local newPos = (progressBar.Size.X.Scale * 100) / 100
-            glowBar.Position = UDim2.new(newPos - 0.2, 0, -0.5, 0)
-        else
-            if glowAnim then glowAnim:Disconnect() end
-        end
-    end)
     
     -- زر إغلاق
     local closeBtn = Create("TextButton", notification, {
         Size = UDim2.new(0, 28, 0, 28),
         Position = UDim2.new(1, -12, 0, 12),
         Text = "✕",
-        TextColor3 = CurrentTheme["Color Dark Text"],
+        TextColor3 = GetTheme().TextDim,
         BackgroundTransparency = 1,
         Font = Enum.Font.GothamBold,
         TextSize = 16
     })
     
-    AddHoverEffect(closeBtn, CurrentTheme["Color Stroke"])
+    AddHoverEffect(closeBtn, GetTheme().Primary)
+    
+    -- أنيميشن شريط التقدم
+    CreateTween(progressBar, "Size", UDim2.new(0, 0, 0, 3), duration, Enum.EasingStyle.Linear, Enum.EasingDirection.In, false)
+    
+    -- أنيميشن التوهج المتحرك
+    local glowAnim
+    glowAnim = RunService.RenderStepped:Connect(function()
+        if progressBar and progressBar.Parent then
+            local newPos = (progressBar.Size.X.Scale * 100) / 100
+            progressGlow.Position = UDim2.new(newPos - 0.2, 0, -0.5, 0)
+        else
+            if glowAnim then glowAnim:Disconnect() end
+        end
+    end)
+    
+    -- أنيميشن الدخول
+    notification.Position = UDim2.new(1, 50, 0, 0)
+    CreateEasingTween(notification, "Position", UDim2.new(0, 0, 0, 0), 0.4, Enum.EasingStyle.Back)
+    CreateTween(notification, "BackgroundTransparency", SaveData.Window.GlassIntensity > 0 and 0.85 or 0, 0.3)
+    
+    -- صوت
+    if sound then
+        PlayClickSound()
+    end
     
     closeBtn.MouseButton1Click:Connect(function()
         if glowAnim then glowAnim:Disconnect() end
-        CreateEasingTween(notification, "Position", UDim2.new(0, 360, 0, 0), 0.3, Enum.EasingStyle.Back)
-        CreateTween(notification, "BackgroundTransparency", 1, 0.2, Enum.EasingStyle.Quad, false)
-        task.wait(0.3)
+        CreateEasingTween(notification, "Position", UDim2.new(1, 50, 0, 0), 0.3, Enum.EasingStyle.Back)
+        CreateTween(notification, "BackgroundTransparency", 1, 0.2)
+        task.wait(0.35)
         container:Destroy()
     end)
-    
-    -- دخول سلس
-    CreateEasingTween(notification, "Position", UDim2.new(0, 0, 0, 0), 0.45, Enum.EasingStyle.Back)
-    CreateEasingTween(notification, "BackgroundTransparency", SaveData.GlassEffect and 0.85 or 0, 0.3)
     
     task.spawn(function()
         task.wait(duration)
         if container.Parent then
             if glowAnim then glowAnim:Disconnect() end
-            CreateEasingTween(notification, "Position", UDim2.new(0, 360, 0, 0), 0.35, Enum.EasingStyle.Back)
-            CreateTween(notification, "BackgroundTransparency", 1, 0.2, Enum.EasingStyle.Quad, false)
-            task.wait(0.35)
+            CreateEasingTween(notification, "Position", UDim2.new(1, 50, 0, 0), 0.35, Enum.EasingStyle.Back)
+            CreateTween(notification, "BackgroundTransparency", 1, 0.2)
+            task.wait(0.4)
             container:Destroy()
         end
     end)
+    
+    return {Close = function() closeBtn.MouseButton1Click:Fire() end}
 end
 
--- ==================== دوال الإعدادات ====================
+-- ==================================================== دوال الإعدادات ====================================================
 local function SaveSettings()
     if writefile then
         local data = {
-            UISize = SaveData.UISize,
-            TabSize = SaveData.TabSize,
+            Window = SaveData.Window,
             Theme = SaveData.Theme,
-            Flags = Flags,
-            GlassEffect = SaveData.GlassEffect,
-            GlowEffect = SaveData.GlowEffect
+            Flags = SaveData.Flags,
+            Notifications = SaveData.Notifications,
+            Animations = SaveData.Animations,
+            Sounds = SaveData.Sounds,
+            Particles = SaveData.Particles
         }
         local success, encoded = pcall(HttpService.JSONEncode, HttpService, data)
         if success then
-            pcall(writefile, "LegendaryUI_Settings.json", encoded)
+            pcall(writefile, "LegendaryUI_Ultimate.json", encoded)
         end
     end
 end
 
 local function LoadSettings()
-    if readfile and isfile and isfile("LegendaryUI_Settings.json") then
-        local success, data = pcall(readfile, "LegendaryUI_Settings.json")
+    if readfile and isfile and isfile("LegendaryUI_Ultimate.json") then
+        local success, data = pcall(readfile, "LegendaryUI_Ultimate.json")
         if success then
             local success2, decoded = pcall(HttpService.JSONDecode, HttpService, data)
             if success2 and type(decoded) == "table" then
-                if decoded.UISize then SaveData.UISize = decoded.UISize end
-                if decoded.TabSize then SaveData.TabSize = decoded.TabSize end
+                if decoded.Window then
+                    for k, v in pairs(decoded.Window) do
+                        SaveData.Window[k] = v
+                    end
+                end
                 if decoded.Theme and Themes[decoded.Theme] then SaveData.Theme = decoded.Theme end
-                if decoded.Flags then Flags = decoded.Flags end
-                if decoded.GlassEffect ~= nil then SaveData.GlassEffect = decoded.GlassEffect end
-                if decoded.GlowEffect ~= nil then SaveData.GlowEffect = decoded.GlowEffect end
-                CurrentTheme = Themes[SaveData.Theme]
+                if decoded.Flags then SaveData.Flags = decoded.Flags end
+                if decoded.Notifications then
+                    for k, v in pairs(decoded.Notifications) do
+                        SaveData.Notifications[k] = v
+                    end
+                end
+                if decoded.Animations then
+                    for k, v in pairs(decoded.Animations) do
+                        SaveData.Animations[k] = v
+                    end
+                end
+                if decoded.Sounds then
+                    for k, v in pairs(decoded.Sounds) do
+                        SaveData.Sounds[k] = v
+                    end
+                end
+                if decoded.Particles then
+                    for k, v in pairs(decoded.Particles) do
+                        SaveData.Particles[k] = v
+                    end
+                end
             end
         end
     end
@@ -440,46 +680,28 @@ end
 
 LoadSettings()
 
--- ==================== دوال الثيم ====================
+-- ==================================================== دوال الثيم ====================================================
 function LegendaryUI:SetTheme(themeName)
     if not Themes[themeName] then return false end
+    
     SaveData.Theme = themeName
-    CurrentTheme = Themes[themeName]
+    local theme = Themes[themeName]
     SaveSettings()
     
     -- تحديث جميع العناصر
-    for _, item in pairs(Instances) do
-        if item.Type == "Gradient" and item.Instance then
-            item.Instance.Color = CurrentTheme["Color Hub 1"]
-        elseif item.Type == "Frame" and item.Instance then
-            item.Instance.BackgroundColor3 = CurrentTheme["Color Hub 2"]
-            if SaveData.GlassEffect and item.Instance:IsA("Frame") then
-                item.Instance.BackgroundTransparency = 0.85
-            else
-                item.Instance.BackgroundTransparency = 0
-            end
-        elseif item.Type == "Stroke" and item.Instance then
-            item.Instance.Color = CurrentTheme["Color Stroke"]
-        elseif item.Type == "Theme" and item.Instance then
-            local prop = item.Instance:IsA("Frame") and "BackgroundColor3" or 
-                        item.Instance:IsA("TextLabel") and "TextColor3" or
-                        item.Instance:IsA("ImageLabel") and "ImageColor3" or "Color"
-            item.Instance[prop] = CurrentTheme["Color Theme"]
-        elseif item.Type == "Text" and item.Instance then
-            item.Instance.TextColor3 = CurrentTheme["Color Text"]
-        elseif item.Type == "DarkText" and item.Instance then
-            item.Instance.TextColor3 = CurrentTheme["Color Dark Text"]
-        elseif item.Type == "ScrollBar" and item.Instance then
-            item.Instance.ScrollBarImageColor3 = CurrentTheme["Color Theme"]
+    for _, element in pairs(self.Instances or {}) do
+        if element.UpdateTheme then
+            element:UpdateTheme(theme)
         end
     end
     
-    LegendaryUI:Notify({
+    self:Notify({
         Title = "🎨 Theme Changed",
-        Text = "تم تغيير الثيم إلى " .. CurrentTheme.Name,
+        Text = "تم تغيير الثيم إلى " .. theme.Name,
         Duration = 2,
         Icon = "rbxassetid://10709790948"
     })
+    
     return true
 end
 
@@ -488,184 +710,235 @@ function LegendaryUI:GetTheme()
 end
 
 function LegendaryUI:GetThemes()
-    local themeList = {}
+    local list = {}
     for name, theme in pairs(Themes) do
-        table.insert(themeList, {Name = name, Display = theme.Name})
+        table.insert(list, {Name = name, Display = theme.Name, Color = theme.Primary})
     end
-    return themeList
+    return list
 end
 
-function LegendaryUI:ToggleGlass(enabled)
-    SaveData.GlassEffect = enabled
-    for _, item in pairs(Instances) do
-        if item.Type == "Frame" and item.Instance and item.Instance:IsA("Frame") then
-            if enabled then
-                item.Instance.BackgroundTransparency = 0.85
-            else
-                item.Instance.BackgroundTransparency = 0
-            end
-        end
-    end
+-- ==================================================== دوال التحكم ====================================================
+function LegendaryUI:GetFlag(name)
+    return SaveData.Flags[name]
+end
+
+function LegendaryUI:SetFlag(name, value)
+    SaveData.Flags[name] = value
+    SaveSettings()
+    return value
+end
+
+function LegendaryUI:ToggleSound(enabled)
+    SaveData.Sounds.Enabled = enabled
     SaveSettings()
 end
 
-function LegendaryUI:ToggleGlow(enabled)
-    SaveData.GlowEffect = enabled
+function LegendaryUI:ToggleParticles(enabled)
+    SaveData.Particles.Enabled = enabled
     SaveSettings()
 end
 
--- ==================== إنشاء الواجهة الرئيسية ====================
-local ScreenGui = Create("ScreenGui", CoreGui, {Name = "LegendaryUI_Pro"})
-local existingGui = CoreGui:FindFirstChild("LegendaryUI_Pro")
+function LegendaryUI:ToggleAnimations(enabled)
+    SaveData.Animations.Enabled = enabled
+    SaveSettings()
+end
+
+function LegendaryUI:SetAnimationSpeed(speed)
+    SaveData.Animations.Speed = Clamp(speed, 0.1, 0.8)
+    SaveSettings()
+end
+
+-- ==================================================== إنشاء الواجهة الرئيسية ====================================================
+local ScreenGui = Create("ScreenGui", CoreGui, {Name = "LegendaryUI_Ultimate"})
+local existingGui = CoreGui:FindFirstChild("LegendaryUI_Ultimate")
 if existingGui and existingGui ~= ScreenGui then existingGui:Destroy() end
 
-Create("UIScale", ScreenGui, {Scale = UIScale, Name = "Scale"})
+local UIScale = Create("UIScale", ScreenGui, {Scale = Camera.ViewportSize.Y / 450})
 
--- ==================== دوال السحب المتطورة ====================
-local function MakeDraggable(frame)
-    local dragging, dragStart, startPos
-    
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
-        end
-    end)
-    
-    frame.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = false
-        end
-    end)
-    
-    frame.InputChanged:Connect(function(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = input.Position - dragStart
-            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X / UIScale, 
-                                        startPos.Y.Scale, startPos.Y.Offset + delta.Y / UIScale)
-        end
-    end)
-    
-    return frame
-end
+-- سجل العناصر
+LegendaryUI.Instances = {}
 
--- ==================== دالة إنشاء النافذة الرئيسية ====================
 function LegendaryUI:MakeWindow(config)
     local title = config.Title or "Legendary UI"
-    local subTitle = config.SubTitle or "Red & Blue Edition"
+    local subtitle = config.Subtitle or "Ultimate Framework"
     local saveFolder = config.SaveFolder
     
     if saveFolder and writefile then
-        Settings.ScriptFile = saveFolder
+        SaveData.SaveFolder = saveFolder
     end
     
-    local windowSize = SaveData.UISize
+    local theme = GetTheme()
+    local windowSize = SaveData.Window.Size
     local window = Create("Frame", ScreenGui, {
         Name = "MainWindow",
         Size = UDim2.fromOffset(windowSize[1], windowSize[2]),
         Position = UDim2.new(0.5, -windowSize[1]/2, 0.5, -windowSize[2]/2),
-        BackgroundTransparency = SaveData.GlassEffect and 0.85 or 0
+        BackgroundColor3 = theme.Background,
+        BackgroundTransparency = 0.02,
+        ZIndex = 1
     })
-    InsertTheme(window, "Frame")
     
-    -- تدرج لوني رائع
+    -- تأثير الزجاج
+    if SaveData.Window.GlassIntensity > 0 then
+        window.BackgroundTransparency = 1 - SaveData.Window.GlassIntensity * 0.8
+    end
+    
+    -- تدرج لوني متقدم
     local gradient = Create("UIGradient", window, {
-        Color = CurrentTheme["Color Hub 1"],
+        Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, theme.Gradient1),
+            ColorSequenceKeypoint.new(0.5, theme.Gradient2),
+            ColorSequenceKeypoint.new(1, theme.Gradient3)
+        }),
         Rotation = 45
     })
-    InsertTheme(gradient, "Gradient")
     
-    -- زوايا دائرية أنيقة
-    local corner = Create("UICorner", window, {CornerRadius = UDim.new(0, 20)})
+    -- زوايا دائرية
+    local corner = Create("UICorner", window, {CornerRadius = UDim.new(0, 24)})
     
     -- حدود متوهجة
     local stroke = Create("UIStroke", window, {
-        Color = CurrentTheme["Color Stroke"],
+        Color = theme.Border,
         Thickness = 2.5,
         Transparency = 0.3
     })
-    InsertTheme(stroke, "Stroke")
     
-    -- تأثير توهج للحدود
-    AddGlowEffect(window, CurrentTheme["Color Glow"])
+    -- تأثير توهج
+    local glowFrame = Create("Frame", window, {
+        Size = UDim2.new(1, 4, 1, 4),
+        Position = UDim2.new(0, -2, 0, -2),
+        BackgroundColor3 = theme.Glow,
+        BackgroundTransparency = 0.8,
+        ZIndex = 0
+    })
+    Create("UICorner", glowFrame, {CornerRadius = UDim.new(0, 26)})
     
-    MakeDraggable(window)
+    -- دوال السحب
+    local dragging = false
+    local dragStart, startPos
     
-    -- ==================== الشريط العلوي الفاخر ====================
+    window.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = window.Position
+        end
+    end)
+    
+    window.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+            SaveData.Window.Position = {window.Position.X.Scale, window.Position.Y.Scale}
+            SaveSettings()
+        end
+    end)
+    
+    window.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            window.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X / UIScale.Scale, 
+                                        startPos.Y.Scale, startPos.Y.Offset + delta.Y / UIScale.Scale)
+        end
+    end)
+    
+    -- الشريط العلوي الفاخر
     local topBar = Create("Frame", window, {
-        Size = UDim2.new(1, 0, 0, 40),
+        Size = UDim2.new(1, 0, 0, 48),
         BackgroundTransparency = 1
     })
     
-    -- خط فاصل علوي
+    -- خط علوي
     local topLine = Create("Frame", topBar, {
-        Size = UDim2.new(1, 0, 0, 2),
-        Position = UDim2.new(0, 0, 1, -2),
-        BackgroundColor3 = CurrentTheme["Color Stroke"],
+        Size = UDim2.new(1, -40, 0, 2),
+        Position = UDim2.new(0, 20, 1, -2),
+        BackgroundColor3 = theme.Border,
         BackgroundTransparency = 0.5
     })
-    InsertTheme(topLine, "Stroke")
     
-    -- أيقونة جانبية
-    local iconDeco = Create("Frame", topBar, {
-        Size = UDim2.new(0, 8, 0, 8),
-        Position = UDim2.new(0, 12, 0.5, 0),
+    -- أيقونة شعار
+    local logoIcon = Create("Frame", topBar, {
+        Size = UDim2.new(0, 32, 0, 32),
+        Position = UDim2.new(0, 16, 0.5, 0),
         AnchorPoint = Vector2.new(0, 0.5),
-        BackgroundColor3 = CurrentTheme["Color Theme"]
+        BackgroundColor3 = theme.Primary,
+        BackgroundTransparency = 0.2
     })
-    Create("UICorner", iconDeco, {CornerRadius = UDim.new(1, 0)})
+    Create("UICorner", logoIcon, {CornerRadius = UDim.new(0, 10)})
+    
+    -- شعار L
+    local logoText = Create("TextLabel", logoIcon, {
+        Size = UDim2.new(1, 0, 1, 0),
+        Text = "L",
+        TextColor3 = theme.Text,
+        Font = Enum.Font.GothamBold,
+        TextSize = 20,
+        BackgroundTransparency = 1
+    })
     
     -- العنوان الرئيسي
-    local titleLabel = InsertTheme(Create("TextLabel", topBar, {
-        Position = UDim2.new(0, 28, 0.5, 0),
+    local titleLabel = Create("TextLabel", topBar, {
+        Position = UDim2.new(0, 56, 0.5, 0),
         AnchorPoint = Vector2.new(0, 0.5),
         Text = title,
-        TextColor3 = CurrentTheme["Color Text"],
+        TextColor3 = theme.Text,
         Font = Enum.Font.GothamBold,
-        TextSize = 16,
+        TextSize = 18,
         BackgroundTransparency = 1
-    }), "Text")
+    })
     
     -- النص الفرعي
-    local subLabel = InsertTheme(Create("TextLabel", topBar, {
-        Position = UDim2.new(0, 28, 0, 32),
-        Text = subTitle,
-        TextColor3 = CurrentTheme["Color Dark Text"],
+    local subtitleLabel = Create("TextLabel", topBar, {
+        Position = UDim2.new(0, 56, 0, 32),
+        Text = subtitle,
+        TextColor3 = theme.TextDim,
         Font = Enum.Font.Gotham,
         TextSize = 9,
         BackgroundTransparency = 1
-    }), "DarkText")
+    })
     
-    -- ==================== أزرار التحكم ====================
+    -- أزرار التحكم
     local buttonContainer = Create("Frame", topBar, {
-        Size = UDim2.new(0, 70, 1, 0),
+        Size = UDim2.new(0, 90, 1, 0),
         Position = UDim2.new(1, -12, 0, 0),
         AnchorPoint = Vector2.new(1, 0),
         BackgroundTransparency = 1
     })
     
     local minimizeBtn = Create("TextButton", buttonContainer, {
-        Size = UDim2.new(0.5, -4, 0, 28),
+        Size = UDim2.new(0, 38, 0, 32),
         Position = UDim2.new(0, 0, 0.5, 0),
         AnchorPoint = Vector2.new(0, 0.5),
         Text = "−",
-        TextColor3 = CurrentTheme["Color Text"],
-        BackgroundColor3 = CurrentTheme["Color Hub 2"],
+        TextColor3 = theme.Text,
+        BackgroundColor3 = theme.Surface,
         Font = Enum.Font.GothamBold,
-        TextSize = 20
+        TextSize = 24
     })
     Create("UICorner", minimizeBtn, {CornerRadius = UDim.new(0, 8)})
-    AddHoverEffect(minimizeBtn, CurrentTheme["Color Theme"])
+    AddHoverEffect(minimizeBtn, theme.Primary)
     AddRippleEffect(minimizeBtn)
     
+    local maximizeBtn = Create("TextButton", buttonContainer, {
+        Size = UDim2.new(0, 38, 0, 32),
+        Position = UDim2.new(0.5, -19, 0.5, 0),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Text = "□",
+        TextColor3 = theme.Text,
+        BackgroundColor3 = theme.Surface,
+        Font = Enum.Font.GothamBold,
+        TextSize = 18
+    })
+    Create("UICorner", maximizeBtn, {CornerRadius = UDim.new(0, 8)})
+    AddHoverEffect(maximizeBtn, theme.Primary)
+    AddRippleEffect(maximizeBtn)
+    
     local closeBtn = Create("TextButton", buttonContainer, {
-        Size = UDim2.new(0.5, -4, 0, 28),
+        Size = UDim2.new(0, 38, 0, 32),
         Position = UDim2.new(1, 0, 0.5, 0),
         AnchorPoint = Vector2.new(1, 0.5),
         Text = "✕",
-        TextColor3 = CurrentTheme["Color Text"],
-        BackgroundColor3 = CurrentTheme["Color Hub 2"],
+        TextColor3 = theme.Text,
+        BackgroundColor3 = theme.Surface,
         Font = Enum.Font.GothamBold,
         TextSize = 18
     })
@@ -673,58 +946,42 @@ function LegendaryUI:MakeWindow(config)
     AddHoverEffect(closeBtn, Color3.fromRGB(200, 50, 50))
     AddRippleEffect(closeBtn)
     
-    local minimized = false
-    local savedSize
-    
-    minimizeBtn.MouseButton1Click:Connect(function()
-        if minimized then
-            CreateEasingTween(window, "Size", savedSize, 0.3, Enum.EasingStyle.Quint)
-            minimized = false
-            minimizeBtn.Text = "−"
-        else
-            savedSize = window.Size
-            CreateEasingTween(window, "Size", UDim2.fromOffset(window.Size.X.Offset, 42), 0.3, Enum.EasingStyle.Quint)
-            minimized = true
-            minimizeBtn.Text = "+"
-        end
-    end)
-    
-    -- ==================== الشريط الجانبي ====================
-    local tabSize = SaveData.TabSize
-    local tabScroll = InsertTheme(Create("ScrollingFrame", window, {
-        Size = UDim2.new(0, tabSize, 1, -48),
+    -- الشريط الجانبي
+    local tabSize = SaveData.Window.TabSize
+    local tabScroll = Create("ScrollingFrame", window, {
+        Size = UDim2.new(0, tabSize, 1, -56),
         Position = UDim2.new(0, 0, 1, -8),
         AnchorPoint = Vector2.new(0, 1),
         BackgroundTransparency = 1,
         ScrollBarThickness = 3,
-        ScrollBarImageColor3 = CurrentTheme["Color Theme"],
+        ScrollBarImageColor3 = theme.Primary,
         AutomaticCanvasSize = "Y",
         ScrollingDirection = "Y"
-    }), "ScrollBar")
+    })
     
     Create("UIPadding", tabScroll, {
-        PaddingLeft = UDim.new(0, 8),
+        PaddingLeft = UDim.new(0, 12),
         PaddingTop = UDim.new(0, 12),
         PaddingBottom = UDim.new(0, 12)
     })
     Create("UIListLayout", tabScroll, {Padding = UDim.new(0, 8)})
     
-    -- ==================== حاوية المحتوى ====================
+    -- حاوية المحتوى
     local contentContainer = Create("Frame", window, {
-        Size = UDim2.new(1, -tabSize - 12, 1, -56),
+        Size = UDim2.new(1, -tabSize - 16, 1, -64),
         Position = UDim2.new(1, 0, 1, -8),
         AnchorPoint = Vector2.new(1, 1),
         BackgroundTransparency = 1,
         ClipsDescendants = true
     })
     
-    -- ==================== عناصر التحكم في الحجم ====================
+    -- مقبض التحكم في الحجم
     local resizeHandle = Create("Frame", window, {
-        Size = UDim2.new(0, 14, 0, 14),
-        Position = UDim2.new(1, -7, 1, -7),
+        Size = UDim2.new(0, 18, 0, 18),
+        Position = UDim2.new(1, -9, 1, -9),
         AnchorPoint = Vector2.new(1, 1),
-        BackgroundColor3 = CurrentTheme["Color Theme"],
-        BackgroundTransparency = 0.4
+        BackgroundColor3 = theme.Primary,
+        BackgroundTransparency = 0.5
     })
     Create("UICorner", resizeHandle, {CornerRadius = UDim.new(1, 0)})
     
@@ -739,7 +996,7 @@ function LegendaryUI:MakeWindow(config)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             if resizing then
                 resizing = false
-                SaveData.UISize = {window.Size.X.Offset, window.Size.Y.Offset}
+                SaveData.Window.Size = {window.Size.X.Offset, window.Size.Y.Offset}
                 SaveSettings()
             end
         end
@@ -747,40 +1004,65 @@ function LegendaryUI:MakeWindow(config)
     
     UserInputService.InputChanged:Connect(function(input)
         if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local newX = math.clamp(window.Size.X.Offset + input.Delta.X, 450, 1100)
-            local newY = math.clamp(window.Size.Y.Offset + input.Delta.Y, 280, 700)
+            local newX = Clamp(window.Size.X.Offset + input.Delta.X, 500, 1400)
+            local newY = Clamp(window.Size.Y.Offset + input.Delta.Y, 350, 900)
             window.Size = UDim2.fromOffset(newX, newY)
-            contentContainer.Size = UDim2.new(1, -tabSize - 12, 1, -56)
+            contentContainer.Size = UDim2.new(1, -tabSize - 16, 1, -64)
         end
     end)
     
-    -- ==================== دوال النافذة ====================
+    -- دوال النافذة
     local windowMethods = {}
+    local containers = {}
+    local currentTab = nil
+    local minimized = false
+    local maximized = false
+    local originalSize = window.Size
     
     function windowMethods:SetTitle(newTitle)
         titleLabel.Text = newTitle
     end
     
-    function windowMethods:SetSubTitle(newSubTitle)
-        subLabel.Text = newSubTitle
-    end
-    
-    function windowMethods:Close()
-        CreateEasingTween(window, "Size", UDim2.fromOffset(0, 0), 0.25, Enum.EasingStyle.Quint, true)
-        window:Destroy()
+    function windowMethods:SetSubtitle(newSubtitle)
+        subtitleLabel.Text = newSubtitle
     end
     
     function windowMethods:Minimize()
         if minimized then
-            CreateEasingTween(window, "Size", savedSize, 0.3, Enum.EasingStyle.Quint)
+            CreateEasingTween(window, "Size", originalSize, 0.3)
             minimized = false
             minimizeBtn.Text = "−"
         else
-            savedSize = window.Size
-            CreateEasingTween(window, "Size", UDim2.fromOffset(window.Size.X.Offset, 42), 0.3, Enum.EasingStyle.Quint)
+            originalSize = window.Size
+            CreateEasingTween(window, "Size", UDim2.fromOffset(window.Size.X.Offset, 48), 0.3)
             minimized = true
             minimizeBtn.Text = "+"
         end
+    end
+    
+    function windowMethods:Maximize()
+        if maximized then
+            CreateEasingTween(window, "Size", originalSize, 0.3)
+            maximized = false
+            maximizeBtn.Text = "□"
+        else
+            originalSize = window.Size
+            local viewport = Camera.ViewportSize
+            CreateEasingTween(window, "Size", UDim2.fromOffset(viewport.X / UIScale.Scale, viewport.Y / UIScale.Scale - 50), 0.3)
+            maximized = true
+            maximizeBtn.Text = "❐"
+        end
+    end
+    
+    function windowMethods:Close()
+        CreateEasingTween(window, "Size", UDim2.fromOffset(0, 0), 0.2)
+        CreateTween(window, "BackgroundTransparency", 1, 0.2)
+        task.wait(0.25)
+        window:Destroy()
+    end
+    
+    function windowMethods:Notify(config)
+        return LegendaryUI:Notify(config)
     end
     
     function windowMethods:Dialog(config)
@@ -792,53 +1074,67 @@ function LegendaryUI:MakeWindow(config)
             Size = UDim2.new(1, 0, 1, 0),
             BackgroundColor3 = Color3.fromRGB(0, 0, 0),
             BackgroundTransparency = 0.6,
-            Active = true
+            Active = true,
+            ZIndex = 100
         })
         
         local dialog = Create("Frame", overlay, {
-            Size = UDim2.new(0, 320, 0, 0),
+            Size = UDim2.new(0, 380, 0, 0),
             Position = UDim2.new(0.5, 0, 0.5, 0),
             AnchorPoint = Vector2.new(0.5, 0.5),
-            BackgroundColor3 = CurrentTheme["Color Hub 2"],
-            BackgroundTransparency = SaveData.GlassEffect and 0.9 or 0,
-            AutomaticSize = "Y"
+            BackgroundColor3 = theme.Surface,
+            BackgroundTransparency = 0.05,
+            AutomaticSize = "Y",
+            ZIndex = 101
         })
-        InsertTheme(dialog, "Frame")
-        Create("UICorner", dialog, {CornerRadius = UDim.new(0, 16)})
+        Create("UICorner", dialog, {CornerRadius = UDim.new(0, 20)})
+        Create("UIStroke", dialog, {Color = theme.Border, Thickness = 1.5, Transparency = 0.4})
         
-        local dialogStroke = Create("UIStroke", dialog, {
-            Color = CurrentTheme["Color Stroke"],
-            Thickness = 2,
-            Transparency = 0.4
+        -- أيقونة
+        local iconFrame = Create("Frame", dialog, {
+            Size = UDim2.new(0, 48, 0, 48),
+            Position = UDim2.new(0.5, -24, 0, 16),
+            BackgroundColor3 = theme.Primary,
+            BackgroundTransparency = 0.2
         })
-        InsertTheme(dialogStroke, "Stroke")
+        Create("UICorner", iconFrame, {CornerRadius = UDim.new(0, 14)})
         
-        local titleLabel = InsertTheme(Create("TextLabel", dialog, {
-            Size = UDim2.new(1, -24, 0, 32),
-            Position = UDim2.new(0, 12, 0, 12),
+        local iconLabel = Create("TextLabel", iconFrame, {
+            Size = UDim2.new(1, 0, 1, 0),
+            Text = "?",
+            TextColor3 = theme.Text,
+            Font = Enum.Font.GothamBold,
+            TextSize = 28,
+            BackgroundTransparency = 1
+        })
+        
+        local titleLabel = Create("TextLabel", dialog, {
+            Size = UDim2.new(1, -32, 0, 32),
+            Position = UDim2.new(0, 16, 0, 72),
             Text = dialogTitle,
-            TextColor3 = CurrentTheme["Color Text"],
+            TextColor3 = theme.Text,
             Font = Enum.Font.GothamBold,
             TextSize = 18,
-            TextXAlignment = "Left",
+            TextXAlignment = "Center",
             BackgroundTransparency = 1
-        }), "Text")
+        })
         
-        local textLabel = InsertTheme(Create("TextLabel", dialog, {
-            Size = UDim2.new(1, -24, 0, 0),
-            Position = UDim2.new(0, 12, 0, 48),
+        local textLabel = Create("TextLabel", dialog, {
+            Size = UDim2.new(1, -32, 0, 0),
+            Position = UDim2.new(0, 16, 0, 108),
             Text = dialogText,
-            TextColor3 = CurrentTheme["Color Dark Text"],
+            TextColor3 = theme.TextDim,
             Font = Enum.Font.Gotham,
             TextSize = 13,
             TextWrapped = true,
+            TextXAlignment = "Center",
             AutomaticSize = "Y",
             BackgroundTransparency = 1
-        }), "DarkText")
+        })
         
         local buttonContainer = Create("Frame", dialog, {
-            Size = UDim2.new(1, -24, 0, 48),
-            Position = UDim2.new(0, 12, 1, -12),
+            Size = UDim2.new(1, -32, 0, 48),
+            Position = UDim2.new(0, 16, 1, -16),
             AnchorPoint = Vector2.new(0, 1),
             BackgroundTransparency = 1
         })
@@ -847,236 +1143,255 @@ function LegendaryUI:MakeWindow(config)
         
         for i, btn in ipairs(buttons) do
             local button = Create("TextButton", buttonContainer, {
-                Size = UDim2.new(0, buttonWidth, 0, 36),
+                Size = UDim2.new(0, buttonWidth, 0, 40),
                 Position = UDim2.new(0, (i-1) * (buttonWidth + 12), 0, 0),
                 Text = btn[1],
-                BackgroundColor3 = CurrentTheme["Color Theme"],
-                TextColor3 = CurrentTheme["Color Text"],
+                BackgroundColor3 = i == 1 and theme.Primary or theme.Surface,
+                TextColor3 = theme.Text,
                 Font = Enum.Font.GothamBold,
                 TextSize = 13
             })
-            Create("UICorner", button, {CornerRadius = UDim.new(0, 8)})
-            AddHoverEffect(button, CurrentTheme["Color Accent"])
+            Create("UICorner", button, {CornerRadius = UDim.new(0, 10)})
+            AddHoverEffect(button, theme.Accent)
             AddRippleEffect(button)
             
             button.MouseButton1Click:Connect(function()
                 if btn[2] then pcall(btn[2]) end
-                CreateEasingTween(dialog, "Size", UDim2.new(0, 320, 0, 0), 0.2, Enum.EasingStyle.Quad)
-                CreateTween(overlay, "BackgroundTransparency", 1, 0.2, Enum.EasingStyle.Quad, true)
+                CreateEasingTween(dialog, "Size", UDim2.new(0, 380, 0, 0), 0.2)
+                CreateTween(overlay, "BackgroundTransparency", 1, 0.2)
+                task.wait(0.25)
                 overlay:Destroy()
             end)
         end
         
-        dialog.Size = UDim2.new(0, 320, 0, textLabel.Size.Y.Offset + 108)
-        CreateEasingTween(dialog, "Size", UDim2.new(0, 320, 0, textLabel.Size.Y.Offset + 108), 0.2)
+        dialog.Size = UDim2.new(0, 380, 0, textLabel.Size.Y.Offset + 180)
+        CreateElasticTween(dialog, "Size", UDim2.new(0, 380, 0, textLabel.Size.Y.Offset + 180), 0.3)
         
         return dialog
     end
     
-    -- ==================== دوال التب ====================
-    local containers = {}
-    local currentTab = nil
-    
+    -- دوال التب
     function windowMethods:MakeTab(config)
         local tabName = config.Title or "Tab"
         local tabIcon = config.Icon or ""
+        local tabDescription = config.Description or ""
+        
+        local theme = GetTheme()
         
         local tabButton = Create("TextButton", tabScroll, {
-            Size = UDim2.new(1, 0, 0, 38),
+            Size = UDim2.new(1, 0, 0, 48),
             Text = "",
-            BackgroundColor3 = CurrentTheme["Color Hub 2"],
-            BackgroundTransparency = SaveData.GlassEffect and 0.95 or 0.8
+            BackgroundColor3 = theme.Surface,
+            BackgroundTransparency = 0.8
         })
-        InsertTheme(tabButton, "Frame")
-        Create("UICorner", tabButton, {CornerRadius = UDim.new(0, 10)})
+        Create("UICorner", tabButton, {CornerRadius = UDim.new(0, 12)})
         
-        -- شريط جانبي للتب النشط
+        -- شريط جانبي نشط
         local activeBar = Create("Frame", tabButton, {
-            Size = UDim2.new(0, 3, 0, 0),
+            Size = UDim2.new(0, 4, 0, 0),
             Position = UDim2.new(0, 0, 0.5, 0),
             AnchorPoint = Vector2.new(0, 0.5),
-            BackgroundColor3 = CurrentTheme["Color Theme"],
+            BackgroundColor3 = theme.Primary,
             BackgroundTransparency = 1
         })
+        Create("UICorner", activeBar, {CornerRadius = UDim.new(0, 2)})
         
         local iconImg = nil
         if tabIcon and tabIcon ~= "" then
             iconImg = Create("ImageLabel", tabButton, {
-                Size = UDim2.new(0, 20, 0, 20),
+                Size = UDim2.new(0, 24, 0, 24),
                 Position = UDim2.new(0, 12, 0.5, 0),
                 AnchorPoint = Vector2.new(0, 0.5),
                 Image = tabIcon,
                 BackgroundTransparency = 1,
-                ImageColor3 = CurrentTheme["Color Theme"]
+                ImageColor3 = theme.Primary
             })
-            InsertTheme(iconImg, "Theme")
         end
         
-        local tabLabel = InsertTheme(Create("TextLabel", tabButton, {
-            Size = UDim2.new(1, iconImg and -44 or -24, 1, 0),
-            Position = UDim2.new(0, iconImg and 40 or 16, 0, 0),
+        local tabLabel = Create("TextLabel", tabButton, {
+            Size = UDim2.new(1, iconImg and -48 or -24, 0, 24),
+            Position = UDim2.new(0, iconImg and 44 or 20, 0, 12),
             Text = tabName,
-            TextColor3 = CurrentTheme["Color Text"],
-            Font = Enum.Font.GothamMedium,
-            TextSize = 12,
+            TextColor3 = theme.Text,
+            Font = Enum.Font.GothamBold,
+            TextSize = 13,
             TextXAlignment = "Left",
             BackgroundTransparency = 1
-        }), "Text")
+        })
+        
+        if tabDescription and tabDescription ~= "" then
+            local descLabel = Create("TextLabel", tabButton, {
+                Size = UDim2.new(1, iconImg and -48 or -24, 0, 18),
+                Position = UDim2.new(0, iconImg and 44 or 20, 0, 32),
+                Text = tabDescription,
+                TextColor3 = theme.TextDim,
+                Font = Enum.Font.Gotham,
+                TextSize = 9,
+                TextXAlignment = "Left",
+                BackgroundTransparency = 1
+            })
+        end
         
         local container = Create("ScrollingFrame", contentContainer, {
             Size = UDim2.new(1, -20, 1, -15),
             Position = UDim2.new(0, 10, 0, 0),
             BackgroundTransparency = 1,
             ScrollBarThickness = 4,
-            ScrollBarImageColor3 = CurrentTheme["Color Theme"],
+            ScrollBarImageColor3 = theme.Primary,
             AutomaticCanvasSize = "Y",
             ScrollingDirection = "Y",
             Visible = false
         })
-        InsertTheme(container, "ScrollBar")
         
         Create("UIPadding", container, {
-            PaddingLeft = UDim.new(0, 12),
-            PaddingRight = UDim.new(0, 12),
-            PaddingTop = UDim.new(0, 8),
-            PaddingBottom = UDim.new(0, 8)
+            PaddingLeft = UDim.new(0, 16),
+            PaddingRight = UDim.new(0, 16),
+            PaddingTop = UDim.new(0, 12),
+            PaddingBottom = UDim.new(0, 12)
         })
-        Create("UIListLayout", container, {Padding = UDim.new(0, 10)})
+        Create("UIListLayout", container, {Padding = UDim.new(0, 12)})
         
         table.insert(containers, container)
         
-        -- أنيميشن عند النقر
         tabButton.MouseButton1Click:Connect(function()
             for _, cont in pairs(containers) do
-                CreateTween(cont, "Visible", false, 0.15, Enum.EasingStyle.Quad, false)
                 cont.Visible = false
             end
             container.Visible = true
-            CreateTween(container, "Visible", true, 0.15, Enum.EasingStyle.Quad, false)
             
             for _, btn in pairs(tabScroll:GetChildren()) do
                 if btn:IsA("TextButton") then
                     local bar = btn:FindFirstChildWhichIsA("Frame")
                     if bar then
-                        CreateTween(bar, "Size", UDim2.new(0, 3, 0, 0), 0.2, Enum.EasingStyle.Quad, false)
-                        CreateTween(bar, "BackgroundTransparency", 1, 0.2, Enum.EasingStyle.Quad, false)
+                        CreateTween(bar, "Size", UDim2.new(0, 4, 0, 0), 0.2)
+                        CreateTween(bar, "BackgroundTransparency", 1, 0.2)
                     end
-                    btn.BackgroundTransparency = SaveData.GlassEffect and 0.95 or 0.8
+                    btn.BackgroundTransparency = 0.8
                 end
             end
-            tabButton.BackgroundTransparency = SaveData.GlassEffect and 0.85 or 0.6
-            CreateTween(activeBar, "Size", UDim2.new(0, 3, 0, 28), 0.2, Enum.EasingStyle.Quad, false)
-            CreateTween(activeBar, "BackgroundTransparency", 0, 0.2, Enum.EasingStyle.Quad, false)
+            tabButton.BackgroundTransparency = 0.6
+            CreateTween(activeBar, "Size", UDim2.new(0, 4, 0, 32), 0.2)
+            CreateTween(activeBar, "BackgroundTransparency", 0, 0.2)
         end)
         
         if not currentTab then
-            tabButton.BackgroundTransparency = SaveData.GlassEffect and 0.85 or 0.6
+            tabButton.BackgroundTransparency = 0.6
             container.Visible = true
-            activeBar.Size = UDim2.new(0, 3, 0, 28)
+            activeBar.Size = UDim2.new(0, 4, 0, 32)
             activeBar.BackgroundTransparency = 0
             currentTab = container
         end
         
-        -- ==================== دوال التب ====================
+        -- دوال التب
         local tabMethods = {}
         local elements = {}
         
-        -- دالة مساعدة لإنشاء الإطار الأساسي للعناصر
+        -- دالة إنشاء الإطار الأساسي
         local function createBaseFrame(title, description, hasControl)
-            local frameHeight = 52
-            if description and description ~= "" then frameHeight = 68 end
+            local theme = GetTheme()
+            local frameHeight = description and description ~= "" and 68 or 52
             
             local frame = Create("Frame", container, {
                 Size = UDim2.new(1, 0, 0, frameHeight),
-                BackgroundColor3 = CurrentTheme["Color Hub 2"],
-                BackgroundTransparency = SaveData.GlassEffect and 0.9 or 0
+                BackgroundColor3 = theme.Surface,
+                BackgroundTransparency = 0.85
             })
-            InsertTheme(frame, "Frame")
-            Create("UICorner", frame, {CornerRadius = UDim.new(0, 12)})
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 14)})
+            Create("UIStroke", frame, {Color = theme.Border, Thickness = 1, Transparency = 0.6})
             
-            local frameStroke = Create("UIStroke", frame, {
-                Color = CurrentTheme["Color Stroke"],
-                Thickness = 1,
-                Transparency = 0.6
-            })
-            InsertTheme(frameStroke, "Stroke")
-            
-            -- خط فاصل جانبي ملون
             local colorBar = Create("Frame", frame, {
-                Size = UDim2.new(0, 4, 1, -8),
+                Size = UDim2.new(0, 4, 1, -12),
                 Position = UDim2.new(0, 0, 0.5, 0),
                 AnchorPoint = Vector2.new(0, 0.5),
-                BackgroundColor3 = CurrentTheme["Color Theme"]
+                BackgroundColor3 = theme.Primary
             })
             Create("UICorner", colorBar, {CornerRadius = UDim.new(0, 2)})
             
-            local titleLabel = InsertTheme(Create("TextLabel", frame, {
-                Size = UDim2.new(1, hasControl and -120 or -24, 0, 22),
-                Position = UDim2.new(0, 16, 0, 10),
+            local titleLabel = Create("TextLabel", frame, {
+                Size = UDim2.new(1, hasControl and -130 or -24, 0, 24),
+                Position = UDim2.new(0, 20, 0, 12),
                 Text = title,
-                TextColor3 = CurrentTheme["Color Text"],
+                TextColor3 = theme.Text,
                 Font = Enum.Font.GothamBold,
                 TextSize = 13,
                 TextXAlignment = "Left",
                 BackgroundTransparency = 1
-            }), "Text")
+            })
             
             local descLabel = nil
             if description and description ~= "" then
-                descLabel = InsertTheme(Create("TextLabel", frame, {
-                    Size = UDim2.new(1, hasControl and -120 or -24, 0, 0),
-                    Position = UDim2.new(0, 16, 0, 34),
+                descLabel = Create("TextLabel", frame, {
+                    Size = UDim2.new(1, hasControl and -130 or -24, 0, 0),
+                    Position = UDim2.new(0, 20, 0, 36),
                     Text = description,
-                    TextColor3 = CurrentTheme["Color Dark Text"],
+                    TextColor3 = theme.TextDim,
                     Font = Enum.Font.Gotham,
                     TextSize = 10,
                     TextXAlignment = "Left",
                     TextWrapped = true,
                     AutomaticSize = "Y",
                     BackgroundTransparency = 1
-                }), "DarkText")
-                
+                })
                 frame.Size = UDim2.new(1, 0, 0, 52 + descLabel.Size.Y.Offset)
             end
             
             return frame, titleLabel, descLabel, colorBar
         end
         
+        -- زر
         function tabMethods:AddButton(config)
             local btnName = config.Title or "Button"
             local btnDesc = config.Description or ""
             local callback = config.Callback or function() end
+            local icon = config.Icon or "rbxassetid://10709791437"
             
             local frame, titleLabel, descLabel = createBaseFrame(btnName, btnDesc, true)
+            local theme = GetTheme()
             
             local button = Create("TextButton", frame, {
-                Size = UDim2.new(0, 80, 0, 32),
-                Position = UDim2.new(1, -12, 0.5, 0),
+                Size = UDim2.new(0, 90, 0, 36),
+                Position = UDim2.new(1, -16, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
                 Text = "▶ تشغيل",
-                BackgroundColor3 = CurrentTheme["Color Theme"],
-                TextColor3 = CurrentTheme["Color Text"],
+                BackgroundColor3 = theme.Primary,
+                TextColor3 = theme.Text,
                 Font = Enum.Font.GothamBold,
-                TextSize = 11
+                TextSize = 12
             })
-            Create("UICorner", button, {CornerRadius = UDim.new(0, 8)})
-            AddHoverEffect(button, CurrentTheme["Color Accent"])
+            Create("UICorner", button, {CornerRadius = UDim.new(0, 10)})
+            AddHoverEffect(button, theme.Accent)
             AddRippleEffect(button)
+            AddParticleEffect(button)
             
             button.MouseButton1Click:Connect(function()
+                if SaveData.Sounds.Enabled then PlayClickSound() end
                 pcall(callback)
-                CreateTween(button, "BackgroundColor3", Color3.fromRGB(100, 200, 100), 0.1, Enum.EasingStyle.Quad, false)
-                CreateTween(button, "BackgroundColor3", CurrentTheme["Color Theme"], 0.2, Enum.EasingStyle.Quad, false)
-                CreateTween(button, "Text", "✓ تم!", 0.05, Enum.EasingStyle.Quad, false)
+                CreateTween(button, "BackgroundColor3", Color3.fromRGB(100, 200, 100), 0.1)
+                CreateTween(button, "BackgroundColor3", theme.Primary, 0.2)
+                CreateTween(button, "Text", "✓ تم!", 0.05)
                 task.wait(0.5)
-                CreateTween(button, "Text", "▶ تشغيل", 0.2, Enum.EasingStyle.Quad, false)
+                CreateTween(button, "Text", "▶ تشغيل", 0.2)
             end)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                titleLabel.TextColor3 = newTheme.Text
+                if descLabel then descLabel.TextColor3 = newTheme.TextDim end
+                button.BackgroundColor3 = newTheme.Primary
+                button.TextColor3 = newTheme.Text
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:SetTitle(newTitle)
                 titleLabel.Text = newTitle
+            end
+            
+            function element:SetDescription(newDesc)
+                if descLabel then
+                    descLabel.Text = newDesc
+                    frame.Size = UDim2.new(1, 0, 0, 52 + descLabel.Size.Y.Offset)
+                end
             end
             
             function element:Destroy()
@@ -1086,6 +1401,7 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- Toggle
         function tabMethods:AddToggle(config)
             local toggleName = config.Title or "Toggle"
             local toggleDesc = config.Description or ""
@@ -1093,22 +1409,23 @@ function LegendaryUI:MakeWindow(config)
             local flag = config.Flag
             local callback = config.Callback or function() end
             
-            if flag and Flags[flag] ~= nil then
-                default = Flags[flag]
+            if flag and SaveData.Flags[flag] ~= nil then
+                default = SaveData.Flags[flag]
             end
             
             local frame, titleLabel, descLabel = createBaseFrame(toggleName, toggleDesc, true)
+            local theme = GetTheme()
             
             local toggleFrame = Create("Frame", frame, {
-                Size = UDim2.new(0, 48, 0, 26),
-                Position = UDim2.new(1, -12, 0.5, 0),
+                Size = UDim2.new(0, 52, 0, 28),
+                Position = UDim2.new(1, -16, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
-                BackgroundColor3 = default and CurrentTheme["Color Theme"] or Color3.fromRGB(70, 70, 70)
+                BackgroundColor3 = default and theme.Primary or Color3.fromRGB(70, 70, 70)
             })
             Create("UICorner", toggleFrame, {CornerRadius = UDim.new(1, 0)})
             
             local toggleSlider = Create("Frame", toggleFrame, {
-                Size = UDim2.new(0, 22, 0, 22),
+                Size = UDim2.new(0, 24, 0, 24),
                 Position = default and UDim2.new(1, -2, 0.5, 0) or UDim2.new(0, 2, 0.5, 0),
                 AnchorPoint = Vector2.new(default and 1 or 0, 0.5),
                 BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1119,33 +1436,40 @@ function LegendaryUI:MakeWindow(config)
             
             local function updateToggle(value)
                 toggled = value
-                if flag then Flags[flag] = value end
+                if flag then SaveData.Flags[flag] = value end
                 pcall(callback, value)
                 SaveSettings()
                 
                 if toggled then
-                    CreateEasingTween(toggleFrame, "BackgroundColor3", CurrentTheme["Color Theme"], 0.2)
+                    CreateEasingTween(toggleFrame, "BackgroundColor3", theme.Primary, 0.2)
                     CreateEasingTween(toggleSlider, "Position", UDim2.new(1, -2, 0.5, 0), 0.2)
-                    CreateTween(toggleSlider, "AnchorPoint", Vector2.new(1, 0.5), 0.2, Enum.EasingStyle.Quad, false)
+                    CreateTween(toggleSlider, "AnchorPoint", Vector2.new(1, 0.5), 0.2)
                 else
                     CreateEasingTween(toggleFrame, "BackgroundColor3", Color3.fromRGB(70, 70, 70), 0.2)
                     CreateEasingTween(toggleSlider, "Position", UDim2.new(0, 2, 0.5, 0), 0.2)
-                    CreateTween(toggleSlider, "AnchorPoint", Vector2.new(0, 0.5), 0.2, Enum.EasingStyle.Quad, false)
+                    CreateTween(toggleSlider, "AnchorPoint", Vector2.new(0, 0.5), 0.2)
                 end
             end
             
-            local clickBtn = Create("TextButton", frame, {
+            local clickArea = Create("TextButton", frame, {
                 Size = UDim2.new(1, 0, 1, 0),
                 BackgroundTransparency = 1,
                 Text = ""
             })
             
-            clickBtn.MouseButton1Click:Connect(function()
+            clickArea.MouseButton1Click:Connect(function()
+                if SaveData.Sounds.Enabled then PlayClickSound() end
                 updateToggle(not toggled)
             end)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                titleLabel.TextColor3 = newTheme.Text
+                if descLabel then descLabel.TextColor3 = newTheme.TextDim end
+                if toggled then toggleFrame.BackgroundColor3 = newTheme.Primary end
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:Set(value)
                 updateToggle(value)
@@ -1162,6 +1486,7 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- Slider
         function tabMethods:AddSlider(config)
             local sliderName = config.Title or "Slider"
             local sliderDesc = config.Description or ""
@@ -1171,57 +1496,57 @@ function LegendaryUI:MakeWindow(config)
             local flag = config.Flag
             local callback = config.Callback or function() end
             
-            if flag and Flags[flag] ~= nil then
-                default = Flags[flag]
+            if flag and SaveData.Flags[flag] ~= nil then
+                default = SaveData.Flags[flag]
             end
             
             local frame, titleLabel, descLabel = createBaseFrame(sliderName, sliderDesc, true)
+            local theme = GetTheme()
             
-            local valueLabel = InsertTheme(Create("TextLabel", frame, {
-                Size = UDim2.new(0, 50, 0, 24),
-                Position = UDim2.new(1, -12, 0, 12),
+            local valueLabel = Create("TextLabel", frame, {
+                Size = UDim2.new(0, 60, 0, 28),
+                Position = UDim2.new(1, -16, 0, 12),
                 AnchorPoint = Vector2.new(1, 0),
                 Text = tostring(default),
-                TextColor3 = CurrentTheme["Color Theme"],
+                TextColor3 = theme.Primary,
                 Font = Enum.Font.GothamBold,
                 TextSize = 14,
                 BackgroundTransparency = 1
-            }), "Theme")
+            })
             
             local sliderBar = Create("Frame", frame, {
-                Size = UDim2.new(1, -130, 0, 5),
-                Position = UDim2.new(0, 12, 0, descLabel and 50 or 38),
+                Size = UDim2.new(1, -140, 0, 6),
+                Position = UDim2.new(0, 16, 0, descLabel and 54 or 42),
                 BackgroundColor3 = Color3.fromRGB(50, 50, 50)
             })
             Create("UICorner", sliderBar, {CornerRadius = UDim.new(1, 0)})
             
             local fill = Create("Frame", sliderBar, {
                 Size = UDim2.new((default - min) / (max - min), 0, 1, 0),
-                BackgroundColor3 = CurrentTheme["Color Theme"]
+                BackgroundColor3 = theme.Primary
             })
             Create("UICorner", fill, {CornerRadius = UDim.new(1, 0)})
             
             local sliderButton = Create("TextButton", sliderBar, {
-                Size = UDim2.new(0, 16, 0, 16),
-                Position = UDim2.new((default - min) / (max - min), -8, 0.5, 0),
+                Size = UDim2.new(0, 18, 0, 18),
+                Position = UDim2.new((default - min) / (max - min), -9, 0.5, 0),
                 AnchorPoint = Vector2.new(0, 0.5),
-                BackgroundColor3 = CurrentTheme["Color Theme"],
+                BackgroundColor3 = theme.Primary,
                 Text = ""
             })
             Create("UICorner", sliderButton, {CornerRadius = UDim.new(1, 0)})
-            AddGlowEffect(sliderButton, CurrentTheme["Color Glow"])
             
             local value = default
             
             local function updateSlider(newValue)
-                value = math.clamp(newValue, min, max)
-                if flag then Flags[flag] = value end
+                value = Clamp(newValue, min, max)
+                if flag then SaveData.Flags[flag] = value end
                 pcall(callback, value)
                 SaveSettings()
                 valueLabel.Text = tostring(value)
                 local percent = (value - min) / (max - min)
                 fill.Size = UDim2.new(percent, 0, 1, 0)
-                sliderButton.Position = UDim2.new(percent, -8, 0.5, 0)
+                sliderButton.Position = UDim2.new(percent, -9, 0.5, 0)
             end
             
             sliderButton.MouseButton1Down:Connect(function()
@@ -1231,7 +1556,7 @@ function LegendaryUI:MakeWindow(config)
                         local mousePos = UserInputService:GetMouseLocation()
                         local barPos = sliderBar.AbsolutePosition.X
                         local barWidth = sliderBar.AbsoluteSize.X
-                        local newPercent = math.clamp((mousePos.X - barPos) / barWidth, 0, 1)
+                        local newPercent = Clamp((mousePos.X - barPos) / barWidth, 0, 1)
                         updateSlider(min + (max - min) * newPercent)
                     end
                 end)
@@ -1243,8 +1568,16 @@ function LegendaryUI:MakeWindow(config)
                 end)
             end)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                titleLabel.TextColor3 = newTheme.Text
+                if descLabel then descLabel.TextColor3 = newTheme.TextDim end
+                valueLabel.TextColor3 = newTheme.Primary
+                fill.BackgroundColor3 = newTheme.Primary
+                sliderButton.BackgroundColor3 = newTheme.Primary
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:Set(newValue)
                 updateSlider(newValue)
@@ -1261,6 +1594,7 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- Dropdown
         function tabMethods:AddDropdown(config)
             local dropdownName = config.Title or "Dropdown"
             local dropdownDesc = config.Description or ""
@@ -1269,75 +1603,77 @@ function LegendaryUI:MakeWindow(config)
             local flag = config.Flag
             local callback = config.Callback or function() end
             
-            if flag and Flags[flag] ~= nil then
-                default = Flags[flag]
+            if flag and SaveData.Flags[flag] ~= nil then
+                default = SaveData.Flags[flag]
             end
             
             local frame, titleLabel, descLabel = createBaseFrame(dropdownName, dropdownDesc, true)
+            local theme = GetTheme()
             
             local dropdownFrame = Create("Frame", frame, {
-                Size = UDim2.new(0, 140, 0, 32),
-                Position = UDim2.new(1, -12, 0.5, 0),
+                Size = UDim2.new(0, 150, 0, 36),
+                Position = UDim2.new(1, -16, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
                 BackgroundColor3 = Color3.fromRGB(45, 45, 45)
             })
-            Create("UICorner", dropdownFrame, {CornerRadius = UDim.new(0, 8)})
+            Create("UICorner", dropdownFrame, {CornerRadius = UDim.new(0, 10)})
             
-            local selectedLabel = InsertTheme(Create("TextLabel", dropdownFrame, {
-                Size = UDim2.new(1, -28, 1, 0),
-                Position = UDim2.new(0, 10, 0, 0),
+            local selectedLabel = Create("TextLabel", dropdownFrame, {
+                Size = UDim2.new(1, -32, 1, 0),
+                Position = UDim2.new(0, 12, 0, 0),
                 Text = tostring(default),
-                TextColor3 = CurrentTheme["Color Text"],
+                TextColor3 = theme.Text,
                 Font = Enum.Font.Gotham,
-                TextSize = 11,
+                TextSize = 12,
                 TextXAlignment = "Left",
                 BackgroundTransparency = 1
-            }), "Text")
+            })
             
             local arrow = Create("ImageLabel", dropdownFrame, {
-                Size = UDim2.new(0, 18, 0, 18),
-                Position = UDim2.new(1, -8, 0.5, 0),
+                Size = UDim2.new(0, 20, 0, 20),
+                Position = UDim2.new(1, -10, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
                 Image = "rbxassetid://10709791523",
                 BackgroundTransparency = 1,
-                ImageColor3 = CurrentTheme["Color Dark Text"]
+                ImageColor3 = theme.TextDim
             })
             
             local optionsFrame = Create("ScrollingFrame", frame, {
-                Size = UDim2.new(0, 140, 0, 0),
-                Position = UDim2.new(1, -12, 0, 48),
+                Size = UDim2.new(0, 150, 0, 0),
+                Position = UDim2.new(1, -16, 0, 50),
                 AnchorPoint = Vector2.new(1, 0),
                 BackgroundColor3 = Color3.fromRGB(40, 40, 40),
                 ScrollBarThickness = 2,
                 Visible = false,
                 ClipsDescendants = true,
-                ZIndex = 10
+                ZIndex = 20
             })
-            Create("UICorner", optionsFrame, {CornerRadius = UDim.new(0, 8)})
+            Create("UICorner", optionsFrame, {CornerRadius = UDim.new(0, 10)})
             Create("UIListLayout", optionsFrame, {Padding = UDim.new(0, 2)})
             
             local selected = default
             
             for _, option in ipairs(options) do
                 local optionBtn = Create("TextButton", optionsFrame, {
-                    Size = UDim2.new(1, 0, 0, 32),
+                    Size = UDim2.new(1, 0, 0, 36),
                     Text = tostring(option),
                     BackgroundColor3 = Color3.fromRGB(40, 40, 40),
-                    TextColor3 = CurrentTheme["Color Text"],
+                    TextColor3 = theme.Text,
                     Font = Enum.Font.Gotham,
                     TextSize = 11
                 })
-                Create("UICorner", optionBtn, {CornerRadius = UDim.new(0, 4)})
-                AddHoverEffect(optionBtn, CurrentTheme["Color Theme"])
+                Create("UICorner", optionBtn, {CornerRadius = UDim.new(0, 6)})
+                AddHoverEffect(optionBtn, theme.Primary)
                 
                 optionBtn.MouseButton1Click:Connect(function()
+                    if SaveData.Sounds.Enabled then PlayClickSound() end
                     selected = option
                     selectedLabel.Text = tostring(option)
-                    if flag then Flags[flag] = option end
+                    if flag then SaveData.Flags[flag] = option end
                     pcall(callback, option)
                     SaveSettings()
                     optionsFrame.Visible = false
-                    CreateTween(optionsFrame, "Size", UDim2.new(0, 140, 0, 0), 0.2, Enum.EasingStyle.Quad, false)
+                    CreateTween(optionsFrame, "Size", UDim2.new(0, 150, 0, 0), 0.2)
                     arrow.Image = "rbxassetid://10709791523"
                     arrow.Rotation = 0
                 end)
@@ -1351,6 +1687,7 @@ function LegendaryUI:MakeWindow(config)
             
             local open = false
             dropdownButton.MouseButton1Click:Connect(function()
+                if SaveData.Sounds.Enabled then PlayClickSound() end
                 open = not open
                 if open then
                     local optionCount = 0
@@ -1359,13 +1696,13 @@ function LegendaryUI:MakeWindow(config)
                             optionCount = optionCount + 1
                         end
                     end
-                    local height = math.min(optionCount * 34, 160)
+                    local height = Clamp(optionCount * 38, 0, 180)
                     optionsFrame.Visible = true
-                    CreateTween(optionsFrame, "Size", UDim2.new(0, 140, 0, height), 0.2, Enum.EasingStyle.Quad, false)
+                    CreateTween(optionsFrame, "Size", UDim2.new(0, 150, 0, height), 0.2)
                     arrow.Image = "rbxassetid://10709790948"
                     arrow.Rotation = 180
                 else
-                    CreateTween(optionsFrame, "Size", UDim2.new(0, 140, 0, 0), 0.2, Enum.EasingStyle.Quad, false)
+                    CreateTween(optionsFrame, "Size", UDim2.new(0, 150, 0, 0), 0.2)
                     task.wait(0.2)
                     optionsFrame.Visible = false
                     arrow.Image = "rbxassetid://10709791523"
@@ -1373,13 +1710,20 @@ function LegendaryUI:MakeWindow(config)
                 end
             end)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                titleLabel.TextColor3 = newTheme.Text
+                if descLabel then descLabel.TextColor3 = newTheme.TextDim end
+                selectedLabel.TextColor3 = newTheme.Text
+                arrow.ImageColor3 = newTheme.TextDim
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:Set(newValue)
                 selected = newValue
                 selectedLabel.Text = tostring(newValue)
-                if flag then Flags[flag] = newValue end
+                if flag then SaveData.Flags[flag] = newValue end
                 pcall(callback, newValue)
                 SaveSettings()
             end
@@ -1395,51 +1739,53 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- Section
         function tabMethods:AddSection(config)
             local sectionName = config.Title or "Section"
             
             local frame = Create("Frame", container, {
-                Size = UDim2.new(1, 0, 0, 36),
+                Size = UDim2.new(1, 0, 0, 42),
                 BackgroundTransparency = 1
             })
             
-            -- خطوط زخرفية
             local leftLine = Create("Frame", frame, {
-                Size = UDim2.new(0.3, 0, 0, 1),
+                Size = UDim2.new(0.35, 0, 0, 1),
                 Position = UDim2.new(0, 0, 0.5, 0),
-                BackgroundColor3 = CurrentTheme["Color Stroke"],
+                BackgroundColor3 = GetTheme().Border,
                 BackgroundTransparency = 0.5
             })
-            InsertTheme(leftLine, "Stroke")
             
             local rightLine = Create("Frame", frame, {
-                Size = UDim2.new(0.3, 0, 0, 1),
+                Size = UDim2.new(0.35, 0, 0, 1),
                 Position = UDim2.new(1, 0, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
-                BackgroundColor3 = CurrentTheme["Color Stroke"],
+                BackgroundColor3 = GetTheme().Border,
                 BackgroundTransparency = 0.5
             })
-            InsertTheme(rightLine, "Stroke")
             
-            local label = InsertTheme(Create("TextLabel", frame, {
-                Size = UDim2.new(0, 0, 0, 24),
+            local label = Create("TextLabel", frame, {
+                Size = UDim2.new(0, 0, 0, 28),
                 Position = UDim2.new(0.5, 0, 0.5, 0),
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 Text = "▸ " .. sectionName .. " ◂",
-                TextColor3 = CurrentTheme["Color Theme"],
+                TextColor3 = GetTheme().Primary,
                 Font = Enum.Font.GothamBold,
                 TextSize = 13,
                 BackgroundTransparency = 1
-            }), "Theme")
+            })
+            label.Size = UDim2.new(0, label.TextBounds.X + 24, 0, 28)
             
-            label.Size = UDim2.new(0, label.TextBounds.X + 20, 0, 24)
-            
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                leftLine.BackgroundColor3 = newTheme.Border
+                rightLine.BackgroundColor3 = newTheme.Border
+                label.TextColor3 = newTheme.Primary
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:SetTitle(newTitle)
                 label.Text = "▸ " .. newTitle .. " ◂"
-                label.Size = UDim2.new(0, label.TextBounds.X + 20, 0, 24)
+                label.Size = UDim2.new(0, label.TextBounds.X + 24, 0, 28)
             end
             
             function element:Destroy()
@@ -1449,35 +1795,39 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- Label
         function tabMethods:AddLabel(config)
             local labelText = config.Text or "Label"
             local isHighlight = config.Highlight or false
             
             local frame = Create("Frame", container, {
                 Size = UDim2.new(1, 0, 0, 0),
-                BackgroundColor3 = CurrentTheme["Color Hub 2"],
-                BackgroundTransparency = SaveData.GlassEffect and 0.9 or 0,
+                BackgroundColor3 = GetTheme().Surface,
+                BackgroundTransparency = 0.85,
                 AutomaticSize = "Y"
             })
-            InsertTheme(frame, "Frame")
-            Create("UICorner", frame, {CornerRadius = UDim.new(0, 10)})
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 12)})
             
-            local label = InsertTheme(Create("TextLabel", frame, {
+            local label = Create("TextLabel", frame, {
                 Size = UDim2.new(1, -24, 0, 0),
                 Position = UDim2.new(0, 12, 0, 12),
                 Text = labelText,
-                TextColor3 = isHighlight and CurrentTheme["Color Theme"] or CurrentTheme["Color Dark Text"],
+                TextColor3 = isHighlight and GetTheme().Primary or GetTheme().TextDim,
                 Font = isHighlight and Enum.Font.GothamBold or Enum.Font.Gotham,
                 TextSize = isHighlight and 13 or 11,
                 TextWrapped = true,
                 AutomaticSize = "Y",
                 BackgroundTransparency = 1
-            }), isHighlight and "Theme" or "DarkText")
+            })
             
             frame.Size = UDim2.new(1, 0, 0, label.Size.Y.Offset + 24)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                label.TextColor3 = isHighlight and newTheme.Primary or newTheme.TextDim
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:SetText(newText)
                 label.Text = newText
@@ -1491,27 +1841,29 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- ColorPicker
         function tabMethods:AddColorPicker(config)
             local pickerName = config.Title or "Color Picker"
             local pickerDesc = config.Description or ""
-            local default = config.Default or Color3.fromRGB(CurrentTheme["Color Theme"])
+            local default = config.Default or GetTheme().Primary
             local flag = config.Flag
             local callback = config.Callback or function() end
             
-            if flag and Flags[flag] ~= nil then
-                default = Flags[flag]
+            if flag and SaveData.Flags[flag] ~= nil then
+                default = SaveData.Flags[flag]
             end
             
             local frame, titleLabel, descLabel = createBaseFrame(pickerName, pickerDesc, true)
+            local theme = GetTheme()
             
             local colorButton = Create("Frame", frame, {
-                Size = UDim2.new(0, 36, 0, 36),
-                Position = UDim2.new(1, -12, 0.5, 0),
+                Size = UDim2.new(0, 40, 0, 40),
+                Position = UDim2.new(1, -16, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
                 BackgroundColor3 = default
             })
-            Create("UICorner", colorButton, {CornerRadius = UDim.new(0, 8)})
-            Create("UIStroke", colorButton, {Color = CurrentTheme["Color Stroke"], Thickness = 1.5})
+            Create("UICorner", colorButton, {CornerRadius = UDim.new(0, 10)})
+            Create("UIStroke", colorButton, {Color = theme.Border, Thickness = 1.5})
             
             local colorPickerOpen = false
             local pickerFrame = nil
@@ -1519,7 +1871,8 @@ function LegendaryUI:MakeWindow(config)
             colorButton.MouseButton1Click:Connect(function()
                 if colorPickerOpen then
                     if pickerFrame then
-                        CreateTween(pickerFrame, "Size", UDim2.new(1, -24, 0, 0), 0.2, Enum.EasingStyle.Quad, true)
+                        CreateTween(pickerFrame, "Size", UDim2.new(1, -24, 0, 0), 0.2)
+                        task.wait(0.2)
                         pickerFrame:Destroy()
                     end
                     colorPickerOpen = false
@@ -1530,20 +1883,18 @@ function LegendaryUI:MakeWindow(config)
                 pickerFrame = Create("Frame", frame, {
                     Size = UDim2.new(1, -24, 0, 0),
                     Position = UDim2.new(0, 12, 0, descLabel and 68 or 52),
-                    BackgroundColor3 = CurrentTheme["Color Hub 2"],
-                    BackgroundTransparency = SaveData.GlassEffect and 0.95 or 0,
-                    ClipsDescendants = true,
-                    Visible = true
+                    BackgroundColor3 = theme.Surface,
+                    BackgroundTransparency = 0.95,
+                    ClipsDescendants = true
                 })
-                InsertTheme(pickerFrame, "Frame")
-                Create("UICorner", pickerFrame, {CornerRadius = UDim.new(0, 10)})
+                Create("UICorner", pickerFrame, {CornerRadius = UDim.new(0, 12)})
                 
                 local hueBar = Create("Frame", pickerFrame, {
-                    Size = UDim2.new(1, -20, 0, 18),
-                    Position = UDim2.new(0, 10, 0, 12),
+                    Size = UDim2.new(1, -24, 0, 20),
+                    Position = UDim2.new(0, 12, 0, 12),
                     BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 })
-                Create("UICorner", hueBar, {CornerRadius = UDim.new(0, 4)})
+                Create("UICorner", hueBar, {CornerRadius = UDim.new(0, 6)})
                 local hueGradient = Create("UIGradient", hueBar, {
                     Rotation = 90,
                     Color = ColorSequence.new({
@@ -1558,7 +1909,7 @@ function LegendaryUI:MakeWindow(config)
                 })
                 
                 local hueSlider = Create("TextButton", hueBar, {
-                    Size = UDim2.new(0, 12, 1, 0),
+                    Size = UDim2.new(0, 14, 1, 0),
                     Position = UDim2.new(0, 0, 0, 0),
                     BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                     Text = ""
@@ -1566,23 +1917,22 @@ function LegendaryUI:MakeWindow(config)
                 Create("UICorner", hueSlider, {CornerRadius = UDim.new(1, 0)})
                 
                 local colorPreview = Create("Frame", pickerFrame, {
-                    Size = UDim2.new(0, 50, 0, 50),
-                    Position = UDim2.new(1, -60, 1, -60),
+                    Size = UDim2.new(0, 55, 0, 55),
+                    Position = UDim2.new(1, -12, 1, -12),
                     AnchorPoint = Vector2.new(1, 1),
                     BackgroundColor3 = default
                 })
-                Create("UICorner", colorPreview, {CornerRadius = UDim.new(0, 8)})
-                Create("UIStroke", colorPreview, {Color = CurrentTheme["Color Stroke"], Thickness = 1})
+                Create("UICorner", colorPreview, {CornerRadius = UDim.new(0, 10)})
+                Create("UIStroke", colorPreview, {Color = theme.Border, Thickness = 1})
                 
-                local r, g, b = default.R, default.G, default.B
                 local h, s, v = Color3.toHSV(default)
-                hueSlider.Position = UDim2.new(h, -6, 0, 0)
+                hueSlider.Position = UDim2.new(h, -7, 0, 0)
                 
                 local function updateColor()
                     local newColor = Color3.fromHSV(h, s, v)
                     colorButton.BackgroundColor3 = newColor
                     colorPreview.BackgroundColor3 = newColor
-                    if flag then Flags[flag] = newColor end
+                    if flag then SaveData.Flags[flag] = newColor end
                     pcall(callback, newColor)
                     SaveSettings()
                 end
@@ -1594,8 +1944,8 @@ function LegendaryUI:MakeWindow(config)
                             local mousePos = UserInputService:GetMouseLocation()
                             local barPos = hueBar.AbsolutePosition.X
                             local barWidth = hueBar.AbsoluteSize.X
-                            local newPercent = math.clamp((mousePos.X - barPos) / barWidth, 0, 1)
-                            hueSlider.Position = UDim2.new(newPercent, -6, 0, 0)
+                            local newPercent = Clamp((mousePos.X - barPos) / barWidth, 0, 1)
+                            hueSlider.Position = UDim2.new(newPercent, -7, 0, 0)
                             h = newPercent
                             updateColor()
                         end
@@ -1608,17 +1958,22 @@ function LegendaryUI:MakeWindow(config)
                     end)
                 end)
                 
-                pickerFrame.Size = UDim2.new(1, -24, 0, 110)
-                frame.Size = UDim2.new(1, 0, 0, (descLabel and 68 or 52) + 110)
+                pickerFrame.Size = UDim2.new(1, -24, 0, 130)
+                frame.Size = UDim2.new(1, 0, 0, (descLabel and 68 or 52) + 130)
                 colorPickerOpen = true
             end)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                titleLabel.TextColor3 = newTheme.Text
+                if descLabel then descLabel.TextColor3 = newTheme.TextDim end
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:SetColor(newColor)
                 colorButton.BackgroundColor3 = newColor
-                if flag then Flags[flag] = newColor end
+                if flag then SaveData.Flags[flag] = newColor end
                 pcall(callback, newColor)
                 SaveSettings()
             end
@@ -1630,6 +1985,7 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- Keybind
         function tabMethods:AddKeybind(config)
             local bindName = config.Title or "Keybind"
             local bindDesc = config.Description or ""
@@ -1637,19 +1993,20 @@ function LegendaryUI:MakeWindow(config)
             local callback = config.Callback or function() end
             
             local frame, titleLabel, descLabel = createBaseFrame(bindName, bindDesc, true)
+            local theme = GetTheme()
             
             local keyButton = Create("TextButton", frame, {
-                Size = UDim2.new(0, 100, 0, 34),
-                Position = UDim2.new(1, -12, 0.5, 0),
+                Size = UDim2.new(0, 110, 0, 38),
+                Position = UDim2.new(1, -16, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
                 Text = defaultKey,
                 BackgroundColor3 = Color3.fromRGB(45, 45, 45),
-                TextColor3 = CurrentTheme["Color Text"],
+                TextColor3 = theme.Text,
                 Font = Enum.Font.GothamBold,
-                TextSize = 12
+                TextSize = 13
             })
-            Create("UICorner", keyButton, {CornerRadius = UDim.new(0, 8)})
-            AddHoverEffect(keyButton, CurrentTheme["Color Theme"])
+            Create("UICorner", keyButton, {CornerRadius = UDim.new(0, 10)})
+            AddHoverEffect(keyButton, theme.Primary)
             
             local listening = false
             local currentKey = defaultKey
@@ -1657,7 +2014,7 @@ function LegendaryUI:MakeWindow(config)
             keyButton.MouseButton1Click:Connect(function()
                 listening = true
                 keyButton.Text = "..."
-                keyButton.BackgroundColor3 = CurrentTheme["Color Theme"]
+                keyButton.BackgroundColor3 = theme.Primary
                 
                 local connection
                 connection = UserInputService.InputBegan:Connect(function(input)
@@ -1681,8 +2038,14 @@ function LegendaryUI:MakeWindow(config)
                 end
             end)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                titleLabel.TextColor3 = newTheme.Text
+                if descLabel then descLabel.TextColor3 = newTheme.TextDim end
+                keyButton.TextColor3 = newTheme.Text
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:SetKey(newKey)
                 currentKey = newKey
@@ -1696,6 +2059,7 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- Timer
         function tabMethods:AddTimer(config)
             local timerName = config.Title or "Timer"
             local timerDesc = config.Description or ""
@@ -1703,47 +2067,48 @@ function LegendaryUI:MakeWindow(config)
             local callback = config.Callback or function() end
             
             local frame, titleLabel, descLabel = createBaseFrame(timerName, timerDesc, true)
+            local theme = GetTheme()
             
-            local timeLabel = InsertTheme(Create("TextLabel", frame, {
-                Size = UDim2.new(0, 80, 0, 40),
-                Position = UDim2.new(0.5, -40, 0, descLabel and 50 or 38),
+            local timeLabel = Create("TextLabel", frame, {
+                Size = UDim2.new(0, 100, 0, 50),
+                Position = UDim2.new(0.5, -50, 0, descLabel and 50 or 38),
                 Text = tostring(defaultTime),
-                TextColor3 = CurrentTheme["Color Theme"],
+                TextColor3 = theme.Primary,
                 Font = Enum.Font.FredokaOne,
-                TextSize = 28,
+                TextSize = 32,
                 BackgroundTransparency = 1
-            }), "Theme")
+            })
             
             local buttonFrame = Create("Frame", frame, {
-                Size = UDim2.new(1, -24, 0, 36),
-                Position = UDim2.new(0, 12, 1, -10),
+                Size = UDim2.new(1, -32, 0, 40),
+                Position = UDim2.new(0, 16, 1, -12),
                 AnchorPoint = Vector2.new(0, 1),
                 BackgroundTransparency = 1
             })
             
             local startBtn = Create("TextButton", buttonFrame, {
-                Size = UDim2.new(0.5, -6, 0, 36),
+                Size = UDim2.new(0.5, -6, 0, 40),
                 Position = UDim2.new(0, 0, 0, 0),
                 Text = "▶ بدء",
-                BackgroundColor3 = CurrentTheme["Color Theme"],
-                TextColor3 = CurrentTheme["Color Text"],
+                BackgroundColor3 = theme.Primary,
+                TextColor3 = theme.Text,
                 Font = Enum.Font.GothamBold,
-                TextSize = 12
+                TextSize = 13
             })
-            Create("UICorner", startBtn, {CornerRadius = UDim.new(0, 8)})
+            Create("UICorner", startBtn, {CornerRadius = UDim.new(0, 10)})
             AddRippleEffect(startBtn)
             
             local resetBtn = Create("TextButton", buttonFrame, {
-                Size = UDim2.new(0.5, -6, 0, 36),
+                Size = UDim2.new(0.5, -6, 0, 40),
                 Position = UDim2.new(1, 0, 0, 0),
                 AnchorPoint = Vector2.new(1, 0),
                 Text = "↺ إعادة",
                 BackgroundColor3 = Color3.fromRGB(70, 70, 70),
-                TextColor3 = CurrentTheme["Color Text"],
+                TextColor3 = theme.Text,
                 Font = Enum.Font.GothamBold,
-                TextSize = 12
+                TextSize = 13
             })
-            Create("UICorner", resetBtn, {CornerRadius = UDim.new(0, 8)})
+            Create("UICorner", resetBtn, {CornerRadius = UDim.new(0, 10)})
             AddRippleEffect(resetBtn)
             
             local remaining = defaultTime
@@ -1756,9 +2121,9 @@ function LegendaryUI:MakeWindow(config)
                     running = false
                     if connection then connection:Disconnect() end
                     startBtn.Text = "▶ بدء"
-                    startBtn.BackgroundColor3 = CurrentTheme["Color Theme"]
+                    startBtn.BackgroundColor3 = theme.Primary
                     pcall(callback)
-                    LegendaryUI:Notify({
+                    windowMethods:Notify({
                         Title = timerName,
                         Text = "انتهى المؤقت!",
                         Duration = 3,
@@ -1768,6 +2133,7 @@ function LegendaryUI:MakeWindow(config)
             end
             
             startBtn.MouseButton1Click:Connect(function()
+                if SaveData.Sounds.Enabled then PlayClickSound() end
                 running = not running
                 if running then
                     startBtn.Text = "⏸ إيقاف"
@@ -1780,24 +2146,34 @@ function LegendaryUI:MakeWindow(config)
                     end)
                 else
                     startBtn.Text = "▶ بدء"
-                    startBtn.BackgroundColor3 = CurrentTheme["Color Theme"]
+                    startBtn.BackgroundColor3 = theme.Primary
                     if connection then connection:Disconnect() end
                 end
             end)
             
             resetBtn.MouseButton1Click:Connect(function()
+                if SaveData.Sounds.Enabled then PlayClickSound() end
                 remaining = defaultTime
                 updateDisplay()
                 if running then
                     running = false
                     startBtn.Text = "▶ بدء"
-                    startBtn.BackgroundColor3 = CurrentTheme["Color Theme"]
+                    startBtn.BackgroundColor3 = theme.Primary
                     if connection then connection:Disconnect() end
                 end
             end)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                titleLabel.TextColor3 = newTheme.Text
+                if descLabel then descLabel.TextColor3 = newTheme.TextDim end
+                timeLabel.TextColor3 = newTheme.Primary
+                startBtn.BackgroundColor3 = newTheme.Primary
+                startBtn.TextColor3 = newTheme.Text
+                resetBtn.TextColor3 = newTheme.Text
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
             
             function element:SetTime(newTime)
                 defaultTime = newTime
@@ -1813,6 +2189,7 @@ function LegendaryUI:MakeWindow(config)
             return element
         end
         
+        -- Discord
         function tabMethods:AddDiscord(config)
             local invite = config.Invite or "https://discord.gg/"
             local title = config.Title or "Discord Server"
@@ -1820,96 +2197,203 @@ function LegendaryUI:MakeWindow(config)
             local icon = config.Icon or "rbxassetid://10709752035"
             
             local frame = Create("Frame", container, {
-                Size = UDim2.new(1, 0, 0, 100),
-                BackgroundColor3 = CurrentTheme["Color Hub 2"],
-                BackgroundTransparency = SaveData.GlassEffect and 0.9 or 0
+                Size = UDim2.new(1, 0, 0, 110),
+                BackgroundColor3 = GetTheme().Surface,
+                BackgroundTransparency = 0.85
             })
-            InsertTheme(frame, "Frame")
-            Create("UICorner", frame, {CornerRadius = UDim.new(0, 14)})
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 16)})
+            Create("UIStroke", frame, {Color = GetTheme().Border, Thickness = 1.5, Transparency = 0.5})
             
-            local frameStroke = Create("UIStroke", frame, {
-                Color = CurrentTheme["Color Stroke"],
-                Thickness = 1.5,
-                Transparency = 0.5
-            })
-            InsertTheme(frameStroke, "Stroke")
-            
-            -- خط جانبي ملون
             local sideBar = Create("Frame", frame, {
-                Size = UDim2.new(0, 5, 1, -20),
+                Size = UDim2.new(0, 5, 1, -24),
                 Position = UDim2.new(0, 0, 0.5, 0),
                 AnchorPoint = Vector2.new(0, 0.5),
-                BackgroundColor3 = CurrentTheme["Color Theme"]
+                BackgroundColor3 = GetTheme().Primary
             })
             Create("UICorner", sideBar, {CornerRadius = UDim.new(0, 2)})
             
             local iconImg = Create("ImageLabel", frame, {
-                Size = UDim2.new(0, 48, 0, 48),
-                Position = UDim2.new(0, 16, 0.5, 0),
+                Size = UDim2.new(0, 52, 0, 52),
+                Position = UDim2.new(0, 20, 0.5, 0),
                 AnchorPoint = Vector2.new(0, 0.5),
                 Image = icon,
                 BackgroundTransparency = 1,
-                ImageColor3 = CurrentTheme["Color Theme"]
+                ImageColor3 = GetTheme().Primary
             })
             
-            local titleLabel = InsertTheme(Create("TextLabel", frame, {
-                Size = UDim2.new(1, -90, 0, 24),
-                Position = UDim2.new(0, 76, 0, 20),
+            local titleLabel = Create("TextLabel", frame, {
+                Size = UDim2.new(1, -100, 0, 28),
+                Position = UDim2.new(0, 84, 0, 22),
                 Text = title,
-                TextColor3 = CurrentTheme["Color Text"],
+                TextColor3 = GetTheme().Text,
                 Font = Enum.Font.GothamBold,
-                TextSize = 15,
+                TextSize = 16,
                 TextXAlignment = "Left",
                 BackgroundTransparency = 1
-            }), "Text")
+            })
             
-            local descLabel = InsertTheme(Create("TextLabel", frame, {
-                Size = UDim2.new(1, -90, 0, 0),
-                Position = UDim2.new(0, 76, 0, 46),
+            local descLabel = Create("TextLabel", frame, {
+                Size = UDim2.new(1, -100, 0, 0),
+                Position = UDim2.new(0, 84, 0, 52),
                 Text = description,
-                TextColor3 = CurrentTheme["Color Dark Text"],
+                TextColor3 = GetTheme().TextDim,
                 Font = Enum.Font.Gotham,
                 TextSize = 10,
                 TextXAlignment = "Left",
                 TextWrapped = true,
                 AutomaticSize = "Y",
                 BackgroundTransparency = 1
-            }), "DarkText")
+            })
             
             local joinBtn = Create("TextButton", frame, {
-                Size = UDim2.new(0, 100, 0, 36),
+                Size = UDim2.new(0, 110, 0, 40),
                 Position = UDim2.new(1, -16, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5),
                 Text = "انضم الآن",
-                BackgroundColor3 = CurrentTheme["Color Theme"],
-                TextColor3 = CurrentTheme["Color Text"],
+                BackgroundColor3 = GetTheme().Primary,
+                TextColor3 = GetTheme().Text,
                 Font = Enum.Font.GothamBold,
-                TextSize = 12
+                TextSize = 13
             })
-            Create("UICorner", joinBtn, {CornerRadius = UDim.new(0, 8)})
-            AddHoverEffect(joinBtn, CurrentTheme["Color Accent"])
+            Create("UICorner", joinBtn, {CornerRadius = UDim.new(0, 10)})
+            AddHoverEffect(joinBtn, GetTheme().Accent)
             AddRippleEffect(joinBtn)
             
             joinBtn.MouseButton1Click:Connect(function()
+                if SaveData.Sounds.Enabled then PlayClickSound() end
                 setclipboard(invite)
-                LegendaryUI:Notify({
+                windowMethods:Notify({
                     Title = "Discord",
                     Text = "تم نسخ رابط السيرفر!",
                     Duration = 2,
-                    Icon = "rbxassetid://10709752035",
-                    IconColor = CurrentTheme["Color Theme"]
+                    Icon = "rbxassetid://10709752035"
                 })
                 joinBtn.Text = "✓ تم النسخ!"
                 joinBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
                 task.wait(1.5)
                 joinBtn.Text = "انضم الآن"
-                joinBtn.BackgroundColor3 = CurrentTheme["Color Theme"]
+                joinBtn.BackgroundColor3 = GetTheme().Primary
             end)
             
-            frame.Size = UDim2.new(1, 0, 0, descLabel.Size.Y.Offset + 80)
+            frame.Size = UDim2.new(1, 0, 0, descLabel.Size.Y.Offset + 92)
             
-            local element = {Frame = frame}
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                sideBar.BackgroundColor3 = newTheme.Primary
+                iconImg.ImageColor3 = newTheme.Primary
+                titleLabel.TextColor3 = newTheme.Text
+                descLabel.TextColor3 = newTheme.TextDim
+                joinBtn.BackgroundColor3 = newTheme.Primary
+                joinBtn.TextColor3 = newTheme.Text
+            end}
             table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        -- Slider with Percentage
+        function tabMethods:AddPercentSlider(config)
+            local sliderName = config.Title or "Percentage"
+            local sliderDesc = config.Description or ""
+            local default = config.Default or 50
+            local flag = config.Flag
+            local callback = config.Callback or function() end
+            
+            if flag and SaveData.Flags[flag] ~= nil then
+                default = SaveData.Flags[flag]
+            end
+            
+            local frame, titleLabel, descLabel = createBaseFrame(sliderName, sliderDesc, true)
+            local theme = GetTheme()
+            
+            local percentLabel = Create("TextLabel", frame, {
+                Size = UDim2.new(0, 60, 0, 28),
+                Position = UDim2.new(1, -16, 0, 12),
+                AnchorPoint = Vector2.new(1, 0),
+                Text = tostring(default) .. "%",
+                TextColor3 = theme.Primary,
+                Font = Enum.Font.GothamBold,
+                TextSize = 14,
+                BackgroundTransparency = 1
+            })
+            
+            local sliderBar = Create("Frame", frame, {
+                Size = UDim2.new(1, -140, 0, 8),
+                Position = UDim2.new(0, 16, 0, descLabel and 54 or 42),
+                BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            })
+            Create("UICorner", sliderBar, {CornerRadius = UDim.new(1, 0)})
+            
+            local fill = Create("Frame", sliderBar, {
+                Size = UDim2.new(default / 100, 0, 1, 0),
+                BackgroundColor3 = theme.Primary
+            })
+            Create("UICorner", fill, {CornerRadius = UDim.new(1, 0)})
+            
+            local sliderButton = Create("TextButton", sliderBar, {
+                Size = UDim2.new(0, 18, 0, 18),
+                Position = UDim2.new(default / 100, -9, 0.5, 0),
+                AnchorPoint = Vector2.new(0, 0.5),
+                BackgroundColor3 = theme.Primary,
+                Text = ""
+            })
+            Create("UICorner", sliderButton, {CornerRadius = UDim.new(1, 0)})
+            
+            local value = default
+            
+            local function updateSlider(newValue)
+                value = Clamp(newValue, 0, 100)
+                if flag then SaveData.Flags[flag] = value end
+                pcall(callback, value)
+                SaveSettings()
+                percentLabel.Text = tostring(value) .. "%"
+                local percent = value / 100
+                fill.Size = UDim2.new(percent, 0, 1, 0)
+                sliderButton.Position = UDim2.new(percent, -9, 0.5, 0)
+            end
+            
+            sliderButton.MouseButton1Down:Connect(function()
+                local connection
+                connection = UserInputService.InputChanged:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseMovement then
+                        local mousePos = UserInputService:GetMouseLocation()
+                        local barPos = sliderBar.AbsolutePosition.X
+                        local barWidth = sliderBar.AbsoluteSize.X
+                        local newPercent = Clamp((mousePos.X - barPos) / barWidth, 0, 1)
+                        updateSlider(newPercent * 100)
+                    end
+                end)
+                
+                UserInputService.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        connection:Disconnect()
+                    end
+                end)
+            end)
+            
+            local element = {Frame = frame, UpdateTheme = function(newTheme)
+                frame.BackgroundColor3 = newTheme.Surface
+                titleLabel.TextColor3 = newTheme.Text
+                if descLabel then descLabel.TextColor3 = newTheme.TextDim end
+                percentLabel.TextColor3 = newTheme.Primary
+                fill.BackgroundColor3 = newTheme.Primary
+                sliderButton.BackgroundColor3 = newTheme.Primary
+            end}
+            table.insert(elements, element)
+            table.insert(LegendaryUI.Instances, element)
+            
+            function element:Set(newValue)
+                updateSlider(newValue)
+            end
+            
+            function element:Get()
+                return value
+            end
             
             function element:Destroy()
                 frame:Destroy()
@@ -1930,6 +2414,14 @@ function LegendaryUI:MakeWindow(config)
         function tabMethods:Destroy()
             tabButton:Destroy()
             container:Destroy()
+            for i, elem in ipairs(elements) do
+                for j, inst in ipairs(LegendaryUI.Instances) do
+                    if inst == elem then
+                        table.remove(LegendaryUI.Instances, j)
+                        break
+                    end
+                end
+            end
         end
         
         return tabMethods
@@ -1937,52 +2429,40 @@ function LegendaryUI:MakeWindow(config)
     
     closeBtn.MouseButton1Click:Connect(function()
         windowMethods:Dialog({
-            Title = "🔴 إغلاق السكربت",
+            Title = "❌ إغلاق السكربت",
             Text = "هل أنت متأكد من إغلاق السكربت؟",
             Buttons = {
                 {"نعم", function() 
-                    LegendaryUI:Notify({
+                    windowMethods:Notify({
                         Title = "وداعاً",
                         Text = "تم إغلاق السكربت بنجاح",
                         Duration = 2
                     })
-                    windowMethods:Close() 
+                    windowMethods:Close()
                 end},
                 {"لا", function() end}
             }
         })
     end)
     
-    -- إشعار ترحيبي
-    LegendaryUI:Notify({
-        Title = "⚡ Legendary UI Pro",
-        Text = "تم تحميل السكربت بنجاح | Red & Blue Edition",
-        Duration = 3,
+    maximizeBtn.MouseButton1Click:Connect(function()
+        windowMethods:Maximize()
+    end)
+    
+    minimizeBtn.MouseButton1Click:Connect(function()
+        windowMethods:Minimize()
+    end)
+    
+    -- إشعار ترحيبي فاخر
+    windowMethods:Notify({
+        Title = "✨ Legendary UI Ultimate",
+        Text = "تم تحميل السكربت بنجاح | الإصدار " .. LegendaryUI.Version,
+        Duration = 4,
         Icon = "rbxassetid://10709790644"
     })
     
     return windowMethods
 end
 
--- ==================== دوال إضافية ====================
-function LegendaryUI:GetFlag(name)
-    return Flags[name]
-end
-
-function LegendaryUI:SetFlag(name, value)
-    Flags[name] = value
-    SaveSettings()
-end
-
-function LegendaryUI:Unload()
-    for _, glow in pairs(GlowFrames) do
-        if glow.Animation then glow.Animation:Disconnect() end
-    end
-    ScreenGui:Destroy()
-end
-
-function LegendaryUI:GetVersion()
-    return "2.0 - Red & Blue Edition"
-end
-
+-- ==================================================== تصدير المكتبة ====================================================
 return LegendaryUI
