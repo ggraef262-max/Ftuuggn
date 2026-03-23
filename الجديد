@@ -1,0 +1,173 @@
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TextChatService = game:GetService("TextChatService")
+local TeleportService = game:GetService("TeleportService")
+local StarterGui = game:GetService("StarterGui")
+local Workspace = game:GetService("Workspace")
+local CoreGui = game:GetService("CoreGui")
+
+local LocalPlayer = Players.LocalPlayer
+local CurrentCamera = Workspace.CurrentCamera
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- ======================
+-- ثابت الصورة الرئيسي
+-- ======================
+local IMAGE_ID = "90798133906684"  -- غير الرقم لو تبي صورة ثانية
+
+-- ======================
+-- دوال مساعدة
+-- ======================
+local function safeFind(parent, name, waitTime)
+    if waitTime then
+        return parent:WaitForChild(name, waitTime)
+    end
+    return parent:FindFirstChild(name)
+end
+
+local function safeGetRemote(path)
+    local remote = ReplicatedStorage
+    for _, name in ipairs(path) do
+        remote = remote:FindFirstChild(name)
+        if not remote then return nil end
+    end
+    return remote
+end
+
+local function fireRemote(path, ...)
+    local remote = safeGetRemote(path)
+    if remote then
+        remote:FireServer(...)
+    end
+end
+
+local function invokeRemote(path, ...)
+    local remote = safeGetRemote(path)
+    if remote then
+        return remote:InvokeServer(...)
+    end
+    return nil
+end
+
+local function sendNotification(title, text, icon, duration)
+    StarterGui:SetCore("SendNotification", {
+        Title = tostring(title),
+        Text = tostring(text),
+        Icon = icon or "rbxassetid://" .. IMAGE_ID,
+        Duration = duration or 5
+    })
+end
+
+local function getCharacter()
+    return LocalPlayer.Character
+end
+
+local function getRootPart()
+    local char = getCharacter()
+    return char and char:FindFirstChild("HumanoidRootPart")
+end
+
+local function getHumanoid()
+    local char = getCharacter()
+    return char and char:FindFirstChildOfClass("Humanoid")
+end
+
+-- ======================
+-- إشعارات البدء (سريعة جداً)
+-- ======================
+sendNotification("Clock7", "تم التفعيل", nil, 2)
+
+-- ======================
+-- إعدادات RP الأساسية
+-- ======================
+local function setRPName(name)
+    fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", name)
+end
+
+local function setRPNameColor(color)
+    fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPNameColor", color)
+end
+
+local function setRPBio(bio)
+    fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", bio)
+end
+
+local function setRPBioColor(color)
+    fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPBioColor", color)
+end
+
+setRPName("Clock7")
+setRPNameColor(Color3.fromRGB(0, 0, 139))
+wait(0.1)
+setRPBio("البحت:CLOCK7")
+setRPBioColor(Color3.new(0, 0, 0))
+
+-- ======================
+-- تحميل واجهة المستخدم
+-- ======================
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
+local Window = Library:MakeWindow({
+    Title = "Clock7 v2.0",
+    SubTitle = "by DBLACK",
+})
+
+-- زر التصغير
+Window:AddMinimizeButton({
+    Button = {
+        Image = "rbxassetid://" .. IMAGE_ID,
+        BackgroundTransparency = 0
+    },
+    Corner = {
+        CornerRadius = UDim.new(35, 1)
+    }
+})
+
+-- ======================
+-- متغيرات عامة
+-- ======================
+local selectedPlayer = nil
+local selectedMethod = "Couch"
+local blackholeActive = false
+local bringPartsActive = false
+local rgbNameActive = false
+local rgbBioActive = false
+local antiSitActive = false
+local noclipActive = false
+local infiniteJumpActive = false
+local cameraFollowActive = false
+local carRGBActive = false
+local carHornActive = false
+local carSpawnLoopActive = false
+local audioLoopActive = false
+local selectedAudioID = nil
+local houseRGBActive = false
+
+-- ======================
+-- تبويب المعلومات
+-- ======================
+local infoTab = Window:MakeTab({
+    Title = "معلومات السكربت",
+    Icon = "rbxassetid://" .. IMAGE_ID
+})
+
+infoTab:AddDiscordInvite({
+    Name = "قناة التليجرام",
+    Description = "انضم لقناتنا على التليجرام",
+    Logo = "rbxassetid://" .. IMAGE_ID,
+    Invite = ""
+})
+
+infoTab:AddSection({ "مطوري السكربت" })
+infoTab:AddParagraph({ "المطور:", "DBLACK" })
+infoTab:AddParagraph({ "للتواصل او لي اعطاء نصائح:", "التلجرام:-XlEAQ1" })
+
+infoTab:AddSection({ "إعادة الدخول" })
+infoTab:AddButton({
+    Name = "إعادة الدخول إلى السيرفر",
+    Callback = function()
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+    end
+})
