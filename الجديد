@@ -6764,121 +6764,6 @@ Tab:AddParagraph({
     "انتظر حوالي35 ليبدأ اللاق"
 })
 
-local Tab = Window:MakeTab({"(تحديث)الاسماء", "Paper"})
-
-local isNameActive = false
-local isBioActive = false
-
-local SectionRGBName = Tab:AddSection({
-    Name = "اسم RGB"
-})
-
-Tab:AddToggle({
-    Name = "تلوين الاسم",
-    Description = "تلوين اسمك الوات تدريجية",
-    Default = false,
-    Callback = function(value)
-        isNameActive = value
-        print(value and "RGB Name ativado" or "RGB Name desativado")
-    end
-})
-
-
-local SectionRGBBio = Tab:AddSection({
-    Name = "RGB بايو"
-})
-
-Tab:AddToggle({
-    Name = "بايو ملون",
-    Description = "تلوين البايو",
-    Default = false,
-    Callback = function(value)
-        isBioActive = value
-        print(value and "RGB BIO ativado" or "RGB BIO desativado")
-    end
-})
-
-local SectionSpam = Tab:AddSection({
-    Name = "(new)سبام اسماء"
-})
-
-
--- متغيرات
-local names = {"", "", ""}
-local execSpeed = 1
-local toggleActive = false
-
--- إنشاء TextBox للأسماء الثلاثة
-for i = 1, 3 do
-Tab:AddTextBox({
-        Name = "أدخل الاسم " .. i,
-        Default = "",
-        TextDisappear = false,
-        Callback = function(value)
-            names[i] = value
-        end
-    })
-end
-
--- Slider لتحديد السرعة
-Tab:AddSlider({
-    Name = "سرعة السبام",
-    Min = 1,
-    Max = 3,
-    Default = 1,
-    Increment = 1,
-    ValueName = "x",
-    Callback = function(value)
-        execSpeed = value
-    end
-})
-
--- Toggle للتشغيل مع الحماية
-Tab:AddToggle({
-    Name = "تشغيل السبام",
-    Default = false,
-    Callback = function(state)
-        toggleActive = state
-        if toggleActive then
-            -- تحقق أن فيه على الأقل اسم واحد مكتوب
-            local hasName = false
-            for _, name in ipairs(names) do
-                if name ~= "" then
-                    hasName = true
-                    break
-                end
-            end
-
-            if not hasName then
-                game:GetService("StarterGui"):SetCore("SendNotification", {
-                    Title = "تحذير",
-                    Text = "يجب إدخال اسم واحد على الأقل قبل التشغيل"
-                })
-                toggleActive = false
-                return
-            end
-
-            -- بدء التشغيل
-            task.spawn(function()
-                while toggleActive do
-                    for _, name in ipairs(names) do
-                        if not toggleActive then break end
-                        if name ~= "" then
-                            local args = {
-                                "RolePlayName",
-                                name
-                            }
-                            game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
-                            task.wait((4 - execSpeed) * 0.5)
-                        end
-                    end
-                end
-            end)
-        end
-    end
-})
-
-
 local CarTab = Window:MakeTab({"السيارة", "car"})
 
 -- Colors for RGB
@@ -7393,7 +7278,7 @@ local S = Instance.new("TextButton")
 
 --Properties:
 
-Flymguiv2.Name = "طيران سيار من صنع رامي"
+Flymguiv2.Name = "طيران سيار من صنع DBLACK"
 Flymguiv2.Parent = game.CoreGui
 Flymguiv2.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -8118,7 +8003,7 @@ LocalPlayerTab:AddButton({
     Name = "تهكير الشات",
     Callback = function()
         if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("hi\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer: Hacked by DemoZHub")
+            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("hi\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer: Hacked by DBLACK")
         else 
             print("Nadaa")
     end
@@ -8739,3 +8624,271 @@ settingsTab:AddButton({
     end
 })
 
+local UniversalTab = Window:MakeTab({"سكربتات مضادات", "plane"})
+
+-- Seção para Scripts Universais
+Section = UniversalTab:AddSection({
+    Name = "سكربتات مضادات قويه"
+})
+
+UniversalTab:AddButton({
+  Name = "مضاد بانج",
+  Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%E2%80%8Fint%20bang"))()
+  end,
+})
+
+UniversalTab:AddButton({
+  Name = "مضاد فلنق",
+  Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Fling"))()
+  end,
+})
+
+BangTab = Window:MakeTab({"بانق","rbxassetid://90798133906684"})
+Players = game:GetService("Players")
+RunService = game:GetService("RunService")
+LocalPlayer = Players.LocalPlayer
+getgenv().selectedPlayer = nil
+Dropdown = nil
+
+function rebuildDropdown()
+    if Dropdown then Dropdown:Destroy() end
+    playerNames = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then table.insert(playerNames, player.Name) end
+    end
+    Dropdown = BangTab:AddDropdown({
+        Name = "حدد لاعب", 
+        Options = playerNames, 
+        Default = "", 
+        Callback = function(Value) 
+            getgenv().selectedPlayer = Value 
+        end
+    })
+end
+
+rebuildDropdown()
+Players.PlayerAdded:Connect(rebuildDropdown)
+Players.PlayerRemoving:Connect(rebuildDropdown)
+
+function createBangToggle(name, yOffset, faceBang)
+    local bangActive = false
+    local connection = nil
+    local togglePosition = false
+    
+    BangTab:AddToggle({
+        Name = name, 
+        Default = false, 
+        Callback = function(Value)
+            bangActive = Value
+            local char = LocalPlayer.Character
+            if not char then return end
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if not humanoid then return end
+            
+            if Value then
+                humanoid.PlatformStand = true
+                if connection then connection:Disconnect() end
+                
+                connection = RunService.Heartbeat:Connect(function()
+                    if bangActive and getgenv().selectedPlayer then
+                        local targetPlayer = Players:FindFirstChild(getgenv().selectedPlayer)
+                        if targetPlayer and targetPlayer.Character and targetPlayer.Character.PrimaryPart then
+                            local targetHead = targetPlayer.Character:FindFirstChild("Head")
+                            if targetHead and char.PrimaryPart then
+                                local offset = (togglePosition and 1) or 4
+                                
+                                if faceBang then
+                                    char:SetPrimaryPartCFrame(
+                                        targetHead.CFrame * 
+                                        CFrame.new(0, 1, -offset) * 
+                                        CFrame.Angles(0, math.rad(180), 0)
+                                    )
+                                else
+                                    char:SetPrimaryPartCFrame(
+                                        targetHead.CFrame * 
+                                        CFrame.new(0, yOffset, offset)
+                                    )
+                                end
+                                
+                                togglePosition = not togglePosition
+                                task.wait(1)
+                            end
+                        end
+                    end
+                end)
+            else
+                humanoid.PlatformStand = false
+                if connection then 
+                    connection:Disconnect()
+                    connection = nil
+                end
+            end
+        end
+    })
+end
+
+createBangToggle("Bang v1 | خلفي v2", -1, false)
+createBangToggle("Bang v2 | خلفي v2", -1.5, false)
+createBangToggle("Face Bang v2 | أمامي v2", 1, true)
+createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
+
+-- ======================
+-- تبويب الأسماء الوهمية
+-- ======================
+local rpTab = Window:MakeTab({ 
+    Title = "الأسماء الوهمية والبايو",
+    Icon = "rbxassetid://90798133906684" 
+})
+
+local rpNameRGBActive = false
+local rpBioRGBActive = false
+
+local rgbColors = {
+    Color3.fromRGB(255, 0, 0), Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 0, 255),
+    Color3.fromRGB(255, 255, 0), Color3.fromRGB(255, 0, 255), Color3.fromRGB(0, 255, 255),
+    Color3.fromRGB(255, 165, 0), Color3.fromRGB(128, 0, 128), Color3.fromRGB(255, 20, 147)
+}
+
+rpTab:AddToggle({
+    Name = "تغيير لون الاسم تلقائياً (RGB)",
+    Default = false,
+    Callback = function(value)
+        rpNameRGBActive = value
+        if value then
+            sendNotification("اسم", "تم تفعيل RGB للاسم", nil, 2)
+        else
+            sendNotification("اسم", "تم إيقاف RGB للاسم", nil, 2)
+        end
+    end
+})
+
+rpTab:AddSection({ "الاسم الوهمي" })
+
+rpTab:AddTextBox({
+    Name = "تغيير الاسم الوهمي",
+    Default = "",
+    PlaceholderText = "أدخل الاسم الجديد",
+    ClearText = true,
+    Callback = function(value)
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", value)
+    end
+})
+
+rpTab:AddToggle({
+    Name = "تغيير لون البايو تلقائياً (RGB)",
+    Default = false,
+    Callback = function(value)
+        rpBioRGBActive = value
+        if value then
+            sendNotification("بايو", "تم تفعيل RGB للبايو", nil, 2)
+        else
+            sendNotification("بايو", "تم إيقاف RGB للبايو", nil, 2)
+        end
+    end
+})
+
+-- حلقة RGB للاسم
+coroutine.wrap(function()
+    while true do
+        if rpNameRGBActive then
+            local color = rgbColors[math.random(#rgbColors)]
+            fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPNameColor", color)
+        end
+        wait(0.7)
+    end
+end)()
+
+-- حلقة RGB للبايو
+coroutine.wrap(function()
+    while true do
+        if rpBioRGBActive then
+            local color = rgbColors[math.random(#rgbColors)]
+            fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPBioColor", color)
+        end
+        wait(0.7)
+    end
+end)()
+
+rpTab:AddButton({
+    Name = "إخفاء الاسم",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", " ")
+        sendNotification("اسم", "تم إخفاء الاسم", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "اسم مميز M",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", "MҷҿҡҺҶҶҷҷҡҺҷҺҸҡҸҡҶҺ")
+        sendNotification("اسم", "تم تغيير الاسم", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "اسم مميز A",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", "AҷҺҸҡҸҡҶҺ")
+        sendNotification("اسم", "تم تغيير الاسم", nil, 2)
+    end
+})
+
+rpTab:AddSection({ "البايو" })
+
+rpTab:AddButton({
+    Name = "بايو مميز 1",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "♡♡♡")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو مميز 2",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "♥♥♥")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "BLACK|hub",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "BLACK|hub")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "CLOCK7|hub",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "CLOCK7|hub")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو Berkegamer6212",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "$$$")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو <RAEF<3",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "<RAEF<3")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
+
+rpTab:AddButton({
+    Name = "بايو <_HooR_>",
+    Callback = function()
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "<_HooR_>")
+        sendNotification("بايو", "تم تغيير البايو", nil, 2)
+    end
+})
