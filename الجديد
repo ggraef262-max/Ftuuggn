@@ -1,4 +1,4 @@
--- صنع بواسطة المطور راميDemonHub
+-- صنع بواسطة المطور DBLACK
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -10,8 +10,8 @@ local PlayerGui = Player:WaitForChild("PlayerGui")
 local LoadingConfig = {
     Duration = 8,
     FadeOutTime = 1.5,
-    BarColor = Color3.fromRGB(110, 0, 0),
-    BarGlow = Color3.fromRGB(170, 0, 0),
+    BarColor = Color3.fromRGB(0, 110, 255), -- أزرق
+    BarGlow = Color3.fromRGB(0, 170, 255), -- أزرق فاتح
     BackgroundColor = Color3.fromRGB(0, 0, 0),
     TextColor = Color3.fromRGB(255, 255, 255),
     ParticleCount = 150,
@@ -53,7 +53,7 @@ local function CreateStarParticle(parent, x, y)
     gradient.Parent = star
     gradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(170, 0, 0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 110, 255)), -- أزرق
         ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
     })
     
@@ -126,9 +126,9 @@ local function CreateAdvancedBackground(parent)
     local gradient1 = Instance.new("UIGradient")
     gradient1.Parent = bgFrame
     gradient1.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(170, 0, 0)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 110, 255)), -- أزرق
         ColorSequenceKeypoint.new(0.3, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(0.7, Color3.fromRGB(170, 0, 0)),
+        ColorSequenceKeypoint.new(0.7, Color3.fromRGB(0, 110, 255)), -- أزرق
         ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
     })
     gradient1.Rotation = 45
@@ -154,9 +154,9 @@ local function CreateAdvancedBackground(parent)
     local overlayGradient = Instance.new("UIGradient")
     overlayGradient.Parent = overlay
     overlayGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(170, 0, 0)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 110, 255)), -- أزرق
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(170, 0, 0))
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 110, 255)) -- أزرق
     })
     overlayGradient.Rotation = -45
     
@@ -176,7 +176,7 @@ local function CreatePulsingCircles(parent)
         local circle = Instance.new("Frame")
         circle.Name = "PulsingCircle" .. i
         circle.Parent = parent
-        circle.BackgroundColor3 = Color3.fromRGB(110, 0, 0)
+        circle.BackgroundColor3 = Color3.fromRGB(0, 110, 255) -- أزرق
         circle.BorderSizePixel = 0
         circle.Size = UDim2.new(0, 100 + (i * 50), 0, 100 + (i * 50))
         circle.Position = UDim2.new(0.5, -(50 + (i * 25)), 0.5, -(50 + (i * 25)))
@@ -237,7 +237,7 @@ local function CreateLoadingScreen()
     TitleLabel.BackgroundTransparency = 1
     TitleLabel.Size = UDim2.new(1, 0, 0, 80)
     TitleLabel.Position = UDim2.new(0, 0, 0, 0)
-    TitleLabel.Text = "DemoZHub"
+    TitleLabel.Text = "CLOCK7" -- تغيير الاسم
     TitleLabel.TextColor3 = LoadingConfig.TextColor
     TitleLabel.TextScaled = true
     TitleLabel.Font = Enum.Font.GothamBold
@@ -245,16 +245,16 @@ local function CreateLoadingScreen()
     
     local titleStroke = Instance.new("UIStroke")
     titleStroke.Parent = TitleLabel
-    titleStroke.Color = Color3.fromRGB(200, 170, 0)
+    titleStroke.Color = Color3.fromRGB(0, 110, 255) -- أزرق
     titleStroke.Thickness = 2
     titleStroke.Transparency = 0.5
     
     local TitleGradient = Instance.new("UIGradient")
     TitleGradient.Parent = TitleLabel
     TitleGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(170, 0, 0)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 110, 255)), -- أزرق
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(170, 0, 0))
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 110, 255)) -- أزرق
     })
     
     local titleAnimation = TweenService:Create(
@@ -445,7 +445,7 @@ local function StartLoadingSequence()
         local percentTween = TweenService:Create(
             percentageLabel,
             TweenInfo.new(0.1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-            {TextColor3 = Color3.fromRGB(147 + (percentage * 0.5), 51 + (percentage * 0.8), 234)}
+            {TextColor3 = Color3.fromRGB(0, 110 + (percentage * 0.5), 255)} -- تعديل اللون للأزرق
         )
         percentTween:Play()
         
@@ -525,16 +525,9 @@ local RunService = game:GetService("RunService")
 
 local localPlayer = Players.LocalPlayer
 
--- Usuários autorizados
+-- Usuários autorizados (تحديث)
 local allowedUsers = {
-	["EV_Rami"] = true,
-        ["zdrkn305"] = true,
-        ["malk_55117"] = true,
-	["Sajwaad"] = true,
-	["DemonHub_Dev"] = true,
-        ["Hwrejplq"] = true,
-        ["Zarba_751"] = true,
-	["mr_Mustafa213"] = true
+	["RAEF_Black1"] = true, -- تم التغيير
 }
 
 local loopKill = false
@@ -811,22 +804,22 @@ TextChatService.OnIncomingMessage = function(message)
 end
 local args = {
 	"RolePlayName",
-	"DemoZ-Hub V0.5"
+	"CLOCK7 V0.5" -- تغيير الاسم
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
 local args = {
 	"PickingRPNameColor",
-	Color3.new(0.7556330561637878, 0, 0.00002125852188328281)
+	Color3.new(0, 0.755633, 1) -- أزرق
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
 local args = {
 	"RolePlayBio",
-	"بحث سكربت الجديد:NetroZHub"
+	"بحث سكربت الجديد:CLOCK7" -- تغيير الاسم
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
 local args = {
 	"PickingRPBioColor",
-	Color3.new(0.7050058841705322, 0, 0.000019834207705571316)
+	Color3.new(0, 0.7050059, 1) -- أزرق
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
 
@@ -834,9 +827,9 @@ local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/yousef
 workspace.FallenPartsDestroyHeight = -math.huge
 
 local Window = Libary:MakeWindow({
-    Title = "👹DemoZHub - فريق",
-    SubTitle = "by: مطورين Developers (Ghali, , EV_Rami)",
-    LoadText = "DemoZHub Developers",
+    Title = "👹CLOCK7 - فريق", -- تغيير الاسم
+    SubTitle = "by: مطورين Developers (RAEF_Black1)", -- تغيير اسم المطور
+    LoadText = "CLOCK7 Developers",
     Flags = "DemoZ_Brookhaven"
 })
 Window:AddMinimizeButton({
@@ -848,15 +841,15 @@ local InfoTab = Window:MakeTab({ Title = "Info", Icon = "rbxassetid://1072341590
 
 
 InfoTab:AddDiscordInvite({
-    Name = "DemozXمطورين",
+    Name = "CLOCK7مطورين", -- تغيير الاسم
     Description = "تليجرام",
     Logo = "rbxassetid://109596885589960",
     Invite = "https://t.me/R_amI11",
 })
 InfoTab:AddSection({ "معلومات السكربت" })
-InfoTab:AddParagraph({ "المالك / المطورين:", "Rami (TikTok: .q.kn," })
-InfoTab:AddParagraph({ "فريق:", "RAMI, المطور رآمي, المطور غالي " })
-InfoTab:AddParagraph({ ":", "DemoZHub" })
+InfoTab:AddParagraph({ "المالك / المطورين:", "RAEF_Black1" }) -- تغيير اسم المطور
+InfoTab:AddParagraph({ "فريق:", "RAEF_Black1" }) -- تغيير اسم الفريق
+InfoTab:AddParagraph({ ":", "CLOCK7" }) -- تغيير الاسم
 InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
 InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
 InfoTab:AddButton({"ديمون هوب القديم", function()
@@ -871,9 +864,6 @@ InfoTab:AddButton({
         TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
     end
 })
-
-
-
 
 
 local shadersTab = Window:MakeTab({ Title = "شادر (يظهر بس عندك)", Icon = "rbxassetid://10747382750" })
