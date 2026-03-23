@@ -918,7 +918,7 @@ InfoTab:AddParagraph({ ":", "CLOCK7" }) -- تغيير الاسم
 InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
 InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
 InfoTab:AddButton({"sky box القديم النادر لي اي ماب", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/muskarnu/Projects/main/DemoNtr.txt"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Sky%20box"))()
 end})
 
 InfoTab:AddSection({ "اعادة دخول" })
