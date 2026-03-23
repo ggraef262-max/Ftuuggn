@@ -97,15 +97,32 @@ local redzlib = {
 			["Color Theme"] = Color3.fromRGB(255, 100, 100), -- أحمر فاتح للعناصر الأساسية
 			["Color Text"] = Color3.fromRGB(255, 255, 255),  -- أبيض ناصع للنص
 			["Color Dark Text"] = Color3.fromRGB(150, 150, 255) -- أزرق فاتح للنص الثانوي
+		},
+		-- ثيم قوس قزح الجديد 🌈
+		Rainbow = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)),     -- أحمر
+				ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 127, 0)),   -- برتقالي
+				ColorSequenceKeypoint.new(0.33, Color3.fromRGB(255, 255, 0)),   -- أصفر
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 255, 0)),     -- أخضر
+				ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)),     -- أزرق
+				ColorSequenceKeypoint.new(0.83, Color3.fromRGB(75, 0, 130)),    -- نيلي
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 255))    -- بنفسجي
+			}),
+			["Color Hub 2"] = Color3.fromRGB(20, 20, 30),  -- لون غامق محايد للخلفيات الثانوية
+			["Color Stroke"] = Color3.fromRGB(255, 255, 255),  -- حد أبيض
+			["Color Theme"] = Color3.fromRGB(255, 0, 255),  -- لون أساسي أرجواني (يمكن تغييره)
+			["Color Text"] = Color3.fromRGB(255, 255, 255),  -- نص أبيض
+			["Color Dark Text"] = Color3.fromRGB(200, 200, 200) -- نص ثانوي فاتح
 		}
 	},
-Info = {
+	Info = {
 		Version = "1.1.0"
 	},
 	Save = {
 		UISize = {550, 380},
 		TabSize = 160,
-		Theme = "Darker"
+		Theme = "Rainbow"  -- تم تغيير الثيم الافتراضي إلى Rainbow
 	},
 	Settings = {},
 	Connection = {},
