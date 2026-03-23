@@ -1,0 +1,1691 @@
+--[[
+    ╔══════════════════════════════════════════════════════════════╗
+    ║                    LEGENDARY UI LIBRARY                      ║
+    ║                        Version 2.0                          ║
+    ║              Premium UI Framework for Roblox                ║
+    ╚══════════════════════════════════════════════════════════════╝
+    
+    مكتبة واجهات أسطورية - تجمع بين أفضل مميزات المكتبات الثلاث
+    تم التحسين للأداء العالي والعمل على أي سكربت دون lag
+    
+    كيفية الاستخدام:
+    local Library = loadstring(game:HttpGet("رابط المكتبة"))()
+    local Window = Library:MakeWindow({Title = "اسم السكربت", SubTitle = "الإصدار"})
+    local Tab = Window:MakeTab({Title = "التب", Icon = "icon"})
+    Tab:AddButton({Title = "زر", Callback = function() end})
+]]
+
+local LegendaryUI = {}
+
+-- ==================== إعدادات المكتبة الأساسية ====================
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
+local HttpService = game:GetService("HttpService")
+local Lighting = game:GetService("Lighting")
+
+-- ==================== الثيمات المتعددة ====================
+local Themes = {
+    Darker = {
+        ["Color Hub 1"] = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(20, 12, 8)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(140, 75, 40)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(20, 12, 8))
+        }),
+        ["Color Hub 2"] = Color3.fromRGB(0, 0, 0),
+        ["Color Stroke"] = Color3.fromRGB(120, 70, 35),
+        ["Color Theme"] = Color3.fromRGB(205, 127, 50),
+        ["Color Text"] = Color3.fromRGB(255, 235, 215),
+        ["Color Dark Text"] = Color3.fromRGB(210, 180, 140)
+    },
+    Neon = {
+        ["Color Hub 1"] = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 10, 20)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(20, 20, 40)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 255, 255))
+        }),
+        ["Color Hub 2"] = Color3.fromRGB(15, 15, 25),
+        ["Color Stroke"] = Color3.fromRGB(0, 255, 255),
+        ["Color Theme"] = Color3.fromRGB(0, 255, 255),
+        ["Color Text"] = Color3.fromRGB(255, 255, 255),
+        ["Color Dark Text"] = Color3.fromRGB(150, 255, 255)
+    },
+    Sunset = {
+        ["Color Hub 1"] = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(50, 20, 30)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(80, 30, 50)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 100, 50))
+        }),
+        ["Color Hub 2"] = Color3.fromRGB(40, 15, 25),
+        ["Color Stroke"] = Color3.fromRGB(255, 100, 50),
+        ["Color Theme"] = Color3.fromRGB(255, 80, 100),
+        ["Color Text"] = Color3.fromRGB(255, 220, 200),
+        ["Color Dark Text"] = Color3.fromRGB(200, 150, 150)
+    },
+    Ocean = {
+        ["Color Hub 1"] = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 30, 50)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 50, 80)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 200, 200))
+        }),
+        ["Color Hub 2"] = Color3.fromRGB(0, 25, 45),
+        ["Color Stroke"] = Color3.fromRGB(0, 200, 200),
+        ["Color Theme"] = Color3.fromRGB(0, 150, 200),
+        ["Color Text"] = Color3.fromRGB(200, 240, 255),
+        ["Color Dark Text"] = Color3.fromRGB(100, 180, 200)
+    },
+    Purple = {
+        ["Color Hub 1"] = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(27.5, 25, 30)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(32.5, 32.5, 32.5)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(27.5, 25, 30))
+        }),
+        ["Color Hub 2"] = Color3.fromRGB(30, 30, 30),
+        ["Color Stroke"] = Color3.fromRGB(40, 40, 40),
+        ["Color Theme"] = Color3.fromRGB(150, 0, 255),
+        ["Color Text"] = Color3.fromRGB(240, 240, 240),
+        ["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
+    },
+    Copper = {
+        ["Color Hub 1"] = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+            ColorSequenceKeypoint.new(0.50, Color3.fromRGB(30, 20, 15)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(20, 12, 8))
+        }),
+        ["Color Hub 2"] = Color3.fromRGB(205, 127, 50),
+        ["Color Stroke"] = Color3.fromRGB(205, 127, 50),
+        ["Color Theme"] = Color3.fromRGB(205, 127, 50),
+        ["Color Text"] = Color3.fromRGB(255, 235, 215),
+        ["Color Dark Text"] = Color3.fromRGB(40, 40, 40)
+    }
+}
+
+-- ==================== إعدادات الحفظ ====================
+local SaveData = {
+    UISize = {500, 380},
+    TabSize = 145,
+    Theme = "Darker",
+    Notifications = true
+}
+
+-- ==================== متغيرات المكتبة ====================
+local Settings = {}
+local Flags = {}
+local Instances = {}
+local Tabs = {}
+local Options = {}
+
+local CurrentTheme = Themes[SaveData.Theme]
+local ViewportSize = workspace.CurrentCamera.ViewportSize
+local UIScale = ViewportSize.Y / 450
+
+-- ==================== دوال مساعدة ====================
+local function GetStr(val)
+    if type(val) == "function" then return val() end
+    return val
+end
+
+local function CreateTween(instance, prop, value, time, wait)
+    local tween = TweenService:Create(instance, TweenInfo.new(time or 0.3, Enum.EasingStyle.Quint), {[prop] = value})
+    tween:Play()
+    if wait then tween.Completed:Wait() end
+    return tween
+end
+
+local function Create(instanceType, parent, props)
+    local new = Instance.new(instanceType)
+    if parent then new.Parent = parent end
+    if props then
+        for prop, value in pairs(props) do
+            new[prop] = value
+        end
+    end
+    return new
+end
+
+local function InsertTheme(instance, typeName)
+    table.insert(Instances, {Instance = instance, Type = typeName})
+    return instance
+end
+
+-- ==================== دوال الإشعارات ====================
+local NotificationFrame = nil
+
+local function CreateNotificationFrame()
+    if NotificationFrame then return end
+    NotificationFrame = Create("Frame", CoreGui, {
+        Name = "LegendaryNotifications",
+        Size = UDim2.new(0, 320, 1, 0),
+        Position = UDim2.new(1, 0, 0, 0),
+        AnchorPoint = Vector2.new(1, 0),
+        BackgroundTransparency = 1
+    })
+    Create("UIPadding", NotificationFrame, {
+        PaddingLeft = UDim.new(0, 15),
+        PaddingTop = UDim.new(0, 15),
+        PaddingBottom = UDim.new(0, 50)
+    })
+    Create("UIListLayout", NotificationFrame, {
+        Padding = UDim.new(0, 10),
+        VerticalAlignment = "Bottom"
+    })
+end
+
+function LegendaryUI:Notify(config)
+    CreateNotificationFrame()
+    
+    local title = config.Title or "Legendary UI"
+    local text = config.Text or "إشعار"
+    local duration = config.Duration or 4
+    local icon = config.Icon or "rbxassetid://10709790644"
+    
+    local container = Create("Frame", NotificationFrame, {
+        Size = UDim2.new(2, 0, 0, 0),
+        BackgroundTransparency = 1,
+        AutomaticSize = "Y"
+    })
+    
+    local notification = Create("Frame", container, {
+        Size = UDim2.new(0, 300, 0, 0),
+        BackgroundColor3 = CurrentTheme["Color Hub 2"],
+        Position = UDim2.new(0, 350, 0, 0),
+        AutomaticSize = "Y"
+    })
+    
+    local corner = Create("UICorner", notification, {CornerRadius = UDim.new(0, 12)})
+    
+    local stroke = Create("UIStroke", notification, {
+        Color = CurrentTheme["Color Stroke"],
+        Thickness = 1.5
+    })
+    
+    local iconLabel = Create("ImageLabel", notification, {
+        Size = UDim2.new(0, 32, 0, 32),
+        Position = UDim2.new(0, 10, 0, 10),
+        Image = icon,
+        BackgroundTransparency = 1,
+        ImageColor3 = CurrentTheme["Color Theme"]
+    })
+    
+    local titleLabel = Create("TextLabel", notification, {
+        Size = UDim2.new(1, -60, 0, 25),
+        Position = UDim2.new(0, 50, 0, 8),
+        Text = title,
+        Font = Enum.Font.GothamBold,
+        TextSize = 14,
+        TextColor3 = CurrentTheme["Color Text"],
+        TextXAlignment = "Left",
+        BackgroundTransparency = 1
+    })
+    
+    local textLabel = Create("TextLabel", notification, {
+        Size = UDim2.new(1, -60, 0, 0),
+        Position = UDim2.new(0, 50, 0, 33),
+        Text = text,
+        Font = Enum.Font.Gotham,
+        TextSize = 11,
+        TextColor3 = CurrentTheme["Color Dark Text"],
+        TextXAlignment = "Left",
+        TextWrapped = true,
+        AutomaticSize = "Y",
+        BackgroundTransparency = 1
+    })
+    
+    local progressBar = Create("Frame", notification, {
+        Size = UDim2.new(1, 0, 0, 3),
+        Position = UDim2.new(0, 0, 1, -3),
+        BackgroundColor3 = CurrentTheme["Color Theme"],
+        BorderSizePixel = 0
+    })
+    
+    CreateTween(notification, "Position", UDim2.new(0, 0, 0, 0), 0.3, false)
+    CreateTween(progressBar, "Size", UDim2.new(0, 0, 0, 3), duration, true)
+    
+    local closeBtn = Create("TextButton", notification, {
+        Size = UDim2.new(0, 22, 0, 22),
+        Position = UDim2.new(1, -28, 0, 8),
+        Text = "✕",
+        TextColor3 = CurrentTheme["Color Dark Text"],
+        BackgroundTransparency = 1,
+        Font = Enum.Font.GothamBold,
+        TextSize = 14
+    })
+    
+    closeBtn.MouseButton1Click:Connect(function()
+        CreateTween(notification, "Position", UDim2.new(0, 350, 0, 0), 0.2, false)
+        task.wait(0.25)
+        container:Destroy()
+    end)
+    
+    task.spawn(function()
+        task.wait(duration)
+        if container.Parent then
+            CreateTween(notification, "Position", UDim2.new(0, 350, 0, 0), 0.3, false)
+            task.wait(0.3)
+            container:Destroy()
+        end
+    end)
+end
+
+-- ==================== دوال الإعدادات ====================
+local function SaveSettings()
+    if writefile then
+        local data = {
+            UISize = SaveData.UISize,
+            TabSize = SaveData.TabSize,
+            Theme = SaveData.Theme,
+            Flags = Flags
+        }
+        local success, encoded = pcall(HttpService.JSONEncode, HttpService, data)
+        if success then
+            pcall(writefile, "LegendaryUI_Settings.json", encoded)
+        end
+    end
+end
+
+local function LoadSettings()
+    if readfile and isfile and isfile("LegendaryUI_Settings.json") then
+        local success, data = pcall(readfile, "LegendaryUI_Settings.json")
+        if success then
+            local success2, decoded = pcall(HttpService.JSONDecode, HttpService, data)
+            if success2 and type(decoded) == "table" then
+                if decoded.UISize then SaveData.UISize = decoded.UISize end
+                if decoded.TabSize then SaveData.TabSize = decoded.TabSize end
+                if decoded.Theme and Themes[decoded.Theme] then SaveData.Theme = decoded.Theme end
+                if decoded.Flags then Flags = decoded.Flags end
+                CurrentTheme = Themes[SaveData.Theme]
+            end
+        end
+    end
+end
+
+LoadSettings()
+
+-- ==================== دوال الثيم ====================
+function LegendaryUI:SetTheme(themeName)
+    if not Themes[themeName] then return end
+    SaveData.Theme = themeName
+    CurrentTheme = Themes[themeName]
+    SaveSettings()
+    
+    for _, item in pairs(Instances) do
+        if item.Type == "Gradient" and item.Instance then
+            item.Instance.Color = CurrentTheme["Color Hub 1"]
+        elseif item.Type == "Frame" and item.Instance then
+            item.Instance.BackgroundColor3 = CurrentTheme["Color Hub 2"]
+        elseif item.Type == "Stroke" and item.Instance then
+            item.Instance.Color = CurrentTheme["Color Stroke"]
+        elseif item.Type == "Theme" and item.Instance then
+            local prop = item.Instance:IsA("Frame") and "BackgroundColor3" or 
+                        item.Instance:IsA("TextLabel") and "TextColor3" or
+                        item.Instance:IsA("ImageLabel") and "ImageColor3" or "Color"
+            item.Instance[prop] = CurrentTheme["Color Theme"]
+        elseif item.Type == "Text" and item.Instance then
+            item.Instance.TextColor3 = CurrentTheme["Color Text"]
+        elseif item.Type == "DarkText" and item.Instance then
+            item.Instance.TextColor3 = CurrentTheme["Color Dark Text"]
+        end
+    end
+    
+    LegendaryUI:Notify({Title = "Theme", Text = "تم تغيير الثيم إلى " .. themeName, Duration = 2})
+end
+
+function LegendaryUI:GetTheme()
+    return SaveData.Theme
+end
+
+function LegendaryUI:GetThemes()
+    local themeList = {}
+    for name in pairs(Themes) do
+        table.insert(themeList, name)
+    end
+    return themeList
+end
+
+-- ==================== دوال النوافذ الأساسية ====================
+local ScreenGui = Create("ScreenGui", CoreGui, {Name = "LegendaryUI"})
+local existingGui = CoreGui:FindFirstChild("LegendaryUI")
+if existingGui and existingGui ~= ScreenGui then existingGui:Destroy() end
+
+Create("UIScale", ScreenGui, {Scale = UIScale, Name = "Scale"})
+
+-- ==================== دوال السحب ====================
+local function MakeDraggable(frame)
+    local dragging, dragStart, startPos
+    
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+        end
+    end)
+    
+    frame.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    
+    frame.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X / UIScale, 
+                                        startPos.Y.Scale, startPos.Y.Offset + delta.Y / UIScale)
+        end
+    end)
+    
+    return frame
+end
+
+-- ==================== دالة إنشاء النافذة الرئيسية ====================
+function LegendaryUI:MakeWindow(config)
+    local title = config.Title or "Legendary UI"
+    local subTitle = config.SubTitle or "Premium Framework"
+    local saveFolder = config.SaveFolder
+    
+    if saveFolder and writefile then
+        Settings.ScriptFile = saveFolder
+    end
+    
+    local windowSize = SaveData.UISize
+    local window = Create("Frame", ScreenGui, {
+        Name = "MainWindow",
+        Size = UDim2.fromOffset(windowSize[1], windowSize[2]),
+        Position = UDim2.new(0.5, -windowSize[1]/2, 0.5, -windowSize[2]/2),
+        BackgroundTransparency = 0.02
+    })
+    InsertTheme(window, "Frame")
+    
+    local gradient = Create("UIGradient", window, {Color = CurrentTheme["Color Hub 1"], Rotation = 45})
+    InsertTheme(gradient, "Gradient")
+    
+    local corner = Create("UICorner", window, {CornerRadius = UDim.new(0, 12)})
+    local stroke = Create("UIStroke", window, {Color = CurrentTheme["Color Stroke"], Thickness = 2})
+    InsertTheme(stroke, "Stroke")
+    
+    MakeDraggable(window)
+    
+    -- ==================== الشريط العلوي ====================
+    local topBar = Create("Frame", window, {
+        Size = UDim2.new(1, 0, 0, 32),
+        BackgroundTransparency = 1
+    })
+    
+    local titleLabel = InsertTheme(Create("TextLabel", topBar, {
+        Position = UDim2.new(0, 15, 0.5, 0),
+        AnchorPoint = Vector2.new(0, 0.5),
+        Text = title,
+        TextColor3 = CurrentTheme["Color Text"],
+        Font = Enum.Font.GothamBold,
+        TextSize = 14,
+        BackgroundTransparency = 1
+    }), "Text")
+    
+    local subLabel = InsertTheme(Create("TextLabel", topBar, {
+        Position = UDim2.new(0, 15, 0, 28),
+        Text = subTitle,
+        TextColor3 = CurrentTheme["Color Dark Text"],
+        Font = Enum.Font.Gotham,
+        TextSize = 9,
+        BackgroundTransparency = 1
+    }), "DarkText")
+    
+    -- ==================== أزرار التحكم ====================
+    local buttonContainer = Create("Frame", topBar, {
+        Size = UDim2.new(0, 60, 1, 0),
+        Position = UDim2.new(1, -10, 0, 0),
+        AnchorPoint = Vector2.new(1, 0),
+        BackgroundTransparency = 1
+    })
+    
+    local minimizeBtn = Create("TextButton", buttonContainer, {
+        Size = UDim2.new(0.5, -2, 1, -8),
+        Position = UDim2.new(0, 0, 0.5, 0),
+        AnchorPoint = Vector2.new(0, 0.5),
+        Text = "−",
+        TextColor3 = CurrentTheme["Color Text"],
+        BackgroundTransparency = 1,
+        Font = Enum.Font.GothamBold,
+        TextSize = 18
+    })
+    
+    local closeBtn = Create("TextButton", buttonContainer, {
+        Size = UDim2.new(0.5, -2, 1, -8),
+        Position = UDim2.new(1, 0, 0.5, 0),
+        AnchorPoint = Vector2.new(1, 0.5),
+        Text = "✕",
+        TextColor3 = CurrentTheme["Color Text"],
+        BackgroundTransparency = 1,
+        Font = Enum.Font.GothamBold,
+        TextSize = 16
+    })
+    
+    local minimized = false
+    local savedSize
+    
+    minimizeBtn.MouseButton1Click:Connect(function()
+        if minimized then
+            CreateTween(window, "Size", savedSize, 0.25, true)
+            minimized = false
+            minimizeBtn.Text = "−"
+        else
+            savedSize = window.Size
+            CreateTween(window, "Size", UDim2.fromOffset(window.Size.X.Offset, 32), 0.25, true)
+            minimized = true
+            minimizeBtn.Text = "+"
+        end
+    end)
+    
+    -- ==================== الشريط الجانبي ====================
+    local tabSize = SaveData.TabSize
+    local tabScroll = InsertTheme(Create("ScrollingFrame", window, {
+        Size = UDim2.new(0, tabSize, 1, -32),
+        Position = UDim2.new(0, 0, 1, 0),
+        AnchorPoint = Vector2.new(0, 1),
+        BackgroundTransparency = 1,
+        ScrollBarThickness = 2,
+        ScrollBarImageColor3 = CurrentTheme["Color Theme"],
+        AutomaticCanvasSize = "Y",
+        ScrollingDirection = "Y"
+    }), "ScrollBar")
+    
+    Create("UIPadding", tabScroll, {PaddingLeft = UDim.new(0, 8), PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10)})
+    Create("UIListLayout", tabScroll, {Padding = UDim.new(0, 6)})
+    
+    -- ==================== حاوية المحتوى ====================
+    local contentContainer = Create("Frame", window, {
+        Size = UDim2.new(1, -tabSize - 5, 1, -37),
+        Position = UDim2.new(1, 0, 1, -5),
+        AnchorPoint = Vector2.new(1, 1),
+        BackgroundTransparency = 1,
+        ClipsDescendants = true
+    })
+    
+    -- ==================== عناصر التحكم في الحجم ====================
+    local resizeHandle = Create("Frame", window, {
+        Size = UDim2.new(0, 12, 0, 12),
+        Position = UDim2.new(1, -6, 1, -6),
+        AnchorPoint = Vector2.new(1, 1),
+        BackgroundColor3 = CurrentTheme["Color Theme"],
+        BackgroundTransparency = 0.5
+    })
+    Create("UICorner", resizeHandle, {CornerRadius = UDim.new(1, 0)})
+    
+    local resizing = false
+    resizeHandle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            resizing = true
+        end
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if resizing then
+                resizing = false
+                SaveData.UISize = {window.Size.X.Offset, window.Size.Y.Offset}
+                SaveSettings()
+            end
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local newX = math.clamp(window.Size.X.Offset + input.Delta.X, 400, 1000)
+            local newY = math.clamp(window.Size.Y.Offset + input.Delta.Y, 200, 600)
+            window.Size = UDim2.fromOffset(newX, newY)
+            contentContainer.Size = UDim2.new(1, -tabSize - 5, 1, -37)
+        end
+    end)
+    
+    -- ==================== دوال النافذة ====================
+    local windowMethods = {}
+    
+    function windowMethods:SetTitle(newTitle)
+        titleLabel.Text = newTitle
+    end
+    
+    function windowMethods:SetSubTitle(newSubTitle)
+        subLabel.Text = newSubTitle
+    end
+    
+    function windowMethods:Close()
+        CreateTween(window, "Size", UDim2.fromOffset(0, 0), 0.2, true)
+        window:Destroy()
+    end
+    
+    function windowMethods:Minimize()
+        if minimized then
+            CreateTween(window, "Size", savedSize, 0.25, true)
+            minimized = false
+            minimizeBtn.Text = "−"
+        else
+            savedSize = window.Size
+            CreateTween(window, "Size", UDim2.fromOffset(window.Size.X.Offset, 32), 0.25, true)
+            minimized = true
+            minimizeBtn.Text = "+"
+        end
+    end
+    
+    function windowMethods:Dialog(config)
+        local dialogTitle = config.Title or "تأكيد"
+        local dialogText = config.Text or "هل أنت متأكد؟"
+        local buttons = config.Buttons or {{"موافق", function() end}}
+        
+        local overlay = Create("Frame", window, {
+            Size = UDim2.new(1, 0, 1, 0),
+            BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+            BackgroundTransparency = 0.5,
+            Active = true
+        })
+        
+        local dialog = Create("Frame", overlay, {
+            Size = UDim2.new(0, 300, 0, 0),
+            Position = UDim2.new(0.5, 0, 0.5, 0),
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BackgroundColor3 = CurrentTheme["Color Hub 2"],
+            AutomaticSize = "Y"
+        })
+        InsertTheme(dialog, "Frame")
+        Create("UICorner", dialog, {CornerRadius = UDim.new(0, 12)})
+        
+        local titleLabel = InsertTheme(Create("TextLabel", dialog, {
+            Size = UDim2.new(1, -20, 0, 30),
+            Position = UDim2.new(0, 15, 0, 10),
+            Text = dialogTitle,
+            TextColor3 = CurrentTheme["Color Text"],
+            Font = Enum.Font.GothamBold,
+            TextSize = 16,
+            TextXAlignment = "Left",
+            BackgroundTransparency = 1
+        }), "Text")
+        
+        local textLabel = InsertTheme(Create("TextLabel", dialog, {
+            Size = UDim2.new(1, -30, 0, 0),
+            Position = UDim2.new(0, 15, 0, 45),
+            Text = dialogText,
+            TextColor3 = CurrentTheme["Color Dark Text"],
+            Font = Enum.Font.Gotham,
+            TextSize = 12,
+            TextWrapped = true,
+            AutomaticSize = "Y",
+            BackgroundTransparency = 1
+        }), "DarkText")
+        
+        local buttonContainer = Create("Frame", dialog, {
+            Size = UDim2.new(1, -20, 0, 40),
+            Position = UDim2.new(0, 10, 1, -50),
+            AnchorPoint = Vector2.new(0, 1),
+            BackgroundTransparency = 1
+        })
+        
+        local buttonWidth = 100 / #buttons
+        for i, btn in ipairs(buttons) do
+            local button = Create("TextButton", buttonContainer, {
+                Size = UDim2.new(0, buttonWidth - 5, 0, 32),
+                Position = UDim2.new(0, (i-1) * buttonWidth + 2.5, 0, 0),
+                Text = btn[1],
+                BackgroundColor3 = CurrentTheme["Color Theme"],
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 12
+            })
+            Create("UICorner", button, {CornerRadius = UDim.new(0, 6)})
+            
+            button.MouseButton1Click:Connect(function()
+                if btn[2] then pcall(btn[2]) end
+                overlay:Destroy()
+            end)
+        end
+        
+        CreateTween(dialog, "Size", UDim2.new(0, 300, 0, textLabel.Size.Y.Offset + 100), 0.2, true)
+        
+        return dialog
+    end
+    
+    -- ==================== دوال التب ====================
+    local containers = {}
+    local currentTab = nil
+    
+    function windowMethods:MakeTab(config)
+        local tabName = config.Title or "Tab"
+        local tabIcon = config.Icon or ""
+        
+        local tabButton = Create("TextButton", tabScroll, {
+            Size = UDim2.new(1, 0, 0, 32),
+            Text = "",
+            BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+            BackgroundTransparency = 0.8
+        })
+        InsertTheme(tabButton, "Frame")
+        Create("UICorner", tabButton, {CornerRadius = UDim.new(0, 8)})
+        
+        local tabLabel = InsertTheme(Create("TextLabel", tabButton, {
+            Size = UDim2.new(1, -20, 1, 0),
+            Position = UDim2.new(0, 20, 0, 0),
+            Text = tabName,
+            TextColor3 = CurrentTheme["Color Text"],
+            Font = Enum.Font.GothamMedium,
+            TextSize = 11,
+            TextXAlignment = "Left",
+            BackgroundTransparency = 1
+        }), "Text")
+        
+        if tabIcon and tabIcon ~= "" then
+            local icon = Create("ImageLabel", tabButton, {
+                Size = UDim2.new(0, 16, 0, 16),
+                Position = UDim2.new(0, 2, 0.5, 0),
+                AnchorPoint = Vector2.new(0, 0.5),
+                Image = tabIcon,
+                BackgroundTransparency = 1,
+                ImageColor3 = CurrentTheme["Color Theme"]
+            })
+            InsertTheme(icon, "Theme")
+        end
+        
+        local container = Create("ScrollingFrame", contentContainer, {
+            Size = UDim2.new(1, -15, 1, -10),
+            Position = UDim2.new(0, 0, 0, 0),
+            BackgroundTransparency = 1,
+            ScrollBarThickness = 4,
+            ScrollBarImageColor3 = CurrentTheme["Color Theme"],
+            AutomaticCanvasSize = "Y",
+            ScrollingDirection = "Y",
+            Visible = false
+        })
+        InsertTheme(container, "ScrollBar")
+        
+        Create("UIPadding", container, {PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12), PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10)})
+        Create("UIListLayout", container, {Padding = UDim.new(0, 8)})
+        
+        table.insert(containers, container)
+        
+        tabButton.MouseButton1Click:Connect(function()
+            for _, cont in pairs(containers) do
+                cont.Visible = false
+            end
+            container.Visible = true
+            
+            for _, btn in pairs(tabScroll:GetChildren()) do
+                if btn:IsA("TextButton") then
+                    btn.BackgroundTransparency = 0.8
+                end
+            end
+            tabButton.BackgroundTransparency = 0.3
+        end)
+        
+        if not currentTab then
+            tabButton.BackgroundTransparency = 0.3
+            container.Visible = true
+            currentTab = container
+        end
+        
+        -- ==================== دوال التب ====================
+        local tabMethods = {}
+        local elements = {}
+        
+        function tabMethods:AddButton(config)
+            local btnName = config.Title or "Button"
+            local callback = config.Callback or function() end
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 32),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"],
+                AutomaticSize = "Y"
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 8)})
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -20, 0, 0),
+                Position = UDim2.new(0, 12, 0, 0),
+                Text = btnName,
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamMedium,
+                TextSize = 12,
+                TextXAlignment = "Left",
+                AutomaticSize = "Y",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local button = Create("TextButton", frame, {
+                Size = UDim2.new(0, 60, 0, 26),
+                Position = UDim2.new(1, -12, 0.5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                Text = "تشغيل",
+                BackgroundColor3 = CurrentTheme["Color Theme"],
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 11
+            })
+            Create("UICorner", button, {CornerRadius = UDim.new(0, 6)})
+            
+            button.MouseButton1Click:Connect(function()
+                pcall(callback)
+                CreateTween(button, "BackgroundColor3", Color3.fromRGB(100, 200, 100), 0.1, false)
+                CreateTween(button, "BackgroundColor3", CurrentTheme["Color Theme"], 0.2, false)
+            end)
+            
+            frame.Size = UDim2.new(1, 0, 0, label.Size.Y.Offset + 12)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:SetTitle(newTitle)
+                label.Text = newTitle
+                frame.Size = UDim2.new(1, 0, 0, label.Size.Y.Offset + 12)
+            end
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddToggle(config)
+            local toggleName = config.Title or "Toggle"
+            local default = config.Default or false
+            local flag = config.Flag
+            local callback = config.Callback or function() end
+            
+            if flag and Flags[flag] ~= nil then
+                default = Flags[flag]
+            end
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 32),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"],
+                AutomaticSize = "Y"
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 8)})
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -60, 0, 0),
+                Position = UDim2.new(0, 12, 0, 0),
+                Text = toggleName,
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamMedium,
+                TextSize = 12,
+                TextXAlignment = "Left",
+                AutomaticSize = "Y",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local toggleFrame = Create("Frame", frame, {
+                Size = UDim2.new(0, 44, 0, 22),
+                Position = UDim2.new(1, -12, 0.5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                BackgroundColor3 = default and CurrentTheme["Color Theme"] or Color3.fromRGB(80, 80, 80)
+            })
+            InsertTheme(toggleFrame, "Theme")
+            Create("UICorner", toggleFrame, {CornerRadius = UDim.new(1, 0)})
+            
+            local toggleSlider = Create("Frame", toggleFrame, {
+                Size = UDim2.new(0, 18, 0, 18),
+                Position = default and UDim2.new(1, -2, 0.5, 0) or UDim2.new(0, 2, 0.5, 0),
+                AnchorPoint = Vector2.new(default and 1 or 0, 0.5),
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            })
+            Create("UICorner", toggleSlider, {CornerRadius = UDim.new(1, 0)})
+            
+            local toggled = default
+            
+            local function updateToggle(value)
+                toggled = value
+                if flag then Flags[flag] = value end
+                pcall(callback, value)
+                
+                if toggled then
+                    CreateTween(toggleFrame, "BackgroundColor3", CurrentTheme["Color Theme"], 0.2, false)
+                    CreateTween(toggleSlider, "Position", UDim2.new(1, -2, 0.5, 0), 0.2, false)
+                    CreateTween(toggleSlider, "AnchorPoint", Vector2.new(1, 0.5), 0.2, false)
+                else
+                    CreateTween(toggleFrame, "BackgroundColor3", Color3.fromRGB(80, 80, 80), 0.2, false)
+                    CreateTween(toggleSlider, "Position", UDim2.new(0, 2, 0.5, 0), 0.2, false)
+                    CreateTween(toggleSlider, "AnchorPoint", Vector2.new(0, 0.5), 0.2, false)
+                end
+                SaveSettings()
+            end
+            
+            local button = Create("TextButton", frame, {
+                Size = UDim2.new(1, 0, 1, 0),
+                BackgroundTransparency = 1,
+                Text = ""
+            })
+            
+            button.MouseButton1Click:Connect(function()
+                updateToggle(not toggled)
+            end)
+            
+            frame.Size = UDim2.new(1, 0, 0, label.Size.Y.Offset + 16)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:Set(value)
+                updateToggle(value)
+            end
+            
+            function element:Get()
+                return toggled
+            end
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddSlider(config)
+            local sliderName = config.Title or "Slider"
+            local min = config.Min or 0
+            local max = config.Max or 100
+            local default = config.Default or 50
+            local flag = config.Flag
+            local callback = config.Callback or function() end
+            
+            if flag and Flags[flag] ~= nil then
+                default = Flags[flag]
+            end
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 55),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"],
+                AutomaticSize = "Y"
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 8)})
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -12, 0, 0),
+                Position = UDim2.new(0, 12, 0, 8),
+                Text = sliderName,
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamMedium,
+                TextSize = 12,
+                TextXAlignment = "Left",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local valueLabel = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(0, 50, 0, 20),
+                Position = UDim2.new(1, -12, 0, 8),
+                AnchorPoint = Vector2.new(1, 0),
+                Text = tostring(default),
+                TextColor3 = CurrentTheme["Color Theme"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 12,
+                TextXAlignment = "Right",
+                BackgroundTransparency = 1
+            }), "Theme")
+            
+            local sliderBar = Create("Frame", frame, {
+                Size = UDim2.new(1, -24, 0, 4),
+                Position = UDim2.new(0, 12, 0, 38),
+                BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            })
+            Create("UICorner", sliderBar, {CornerRadius = UDim.new(1, 0)})
+            
+            local fill = Create("Frame", sliderBar, {
+                Size = UDim2.new((default - min) / (max - min), 0, 1, 0),
+                BackgroundColor3 = CurrentTheme["Color Theme"]
+            })
+            Create("UICorner", fill, {CornerRadius = UDim.new(1, 0)})
+            
+            local sliderButton = Create("TextButton", sliderBar, {
+                Size = UDim2.new(0, 14, 0, 14),
+                Position = UDim2.new((default - min) / (max - min), -7, 0.5, 0),
+                AnchorPoint = Vector2.new(0, 0.5),
+                BackgroundColor3 = CurrentTheme["Color Theme"],
+                Text = ""
+            })
+            Create("UICorner", sliderButton, {CornerRadius = UDim.new(1, 0)})
+            
+            local value = default
+            
+            local function updateSlider(newValue)
+                value = math.clamp(newValue, min, max)
+                if flag then Flags[flag] = value end
+                pcall(callback, value)
+                valueLabel.Text = tostring(value)
+                local percent = (value - min) / (max - min)
+                fill.Size = UDim2.new(percent, 0, 1, 0)
+                sliderButton.Position = UDim2.new(percent, -7, 0.5, 0)
+                SaveSettings()
+            end
+            
+            sliderButton.MouseButton1Down:Connect(function()
+                local connection
+                connection = UserInputService.InputChanged:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseMovement then
+                        local mousePos = UserInputService:GetMouseLocation()
+                        local barPos = sliderBar.AbsolutePosition.X
+                        local barWidth = sliderBar.AbsoluteSize.X
+                        local newPercent = math.clamp((mousePos.X - barPos) / barWidth, 0, 1)
+                        updateSlider(min + (max - min) * newPercent)
+                    end
+                end)
+                
+                UserInputService.InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        connection:Disconnect()
+                    end
+                end)
+            end)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:Set(newValue)
+                updateSlider(newValue)
+            end
+            
+            function element:Get()
+                return value
+            end
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddDropdown(config)
+            local dropdownName = config.Title or "Dropdown"
+            local options = config.Options or {}
+            local default = config.Default or options[1]
+            local flag = config.Flag
+            local callback = config.Callback or function() end
+            
+            if flag and Flags[flag] ~= nil then
+                default = Flags[flag]
+            end
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 44),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"],
+                AutomaticSize = "Y"
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 8)})
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -12, 0, 0),
+                Position = UDim2.new(0, 12, 0, 8),
+                Text = dropdownName,
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamMedium,
+                TextSize = 12,
+                TextXAlignment = "Left",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local dropdownFrame = Create("Frame", frame, {
+                Size = UDim2.new(1, -24, 0, 28),
+                Position = UDim2.new(0, 12, 0, 30),
+                BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            })
+            Create("UICorner", dropdownFrame, {CornerRadius = UDim.new(0, 6)})
+            
+            local selectedLabel = InsertTheme(Create("TextLabel", dropdownFrame, {
+                Size = UDim2.new(1, -24, 1, 0),
+                Position = UDim2.new(0, 10, 0, 0),
+                Text = tostring(default),
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.Gotham,
+                TextSize = 11,
+                TextXAlignment = "Left",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local arrow = Create("ImageLabel", dropdownFrame, {
+                Size = UDim2.new(0, 16, 0, 16),
+                Position = UDim2.new(1, -8, 0.5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                Image = "rbxassetid://10709791523",
+                BackgroundTransparency = 1,
+                ImageColor3 = CurrentTheme["Color Dark Text"]
+            })
+            
+            local optionsFrame = Create("ScrollingFrame", frame, {
+                Size = UDim2.new(1, -24, 0, 0),
+                Position = UDim2.new(0, 12, 0, 58),
+                BackgroundColor3 = Color3.fromRGB(45, 45, 45),
+                ScrollBarThickness = 2,
+                Visible = false,
+                ClipsDescendants = true
+            })
+            Create("UICorner", optionsFrame, {CornerRadius = UDim.new(0, 6)})
+            Create("UIListLayout", optionsFrame, {Padding = UDim.new(0, 2)})
+            
+            local selected = default
+            
+            for _, option in ipairs(options) do
+                local optionBtn = Create("TextButton", optionsFrame, {
+                    Size = UDim2.new(1, 0, 0, 28),
+                    Text = tostring(option),
+                    BackgroundColor3 = Color3.fromRGB(45, 45, 45),
+                    TextColor3 = CurrentTheme["Color Text"],
+                    Font = Enum.Font.Gotham,
+                    TextSize = 11
+                })
+                Create("UICorner", optionBtn, {CornerRadius = UDim.new(0, 4)})
+                
+                optionBtn.MouseButton1Click:Connect(function()
+                    selected = option
+                    selectedLabel.Text = tostring(option)
+                    if flag then Flags[flag] = option end
+                    pcall(callback, option)
+                    SaveSettings()
+                    optionsFrame.Visible = false
+                    optionsFrame.Size = UDim2.new(1, -24, 0, 0)
+                    arrow.Image = "rbxassetid://10709791523"
+                    arrow.Rotation = 0
+                end)
+            end
+            
+            local dropdownButton = Create("TextButton", dropdownFrame, {
+                Size = UDim2.new(1, 0, 1, 0),
+                BackgroundTransparency = 1,
+                Text = ""
+            })
+            
+            local open = false
+            dropdownButton.MouseButton1Click:Connect(function()
+                open = not open
+                if open then
+                    local optionCount = 0
+                    for _, child in pairs(optionsFrame:GetChildren()) do
+                        if child:IsA("TextButton") then
+                            optionCount = optionCount + 1
+                        end
+                    end
+                    local height = math.min(optionCount * 30, 150)
+                    optionsFrame.Visible = true
+                    CreateTween(optionsFrame, "Size", UDim2.new(1, -24, 0, height), 0.2, false)
+                    arrow.Image = "rbxassetid://10709790948"
+                    arrow.Rotation = 180
+                else
+                    CreateTween(optionsFrame, "Size", UDim2.new(1, -24, 0, 0), 0.2, false)
+                    task.wait(0.2)
+                    optionsFrame.Visible = false
+                    arrow.Image = "rbxassetid://10709791523"
+                    arrow.Rotation = 0
+                end
+            end)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:Set(newValue)
+                selected = newValue
+                selectedLabel.Text = tostring(newValue)
+                if flag then Flags[flag] = newValue end
+                pcall(callback, newValue)
+                SaveSettings()
+            end
+            
+            function element:Get()
+                return selected
+            end
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddSection(config)
+            local sectionName = config.Title or "Section"
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 28),
+                BackgroundTransparency = 1
+            })
+            
+            local line = Create("Frame", frame, {
+                Size = UDim2.new(1, 0, 0, 1),
+                Position = UDim2.new(0, 0, 0.5, 0),
+                BackgroundColor3 = CurrentTheme["Color Stroke"]
+            })
+            InsertTheme(line, "Stroke")
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(0, 0, 0, 20),
+                Position = UDim2.new(0, 10, 0.5, 0),
+                Text = sectionName,
+                TextColor3 = CurrentTheme["Color Theme"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 12,
+                BackgroundTransparency = 1
+            }), "Theme")
+            
+            label.Size = UDim2.new(0, label.TextBounds.X + 20, 0, 20)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:SetTitle(newTitle)
+                label.Text = newTitle
+                label.Size = UDim2.new(0, label.TextBounds.X + 20, 0, 20)
+            end
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddLabel(config)
+            local labelText = config.Text or "Label"
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 0),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"],
+                AutomaticSize = "Y"
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 8)})
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -24, 0, 0),
+                Position = UDim2.new(0, 12, 0, 8),
+                Text = labelText,
+                TextColor3 = CurrentTheme["Color Dark Text"],
+                Font = Enum.Font.Gotham,
+                TextSize = 11,
+                TextWrapped = true,
+                AutomaticSize = "Y",
+                BackgroundTransparency = 1
+            }), "DarkText")
+            
+            frame.Size = UDim2.new(1, 0, 0, label.Size.Y.Offset + 16)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:SetText(newText)
+                label.Text = newText
+                frame.Size = UDim2.new(1, 0, 0, label.Size.Y.Offset + 16)
+            end
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddColorPicker(config)
+            local pickerName = config.Title or "Color Picker"
+            local default = config.Default or Color3.fromRGB(255, 100, 100)
+            local flag = config.Flag
+            local callback = config.Callback or function() end
+            
+            if flag and Flags[flag] ~= nil then
+                default = Flags[flag]
+            end
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 44),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"],
+                AutomaticSize = "Y"
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 8)})
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -80, 0, 0),
+                Position = UDim2.new(0, 12, 0, 12),
+                Text = pickerName,
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamMedium,
+                TextSize = 12,
+                TextXAlignment = "Left",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local colorButton = Create("Frame", frame, {
+                Size = UDim2.new(0, 30, 0, 30),
+                Position = UDim2.new(1, -12, 0.5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                BackgroundColor3 = default
+            })
+            Create("UICorner", colorButton, {CornerRadius = UDim.new(0, 6)})
+            Create("UIStroke", colorButton, {Color = CurrentTheme["Color Stroke"], Thickness = 1})
+            
+            local colorPickerOpen = false
+            local pickerFrame = nil
+            
+            colorButton.MouseButton1Click:Connect(function()
+                if colorPickerOpen then
+                    if pickerFrame then pickerFrame:Destroy() end
+                    colorPickerOpen = false
+                    return
+                end
+                
+                pickerFrame = Create("Frame", frame, {
+                    Size = UDim2.new(1, -24, 0, 120),
+                    Position = UDim2.new(0, 12, 0, 44),
+                    BackgroundColor3 = CurrentTheme["Color Hub 2"],
+                    Visible = true
+                })
+                InsertTheme(pickerFrame, "Frame")
+                Create("UICorner", pickerFrame, {CornerRadius = UDim.new(0, 8)})
+                
+                local hueBar = Create("Frame", pickerFrame, {
+                    Size = UDim2.new(1, -20, 0, 15),
+                    Position = UDim2.new(0, 10, 0, 10),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                })
+                Create("UICorner", hueBar, {CornerRadius = UDim.new(0, 4)})
+                local hueGradient = Create("UIGradient", hueBar, {
+                    Rotation = 90,
+                    Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+                        ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 255, 0)),
+                        ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
+                        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
+                        ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)),
+                        ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
+                    })
+                })
+                
+                local hueSlider = Create("TextButton", hueBar, {
+                    Size = UDim2.new(0, 10, 1, 0),
+                    Position = UDim2.new(0, 0, 0, 0),
+                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                    Text = ""
+                })
+                Create("UICorner", hueSlider, {CornerRadius = UDim.new(1, 0)})
+                
+                local colorPreview = Create("Frame", pickerFrame, {
+                    Size = UDim2.new(0, 50, 0, 50),
+                    Position = UDim2.new(1, -60, 1, -60),
+                    AnchorPoint = Vector2.new(1, 1),
+                    BackgroundColor3 = default
+                })
+                Create("UICorner", colorPreview, {CornerRadius = UDim.new(0, 6)})
+                Create("UIStroke", colorPreview, {Color = CurrentTheme["Color Stroke"], Thickness = 1})
+                
+                local r, g, b = default.R, default.G, default.B
+                local h, s, v = Color3.toHSV(default)
+                
+                local function updateColor()
+                    local newColor = Color3.fromHSV(h, s, v)
+                    colorButton.BackgroundColor3 = newColor
+                    colorPreview.BackgroundColor3 = newColor
+                    if flag then Flags[flag] = newColor end
+                    pcall(callback, newColor)
+                    SaveSettings()
+                end
+                
+                hueSlider.MouseButton1Down:Connect(function()
+                    local connection
+                    connection = UserInputService.InputChanged:Connect(function(input)
+                        if input.UserInputType == Enum.UserInputType.MouseMovement then
+                            local mousePos = UserInputService:GetMouseLocation()
+                            local barPos = hueBar.AbsolutePosition.X
+                            local barWidth = hueBar.AbsoluteSize.X
+                            local newPercent = math.clamp((mousePos.X - barPos) / barWidth, 0, 1)
+                            hueSlider.Position = UDim2.new(newPercent, -5, 0, 0)
+                            h = newPercent
+                            updateColor()
+                        end
+                    end)
+                    
+                    UserInputService.InputEnded:Connect(function(input)
+                        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                            connection:Disconnect()
+                        end
+                    end)
+                end)
+                
+                colorPickerOpen = true
+                frame.Size = UDim2.new(1, 0, 0, 168)
+            end)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:SetColor(newColor)
+                colorButton.BackgroundColor3 = newColor
+                if flag then Flags[flag] = newColor end
+                pcall(callback, newColor)
+                SaveSettings()
+            end
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddKeybind(config)
+            local bindName = config.Title or "Keybind"
+            local defaultKey = config.Default or "None"
+            local callback = config.Callback or function() end
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 44),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"],
+                AutomaticSize = "Y"
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 8)})
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -120, 0, 0),
+                Position = UDim2.new(0, 12, 0, 12),
+                Text = bindName,
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamMedium,
+                TextSize = 12,
+                TextXAlignment = "Left",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local keyButton = Create("TextButton", frame, {
+                Size = UDim2.new(0, 100, 0, 28),
+                Position = UDim2.new(1, -12, 0.5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                Text = defaultKey,
+                BackgroundColor3 = Color3.fromRGB(50, 50, 50),
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 11
+            })
+            Create("UICorner", keyButton, {CornerRadius = UDim.new(0, 6)})
+            
+            local listening = false
+            local currentKey = defaultKey
+            
+            keyButton.MouseButton1Click:Connect(function()
+                listening = true
+                keyButton.Text = "..."
+                
+                local connection
+                connection = UserInputService.InputBegan:Connect(function(input)
+                    if listening then
+                        local key = input.KeyCode.Name
+                        if key ~= "Unknown" then
+                            currentKey = key
+                            keyButton.Text = key
+                            pcall(callback, key)
+                            listening = false
+                            connection:Disconnect()
+                        end
+                    end
+                end)
+                
+                task.wait(3)
+                if listening then
+                    listening = false
+                    keyButton.Text = currentKey
+                    connection:Disconnect()
+                end
+            end)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:SetKey(newKey)
+                currentKey = newKey
+                keyButton.Text = newKey
+            end
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddTimer(config)
+            local timerName = config.Title or "Timer"
+            local defaultTime = config.Default or 10
+            local callback = config.Callback or function() end
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 70),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"]
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 8)})
+            
+            local label = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -12, 0, 20),
+                Position = UDim2.new(0, 12, 0, 8),
+                Text = timerName,
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamMedium,
+                TextSize = 12,
+                TextXAlignment = "Left",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local timeLabel = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(0, 80, 0, 30),
+                Position = UDim2.new(0.5, -40, 0, 35),
+                Text = tostring(defaultTime),
+                TextColor3 = CurrentTheme["Color Theme"],
+                Font = Enum.Font.FredokaOne,
+                TextSize = 24,
+                BackgroundTransparency = 1
+            }), "Theme")
+            
+            local startBtn = Create("TextButton", frame, {
+                Size = UDim2.new(0, 70, 0, 28),
+                Position = UDim2.new(0.5, -75, 1, -10),
+                Text = "▶ بدء",
+                BackgroundColor3 = CurrentTheme["Color Theme"],
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 11
+            })
+            Create("UICorner", startBtn, {CornerRadius = UDim.new(0, 6)})
+            
+            local resetBtn = Create("TextButton", frame, {
+                Size = UDim2.new(0, 70, 0, 28),
+                Position = UDim2.new(0.5, 5, 1, -10),
+                Text = "↺ إعادة",
+                BackgroundColor3 = Color3.fromRGB(80, 80, 80),
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 11
+            })
+            Create("UICorner", resetBtn, {CornerRadius = UDim.new(0, 6)})
+            
+            local remaining = defaultTime
+            local running = false
+            local connection
+            
+            local function updateDisplay()
+                timeLabel.Text = tostring(math.floor(remaining))
+                if remaining <= 0 and running then
+                    running = false
+                    if connection then connection:Disconnect() end
+                    startBtn.Text = "▶ بدء"
+                    startBtn.BackgroundColor3 = CurrentTheme["Color Theme"]
+                    pcall(callback)
+                end
+            end
+            
+            startBtn.MouseButton1Click:Connect(function()
+                running = not running
+                if running then
+                    startBtn.Text = "⏸ إيقاف"
+                    startBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 80)
+                    connection = RunService.Heartbeat:Connect(function(dt)
+                        if running and remaining > 0 then
+                            remaining = remaining - dt
+                            updateDisplay()
+                        end
+                    end)
+                else
+                    startBtn.Text = "▶ بدء"
+                    startBtn.BackgroundColor3 = CurrentTheme["Color Theme"]
+                    if connection then connection:Disconnect() end
+                end
+            end)
+            
+            resetBtn.MouseButton1Click:Connect(function()
+                remaining = defaultTime
+                updateDisplay()
+                if running then
+                    running = false
+                    startBtn.Text = "▶ بدء"
+                    startBtn.BackgroundColor3 = CurrentTheme["Color Theme"]
+                    if connection then connection:Disconnect() end
+                end
+            end)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:SetTime(newTime)
+                defaultTime = newTime
+                remaining = newTime
+                updateDisplay()
+            end
+            
+            function element:Destroy()
+                if connection then connection:Disconnect() end
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:AddDiscord(config)
+            local invite = config.Invite or "https://discord.gg/"
+            local title = config.Title or "Discord Server"
+            local description = config.Description or "انضم للسيرفر للحصول على التحديثات"
+            local icon = config.Icon or "rbxassetid://10709752035"
+            
+            local frame = Create("Frame", container, {
+                Size = UDim2.new(1, 0, 0, 90),
+                BackgroundColor3 = CurrentTheme["Color Hub 2"]
+            })
+            InsertTheme(frame, "Frame")
+            Create("UICorner", frame, {CornerRadius = UDim.new(0, 12)})
+            
+            local iconImg = Create("ImageLabel", frame, {
+                Size = UDim2.new(0, 50, 0, 50),
+                Position = UDim2.new(0, 12, 0, 12),
+                Image = icon,
+                BackgroundTransparency = 1,
+                ImageColor3 = CurrentTheme["Color Theme"]
+            })
+            
+            local titleLabel = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -80, 0, 20),
+                Position = UDim2.new(0, 70, 0, 12),
+                Text = title,
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 14,
+                TextXAlignment = "Left",
+                BackgroundTransparency = 1
+            }), "Text")
+            
+            local descLabel = InsertTheme(Create("TextLabel", frame, {
+                Size = UDim2.new(1, -80, 0, 30),
+                Position = UDim2.new(0, 70, 0, 34),
+                Text = description,
+                TextColor3 = CurrentTheme["Color Dark Text"],
+                Font = Enum.Font.Gotham,
+                TextSize = 10,
+                TextXAlignment = "Left",
+                TextWrapped = true,
+                BackgroundTransparency = 1
+            }), "DarkText")
+            
+            local joinBtn = Create("TextButton", frame, {
+                Size = UDim2.new(0, 100, 0, 30),
+                Position = UDim2.new(1, -12, 0.5, 0),
+                AnchorPoint = Vector2.new(1, 0.5),
+                Text = "انضم",
+                BackgroundColor3 = CurrentTheme["Color Theme"],
+                TextColor3 = CurrentTheme["Color Text"],
+                Font = Enum.Font.GothamBold,
+                TextSize = 12
+            })
+            Create("UICorner", joinBtn, {CornerRadius = UDim.new(0, 6)})
+            
+            joinBtn.MouseButton1Click:Connect(function()
+                setclipboard(invite)
+                LegendaryUI:Notify({Title = "Discord", Text = "تم نسخ الرابط!", Duration = 2})
+                joinBtn.Text = "تم النسخ!"
+                joinBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+                task.wait(2)
+                joinBtn.Text = "انضم"
+                joinBtn.BackgroundColor3 = CurrentTheme["Color Theme"]
+            end)
+            
+            local element = {Frame = frame}
+            table.insert(elements, element)
+            
+            function element:Destroy()
+                frame:Destroy()
+            end
+            
+            return element
+        end
+        
+        function tabMethods:Clear()
+            for _, child in pairs(container:GetChildren()) do
+                if child:IsA("Frame") and child ~= container then
+                    child:Destroy()
+                end
+            end
+        end
+        
+        function tabMethods:Destroy()
+            tabButton:Destroy()
+            container:Destroy()
+        end
+        
+        return tabMethods
+    end
+    
+    closeBtn.MouseButton1Click:Connect(function()
+        windowMethods:Dialog({
+            Title = "إغلاق",
+            Text = "هل أنت متأكد من إغلاق السكربت؟",
+            Buttons = {
+                {"نعم", function() windowMethods:Close() end},
+                {"لا", function() end}
+            }
+        })
+    end)
+    
+    return windowMethods
+end
+
+-- ==================== دوال إضافية ====================
+function LegendaryUI:GetFlag(name)
+    return Flags[name]
+end
+
+function LegendaryUI:SetFlag(name, value)
+    Flags[name] = value
+    SaveSettings()
+end
+
+function LegendaryUI:Unload()
+    ScreenGui:Destroy()
+end
+
+return LegendaryUI
