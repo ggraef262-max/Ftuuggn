@@ -10,8 +10,8 @@ local PlayerGui = Player:WaitForChild("PlayerGui")
 local LoadingConfig = {
     Duration = 8,
     FadeOutTime = 1.5,
-    BarColor = Color3.fromRGB(0, 110, 255), -- أزرق
-    BarGlow = Color3.fromRGB(0, 170, 255), -- أزرق فاتح
+    BarColor = Color3.fromRGB(255, 0, 0), -- أحمر
+    BarGlow = Color3.fromRGB(255, 255, 0), -- أصفر
     BackgroundColor = Color3.fromRGB(0, 0, 0),
     TextColor = Color3.fromRGB(255, 255, 255),
     ParticleCount = 150,
@@ -33,6 +33,8 @@ local LoadingElements = {
 
 local Particles = {}
 local AnimationConnections = {}
+local RainbowHue = 0
+local RainbowConnection = nil
 
 local function CreateStarParticle(parent, x, y)
     local star = Instance.new("Frame")
@@ -49,24 +51,43 @@ local function CreateStarParticle(parent, x, y)
     corner.CornerRadius = UDim.new(1, 0)
     corner.Parent = star
     
-    local gradient = Instance.new("UIGradient")
-    gradient.Parent = star
-    gradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 110, 255)), -- أزرق
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
-    })
-    
     local particle = {
         frame = star,
         speedX = (math.random(-100, 100) / 100) * LoadingConfig.ParticleSpeed,
         speedY = (math.random(-100, 100) / 100) * LoadingConfig.ParticleSpeed,
         rotationSpeed = math.random(-5, 5),
         pulseSpeed = math.random(1, 3),
-        opacity = math.random(30, 100) / 100
+        opacity = math.random(30, 100) / 100,
+        hue = math.random()
     }
     
     return particle
+end
+
+local function UpdateParticleColors()
+    for _, particle in pairs(Particles) do
+        if particle.frame and particle.frame.Parent then
+            local hue = (tick() * 0.5 + particle.hue) % 1
+            local color = Color3.fromHSV(hue, 1, 1)
+            
+            local gradient = particle.frame:FindFirstChild("UIGradient")
+            if gradient then
+                gradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, color),
+                    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+                    ColorSequenceKeypoint.new(1, color)
+                })
+            else
+                local newGradient = Instance.new("UIGradient")
+                newGradient.Parent = particle.frame
+                newGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, color),
+                    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+                    ColorSequenceKeypoint.new(1, color)
+                })
+            end
+        end
+    end
 end
 
 local function CreateParticleSystem(parent)
@@ -126,9 +147,9 @@ local function CreateAdvancedBackground(parent)
     local gradient1 = Instance.new("UIGradient")
     gradient1.Parent = bgFrame
     gradient1.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 110, 255)), -- أزرق
+        ColorSequenceKeypoint.new(0, Color3.fromHSV(0, 1, 1)),
         ColorSequenceKeypoint.new(0.3, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(0.7, Color3.fromRGB(0, 110, 255)), -- أزرق
+        ColorSequenceKeypoint.new(0.7, Color3.fromHSV(0.5, 1, 1)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
     })
     gradient1.Rotation = 45
@@ -140,6 +161,17 @@ local function CreateAdvancedBackground(parent)
     )
     animateGradient:Play()
     table.insert(AnimationConnections, animateGradient)
+    
+    local rainbowBg = RunService.Heartbeat:Connect(function()
+        local hue = (tick() * 0.2) % 1
+        gradient1.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromHSV(hue, 1, 1)),
+            ColorSequenceKeypoint.new(0.3, Color3.fromRGB(0, 0, 0)),
+            ColorSequenceKeypoint.new(0.7, Color3.fromHSV((hue + 0.5) % 1, 1, 1)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+        })
+    end)
+    table.insert(AnimationConnections, rainbowBg)
     
     local overlay = Instance.new("Frame")
     overlay.Name = "Overlay"
@@ -154,9 +186,9 @@ local function CreateAdvancedBackground(parent)
     local overlayGradient = Instance.new("UIGradient")
     overlayGradient.Parent = overlay
     overlayGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 110, 255)), -- أزرق
+        ColorSequenceKeypoint.new(0, Color3.fromHSV(0.8, 1, 1)),
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 110, 255)) -- أزرق
+        ColorSequenceKeypoint.new(1, Color3.fromHSV(0.2, 1, 1))
     })
     overlayGradient.Rotation = -45
     
@@ -168,6 +200,16 @@ local function CreateAdvancedBackground(parent)
     animateOverlay:Play()
     table.insert(AnimationConnections, animateOverlay)
     
+    local rainbowOverlay = RunService.Heartbeat:Connect(function()
+        local hue = (tick() * 0.15) % 1
+        overlayGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromHSV((hue + 0.6) % 1, 1, 1)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),
+            ColorSequenceKeypoint.new(1, Color3.fromHSV(hue, 1, 1))
+        })
+    end)
+    table.insert(AnimationConnections, rainbowOverlay)
+    
     return bgFrame
 end
 
@@ -176,7 +218,7 @@ local function CreatePulsingCircles(parent)
         local circle = Instance.new("Frame")
         circle.Name = "PulsingCircle" .. i
         circle.Parent = parent
-        circle.BackgroundColor3 = Color3.fromRGB(0, 110, 255) -- أزرق
+        circle.BackgroundColor3 = Color3.fromHSV((i / 5), 1, 1)
         circle.BorderSizePixel = 0
         circle.Size = UDim2.new(0, 100 + (i * 50), 0, 100 + (i * 50))
         circle.Position = UDim2.new(0.5, -(50 + (i * 25)), 0.5, -(50 + (i * 25)))
@@ -198,6 +240,12 @@ local function CreatePulsingCircles(parent)
         )
         pulseTween:Play()
         table.insert(AnimationConnections, pulseTween)
+        
+        local rainbowCircle = RunService.Heartbeat:Connect(function()
+            local hue = (tick() * 0.3 + (i * 0.1)) % 1
+            circle.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
+        end)
+        table.insert(AnimationConnections, rainbowCircle)
     end
 end
 
@@ -237,7 +285,7 @@ local function CreateLoadingScreen()
     TitleLabel.BackgroundTransparency = 1
     TitleLabel.Size = UDim2.new(1, 0, 0, 80)
     TitleLabel.Position = UDim2.new(0, 0, 0, 0)
-    TitleLabel.Text = "CLOCK7" -- تغيير الاسم
+    TitleLabel.Text = "CLOCK7"
     TitleLabel.TextColor3 = LoadingConfig.TextColor
     TitleLabel.TextScaled = true
     TitleLabel.Font = Enum.Font.GothamBold
@@ -245,16 +293,16 @@ local function CreateLoadingScreen()
     
     local titleStroke = Instance.new("UIStroke")
     titleStroke.Parent = TitleLabel
-    titleStroke.Color = Color3.fromRGB(0, 110, 255) -- أزرق
+    titleStroke.Color = Color3.fromRGB(255, 0, 0)
     titleStroke.Thickness = 2
     titleStroke.Transparency = 0.5
     
     local TitleGradient = Instance.new("UIGradient")
     TitleGradient.Parent = TitleLabel
     TitleGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 110, 255)), -- أزرق
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 110, 255)) -- أزرق
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 255))
     })
     
     local titleAnimation = TweenService:Create(
@@ -265,13 +313,16 @@ local function CreateLoadingScreen()
     titleAnimation:Play()
     table.insert(AnimationConnections, titleAnimation)
     
-    local glowTween = TweenService:Create(
-        titleStroke,
-        TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-        {Transparency = 0.1}
-    )
-    glowTween:Play()
-    table.insert(AnimationConnections, glowTween)
+    local rainbowTitle = RunService.Heartbeat:Connect(function()
+        local hue = (tick() * 0.2) % 1
+        TitleGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromHSV(hue, 1, 1)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+            ColorSequenceKeypoint.new(1, Color3.fromHSV((hue + 0.5) % 1, 1, 1))
+        })
+        titleStroke.Color = Color3.fromHSV(hue, 1, 1)
+    end)
+    table.insert(AnimationConnections, rainbowTitle)
     
     local SubtitleLabel = Instance.new("TextLabel")
     SubtitleLabel.Name = "SubtitleLabel"
@@ -341,6 +392,20 @@ local function CreateLoadingScreen()
     barGradientAnim:Play()
     table.insert(AnimationConnections, barGradientAnim)
     
+    local rainbowBar = RunService.Heartbeat:Connect(function()
+        local hue = (tick() * 0.3) % 1
+        LoadingConfig.BarColor = Color3.fromHSV(hue, 1, 1)
+        LoadingConfig.BarGlow = Color3.fromHSV((hue + 0.3) % 1, 1, 1)
+        ProgressBar.BackgroundColor3 = LoadingConfig.BarColor
+        ProgressStroke.Color = LoadingConfig.BarGlow
+        BarGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, LoadingConfig.BarColor),
+            ColorSequenceKeypoint.new(0.5, LoadingConfig.BarGlow),
+            ColorSequenceKeypoint.new(1, LoadingConfig.BarColor)
+        })
+    end)
+    table.insert(AnimationConnections, rainbowBar)
+    
     local GlowEffect = Instance.new("Frame")
     GlowEffect.Name = "GlowEffect"
     GlowEffect.Parent = ProgressBar
@@ -366,6 +431,12 @@ local function CreateLoadingScreen()
     PercentageLabel.TextScaled = true
     PercentageLabel.Font = Enum.Font.GothamBold
     PercentageLabel.ZIndex = 12
+    
+    local rainbowPercent = RunService.Heartbeat:Connect(function()
+        local hue = (tick() * 0.25) % 1
+        PercentageLabel.TextColor3 = Color3.fromHSV(hue, 1, 1)
+    end)
+    table.insert(AnimationConnections, rainbowPercent)
     
     local StatusLabel = Instance.new("TextLabel")
     StatusLabel.Name = "StatusLabel"
@@ -415,6 +486,7 @@ local function StartLoadingSequence()
     
     local particleConnection = RunService.Heartbeat:Connect(function()
         UpdateParticles(mainFrame)
+        UpdateParticleColors()
     end)
     table.insert(AnimationConnections, particleConnection)
     
@@ -441,13 +513,6 @@ local function StartLoadingSequence()
             {Size = UDim2.new(progress, 0, 1, 0)}
         )
         barTween:Play()
-        
-        local percentTween = TweenService:Create(
-            percentageLabel,
-            TweenInfo.new(0.1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-            {TextColor3 = Color3.fromRGB(0, 110 + (percentage * 0.5), 255)} -- تعديل اللون للأزرق
-        )
-        percentTween:Play()
         
         percentageLabel.Text = percentage .. "%"
         
