@@ -8738,3 +8738,536 @@ settingsTab:AddButton({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
     end
 })
+
+--[====[
+    ================================================
+    علامة التبويب: SKYBOX (تغيير خلفية السماء)
+    ================================================
+]====]
+local TrollTab = Window:MakeTab({ Title = "سكاي بوكس", Icon = "cloud" })
+
+TrollTab:AddSection({ "Skybox by DBLACK" })
+
+--[====[
+    زر عادي: يطبق سكربت خارجي لتغيير شكل السماء.
+]====]
+TrollTab:AddButton({
+ Name = "سكاي بوكس",
+ Callback = function()
+   loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/qZkSict1retkqFIr/raw"))()
+   end
+})
+
+--[====[
+    زر: تغيير شكل اللاعب وتشغيل حركة
+]====]
+TrollTab:AddButton({
+    Name = "تغيير الشكل + حركة",
+    Callback = function()
+        -- تغيير شكل اللاعب
+        local args = {
+            {
+                100839513065432
+            }
+        }
+        pcall(function()
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack(args))
+        end)
+        
+        -- إعدادات الحركة
+        local function LoadTrack(id)
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoid = character:WaitForChild("Humanoid")
+            
+            -- إيقاف أي حركة حالية
+            if CurrentTrack then 
+                pcall(function()
+                    CurrentTrack:Stop(0)
+                end)
+            end
+            
+            local newAnim = Instance.new("Animation")
+            newAnim.AnimationId = "rbxassetid://" .. tostring(id)
+            local newTrack = humanoid:LoadAnimation(newAnim)
+            newTrack.Priority = Enum.AnimationPriority.Action4
+            
+            newTrack:Play(0.1, 1, 1)
+            CurrentTrack = newTrack
+            
+            return newTrack
+        end
+        
+        local EmoteId = 70883871260184
+        LoadTrack(EmoteId)
+    end
+})
+
+--[=====[
+    تأثير SKYBOX ROTATOR - تدوير السماء
+]=====]
+local rotationEnabled = false
+local rotationConnection = nil
+
+TrollTab:AddToggle({
+    Name = "Skybox Rotator",
+    Default = false,
+    Callback = function(value)
+        rotationEnabled = value
+        
+        if rotationEnabled then
+            local sky = game:GetService("Lighting").Sky
+            if sky then
+                rotationConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                    if sky then
+                        local currentCFrame = sky.CFrame
+                        sky.CFrame = currentCFrame * CFrame.Angles(0, math.rad(0.5), 0)
+                    end
+                end)
+            end
+        else
+            if rotationConnection then
+                rotationConnection:Disconnect()
+                rotationConnection = nil
+            end
+            local sky = game:GetService("Lighting").Sky
+            if sky then
+                sky.CFrame = CFrame.new()
+            end
+        end
+    end
+})
+
+--[=====[
+    تأثير FLASHBANG - فلاش قوي
+]=====]
+local flashbangActive = false
+
+TrollTab:AddButton({
+    Name = "Flashbang Effect",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local camera = workspace.CurrentCamera
+        
+        local flash = Instance.new("Part")
+        flash.Name = "Flashbang"
+        flash.Size = Vector3.new(100, 100, 100)
+        flash.Position = camera.CFrame.Position
+        flash.Anchored = true
+        flash.CanCollide = false
+        flash.Transparency = 0
+        flash.BrickColor = BrickColor.new("White")
+        flash.Material = Enum.Material.Neon
+        flash.Parent = workspace
+        
+        local tweenService = game:GetService("TweenService")
+        local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        local tween = tweenService:Create(flash, tweenInfo, {Transparency = 1})
+        tween:Play()
+        
+        tween.Completed:Connect(function()
+            flash:Destroy()
+        end)
+    end
+})
+
+--[=====[
+    تأثير BLOOD MOON SKYBOX
+]=====]
+local bloodMoonEnabled = false
+local originalSkyProperties = {}
+
+TrollTab:AddToggle({
+    Name = "Blood Moon Skybox",
+    Default = false,
+    Callback = function(value)
+        bloodMoonEnabled = value
+        local lighting = game:GetService("Lighting")
+        
+        if bloodMoonEnabled then
+            -- حفظ الإعدادات الأصلية
+            originalSkyProperties = {
+                Sky = lighting.Sky,
+                Ambient = lighting.Ambient,
+                OutdoorAmbient = lighting.OutdoorAmbient,
+                ColorShift_Top = lighting.ColorShift_Top,
+                ColorShift_Bottom = lighting.ColorShift_Bottom,
+                FogColor = lighting.FogColor,
+                FogEnd = lighting.FogEnd
+            }
+            
+            -- إنشاء SkyBox جديد إذا لم يكن موجوداً
+            if not lighting:FindFirstChild("Sky") then
+                local newSky = Instance.new("Sky")
+                newSky.Parent = lighting
+            end
+            
+            local sky = lighting.Sky
+            sky.SkyboxBk = "rbxassetid://158016360"
+            sky.SkyboxDn = "rbxassetid://158016360"
+            sky.SkyboxFt = "rbxassetid://158016360"
+            sky.SkyboxLf = "rbxassetid://158016360"
+            sky.SkyboxRt = "rbxassetid://158016360"
+            sky.SkyboxUp = "rbxassetid://158016360"
+            
+            lighting.Ambient = Color3.fromRGB(80, 0, 0)
+            lighting.OutdoorAmbient = Color3.fromRGB(60, 0, 0)
+            lighting.ColorShift_Top = Color3.fromRGB(150, 0, 0)
+            lighting.ColorShift_Bottom = Color3.fromRGB(80, 0, 0)
+            lighting.FogColor = Color3.fromRGB(100, 0, 0)
+            lighting.FogEnd = 200
+        else
+            -- استعادة الإعدادات الأصلية
+            if originalSkyProperties.Sky then
+                local sky = lighting.Sky
+                if sky then
+                    sky.SkyboxBk = originalSkyProperties.Sky.SkyboxBk
+                    sky.SkyboxDn = originalSkyProperties.Sky.SkyboxDn
+                    sky.SkyboxFt = originalSkyProperties.Sky.SkyboxFt
+                    sky.SkyboxLf = originalSkyProperties.Sky.SkyboxLf
+                    sky.SkyboxRt = originalSkyProperties.Sky.SkyboxRt
+                    sky.SkyboxUp = originalSkyProperties.Sky.SkyboxUp
+                end
+            end
+            lighting.Ambient = originalSkyProperties.Ambient
+            lighting.OutdoorAmbient = originalSkyProperties.OutdoorAmbient
+            lighting.ColorShift_Top = originalSkyProperties.ColorShift_Top
+            lighting.ColorShift_Bottom = originalSkyProperties.ColorShift_Bottom
+            lighting.FogColor = originalSkyProperties.FogColor
+            lighting.FogEnd = originalSkyProperties.FogEnd
+        end
+    end
+})
+
+--[=====[
+    تأثير GLITCH SKYBOX
+]=====]
+local glitchEnabled = false
+local glitchConnection = nil
+local originalSkyTextures = {}
+
+TrollTab:AddToggle({
+    Name = "Glitch Skybox",
+    Default = false,
+    Callback = function(value)
+        glitchEnabled = value
+        local lighting = game:GetService("Lighting")
+        
+        if glitchEnabled then
+            -- حفظ النصوص الأصلية
+            local sky = lighting.Sky
+            if sky then
+                originalSkyTextures = {
+                    Bk = sky.SkyboxBk,
+                    Dn = sky.SkyboxDn,
+                    Ft = sky.SkyboxFt,
+                    Lf = sky.SkyboxLf,
+                    Rt = sky.SkyboxRt,
+                    Up = sky.SkyboxUp
+                }
+            end
+            
+            -- تأثير التشويش
+            local glitchTextures = {
+                "rbxassetid://2024549729",
+                "rbxassetid://2024550294",
+                "rbxassetid://2024550619",
+                "rbxassetid://2024550795",
+                "rbxassetid://2024550986",
+                "rbxassetid://2024551156"
+            }
+            
+            local textureIndex = 1
+            glitchConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                if lighting.Sky then
+                    textureIndex = textureIndex % #glitchTextures + 1
+                    local currentTex = glitchTextures[textureIndex]
+                    lighting.Sky.SkyboxBk = currentTex
+                    lighting.Sky.SkyboxDn = currentTex
+                    lighting.Sky.SkyboxFt = currentTex
+                    lighting.Sky.SkyboxLf = currentTex
+                    lighting.Sky.SkyboxRt = currentTex
+                    lighting.Sky.SkyboxUp = currentTex
+                end
+                task.wait(0.1)
+            end)
+        else
+            if glitchConnection then
+                glitchConnection:Disconnect()
+                glitchConnection = nil
+            end
+            -- استعادة النصوص الأصلية
+            local sky = lighting.Sky
+            if sky and next(originalSkyTextures) then
+                sky.SkyboxBk = originalSkyTextures.Bk
+                sky.SkyboxDn = originalSkyTextures.Dn
+                sky.SkyboxFt = originalSkyTextures.Ft
+                sky.SkyboxLf = originalSkyTextures.Lf
+                sky.SkyboxRt = originalSkyTextures.Rt
+                sky.SkyboxUp = originalSkyTextures.Up
+            end
+        end
+    end
+})
+
+-- متغيرات لتتبع حالة تأثير Nuke Skybox.
+local skyboxEnabled = false
+local skyboxTrack = nil
+local rigidTrack = nil
+local savedNukeBody = {}
+
+-- دالة مساعدة: توقف جميع الحركات (الأنيميشن) الخاصة بتأثير Nuke.
+local function stopAllAnimations()
+    if rigidTrack then
+        pcall(function()
+            rigidTrack:Stop()
+            rigidTrack:Destroy()
+        end)
+        rigidTrack = nil
+    end
+    
+    if skyboxTrack then
+        pcall(function()
+            skyboxTrack:Stop()
+            skyboxTrack:Destroy()
+        end)
+        skyboxTrack = nil
+    end
+    
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            local animator = humanoid:FindFirstChild("Animator")
+            if animator then
+                for _, track in pairs(animator:GetPlayingAnimationTracks()) do
+                    if track.Animation then
+                        local animId = track.Animation.AnimationId
+                        if animId == "rbxassetid://70883871260184" or animId == "rbxassetid://3695333486" then
+                            pcall(function()
+                                track:Stop()
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- تأثير Nuke Skybox
+TrollTab:AddToggle({
+    Name = "Nuke Skybox",
+    Default = false,
+    Callback = function(value)
+        skyboxEnabled = value
+        
+        if value then
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local description = humanoid:GetAppliedDescription()
+                    
+                    savedNukeBody = {
+                        Torso = description.Torso,
+                        RightArm = description.RightArm,
+                        LeftArm = description.LeftArm,
+                        RightLeg = description.RightLeg,
+                        LeftLeg = description.LeftLeg,
+                        Head = description.Head
+                    }
+                    
+                    task.wait(0.2)
+                    
+                    local args = {
+                        [1] = 123402086843885,
+                        [2] = 100839513065432,
+                        [3] = 78300682916056,
+                        [4] = 86276701020724,
+                        [5] = 78409653958165,
+                        [6] = 15093053680
+                    }
+                    
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(args)
+                    end)
+                    
+                    task.wait(0.3)
+                    
+                    local newAnim = Instance.new("Animation")
+                    newAnim.AnimationId = "rbxassetid://70883871260184"
+                    
+                    skyboxTrack = humanoid:LoadAnimation(newAnim)
+                    skyboxTrack.Priority = Enum.AnimationPriority.Action4
+                    skyboxTrack:Play(0.1, 1, 0.01)
+                    
+                    task.wait(0.5)
+                    
+                    local plankAnim = Instance.new("Animation")
+                    plankAnim.AnimationId = "rbxassetid://3695333486"
+                    rigidTrack = humanoid:LoadAnimation(plankAnim)
+                    rigidTrack.Priority = Enum.AnimationPriority.Movement
+                    rigidTrack:Play(0.1, 1, 0)
+                end
+            end
+        else
+            stopAllAnimations()
+            
+            task.wait(0.2)
+            
+            if next(savedNukeBody) then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        local restoreBody = {
+                            [1] = savedNukeBody.Torso,
+                            [2] = savedNukeBody.RightArm,
+                            [3] = savedNukeBody.LeftArm,
+                            [4] = savedNukeBody.RightLeg,
+                            [5] = savedNukeBody.LeftLeg,
+                            [6] = savedNukeBody.Head
+                        }
+                        
+                        local args = {
+                            [1] = restoreBody
+                        }
+                        
+                        pcall(function()
+                            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+                        end)
+                        
+                        savedNukeBody = {}
+                    end
+                end
+            end
+        end
+    end
+})
+
+-- تأثير Nuke FlashBack
+local nukeFlashEnabled = false
+local nukeFlashTrack = nil
+local flashRigidTrack = nil
+local savedNukeFlashBody = {}
+
+local function stopFlashAnimations()
+    if flashRigidTrack then
+        pcall(function()
+            flashRigidTrack:Stop()
+            flashRigidTrack:Destroy()
+        end)
+        flashRigidTrack = nil
+    end
+    
+    if nukeFlashTrack then
+        pcall(function()
+            nukeFlashTrack:Stop()
+            nukeFlashTrack:Destroy()
+        end)
+        nukeFlashTrack = nil
+    end
+end
+
+TrollTab:AddToggle({
+    Name = "Nuke FlashBack",
+    Default = false,
+    Callback = function(value)
+        nukeFlashEnabled = value
+        
+        if value then
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local description = humanoid:GetAppliedDescription()
+                    
+                    savedNukeFlashBody = {
+                        Torso = description.Torso,
+                        RightArm = description.RightArm,
+                        LeftArm = description.LeftArm,
+                        RightLeg = description.RightLeg,
+                        LeftLeg = description.LeftLeg,
+                        Head = description.Head
+                    }
+                    
+                    task.wait(0.2)
+                    
+                    local args = {
+                        [1] = 123402086843885,
+                        [2] = 100839513065432,
+                        [3] = 78300682916056,
+                        [4] = 86276701020724,
+                        [5] = 78409653958165,
+                        [6] = 15093053680
+                    }
+                    
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(args)
+                    end)
+                    
+                    task.wait(0.3)
+                    
+                    local newAnim = Instance.new("Animation")
+                    newAnim.AnimationId = "rbxassetid://70883871260184"
+                    
+                    nukeFlashTrack = humanoid:LoadAnimation(newAnim)
+                    nukeFlashTrack.Priority = Enum.AnimationPriority.Action4
+                    nukeFlashTrack:Play(0.1, 1, 1)
+                    
+                    task.wait(0.1)
+                    nukeFlashTrack:AdjustSpeed(5)
+                    
+                    task.wait(0.3)
+                    
+                    local plankAnim = Instance.new("Animation")
+                    plankAnim.AnimationId = "rbxassetid://3695333486"
+                    flashRigidTrack = humanoid:LoadAnimation(plankAnim)
+                    flashRigidTrack.Priority = Enum.AnimationPriority.Movement
+                    flashRigidTrack:Play(0.1, 1, 0)
+                end
+            end
+        else
+            stopFlashAnimations()
+            
+            task.wait(0.2)
+            
+            if next(savedNukeFlashBody) then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        local restoreBody = {
+                            [1] = savedNukeFlashBody.Torso,
+                            [2] = savedNukeFlashBody.RightArm,
+                            [3] = savedNukeFlashBody.LeftArm,
+                            [4] = savedNukeFlashBody.RightLeg,
+                            [5] = savedNukeFlashBody.LeftLeg,
+                            [6] = savedNukeFlashBody.Head
+                        }
+                        
+                        local args = {
+                            [1] = restoreBody
+                        }
+                        
+                        pcall(function()
+                            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+                        end)
+                        
+                        savedNukeFlashBody = {}
+                    end
+                end
+            end
+        end
+    end
+})
