@@ -23,10 +23,10 @@ local LoadingElements = {
     "يتم تجهيز الموارد...",
     "بدء تحميل السكربت...",
     "تجهيز واجهة السكربت...",
-    "السكربت العربي الاقوى...",
-    "الاكمال قريب...",
-    "على وشك الانتهاء...",
-    "تم الانتهاء...",
+    "السكربت CLOCK7...",
+    "اتمنا يعجبك...",
+    "ايميل روبلكس RAEF_black1...",
+    "شكرا علي الانتضار...",
     "تشغيل السكربت...",
     "هنيئا لكم!"
 }
@@ -804,7 +804,7 @@ TextChatService.OnIncomingMessage = function(message)
 end
 local args = {
 	"RolePlayName",
-	"CLOCK7 V0.5" -- تغيير الاسم
+	"CLOCK7 V2.1" -- تغيير الاسم
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
 local args = {
@@ -814,7 +814,7 @@ local args = {
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
 local args = {
 	"RolePlayBio",
-	"بحث سكربت الجديد:CLOCK7" -- تغيير الاسم
+	"بحث سكربت :CLOCK7" -- تغيير الاسم
 }
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
 local args = {
@@ -827,13 +827,13 @@ local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/yousef
 workspace.FallenPartsDestroyHeight = -math.huge
 
 local Window = Libary:MakeWindow({
-    Title = "👹CLOCK7 - فريق", -- تغيير الاسم
+    Title = "CLOCK7 -", -- تغيير الاسم
     SubTitle = "by: مطورين Developers (RAEF_Black1)", -- تغيير اسم المطور
     LoadText = "CLOCK7 Developers",
-    Flags = "DemoZ_Brookhaven"
+    Flags = "CLOCK7_Brookhaven"
 })
 Window:AddMinimizeButton({
-    Button = { Image = "rbxassetid://132069262307646", BackgroundTransparency = 0 },
+    Button = { Image = "rbxassetid://90798133906684", BackgroundTransparency = 0 },
     Corner = { CornerRadius = UDim.new(35, 1) },
 })
 
@@ -843,7 +843,7 @@ local InfoTab = Window:MakeTab({ Title = "Info", Icon = "rbxassetid://1072341590
 InfoTab:AddDiscordInvite({
     Name = "CLOCK7مطورين", -- تغيير الاسم
     Description = "تليجرام",
-    Logo = "rbxassetid://109596885589960",
+    Logo = "rbxassetid://90798133906684",
     Invite = "https://t.me/R_amI11",
 })
 InfoTab:AddSection({ "معلومات السكربت" })
@@ -852,7 +852,7 @@ InfoTab:AddParagraph({ "فريق:", "RAEF_Black1" }) -- تغيير اسم الف
 InfoTab:AddParagraph({ ":", "CLOCK7" }) -- تغيير الاسم
 InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
 InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
-InfoTab:AddButton({"ديمون هوب القديم", function()
+InfoTab:AddButton({"اضافات:ترتيب + sky box القديم+ تلوين جسم وشعر +والكتيير اتمنا يعجبكم", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/muskarnu/Projects/main/DemoNtr.txt"))()
 end})
 
