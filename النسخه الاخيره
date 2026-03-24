@@ -5831,7 +5831,7 @@ botaoMinimizar.MouseButton1Down:Connect(alternarBotoes)
     end
 })
 
--- إنشاء التاب الرئيسي
+-- ==================== التاب الأول: بانق ====================
 local BangTab = Window:MakeTab({"بانق", "rbxassetid://"})
 
 -- الحصول على الخدمات
@@ -5867,17 +5867,6 @@ local function rebuildBangDropdown()
             getgenv().selectedPlayer = Value
         end
     })
-end
-
--- دالة لتحديث قائمة اللاعبين (لـ Head Sit)
-local function updatePlayerList()
-    local playersList = {}
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            table.insert(playersList, player.Name)
-        end
-    end
-    return playersList
 end
 
 -- ==================== قسم Bang ====================
@@ -5937,15 +5926,24 @@ createBangToggle("Bang v2 | خلفي v2", -1.5, false)
 createBangToggle("Face Bang v1 | أمامي v1", 1, true)
 createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
 
--- ==================== قسم Head Sit ====================
+-- ==================== التاب الثاني: الجلوس فوق الرأس ====================
+local HeadSitTab = Window:MakeTab({"الجلوس على راس", "rbxassetid://"})
 
-local HeadSitSection = BangTab:AddSection({
-    Name = "الجلوس فوق راس"
-})
-
+-- المتغيرات الخاصة بالتاب الثاني
 local selectedHeadSit = nil
 local headSitConnection = nil
 local headSitDropdown = nil
+
+-- دالة لتحديث قائمة اللاعبين (لـ Head Sit)
+local function updatePlayerList()
+    local playersList = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(playersList, player.Name)
+        end
+    end
+    return playersList
+end
 
 -- إنشاء القائمة المنسدلة لـ Head Sit
 local function rebuildHeadSitDropdown()
@@ -5956,7 +5954,7 @@ local function rebuildHeadSitDropdown()
     end
     
     local playersList = updatePlayerList()
-    headSitDropdown = HeadSitSection:AddDropdown({
+    headSitDropdown = HeadSitTab:AddDropdown({
         Name = "اختيار لاعب",
         Default = "",
         Options = playersList,
@@ -5990,7 +5988,7 @@ Players.PlayerAdded:Connect(refreshHeadSitDropdown)
 Players.PlayerRemoving:Connect(refreshHeadSitDropdown)
 
 -- إضافة Toggle الجلوس
-HeadSitSection:AddToggle({
+HeadSitTab:AddToggle({
     Name = "جلوس فوق راس اللاعب",
     Default = false,
     Callback = function(bool)
@@ -6041,7 +6039,7 @@ HeadSitSection:AddToggle({
 })
 
 -- زر تحديث القائمة
-HeadSitSection:AddButton({
+HeadSitTab:AddButton({
     Name = "تحديث قائمة اللاعبين",
     Callback = function()
         refreshHeadSitDropdown()
