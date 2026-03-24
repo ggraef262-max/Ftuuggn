@@ -929,3 +929,1061 @@ InfoTab:AddButton({
         TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
     end
 })
+
+local shadersTab = Window:MakeTab({ Title = "شادر (يظهر بس عندك)", Icon = "rbxassetid://10747382750" })
+
+shadersTab:AddSection({ "جودة" })
+shadersTab:AddParagraph({"شادر٢ coming soon."})
+shadersTab:AddButton({"شادرRTX", function()
+    -- Aviso: script otimizado, ativação automática sem interface gráfica.
+
+local workspace = game:GetService("Workspace")
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+local Debris = game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
+local SoundService = game:GetService("SoundService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local model = workspace:FindFirstChild("Model")
+
+-- Som de ativação
+local sound = Instance.new("Sound")
+sound.SoundId = "rbxassetid://131644923"
+sound.Volume = 1
+sound.Parent = SoundService
+sound:Play()
+
+-- Aplicar materiais ao mapa
+if model then
+	local function setMat(obj)
+		for _, c in pairs(obj:GetChildren()) do
+			if c:IsA("BasePart") then
+				c.Material = Enum.Material.Basalt
+			elseif c:IsA("Model") or c:IsA("Folder") then
+				setMat(c)
+			end
+		end
+	end
+	if model:FindFirstChild("001_SnowStreet") then
+		setMat(model["001_SnowStreet"])
+	end
+	if model:FindFirstChild("Street") then
+		for _, o in pairs(model.Street:GetDescendants()) do
+			if o:IsA("BasePart") then
+				o.Material = Enum.Material.Basalt
+			end
+		end
+	end
+	for _, o in pairs(model:GetChildren()) do
+		if o:IsA("BasePart") and (o.Name == "Sidewalk" or o.Name == "Wedge") and o.Material == Enum.Material.SmoothPlastic then
+			o.Material = Enum.Material.Cobblestone
+		end
+	end
+	model.ChildAdded:Connect(function(obj)
+		if obj:IsA("BasePart") and (obj.Name == "Sidewalk" or obj.Name == "Wedge") and obj.Material == Enum.Material.SmoothPlastic then
+			obj.Material = Enum.Material.Cobblestone
+		end
+	end)
+end
+
+local soundPart = Instance.new("Part")
+soundPart.Size = Vector3.new(1,1,1)
+soundPart.Transparency = 1
+soundPart.Anchored = true
+soundPart.CanCollide = false
+soundPart.Parent = workspace
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+local birdSound = Instance.new("Sound")
+birdSound.Name = "BirdsSound"
+birdSound.SoundId = "rbxassetid://1237969272"
+birdSound.Looped = true
+birdSound.Volume = 0.05
+birdSound.Parent = soundPart
+
+local wolfSound = Instance.new("Sound")
+wolfSound.SoundId = "rbxassetid://6654360741"
+wolfSound.Volume = 0.05
+wolfSound.Looped = false
+wolfSound.Parent = workspace
+
+RunService.Heartbeat:Connect(function()
+	if hrp and hrp.Parent then
+		soundPart.Position = hrp.Position + Vector3.new(0,10,0)
+	end
+end)
+
+local function isNight()
+	local t = Lighting.ClockTime
+	return (t >= 18 or t <= 6)
+end
+
+task.spawn(function()
+	while true do
+		if isNight() then
+			if birdSound.IsPlaying then birdSound:Stop() end
+			if wolfSound.IsPlaying then wolfSound:Stop() end
+			wolfSound:Play()
+		else
+			if wolfSound.IsPlaying then wolfSound:Stop() end
+			if not birdSound.IsPlaying then birdSound:Play() end
+		end
+		wait(20)
+	end
+end)
+
+local fountainPart = Instance.new("Part")
+fountainPart.Anchored = true
+fountainPart.CanCollide = false
+fountainPart.Transparency = 1
+fountainPart.Size = Vector3.new(1,1,1)
+fountainPart.Position = Vector3.new(-27,19,15)
+fountainPart.Parent = workspace
+
+local attachment = Instance.new("Attachment")
+attachment.Position = Vector3.new(-27,19,15)
+attachment.Parent = fountainPart
+
+local fountainSound = Instance.new("Sound")
+fountainSound.Name = "FountainSound"
+fountainSound.SoundId = "rbxassetid://4766793559"
+fountainSound.Looped = true
+fountainSound.Volume = 0.03
+fountainSound.EmitterSize = 10
+fountainSound.RollOffMode = Enum.RollOffMode.Linear
+fountainSound.MaxDistance = 100
+fountainSound.Parent = attachment
+fountainSound:Play()
+
+local customSound = Instance.new("Sound")
+customSound.Name = "MyCustomSound"
+customSound.SoundId = "rbxassetid://9048659736"
+customSound.Volume = 0.01
+customSound.Looped = true
+customSound.PlayOnRemove = false
+customSound.Parent = workspace
+customSound:Play()
+
+local active = false
+local stars = {}
+local shootingStarsFolder = Instance.new("Folder",workspace)
+shootingStarsFolder.Name = "ShootingStars"
+local STAR_COUNT = 300
+local SHOOTING_STAR_CHANCE = 0.3
+local SHOOTING_STAR_MAX = 12
+local shootingStarCooldown = 0.1
+
+local spaceSound = Instance.new("Sound",workspace)
+spaceSound.SoundId = "rbxassetid://1843520836"
+spaceSound.Volume = 0.3
+spaceSound.Looped = true
+spaceSound.Name = "SpaceAmbience"
+
+local function createStar()
+	local star = Instance.new("Part")
+	local size = math.random(1,3)*0.5
+	star.Size = Vector3.new(size,size,size)
+	star.Position = Vector3.new(math.random(-1000,1000),math.random(300,700),math.random(-1000,1000))
+	star.Anchored = true
+	star.CanCollide = false
+	star.Material = Enum.Material.Neon
+	local colors = {Color3.fromRGB(255,255,255),Color3.fromRGB(255,255,180),Color3.fromRGB(180,200,255)}
+	star.Color = colors[math.random(1,#colors)]
+	star.Name = "Star"
+	star.Parent = workspace
+	local light = Instance.new("PointLight",star)
+	light.Brightness = 2 + math.random()*1.5
+	light.Range = 12
+	spawn(function()
+		while star.Parent and active do
+			star.Transparency = 0.2 + math.sin(tick()*math.random(2,5))*0.2
+			RunService.Heartbeat:Wait()
+		end
+		if star.Parent then star:Destroy() end
+	end)
+	table.insert(stars,star)
+end
+
+local function createShootingStar()
+	if not active then return end
+	local startPos = Vector3.new(math.random(-1000,1000),math.random(350,600),math.random(-1000,1000))
+	local dir = Vector3.new(math.random(-1,1),math.random(-0.1,0.1),math.random(-1,1)).Unit
+	local speed = math.random(350,550)
+	local isFire = math.random() <= SHOOTING_STAR_CHANCE
+	local color = isFire and Color3.fromRGB(255,50,50) or Color3.fromRGB(255,255,220)
+	local trailColor = isFire and ColorSequence.new(Color3.fromRGB(255,120,0),Color3.fromRGB(255,230,50)) or ColorSequence.new(Color3.fromRGB(255,255,255),Color3.fromRGB(255,255,180))
+	local star = Instance.new("Part")
+	star.Size = Vector3.new(0.5,0.5,3)
+	star.Position = startPos
+	star.Anchored = true
+	star.CanCollide = false
+	star.Material = Enum.Material.Neon
+	star.Color = color
+	star.Name = "ShootingStar"
+	star.Parent = shootingStarsFolder
+	local att0 = Instance.new("Attachment",star)
+	local att1 = Instance.new("Attachment",star)
+	att1.Position = Vector3.new(0,0,-3)
+	local trail = Instance.new("Trail",star)
+	trail.Attachment0 = att0
+	trail.Attachment1 = att1
+	trail.Lifetime = 0.35
+	trail.Color = trailColor
+	trail.LightEmission = 1
+	trail.WidthScale = NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(1,0)})
+	local light = Instance.new("PointLight",star)
+	light.Brightness = isFire and 12 or 7
+	light.Range = 35
+	light.Color = color
+	if isFire then
+		local fire = Instance.new("Fire",star)
+		fire.Heat = 15
+		fire.Size = 3.5
+		fire.Color = Color3.fromRGB(255,110,0)
+		fire.SecondaryColor = Color3.fromRGB(255,210,0)
+	end
+	local lifetime = math.random(1,1.5)
+	local timePassed = 0
+	local moveConn
+	moveConn = RunService.Heartbeat:Connect(function(dt)
+		if not active then moveConn:Disconnect() if star.Parent then star:Destroy() end return end
+		timePassed += dt
+		if timePassed >= lifetime then moveConn:Disconnect() if star.Parent then star:Destroy() end return end
+		local curve = math.sin(timePassed*20)*0.5
+		star.Position += (dir+Vector3.new(0,curve,0)).Unit*speed*dt
+	end)
+	Debris:AddItem(star,4)
+end
+
+local function updateSky()
+	local hour = Lighting.ClockTime
+	local shouldBeActive = hour >= 18 or hour < 6
+	if shouldBeActive and not active then
+		active = true
+		Lighting.FogColor = Color3.fromRGB(10,10,30)
+		Lighting.FogEnd = 5000
+		Lighting.Brightness = 2
+		for _,s in ipairs(stars) do if s and s.Parent then s:Destroy() end end
+		stars = {}
+		for _,p in ipairs(shootingStarsFolder:GetChildren()) do p:Destroy() end
+		for i=1,STAR_COUNT do createStar() end
+		spaceSound:Play()
+	elseif not shouldBeActive and active then
+		active = false
+		for _,s in ipairs(stars) do if s and s.Parent then s:Destroy() end end
+		stars = {}
+		for _,p in ipairs(shootingStarsFolder:GetChildren()) do p:Destroy() end
+		spaceSound:Stop()
+		Lighting.FogColor = Color3.fromRGB(192,192,192)
+		Lighting.FogEnd = 100000
+		Lighting.Brightness = 2
+	end
+end
+
+task.spawn(function()
+	while true do
+		if active then
+			for i=1,SHOOTING_STAR_MAX do
+				createShootingStar()
+				task.wait(shootingStarCooldown)
+			end
+		else
+			task.wait(1)
+		end
+	end
+end)
+
+task.spawn(function()
+	while true do
+		updateSky()
+		task.wait(1)
+	end
+end)
+
+local rainFolder = Instance.new("Folder",workspace)
+rainFolder.Name = "FakeRain"
+local isRaining = false
+
+local birds = Instance.new("Sound",SoundService)
+birds.SoundId = "rbxassetid://9111139882"
+birds.Volume = 0.2
+birds.Looped = true
+birds:Play()
+
+local rainSound = Instance.new("Sound",SoundService)
+rainSound.SoundId = "rbxassetid://9118823106"
+rainSound.Volume = 0.3
+rainSound.Looped = true
+rainSound:Play()
+
+local thunder = Instance.new("Sound",SoundService)
+thunder.SoundId = "rbxassetid://9120018695"
+thunder.Volume = 0.4
+
+local function updateBirdSound()
+	birds.Volume = isRaining and 0 or 0.2
+end
+
+local function spawnRain()
+	isRaining = true
+	updateBirdSound()
+	for i=1,120 do
+		local drop = Instance.new("Part")
+		drop.Size = Vector3.new(0.1,2,0.1)
+		drop.Anchored = true
+		drop.CanCollide = false
+		drop.Material = Enum.Material.Glass
+		drop.Transparency = 0.5
+		drop.Color = Color3.fromRGB(160,160,255)
+		drop.Position = Vector3.new(math.random(-150,150),100,math.random(-150,150))
+		drop.Parent = rainFolder
+		local tween = TweenService:Create(drop,TweenInfo.new(1),{Position=drop.Position-Vector3.new(0,60,0)})
+		tween:Play()
+		Debris:AddItem(drop,1.5)
+	end
+	wait(1.5)
+	isRaining = false
+	updateBirdSound()
+end
+
+local function lightningStrike()
+	local flash = Instance.new("Part")
+	flash.Size = Vector3.new(1,1000,1)
+	flash.Anchored = true
+	flash.CanCollide = false
+	flash.Transparency = 0.4
+	flash.Material = Enum.Material.Neon
+	flash.Color = Color3.new(1,1,1)
+	flash.Position = Vector3.new(math.random(-100,100),500,math.random(-100,100))
+	flash.Parent = workspace
+	Lighting.Brightness = Lighting.Brightness + 1.5
+	thunder:Play()
+	wait(0.1)
+	Lighting.Brightness = Lighting.Brightness - 1.5
+	flash:Destroy()
+end
+
+for _,part in pairs(workspace:GetDescendants()) do
+	if part:IsA("BasePart") and part.Material == Enum.Material.SmoothPlastic then
+		part.Reflectance = 0.25
+	end
+end
+
+task.spawn(function()
+	while true do
+		spawnRain()
+		if math.random() < 0.2 then lightningStrike() end
+		wait(1)
+	end
+end)
+
+-- Iluminação e ambiente geral
+Lighting.Brightness = 2
+Lighting.GlobalShadows = true
+Lighting.OutdoorAmbient = Color3.fromRGB(70, 70, 70)
+Lighting.FogColor = Color3.fromRGB(120, 130, 140)
+Lighting.FogStart = 80
+Lighting.FogEnd = 600
+Lighting.EnvironmentSpecularScale = 1
+Lighting.EnvironmentDiffuseScale = 0.5
+
+local sky = Instance.new("Sky")
+sky.SkyboxBk = "rbxassetid://159454299"
+sky.SkyboxDn = "rbxassetid://159454296"
+sky.SkyboxFt = "rbxassetid://159454293"
+sky.SkyboxLf = "rbxassetid://159454286"
+sky.SkyboxRt = "rbxassetid://159454300"
+sky.SkyboxUp = "rbxassetid://159454304"
+sky.Parent = Lighting
+
+local color = Instance.new("ColorCorrectionEffect", Lighting)
+color.Brightness = 0.03
+color.Contrast = 0.15
+color.Saturation = 0.05
+color.TintColor = Color3.fromRGB(255, 240, 220)
+
+local bloom = Instance.new("BloomEffect", Lighting)
+bloom.Intensity = 0.8
+bloom.Size = 56
+bloom.Threshold = 0.9
+
+local sunRays = Instance.new("SunRaysEffect", Lighting)
+sunRays.Intensity = 0.05
+sunRays.Spread = 0.8
+
+local blur = Instance.new("BlurEffect", Lighting)
+blur.Size = 0
+end})
+
+local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
+
+
+TrollTab:AddSection({ "ثقب اسود" })
+TrollTab:AddButton({
+    Name = "V2(هالة ابواب💥)",
+    Description = "تدوير الابواب والسيارات حول اللاعب",
+    Callback = function()
+    local Players, RunService, LocalPlayer, Workspace = game:GetService("Players"), game:GetService("RunService"), game:GetService("Players").LocalPlayer, game:GetService("Workspace")
+
+local gui = Instance.new("ScreenGui", game.CoreGui)
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 300, 0, 200)
+frame.Position = UDim2.new(0.4, 0, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(110, 0, 0)
+frame.Active = true
+frame.Draggable = true
+
+local nameBox = Instance.new("TextBox", frame)
+nameBox.Size = UDim2.new(0, 280, 0, 30)
+nameBox.Position = UDim2.new(0, 10, 0, 10)
+nameBox.PlaceholderText = "اكتب اسم اللاعب"
+nameBox.TextScaled = true
+
+local radiusBox = Instance.new("TextBox", frame)
+radiusBox.Size = UDim2.new(0, 280, 0, 30)
+radiusBox.Position = UDim2.new(0, 10, 0, 50)
+radiusBox.PlaceholderText = "اكتب نصف القطر"
+radiusBox.Text = "10"
+radiusBox.TextScaled = true
+
+local toggleButton = Instance.new("TextButton", frame)
+toggleButton.Size = UDim2.new(0, 280, 0, 30)
+toggleButton.Position = UDim2.new(0, 10, 0, 90)
+toggleButton.Text = "Bring | مطفي"
+toggleButton.TextScaled = true
+
+local modeButton = Instance.new("TextButton", frame)
+modeButton.Size = UDim2.new(0, 280, 0, 30)
+modeButton.Position = UDim2.new(0, 10, 0, 130)
+modeButton.Text = "الوضع : تجميع"
+modeButton.TextScaled = true
+
+local parts, active, rotateMode, connection = {}, false, false, nil
+local targetPlayer, hrp
+
+local function getPlayer(name)
+	for _, p in ipairs(Players:GetPlayers()) do
+		if p.Name:lower():find(name:lower()) or p.DisplayName:lower():find(name:lower()) then
+			return p
+		end
+	end
+end
+
+local function forcePart(part)
+	if part:IsA("BasePart") and not part.Anchored and not part.Parent:FindFirstChildOfClass("Humanoid") and part.Name ~= "Handle" then
+		for _, c in ipairs(part:GetChildren()) do
+			if c:IsA("BodyMover") or c:IsA("AlignPosition") then
+				c:Destroy()
+			end
+		end
+		part.CanCollide = false
+		local att = Instance.new("Attachment", part)
+		local align = Instance.new("AlignPosition", part)
+		align.Attachment0 = att
+		align.RigidityEnabled = false
+		align.Mode = Enum.PositionAlignmentMode.OneAttachment
+		align.MaxForce = 1e9
+		align.Responsiveness = 200
+		table.insert(parts, {part=part, att=att, align=align})
+	end
+end
+
+local function startBring()
+	active = true
+	toggleButton.Text = "Bring | شغال"
+	for _, v in ipairs(Workspace:GetDescendants()) do forcePart(v) end
+	connection = Workspace.DescendantAdded:Connect(forcePart)
+end
+
+local function stopBring()
+	active = false
+	toggleButton.Text = "Bring | مطفي"
+	if connection then connection:Disconnect() end
+	for _, p in ipairs(parts) do
+		if p.part and p.part:IsDescendantOf(Workspace) then
+			p.part.CanCollide = true
+			p.att:Destroy()
+			p.align:Destroy()
+		end
+	end
+	parts = {}
+end
+
+toggleButton.MouseButton1Click:Connect(function()
+	targetPlayer = getPlayer(nameBox.Text)
+	if targetPlayer then
+		hrp = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+		if hrp then
+			if not active then
+				startBring()
+			else
+				stopBring()
+			end
+		end
+	end
+end)
+
+modeButton.MouseButton1Click:Connect(function()
+	rotateMode = not rotateMode
+	modeButton.Text = rotateMode and "الوضع : دوران" or "الوضع : تجميع"
+end)
+
+RunService.Heartbeat:Connect(function()
+	if active and hrp then
+		local radius = tonumber(radiusBox.Text) or 10
+		local timeNow = tick()
+		for i, data in ipairs(parts) do
+			local part, att, align = data.part, data.att, data.align
+			if rotateMode then
+				local angle = (2 * math.pi / #parts) * i + timeNow*1.5
+				local pos = hrp.Position + Vector3.new(math.cos(angle)*radius, 3, math.sin(angle)*radius)
+				align.Position = pos
+			else
+				align.Position = hrp.Position + Vector3.new(0, 3, 0)
+			end
+		end
+	end
+end)
+
+    end
+})
+TrollTab:AddButton({
+    Name = "تجميد لاعبoff/on",
+    Description = "تجميد لاعب فقطoff/on",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/DezomXHub/DemozX/main/freezing.txt"))()
+    end
+})
+
+TrollTab:AddSection({ "تدبيل طيارات" })
+TrollTab:AddButton({
+    Name = "تدبيل طيارات عل سبون",
+    Description = "تدبيل طيارات يصمط السيرفر😉",
+    Callback = function()
+-- === ✅ سكربت تشغيل تدبير الطائرات (يعمل فورًا) ===
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local TextChatService = game:GetService("TextChatService")
+local player = Players.LocalPlayer
+
+-- === حفظ الموقع الأصلي فورًا ===
+local Character = player.Character or player.CharacterAdded:Wait()
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+local originalPosition = HumanoidRootPart.Position
+print("✅ تم حفظ الموقع الأصلي:", originalPosition)
+
+-- إعدادات الطائرات
+local clickDetector = Workspace.WorkspaceCom["001_Airport"].AirportHanger["001_JetCloneButton"].Button.ClickDetector
+local jetStorage = Workspace.WorkspaceCom["001_Airport"].AirportHanger["001_JetStorage"]
+local buttonPosition = Vector3.new(498.99, -19.52, 278.73)
+local targetPosition = Vector3.new(-26.20, 98.02, 17.45)
+local voidPosition = Vector3.new(0, -1000, 0)
+
+-- دالة: إيجاد أول جزء فيطري للطائرة
+local function getFirstPart(jet)
+    for _, part in ipairs(jet:GetDescendants()) do
+        if part:IsA("BasePart") then
+            return part
+        end
+    end
+    return nil
+end
+
+-- دالة: نقل الطائرة وتثبيتها
+local function teleportAndStabilizeJet(jet, position)
+    local primaryPart = getFirstPart(jet)
+    if not primaryPart then return false end
+    for _ = 1, 5 do
+        pcall(function()
+            jet.PrimaryPart = primaryPart
+            primaryPart.Anchored = false
+            jet:SetPrimaryPartCFrame(CFrame.new(position) * CFrame.Angles(0, math.rad(90), 0))
+            task.wait(0.5)
+            primaryPart.Velocity = Vector3.new(0, 0, 0)
+            primaryPart.RotVelocity = Vector3.new(0, 0, 0)
+        end)
+        if jet.PrimaryPart and (jet.PrimaryPart.Position - position).Magnitude < 10 then
+            return true
+        end
+        task.wait(0.5)
+    end
+    return false
+end
+
+-- إزالة الطائرات القديمة
+for _, jet in ipairs(jetStorage:GetChildren()) do
+    if jet:IsA("Model") then
+        local primaryPart = getFirstPart(jet)
+        if primaryPart and (primaryPart.Position - buttonPosition).Magnitude < 50 then
+            teleportAndStabilizeJet(jet, voidPosition)
+            task.wait(0.5)
+        end
+    end
+end
+
+-- إرسال رسالة في الشات
+if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("hi\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer:🚀[DemoZHub]")
+else 
+    print("Nadaa")
+end
+
+-- === بدء سبام الطائرات ===
+local running = true
+local loop = RunService.Heartbeat:Connect(function()
+    if not running then return end
+
+    -- النقر على زر إنشاء الطائرة
+    fireclickdetector(clickDetector)
+
+    -- نقل اللاعب إلى زر الطائرة
+    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        player.Character:SetPrimaryPartCFrame(CFrame.new(buttonPosition))
+    end
+
+    task.wait(0.5)
+
+    -- انتظار طائرة جديدة
+    local newJet = nil
+    for _ = 1, 10 do
+        for _, jet in ipairs(jetStorage:GetChildren()) do
+            if jet:IsA("Model") and not newJet then
+                local primaryPart = getFirstPart(jet)
+                if primaryPart and (primaryPart.Position - buttonPosition).Magnitude < 100 then
+                    newJet = jet
+                    break
+                end
+            end
+        end
+        if newJet then break end
+        task.wait(0.5)
+    end
+
+    -- نقل الطائرة إلى الهدف
+    if newJet then
+        while running and not teleportAndStabilizeJet(newJet, targetPosition) do
+            task.wait(0.5)
+        end
+    else
+        task.wait(0.5)
+    end
+end)
+
+-- حفظ الحلقة والموقع للاستخدام لاحقًا (مفيد للإيقاف)
+_G.AirplaneSpam = {
+    Loop = loop,
+    OriginalPosition = originalPosition,
+    Running = running
+}
+
+print("🚀 تم تشغيل تدبير الطائرات!")
+  end
+})
+TrollTab:AddButton({
+    Name = "ايقاف",
+    Description = "",
+    Callback = function()
+-- 🛑 لإيقاف السبام وإعادة اللاعب:
+if _G.AirplaneSpam and _G.AirplaneSpam.Loop then
+    _G.AirplaneSpam.Loop:Disconnect()
+    game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(_G.AirplaneSpam.OriginalPosition))
+    print("🛑 تم الإيقاف")
+end
+    end
+})
+
+
+
+TrollTab:AddSection({ "سكربت الابواب" })
+TrollTab:AddButton({
+    Name = " سكربت ابواب الجديدV2",
+    Description = "اكتب هنا اسم لاعب وشغل اذا نا صار شي فعل طيران وجمع ابواب ",
+    Callback = function()
+        -- Gui to
+-- Version: 3.2
+
+-- Gui to Lua - إصدار كامل مع زر Toggle وBring Parts
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+
+-- GUI
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "Gui"
+Gui.Parent = gethui and gethui() or game.CoreGui
+Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Parent = Gui
+Main.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+Main.BorderColor3 = Color3.fromRGB(120, 0, 0)
+Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.33, 0, 0.54, 0)
+Main.Size = UDim2.new(0.24, 0, 0.17, 0)
+Main.Active = true
+Main.Draggable = true
+
+local Box = Instance.new("TextBox")
+Box.Name = "Box"
+Box.Parent = Main
+Box.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
+Box.BorderSizePixel = 0
+Box.Position = UDim2.new(0.1, 0, 0.22, 0)
+Box.Size = UDim2.new(0.8, 0, 0.37, 0)
+Box.Font = Enum.Font.SourceSansBold
+Box.PlaceholderText = "Player here"
+Box.Text = ""
+Box.TextColor3 = Color3.fromRGB(255, 255, 255)
+Box.TextScaled = true
+Box.TextWrapped = true
+local UITextSizeConstraint = Instance.new("UITextSizeConstraint", Box)
+UITextSizeConstraint.MaxTextSize = 31
+
+local Label = Instance.new("TextLabel")
+Label.Name = "Label"
+Label.Parent = Main
+Label.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+Label.BorderSizePixel = 2
+Label.Size = UDim2.new(1, 0, 0.16, 0)
+Label.Font = Enum.Font.Nunito
+Label.Text = "المطور: Rami | BY @Sajwaad"
+Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+Label.TextScaled = true
+Label.TextWrapped = true
+local UITextSizeConstraint_2 = Instance.new("UITextSizeConstraint", Label)
+UITextSizeConstraint_2.MaxTextSize = 21
+
+local Button = Instance.new("TextButton")
+Button.Name = "Button"
+Button.Parent = Main
+Button.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+Button.BorderSizePixel = 2
+Button.Position = UDim2.new(0.18, 0, 0.65, 0)
+Button.Size = UDim2.new(0.63, 0, 0.28, 0)
+Button.Font = Enum.Font.Nunito
+Button.Text = "Bring | مطفي"
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.TextWrapped = true
+local UITextSizeConstraint_3 = Instance.new("UITextSizeConstraint", Button)
+UITextSizeConstraint_3.MaxTextSize = 28
+
+local ToggleButton = Instance.new("ImageButton")
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Parent = Gui
+ToggleButton.BackgroundTransparency = 0.3
+ToggleButton.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+ToggleButton.BorderSizePixel = 0
+ToggleButton.Position = UDim2.new(0.01, 0, 0.45, 0)
+ToggleButton.Size = UDim2.new(0.05, 0, 0.09, 0)
+ToggleButton.Image = "rbxassetid://107728948792167"
+ToggleButton.Active = true
+ToggleButton.Draggable = true
+
+-- Bring Parts System
+local character
+local humanoidRootPart
+local player = nil
+local blackHoleActive = false
+local DescendantAddedConnection
+
+local Folder = Instance.new("Folder", Workspace)
+local Part = Instance.new("Part", Folder)
+local Attachment1 = Instance.new("Attachment", Part)
+Part.Anchored = true
+Part.CanCollide = false
+Part.Transparency = 1
+
+getgenv().Network = getgenv().Network or {
+    BaseParts = {},
+    Velocity = Vector3.new(14.46, 14.46, 14.46)
+}
+
+local function RetainPart(Part)
+    if Part:IsA("BasePart") and Part:IsDescendantOf(Workspace) then
+        table.insert(Network.BaseParts, Part)
+        Part.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+        Part.CanCollide = false
+    end
+end
+
+RunService.Heartbeat:Connect(function()
+    sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
+    for _, Part in pairs(Network.BaseParts) do
+        if Part:IsDescendantOf(Workspace) then
+            Part.Velocity = Network.Velocity
+        end
+    end
+end)
+
+local function ForcePart(v)
+    if v:IsA("BasePart") and not v.Anchored and not v.Parent:FindFirstChildOfClass("Humanoid") and not v.Parent:FindFirstChild("Head") and v.Name ~= "Handle" then
+        for _, x in ipairs(v:GetChildren()) do
+            if x:IsA("BodyMover") or x:IsA("RocketPropulsion") then
+                x:Destroy()
+            end
+        end
+        for _, name in pairs({"Attachment", "AlignPosition", "Torque"}) do
+            if v:FindFirstChild(name) then v:FindFirstChild(name):Destroy() end
+        end
+        v.CanCollide = false
+        local Torque = Instance.new("Torque", v)
+        Torque.Torque = Vector3.new(100000, 100000, 100000)
+        local AlignPosition = Instance.new("AlignPosition", v)
+        local Attachment2 = Instance.new("Attachment", v)
+        Torque.Attachment0 = Attachment2
+        AlignPosition.MaxForce = math.huge
+        AlignPosition.MaxVelocity = math.huge
+        AlignPosition.Responsiveness = 200
+        AlignPosition.Attachment0 = Attachment2
+        AlignPosition.Attachment1 = Attachment1
+    end
+end
+
+local function toggleBlackHole()
+    blackHoleActive = not blackHoleActive
+    if blackHoleActive then
+        Button.Text = "Bring | شغال"
+        for _, v in ipairs(Workspace:GetDescendants()) do
+            ForcePart(v)
+        end
+        DescendantAddedConnection = Workspace.DescendantAdded:Connect(function(v)
+            if blackHoleActive then ForcePart(v) end
+        end)
+        spawn(function()
+            while blackHoleActive and RunService.RenderStepped:Wait() do
+                Attachment1.WorldCFrame = humanoidRootPart.CFrame
+            end
+        end)
+    else
+        Button.Text = "Bring | مطفي"
+        if DescendantAddedConnection then DescendantAddedConnection:Disconnect() end
+    end
+end
+
+local function getPlayer(name)
+    local lowerName = string.lower(name)
+    for _, p in pairs(Players:GetPlayers()) do
+        if string.find(string.lower(p.Name), lowerName) or string.find(string.lower(p.DisplayName), lowerName) then
+            return p
+        end
+    end
+end
+
+Box.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        player = getPlayer(Box.Text)
+        if player then
+            Box.Text = player.Name
+        end
+    end
+end)
+
+Button.MouseButton1Click:Connect(function()
+    if player then
+        character = player.Character or player.CharacterAdded:Wait()
+        humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        toggleBlackHole()
+    end
+end)
+
+ToggleButton.MouseButton1Click:Connect(function()
+    Main.Visible = not Main.Visible
+end)
+
+    end
+})
+
+TrollTab:AddSection({ "اختفاء" })
+
+TrollTab:AddButton({
+    Name = "اختفاء",
+    Description = "سكن مخفي حقيقي",
+Callback = function()
+        
+        local args = {
+    [1] = {
+        [1] = 102344834840946,
+        [2] = 70400527171038,
+        [3] = 0,
+        [4] = 0,
+        [5] = 0,
+        [6] = 0
+    }
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(111858803548721)
+local allaccessories = {}
+
+for zxcwefwfecas, xcaefwefas in ipairs({
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.BackAccessory,
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.FaceAccessory,
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.FrontAccessory,
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.NeckAccessory,
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.HatAccessory,
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.HairAccessory,
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.ShouldersAccessory,
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.WaistAccessory,
+    game.Players.LocalPlayer.Character.Humanoid.HumanoidDescription.GraphicTShirt
+}) do
+    for scacvdfbdb in string.gmatch(xcaefwefas, "%d+") do
+        table.insert(allaccessories, tonumber(scacvdfbdb))
+    end
+end
+
+wait()
+
+for asdwr,asderg in ipairs(allaccessories) do
+    task.spawn(function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(asderg)
+        print(asderg)
+    end)
+end
+    end
+})
+
+
+TrollTab:AddSection({ "بشرة ملونة" })
+
+local colors = { "Bright red", "Lime green", "Bright blue", "Bright yellow", "Bright cyan", "Hot pink", "Royal purple" }
+local rgbEnabled = false
+
+local function changeColor(color)
+    local args = { color }
+    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeBodyColor"):FireServer(unpack(args))
+end
+
+local function toggleRGBCharacter(enabled)
+    rgbEnabled = enabled
+    if rgbEnabled then
+        while rgbEnabled do
+            for _, color in ipairs(colors) do
+                if not rgbEnabled then return end
+                changeColor(color)
+                wait(0.5)
+            end
+        end
+    end
+end
+
+TrollTab:AddToggle({
+    Name = "تلوين البشرة",
+    Description = "RGB",
+    Default = false,
+    Callback = function(value)
+        toggleRGBCharacter(value)
+    end
+})
+
+
+TrollTab:AddSection({ "تلوين الشعر" })
+local hairColors = {
+    Color3.new(1, 1, 0), Color3.new(0, 0, 1), Color3.new(1, 0, 1), Color3.new(1, 1, 1),
+    Color3.new(0, 1, 0), Color3.new(0.5, 0, 1), Color3.new(1, 0.647, 0), Color3.new(0, 1, 1)
+}
+local isActive = false
+
+
+local function changeHairColor()
+    local i = 1
+    while isActive do
+        if not isActive then break end
+        local args = { [1] = "ChangeHairColor2", [2] = hairColors[i] }
+        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Max1y"):FireServer(unpack(args))
+        wait(0.1)
+        i = i % #hairColors + 1
+    end
+end
+
+
+TrollTab:AddToggle({
+    Name = "شعر ملون",
+    Description = "",
+    Default = false,
+    Callback = function(value)
+        isActive = value
+        if isActive then
+            changeHairColor()
+        end
+    end
+})
+
+
+-- Tab 4: Anti Sit
+TrollTab:AddSection({ "" })
+TrollTab:AddToggle({
+    Name = "مضاد جلوس",
+    Description = "",
+    Default = false,
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        local connections = {}
+        local runService = game:GetService("RunService")
+
+
+        local function preventSitting(humanoid)
+            if humanoid then
+                humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                local sitConnection = humanoid.StateChanged:Connect(function(_, newState)
+                    if newState == Enum.HumanoidStateType.Seated then
+                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                    end
+                end)
+                table.insert(connections, sitConnection)
+            end
+        end
+
+
+        local function monitorCharacter()
+            local function onCharacterAdded(character)
+                local humanoid = character:WaitForChild("Humanoid")
+                preventSitting(humanoid)
+            end
+
+
+            local characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
+            table.insert(connections, characterAddedConnection)
+
+
+            if player.Character then
+                onCharacterAdded(player.Character)
+            end
+        end
+
+
+        local function resetSitting()
+            for _, connection in ipairs(connections) do
+                connection:Disconnect()
+            end
+            connections = {}
+            local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+            end
+        end
+
+
+        if Value then
+            monitorCharacter()
+            local heartbeatConnection = runService.Heartbeat:Connect(function()
+                local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                end
+            end)
+            table.insert(connections, heartbeatConnection)
+        else
+            resetSitting()
+        end
+    end
+})
+
