@@ -1,7 +1,7 @@
 local allowedAdmins = {
-    ["mariam12269865"] = true,
-    ["youssef126608"] = true,
-    ["omlabanblsokar2"] = true
+    ["Raef_black1"] = true,
+    ["Raef_black1"] = true,
+    ["Raef_black1"] = true
 }
 
 local Players = game:GetService("Players")
