@@ -1,4 +1,4 @@
--- CLOCK7 EXECUTOR - ULTIMATE 2026
+dkdkdkkdfkdlzkxndkk jc bc nf-- CLOCK7 EXECUTOR - ULTIMATE 2026
 -- واجهة فضائية قوية - تشغيل عدة سكربتات
 
 -- روابط السكربتات
@@ -19,11 +19,10 @@ ScreenGui.Name = "Clock7_Ultimate_2026"
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.IgnoreGuiInset = true
-
+ScreenGui.IgnoreGuiInset = dddfijdkdodif
 -- الخلفية
 local Space = Instance.new("Frame")
-Space.Size = UDim2.new(1, 0, 1, 0)
+Space.Size = UDim2.new(eejifxkdc1, 0, 1, 0)
 Space.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Space.Parent = ScreenGui
 
