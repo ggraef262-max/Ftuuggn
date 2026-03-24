@@ -5830,3 +5830,220 @@ end
 botaoMinimizar.MouseButton1Down:Connect(alternarBotoes)    
     end
 })
+
+-- إنشاء التاب الرئيسي
+local BangTab = Window:MakeTab({"بانق", "rbxassetid://"})
+
+-- الحصول على الخدمات
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- المتغيرات العامة
+getgenv().selectedPlayer = nil
+local Dropdown = nil
+
+-- ==================== الدوال المساعدة ====================
+
+-- دالة لتحديث قائمة اللاعبين (لـ Bang)
+local function updateBangPlayerList()
+    local playerNames = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(playerNames, player.Name)
+        end
+    end
+    return playerNames
+end
+
+local function rebuildBangDropdown()
+    if Dropdown then Dropdown:Destroy() end
+    local playerNames = updateBangPlayerList()
+    Dropdown = BangTab:AddDropdown({
+        Name = "حدد لاعب",
+        Options = playerNames,
+        Default = "",
+        Callback = function(Value)
+            getgenv().selectedPlayer = Value
+        end
+    })
+end
+
+-- دالة لتحديث قائمة اللاعبين (لـ Head Sit)
+local function updatePlayerList()
+    local playersList = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(playersList, player.Name)
+        end
+    end
+    return playersList
+end
+
+-- ==================== قسم Bang ====================
+
+rebuildBangDropdown()
+Players.PlayerAdded:Connect(rebuildBangDropdown)
+Players.PlayerRemoving:Connect(rebuildBangDropdown)
+
+-- دالة إنشاء أزرار Bang
+local function createBangToggle(name, yOffset, faceBang)
+    local bangActive = false
+    local connection = nil
+    local togglePosition = false
+    
+    BangTab:AddToggle({
+        Name = name,
+        Default = false,
+        Callback = function(Value)
+            bangActive = Value
+            local char = LocalPlayer.Character
+            if not char then return end
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if not humanoid then return end
+            
+            if Value then
+                humanoid.PlatformStand = true
+                if connection then connection:Disconnect() end
+                connection = RunService.Heartbeat:Connect(function()
+                    if bangActive and getgenv().selectedPlayer then
+                        local targetPlayer = Players:FindFirstChild(getgenv().selectedPlayer)
+                        if targetPlayer and targetPlayer.Character and targetPlayer.Character.PrimaryPart then
+                            local targetHead = targetPlayer.Character:FindFirstChild("Head")
+                            if targetHead and char.PrimaryPart then
+                                local offset = (togglePosition and 1) or 4
+                                if faceBang then
+                                    char:SetPrimaryPartCFrame(targetHead.CFrame * CFrame.new(0, 1, -offset) * CFrame.Angles(0, math.rad(180), 0))
+                                else
+                                    char:SetPrimaryPartCFrame(targetHead.CFrame * CFrame.new(0, yOffset, offset))
+                                end
+                                togglePosition = not togglePosition
+                                task.wait(1)
+                            end
+                        end
+                    end
+                end)
+            else
+                humanoid.PlatformStand = false
+                if connection then connection:Disconnect() end
+            end
+        end
+    })
+end
+
+-- إنشاء أزرار Bang
+createBangToggle("Bang v1 | خلفي v1", -1, false)
+createBangToggle("Bang v2 | خلفي v2", -1.5, false)
+createBangToggle("Face Bang v1 | أمامي v1", 1, true)
+createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
+
+-- ==================== قسم Head Sit ====================
+
+local HeadSitSection = BangTab:AddSection({
+    Name = "الجلوس فوق راس"
+})
+
+local selectedHeadSit = nil
+local headSitConnection = nil
+local headSitDropdown = nil
+
+-- إنشاء القائمة المنسدلة لـ Head Sit
+local function rebuildHeadSitDropdown()
+    if headSitDropdown then
+        pcall(function()
+            headSitDropdown:Destroy()
+        end)
+    end
+    
+    local playersList = updatePlayerList()
+    headSitDropdown = HeadSitSection:AddDropdown({
+        Name = "اختيار لاعب",
+        Default = "",
+        Options = playersList,
+        Callback = function(Value)
+            selectedHeadSit = Value
+        end
+    })
+end
+
+-- دالة لتحديث القائمة (للزر)
+local function refreshHeadSitDropdown()
+    local updatedPlayers = updatePlayerList()
+    if headSitDropdown and updatedPlayers then
+        pcall(function()
+            headSitDropdown:Refresh(updatedPlayers)
+        end)
+        if selectedHeadSit and not Players:FindFirstChild(selectedHeadSit) then
+            selectedHeadSit = nil
+            pcall(function()
+                headSitDropdown:Set("")
+            end)
+        end
+    end
+end
+
+-- إنشاء القائمة لأول مرة
+rebuildHeadSitDropdown()
+
+-- تحديث القائمة عند دخول أو خروج لاعب
+Players.PlayerAdded:Connect(refreshHeadSitDropdown)
+Players.PlayerRemoving:Connect(refreshHeadSitDropdown)
+
+-- إضافة Toggle الجلوس
+HeadSitSection:AddToggle({
+    Name = "جلوس فوق راس اللاعب",
+    Default = false,
+    Callback = function(bool)
+        local player = LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        local humanoid = character:WaitForChild("Humanoid")
+
+        if not selectedHeadSit or selectedHeadSit == "" then
+            warn("الرجاء اختيار لاعب!")
+            return false
+        end
+
+        local selectedPlayer = Players:FindFirstChild(selectedHeadSit)
+
+        if bool then
+            if selectedPlayer and selectedPlayer.Character then
+                humanoid.Sit = true
+
+                if headSitConnection then
+                    headSitConnection:Disconnect()
+                end
+
+                headSitConnection = RunService.Heartbeat:Connect(function()
+                    if selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("Head") and humanoid.Sit then
+                        local targetHead = selectedPlayer.Character.Head
+                        humanoidRootPart.CFrame = targetHead.CFrame * CFrame.Angles(0, 0, 0) * CFrame.new(0, 1.6, 0.4)
+                    else
+                        if headSitConnection then
+                            headSitConnection:Disconnect()
+                            headSitConnection = nil
+                            humanoid.Sit = false
+                        end
+                    end
+                end)
+            else
+                warn("اللاعب المختار غير موجود!")
+                return false
+            end
+        else
+            if headSitConnection then
+                headSitConnection:Disconnect()
+                headSitConnection = nil
+            end
+            humanoid.Sit = false
+        end
+    end
+})
+
+-- زر تحديث القائمة
+HeadSitSection:AddButton({
+    Name = "تحديث قائمة اللاعبين",
+    Callback = function()
+        refreshHeadSitDropdown()
+    end
+})
