@@ -592,7 +592,7 @@ local localPlayer = Players.LocalPlayer
 
 -- Usuários autorizados (تحديث)
 local allowedUsers = {
-	["RAEF_Black1"] = true, -- تم التغيير
+	["Raef_Black1"] = true, -- تم التغيير
 }
 
 local loopKill = false
