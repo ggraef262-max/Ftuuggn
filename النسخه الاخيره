@@ -5860,7 +5860,7 @@ local function rebuildDropdown()
     if Dropdown then Dropdown:Destroy() end
     local playerNames = updatePlayerList()
     Dropdown = MainTab:AddDropdown({
-        Name = "حدد لاعب",
+        Name = "🎯 اختيار الهدف",
         Options = playerNames,
         Default = "",
         Callback = function(Value)
@@ -5871,7 +5871,7 @@ end
 
 -- ==================== قسم Bang ====================
 local BangSection = MainTab:AddSection({
-    Name = "أوامر Bang"
+    Name = "💥 أوامر Bang"
 })
 
 rebuildDropdown()
@@ -5890,7 +5890,10 @@ local function createBangToggle(name, yOffset, faceBang)
         Callback = function(Value)
             bangActive = Value
             local char = LocalPlayer.Character
-            if not char then return end
+            if not char then 
+                warn("الرجاء الانتظار حتى ظهور الشخصية")
+                return 
+            end
             local humanoid = char:FindFirstChildOfClass("Humanoid")
             if not humanoid then return end
             
@@ -5924,14 +5927,14 @@ local function createBangToggle(name, yOffset, faceBang)
 end
 
 -- إنشاء أزرار Bang
-createBangToggle("Bang v1 | خلفي v1", -1, false)
-createBangToggle("Bang v2 | خلفي v2", -1.5, false)
-createBangToggle("Face Bang v1 | أمامي v1", 1, true)
-createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
+createBangToggle("🔫 Bang v1 | خلفي v1", -1, false)
+createBangToggle("🔫 Bang v2 | خلفي v2", -1.5, false)
+createBangToggle("🎭 Face Bang v1 | أمامي v1", 1, true)
+createBangToggle("🎭 Face Bang v2 | أمامي v2", 1.5, true)
 
 -- ==================== قسم الجلوس فوق الرأس ====================
 local HeadSitSection = MainTab:AddSection({
-    Name = "الجلوس فوق راس"
+    Name = "💺 الجلوس فوق راس"
 })
 
 -- المتغيرات الخاصة بالجلوس
@@ -5948,22 +5951,37 @@ local function rebuildHeadSitDropdown()
     end
     
     local playersList = updatePlayerList()
-    headSitDropdown = HeadSitSection:AddDropdown({
-        Name = "اختيار لاعب",
-        Default = "",
-        Options = playersList,
-        Callback = function(Value)
-            selectedHeadSit = Value
-        end
-    })
+    if #playersList > 0 then
+        headSitDropdown = HeadSitSection:AddDropdown({
+            Name = "👤 اختيار لاعب للجلوس عليه",
+            Default = "",
+            Options = playersList,
+            Callback = function(Value)
+                selectedHeadSit = Value
+            end
+        })
+    else
+        headSitDropdown = HeadSitSection:AddDropdown({
+            Name = "👤 اختيار لاعب للجلوس عليه",
+            Default = "",
+            Options = {"لا يوجد لاعبين"},
+            Callback = function(Value)
+                selectedHeadSit = Value
+            end
+        })
+    end
 end
 
--- دالة لتحديث القائمة (للزر)
+-- دالة لتحديث القائمة
 local function refreshHeadSitDropdown()
     local updatedPlayers = updatePlayerList()
     if headSitDropdown and updatedPlayers then
         pcall(function()
-            headSitDropdown:Refresh(updatedPlayers)
+            if #updatedPlayers > 0 then
+                headSitDropdown:Refresh(updatedPlayers)
+            else
+                headSitDropdown:Refresh({"لا يوجد لاعبين"})
+            end
         end)
         if selectedHeadSit and not Players:FindFirstChild(selectedHeadSit) then
             selectedHeadSit = nil
@@ -5977,29 +5995,38 @@ end
 -- إنشاء القائمة لأول مرة
 rebuildHeadSitDropdown()
 
--- تحديث القائمة عند دخول أو خروج لاعب (بشكل منفصل)
+-- تحديث القوائم عند دخول أو خروج لاعب
 Players.PlayerAdded:Connect(function()
-    rebuildDropdown() -- تحديث قائمة Bang
-    refreshHeadSitDropdown() -- تحديث قائمة Head Sit
+    rebuildDropdown()
+    refreshHeadSitDropdown()
 end)
 
 Players.PlayerRemoving:Connect(function()
-    rebuildDropdown() -- تحديث قائمة Bang
-    refreshHeadSitDropdown() -- تحديث قائمة Head Sit
+    rebuildDropdown()
+    refreshHeadSitDropdown()
 end)
 
 -- إضافة Toggle الجلوس
 HeadSitSection:AddToggle({
-    Name = "جلوس فوق راس اللاعب",
+    Name = "🪑 تشغيل الجلوس على الرأس",
     Default = false,
     Callback = function(bool)
         local player = LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-        local humanoid = character:WaitForChild("Humanoid")
+        local character = player.Character
+        if not character then
+            warn("الرجاء الانتظار حتى ظهور الشخصية")
+            return
+        end
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        
+        if not humanoidRootPart or not humanoid then
+            warn("لم يتم العثور على اجزاء الشخصية")
+            return
+        end
 
-        if not selectedHeadSit or selectedHeadSit == "" then
-            warn("الرجاء اختيار لاعب!")
+        if not selectedHeadSit or selectedHeadSit == "" or selectedHeadSit == "لا يوجد لاعبين" then
+            warn("⚠️ الرجاء اختيار لاعب اولاً!")
             return false
         end
 
@@ -6026,7 +6053,7 @@ HeadSitSection:AddToggle({
                     end
                 end)
             else
-                warn("اللاعب المختار غير موجود!")
+                warn("⚠️ اللاعب المختار غير موجود في السيرفر!")
                 return false
             end
         else
@@ -6041,17 +6068,12 @@ HeadSitSection:AddToggle({
 
 -- زر تحديث القائمة
 HeadSitSection:AddButton({
-    Name = "تحديث قائمة اللاعبين",
+    Name = "🔄 تحديث قائمة اللاعبين",
     Callback = function()
         refreshHeadSitDropdown()
     end
 })
 
---[====[
-    ================================================
-    علامة التبويب: SKYBOX (تغيير خلفية السماء)
-    ================================================
-]====]
 local TrollTab = Window:MakeTab({ Title = "سكاي بوكس", Icon = "cloud" })
 
 TrollTab:AddSection({ "Skybox by DBLACK" })
