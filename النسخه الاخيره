@@ -6416,7 +6416,6 @@ TrollTab:AddToggle({
     end
 })
 
-
 -- 1. تبويب الرؤوس
 local HeadsTab = Window:CreateTab("الـرؤوس", 4483362458)
 HeadsTab:CreateSection("الرؤوس المطلوبة")
