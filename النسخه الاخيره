@@ -5831,8 +5831,8 @@ botaoMinimizar.MouseButton1Down:Connect(alternarBotoes)
     end
 })
 
--- ==================== التاب الأول: بانق ====================
-local BangTab = Window:MakeTab({"بانق", "rbxassetid://"})
+-- ==================== التاب الرئيسي ====================
+local MainTab = Window:MakeTab({"بانق", "rbxassetid://"})
 
 -- الحصول على الخدمات
 local Players = game:GetService("Players")
@@ -5845,8 +5845,8 @@ local Dropdown = nil
 
 -- ==================== الدوال المساعدة ====================
 
--- دالة لتحديث قائمة اللاعبين (لـ Bang)
-local function updateBangPlayerList()
+-- دالة لتحديث قائمة اللاعبين
+local function updatePlayerList()
     local playerNames = {}
     for _, player in ipairs(Players:GetPlayers()) do
         if player ~= LocalPlayer then
@@ -5856,10 +5856,10 @@ local function updateBangPlayerList()
     return playerNames
 end
 
-local function rebuildBangDropdown()
+local function rebuildDropdown()
     if Dropdown then Dropdown:Destroy() end
-    local playerNames = updateBangPlayerList()
-    Dropdown = BangTab:AddDropdown({
+    local playerNames = updatePlayerList()
+    Dropdown = MainTab:AddDropdown({
         Name = "حدد لاعب",
         Options = playerNames,
         Default = "",
@@ -5870,10 +5870,13 @@ local function rebuildBangDropdown()
 end
 
 -- ==================== قسم Bang ====================
+local BangSection = MainTab:AddSection({
+    Name = "أوامر Bang"
+})
 
-rebuildBangDropdown()
-Players.PlayerAdded:Connect(rebuildBangDropdown)
-Players.PlayerRemoving:Connect(rebuildBangDropdown)
+rebuildDropdown()
+Players.PlayerAdded:Connect(rebuildDropdown)
+Players.PlayerRemoving:Connect(rebuildDropdown)
 
 -- دالة إنشاء أزرار Bang
 local function createBangToggle(name, yOffset, faceBang)
@@ -5881,7 +5884,7 @@ local function createBangToggle(name, yOffset, faceBang)
     local connection = nil
     local togglePosition = false
     
-    BangTab:AddToggle({
+    BangSection:AddToggle({
         Name = name,
         Default = false,
         Callback = function(Value)
@@ -5926,24 +5929,15 @@ createBangToggle("Bang v2 | خلفي v2", -1.5, false)
 createBangToggle("Face Bang v1 | أمامي v1", 1, true)
 createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
 
--- ==================== التاب الثاني: الجلوس فوق الرأس ====================
-local HeadSitTab = Window:MakeTab({"الجلوس على راس", "rbxassetid://"})
+-- ==================== قسم الجلوس فوق الرأس ====================
+local HeadSitSection = MainTab:AddSection({
+    Name = "الجلوس فوق راس"
+})
 
--- المتغيرات الخاصة بالتاب الثاني
+-- المتغيرات الخاصة بالجلوس
 local selectedHeadSit = nil
 local headSitConnection = nil
 local headSitDropdown = nil
-
--- دالة لتحديث قائمة اللاعبين (لـ Head Sit)
-local function updatePlayerList()
-    local playersList = {}
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            table.insert(playersList, player.Name)
-        end
-    end
-    return playersList
-end
 
 -- إنشاء القائمة المنسدلة لـ Head Sit
 local function rebuildHeadSitDropdown()
@@ -5954,7 +5948,7 @@ local function rebuildHeadSitDropdown()
     end
     
     local playersList = updatePlayerList()
-    headSitDropdown = HeadSitTab:AddDropdown({
+    headSitDropdown = HeadSitSection:AddDropdown({
         Name = "اختيار لاعب",
         Default = "",
         Options = playersList,
@@ -5983,12 +5977,19 @@ end
 -- إنشاء القائمة لأول مرة
 rebuildHeadSitDropdown()
 
--- تحديث القائمة عند دخول أو خروج لاعب
-Players.PlayerAdded:Connect(refreshHeadSitDropdown)
-Players.PlayerRemoving:Connect(refreshHeadSitDropdown)
+-- تحديث القائمة عند دخول أو خروج لاعب (بشكل منفصل)
+Players.PlayerAdded:Connect(function()
+    rebuildDropdown() -- تحديث قائمة Bang
+    refreshHeadSitDropdown() -- تحديث قائمة Head Sit
+end)
+
+Players.PlayerRemoving:Connect(function()
+    rebuildDropdown() -- تحديث قائمة Bang
+    refreshHeadSitDropdown() -- تحديث قائمة Head Sit
+end)
 
 -- إضافة Toggle الجلوس
-HeadSitTab:AddToggle({
+HeadSitSection:AddToggle({
     Name = "جلوس فوق راس اللاعب",
     Default = false,
     Callback = function(bool)
@@ -6039,7 +6040,7 @@ HeadSitTab:AddToggle({
 })
 
 -- زر تحديث القائمة
-HeadSitTab:AddButton({
+HeadSitSection:AddButton({
     Name = "تحديث قائمة اللاعبين",
     Callback = function()
         refreshHeadSitDropdown()
