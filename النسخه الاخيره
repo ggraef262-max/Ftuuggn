@@ -104,7 +104,7 @@ end
 
 setRPName("Clock7")
 setRPNameColor(Color3.fromRGB(0, 0, 139))
-task.wait(0.1)
+wait(0.1)
 setRPBio("البحت:CLOCK7")
 setRPBioColor(Color3.new(0, 0, 0))
 
@@ -156,12 +156,23 @@ local infoTab = Window:MakeTab({
     Icon = "rbxassetid://" .. IMAGE_ID
 })
 
--- تصحيح الخطأ: تغيير InfoTab إلى infoTab
 infoTab:AddDiscordInvite({
-    Name = "CLOCK7مطورين", -- تغيير الاسم
-    Description = "تليجرام",
-    Logo = "rbxassetid://90798133906684",
-    Invite = "انتظرونا اسفيين",
+    Name = "قناة التليجرام",
+    Description = "انضم لقناتنا على التليجرام",
+    Logo = "rbxassetid://" .. IMAGE_ID,
+    Invite = ""
+})
+
+infoTab:AddSection({ "مطوري السكربت" })
+infoTab:AddParagraph({ "المطور:", "DBLACK" })
+infoTab:AddParagraph({ "للتواصل او لي اعطاء نصائح:", "التلجرام:-XlEAQ1" })
+
+infoTab:AddSection({ "إعادة الدخول" })
+infoTab:AddButton({
+    Name = "إعادة الدخول إلى السيرفر",
+    Callback = function()
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+    end
 })
 
 infoTab:AddSection({ "معلومات السكربت" })
