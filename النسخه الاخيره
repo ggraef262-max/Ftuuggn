@@ -104,7 +104,7 @@ end
 
 setRPName("Clock7")
 setRPNameColor(Color3.fromRGB(0, 0, 139))
-wait(0.1)
+task.wait(0.1)
 setRPBio("البحت:CLOCK7")
 setRPBioColor(Color3.new(0, 0, 0))
 
@@ -156,24 +156,31 @@ local infoTab = Window:MakeTab({
     Icon = "rbxassetid://" .. IMAGE_ID
 })
 
-InfoTab:AddDiscordInvite({
+-- تصحيح الخطأ: تغيير InfoTab إلى infoTab
+infoTab:AddDiscordInvite({
     Name = "CLOCK7مطورين", -- تغيير الاسم
     Description = "تليجرام",
     Logo = "rbxassetid://90798133906684",
     Invite = "انتظرونا اسفيين",
 })
-InfoTab:AddSection({ "معلومات السكربت" })
-InfoTab:AddParagraph({ "المالك / المطورين:", "RAEF_Black1" }) -- تغيير اسم المطور
-InfoTab:AddParagraph({ "فريق:", "RAEF_Black1" }) -- تغيير اسم الفريق
-InfoTab:AddParagraph({ ":", "CLOCK7" }) -- تغيير الاسم
-InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
-InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
-InfoTab:AddButton({"sky box القديم النادر لي اي ماب", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Sky%20box"))()
-end})
 
-InfoTab:AddSection({ "اعادة دخول" })
-InfoTab:AddButton({
+infoTab:AddSection({ "معلومات السكربت" })
+infoTab:AddParagraph({ "المالك / المطورين:", "RAEF_Black1" }) -- تغيير اسم المطور
+infoTab:AddParagraph({ "فريق:", "RAEF_Black1" }) -- تغيير اسم الفريق
+infoTab:AddParagraph({ ":", "CLOCK7" }) -- تغيير الاسم
+infoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
+infoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
+
+-- تصحيح: إضافة اسم للزر
+infoTab:AddButton({
+    Name = "Sky Box القديم النادر",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Sky%20box"))()
+    end
+})
+
+infoTab:AddSection({ "اعادة دخول" })
+infoTab:AddButton({
     Name = "اعادة دخول للسيرفر",
     Callback = function()
         local TeleportService = game:GetService("TeleportService")
