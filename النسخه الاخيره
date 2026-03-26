@@ -155,6 +155,7 @@ local infoTab = Window:MakeTab({
     Title = "معلومات السكربت",
     Icon = "rbxassetid://" .. IMAGE_ID
 })
+
 InfoTab:AddDiscordInvite({
     Name = "CLOCK7مطورين", -- تغيير الاسم
     Description = "تليجرام",
