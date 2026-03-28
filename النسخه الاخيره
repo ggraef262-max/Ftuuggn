@@ -5401,9 +5401,9 @@ TrollTab:AddSection({ "Skybox by DBLACK" })
     زر عادي: يطبق سكربت خارجي لتغيير شكل السماء.
 ]====]
 TrollTab:AddButton({
- Name = "سكاي بوكس",
+ Name = " القديم سكاي بوكس",
  Callback = function()
-   loadstring(game:HttpGet("https://api.rubis.app/v2/scrap/qZkSict1retkqFIr/raw"))()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Sky%20box"))()
    end
 })
 
