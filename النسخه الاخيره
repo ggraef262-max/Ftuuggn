@@ -6414,7 +6414,7 @@ rpTab:AddButton({
 
 -- ====================== تاب الرؤوس والأرجل ======================
 local HeadsLegsTab = Window:MakeTab({
-    Name = "الـرؤوس و الارجـل",
+    Text = "الـرؤوس و الارجـل",
     Icon = "rbxassetid://10709789686"
 })
 
@@ -6559,8 +6559,8 @@ HeadsLegsTab:AddButton({
 })
 
 -- ====================== تاب الأجسام ======================
-local BodiesTab = Window:MakeTab({
-    Name = "الاجـسـام",
+local HeadsLegsTab = Window:MakeTab({
+    Text = "الاجسام",
     Icon = "rbxassetid://10709789686"
 })
 
