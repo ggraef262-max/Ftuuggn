@@ -6314,7 +6314,7 @@ coroutine.wrap(function()
             local color = rgbColors[math.random(#rgbColors)]
             fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPNameColor", color)
         end
-        wait(0.7)
+        wait(0.1)
     end
 end)()
 
@@ -6411,12 +6411,19 @@ rpTab:AddButton({
     end
 })
 
-local Main = Library:MakeTab({Name = "الـرؤوس و الارجـل"})
 
--- ====================== الرؤوس ======================
-Main:AddSection({"الـرؤوس"})
+-- ====================== تاب الرؤوس والأرجل ======================
+local HeadsLegsTab = Window:MakeTab({
+    Name = "الـرؤوس و الارجـل",
+    Icon = "rbxassetid://10709789686"
+})
 
-Main:AddButton({
+-- قسم الرؤوس
+HeadsLegsTab:AddSection({
+    Name = "الـرؤوس"
+})
+
+HeadsLegsTab:AddButton({
     Name = "رأس روبـوت",
     Callback = function()
         wait(0.1)
@@ -6425,7 +6432,7 @@ Main:AddButton({
     end
 })
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رأس بـنـت كـيـوت",
     Callback = function()
         wait(0.1)
@@ -6434,7 +6441,7 @@ Main:AddButton({
     end
 })
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رأس مـخـفـي",
     Callback = function()
         wait(0.1)
@@ -6443,7 +6450,7 @@ Main:AddButton({
     end
 })
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رأس كـوبـي | رول",
     Callback = function()
         wait(0.1)
@@ -6452,7 +6459,7 @@ Main:AddButton({
     end
 })
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رأس عـيـون زرقـاء",
     Callback = function()
         wait(0.1)
@@ -6461,10 +6468,12 @@ Main:AddButton({
     end
 })
 
--- ====================== الأرجل ======================
-Main:AddSection({"الارجـل"})
+-- قسم الأرجل
+HeadsLegsTab:AddSection({
+    Name = "الارجـل"
+})
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رجـل مـقـطـوعـة لـلـبـنـات",
     Callback = function()
         local args = {
@@ -6481,7 +6490,7 @@ Main:AddButton({
     end
 })
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رجـل مـقـطـوعـة لـلـولـد",
     Callback = function()
         local args = {
@@ -6498,7 +6507,7 @@ Main:AddButton({
     end
 })
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رجـل حـديـديـة",
     Callback = function()
         local args = {
@@ -6515,7 +6524,7 @@ Main:AddButton({
     end
 })
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رجـل الـعـضـم الـرصـاصـي",
     Callback = function()
         local args = {
@@ -6532,7 +6541,7 @@ Main:AddButton({
     end
 })
 
-Main:AddButton({
+HeadsLegsTab:AddButton({
     Name = "رجـل رول",
     Callback = function()
         local args = {
@@ -6549,12 +6558,18 @@ Main:AddButton({
     end
 })
 
--- ====================== الأجسام ======================
-local Bodies = Library:MakeTab({Name = "الاجـسـام"})
+-- ====================== تاب الأجسام ======================
+local BodiesTab = Window:MakeTab({
+    Name = "الاجـسـام",
+    Icon = "rbxassetid://10709789686"
+})
 
-Bodies:AddSection({"اجـسـام الـبـنـات"})
+-- قسم أجسام البنات
+BodiesTab:AddSection({
+    Name = "اجـسـام الـبـنـات"
+})
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 1",
     Callback = function()
         local args = {
@@ -6571,7 +6586,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 2",
     Callback = function()
         local args = {
@@ -6588,7 +6603,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 3",
     Callback = function()
         local args = {
@@ -6605,7 +6620,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 4",
     Callback = function()
         local args = {
@@ -6622,7 +6637,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 5",
     Callback = function()
         local args = {
@@ -6639,7 +6654,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 6",
     Callback = function()
         local args = {
@@ -6656,7 +6671,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 7",
     Callback = function()
         local args = {
@@ -6673,7 +6688,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 8",
     Callback = function()
         local args = {
@@ -6690,7 +6705,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم بـنـت 9",
     Callback = function()
         local args = {
@@ -6707,9 +6722,12 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddSection({"اجـسـام الـولـد"})
+-- قسم أجسام الأولاد
+BodiesTab:AddSection({
+    Name = "اجـسـام الـولـد"
+})
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم ولـد 1",
     Callback = function()
         local args = {
@@ -6726,7 +6744,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم ولـد 2",
     Callback = function()
         local args = {
@@ -6743,7 +6761,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم ولـد كـوبـي",
     Callback = function()
         local args = {
@@ -6760,7 +6778,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم ولـد رول",
     Callback = function()
         local args = {
@@ -6777,7 +6795,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم ولـد مـعـضـل",
     Callback = function()
         local args = {
@@ -6794,9 +6812,12 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddSection({"اجـسـام الـقـزم"})
+-- قسم أجسام القزم
+BodiesTab:AddSection({
+    Name = "اجـسـام الـقـزم"
+})
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم قـزم",
     Callback = function()
         local args = {
@@ -6813,7 +6834,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم قـزم مـتـوسـط",
     Callback = function()
         local args = {
@@ -6830,7 +6851,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم قـزم صـغـيـر",
     Callback = function()
         local args = {
@@ -6847,7 +6868,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم قـزم الـمـربـع",
     Callback = function()
         local args = {
@@ -6864,7 +6885,7 @@ Bodies:AddButton({
     end
 })
 
-Bodies:AddButton({
+BodiesTab:AddButton({
     Name = "جـسـم قـزم بـنـت",
     Callback = function()
         local args = {
@@ -6880,5 +6901,3 @@ Bodies:AddButton({
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("ChangeCharacterBody", 9e9):InvokeServer(unpack(args))
     end
 })
-
-print("تم تحميل السكريبت بنجاح")
