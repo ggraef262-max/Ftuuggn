@@ -6325,7 +6325,7 @@ coroutine.wrap(function()
             local color = rgbColors[math.random(#rgbColors)]
             fireRemote({"RE", "1RPNam1eColo1r"}, "PickingRPBioColor", color)
         end
-        wait(0.7)
+        wait(0.1)
     end
 end)()
 
