@@ -83,37 +83,72 @@ local redzlib = {
 			["Color Text"] = Color3.fromRGB(200, 240, 255),
 			["Color Dark Text"] = Color3.fromRGB(100, 180, 200)
 		},
-		-- ثيم البوليس (أحمر فاتح وأزرق داكن) 🚔
 		Police = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 100)),     -- أزرق داكن
-				ColorSequenceKeypoint.new(0.30, Color3.fromRGB(0, 0, 80)),      -- أزرق داكن جداً
-				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 80, 80)),   -- أحمر فاتح
-				ColorSequenceKeypoint.new(0.70, Color3.fromRGB(255, 100, 100)), -- أحمر فاتح جداً
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 139))      -- أزرق داكن
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 100)),
+				ColorSequenceKeypoint.new(0.30, Color3.fromRGB(0, 0, 80)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(255, 80, 80)),
+				ColorSequenceKeypoint.new(0.70, Color3.fromRGB(255, 100, 100)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 139))
 			}),
-			["Color Hub 2"] = Color3.fromRGB(20, 20, 50),  -- أزرق داكن جداً للأزرار
-			["Color Stroke"] = Color3.fromRGB(255, 80, 80),  -- أحمر فاتح للحدود
-			["Color Theme"] = Color3.fromRGB(255, 100, 100), -- أحمر فاتح للعناصر الأساسية
-			["Color Text"] = Color3.fromRGB(255, 255, 255),  -- أبيض ناصع للنص
-			["Color Dark Text"] = Color3.fromRGB(150, 150, 255) -- أزرق فاتح للنص الثانوي
+			["Color Hub 2"] = Color3.fromRGB(20, 20, 50),
+			["Color Stroke"] = Color3.fromRGB(255, 80, 80),
+			["Color Theme"] = Color3.fromRGB(255, 100, 100),
+			["Color Text"] = Color3.fromRGB(255, 255, 255),
+			["Color Dark Text"] = Color3.fromRGB(150, 150, 255)
 		},
-		-- ثيم قوس قزح الجديد 🌈
 		Rainbow = {
 			["Color Hub 1"] = ColorSequence.new({
-				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)),     -- أحمر
-				ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 127, 0)),   -- برتقالي
-				ColorSequenceKeypoint.new(0.33, Color3.fromRGB(255, 255, 0)),   -- أصفر
-				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 255, 0)),     -- أخضر
-				ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)),     -- أزرق
-				ColorSequenceKeypoint.new(0.83, Color3.fromRGB(75, 0, 130)),    -- نيلي
-				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 255))    -- بنفسجي
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 0)),
+				ColorSequenceKeypoint.new(0.16, Color3.fromRGB(255, 127, 0)),
+				ColorSequenceKeypoint.new(0.33, Color3.fromRGB(255, 255, 0)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 255, 0)),
+				ColorSequenceKeypoint.new(0.66, Color3.fromRGB(0, 0, 255)),
+				ColorSequenceKeypoint.new(0.83, Color3.fromRGB(75, 0, 130)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 255))
 			}),
-			["Color Hub 2"] = Color3.fromRGB(20, 20, 30),  -- لون غامق محايد للخلفيات الثانوية
-			["Color Stroke"] = Color3.fromRGB(255, 255, 255),  -- حد أبيض
-			["Color Theme"] = Color3.fromRGB(255, 0, 255),  -- لون أساسي أرجواني (يمكن تغييره)
-			["Color Text"] = Color3.fromRGB(255, 255, 255),  -- نص أبيض
-			["Color Dark Text"] = Color3.fromRGB(200, 200, 200) -- نص ثانوي فاتح
+			["Color Hub 2"] = Color3.fromRGB(20, 20, 30),
+			["Color Stroke"] = Color3.fromRGB(255, 255, 255),
+			["Color Theme"] = Color3.fromRGB(255, 0, 255),
+			["Color Text"] = Color3.fromRGB(255, 255, 255),
+			["Color Dark Text"] = Color3.fromRGB(200, 200, 200)
+		},
+		-- 🔴⚫ الثيمات الجديدة (أحمر وأسود)
+		RedBlack = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(20, 20, 20)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(40, 40, 40)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 0))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(30, 30, 30),
+			["Color Stroke"] = Color3.fromRGB(200, 0, 0),
+			["Color Theme"] = Color3.fromRGB(255, 50, 50),
+			["Color Text"] = Color3.fromRGB(255, 255, 255),
+			["Color Dark Text"] = Color3.fromRGB(200, 100, 100)
+		},
+		DarkRed = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 10, 10)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(25, 25, 25)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(100, 0, 0))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(15, 15, 15),
+			["Color Stroke"] = Color3.fromRGB(139, 0, 0),
+			["Color Theme"] = Color3.fromRGB(220, 40, 40),
+			["Color Text"] = Color3.fromRGB(255, 255, 255),
+			["Color Dark Text"] = Color3.fromRGB(180, 80, 80)
+		},
+		BloodRed = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(30, 0, 0)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(50, 0, 0)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(139, 0, 0))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(25, 0, 0),
+			["Color Stroke"] = Color3.fromRGB(180, 0, 0),
+			["Color Theme"] = Color3.fromRGB(255, 30, 30),
+			["Color Text"] = Color3.fromRGB(255, 255, 255),
+			["Color Dark Text"] = Color3.fromRGB(200, 100, 100)
 		}
 	},
 	Info = {
@@ -122,7 +157,7 @@ local redzlib = {
 	Save = {
 		UISize = {550, 380},
 		TabSize = 160,
-		Theme = "Rainbow"  -- تم تغيير الثيم الافتراضي إلى Rainbow
+		Theme = "Rainbow"
 	},
 	Settings = {},
 	Connection = {},
@@ -132,9 +167,8 @@ local redzlib = {
 	Flags = {},
 	Tabs = {},
 	Icons = (function()
-	  -- This file was @Engoy by Tarmac. It is not intended for manual editing.
-		return {
-			["accessibility"] = "rbxassetid://10709751939",
+		return {}
+	 	["accessibility"] = "rbxassetid://10709751939",
 			["activity"] = "rbxassetid://10709752035",
 			["airvent"] = "rbxassetid://10709752131",
 			["airplay"] = "rbxassetid://10709752254",
