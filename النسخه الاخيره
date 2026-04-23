@@ -19,7 +19,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 -- ======================
 -- ثابت الصورة الرئيسي
 -- ======================
-local IMAGE_ID = "90798133906684"  -- غير الرقم لو تبي صورة ثانية
+local IMAGE_ID = "112765062204708"  -- غير الرقم لو تبي صورة ثانية
 
 -- ======================
 -- دوال مساعدة
@@ -199,7 +199,7 @@ infoTab:AddButton({
     end
 })
 
-local shadersTab = Window:MakeTab({ Title = "شادر (يظهر بس عندك)", Icon = "rbxassetid://10747382750" })
+local shadersTab = Window:MakeTab({ Title = "شادر (يظهر بس عندك)", Icon = "rbxassetid://112765062204708" })
 
 shadersTab:AddSection({ "جودة" })
 shadersTab:AddParagraph({"شادر٢ coming soon."})
