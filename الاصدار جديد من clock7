@@ -1256,7 +1256,7 @@ TrollTab:AddToggle({
     end
 })
 
-local Troll = Window:MakeTab({ Title = "تخريب على اللاعبين", Icon = "rbxassetid://90798133906684" })
+local Troll = Window:MakeTab({ Title = "تخريب على اللاعبين", Icon = "rbxassetid://79171765760424" })
 
 
 local Players = game:GetService("Players")
