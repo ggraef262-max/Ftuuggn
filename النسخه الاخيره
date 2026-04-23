@@ -19,7 +19,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 -- ======================
 -- ثابت الصورة الرئيسي
 -- ======================
-local IMAGE_ID = "112765062204708"  -- غير الرقم لو تبي صورة ثانية
+local IMAGE_ID = "79171765760424"  -- غير الرقم لو تبي صورة ثانية
 
 -- ======================
 -- دوال مساعدة
@@ -199,7 +199,7 @@ infoTab:AddButton({
     end
 })
 
-local shadersTab = Window:MakeTab({ Title = "شادر (يظهر بس عندك)", Icon = "rbxassetid://112765062204708" })
+local shadersTab = Window:MakeTab({ Title = "شادر (يظهر بس عندك)", Icon = "rbxassetid://79171765760424" })
 
 shadersTab:AddSection({ "جودة" })
 shadersTab:AddParagraph({"شادر٢ coming soon."})
@@ -586,7 +586,7 @@ local blur = Instance.new("BlurEffect", Lighting)
 blur.Size = 0
 end})
 
-local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
+local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://79171765760424" })
 
 
 TrollTab:AddSection({ "ثقب اسود" })
@@ -1121,7 +1121,7 @@ end
 })
 
 
-TrollTab:AddSection({ "بشرة ملونة" })
+TrollTab:AddSection({ "جسم ملون" })
 
 local colors = { "Bright red", "Lime green", "Bright blue", "Bright yellow", "Bright cyan", "Hot pink", "Royal purple" }
 local rgbEnabled = false
@@ -1145,7 +1145,7 @@ local function toggleRGBCharacter(enabled)
 end
 
 TrollTab:AddToggle({
-    Name = "تلوين البشرة",
+    Name = "لون الجسم",
     Description = "RGB",
     Default = false,
     Callback = function(value)
@@ -1154,7 +1154,7 @@ TrollTab:AddToggle({
 })
 
 
-TrollTab:AddSection({ "تلوين الشعر" })
+TrollTab:AddSection({ "لون الشعر" })
 local hairColors = {
     Color3.new(1, 1, 0), Color3.new(0, 0, 1), Color3.new(1, 0, 1), Color3.new(1, 1, 1),
     Color3.new(0, 1, 0), Color3.new(0.5, 0, 1), Color3.new(1, 0.647, 0), Color3.new(0, 1, 1)
@@ -1256,7 +1256,7 @@ TrollTab:AddToggle({
     end
 })
 
-local Troll = Window:MakeTab({ Title = "تخريب على اللاعبين", Icon = "rbxassetid://90798133906684" })
+local Troll = Window:MakeTab({ Title = "تخريب على اللاعبين", Icon = "rbxassetid://79171765760424" })
 
 
 local Players = game:GetService("Players")
@@ -2703,7 +2703,7 @@ Troll:AddButton({
 local kill = Troll:AddSection({Name = "قتل بالنقر على اللاعب"})
 
 Troll:AddButton({
-  Name = "قتل بالابواب [اصدار 1.0]",
+  Name = "قتل بالابواب [اصدار الاخير]",
 Description = "Para Usar, Recomendo chegar perto de outras portas, apos ela ir até você, clique no jogador que deseja flingar",
   Callback = function()
 local Players = game:GetService("Players")
@@ -5100,7 +5100,7 @@ botaoMinimizar.MouseButton1Down:Connect(alternarBotoes)
     end
 })
 
-local Tab13 = Window:MakeTab({"مضادات By dblack", "rbxassetid://90798133906684"})
+local Tab13 = Window:MakeTab({"مضادات By dblack", "rbxassetid://79171765760424"})
 
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Workspace = game:GetService("Workspace")
@@ -5393,7 +5393,7 @@ Tab13:AddToggle({
     end
 })
 
-local TrollTab = Window:MakeTab({ Title = "سكاي بوكس", Icon = "cloud" })
+local TrollTab = Window:MakeTab({ Title = "سكاي بوكس", "rbxassetid://79171765760424"})
 
 TrollTab:AddSection({ "Skybox by DBLACK" })
 
@@ -5690,7 +5690,7 @@ TrollTab:AddToggle({
 -- ======================
 local settingsTab = Window:MakeTab({ 
     Title = "إعدادات عامة [سرعة وقفز]",
-    Icon = "rbxassetid://90798133906684" 
+    Icon = ""rbxassetid://79171765760424" 
 })
 
 settingsTab:AddTextBox({
@@ -6163,7 +6163,7 @@ UniversalTab:AddButton({
   end,
 })
 
-BangTab = Window:MakeTab({"بانق","rbxassetid://90798133906684"})
+BangTab = Window:MakeTab({"بانق","rbxassetid://79171765760424"})
 Players = game:GetService("Players")
 RunService = game:GetService("RunService")
 LocalPlayer = Players.LocalPlayer
@@ -6257,7 +6257,7 @@ createBangToggle("Face Bang v2 | أمامي v2", 1.5, true)
 -- ======================
 local rpTab = Window:MakeTab({ 
     Title = "الأسماء الوهمية والبايو",
-    Icon = "rbxassetid://90798133906684" 
+    Icon = "rbxassetid://79171765760424" 
 })
 
 local rpNameRGBActive = false
@@ -6415,7 +6415,7 @@ rpTab:AddButton({
 -- ====================== تاب الرؤوس والأرجل ======================
 local HeadsLegsTab = Window:MakeTab({
     Title = "الـرؤوس و الارجـل",
-    Icon = "rbxassetid://10709789686"
+    Icon = "rbxassetid://79171765760424"
 })
 
 -- قسم الرؤوس
@@ -6561,7 +6561,7 @@ HeadsLegsTab:AddButton({
 -- ====================== تاب الأجسام ======================
 local BodiesTab = Window:MakeTab({
     Title = "الأجسام",
-    Icon = "rbxassetid://10709789686"
+    Icon = "rbxassetid://79171765760424"
 })
 
 -- قسم أجسام البنات
