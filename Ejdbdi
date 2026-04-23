@@ -1,424 +1,279 @@
--- صنع بواسطة المطور DBLACK
--- انترو احترافي مع جسيمات وتأثيرات ثم تشغيل السكربت الرئيسي
+-- ==================================================
+-- [ CLOCK7 | BLACK & RED MASTERPIECE ]
+-- صنع بواسطة DBLACK | إصدار أسطوري
+-- تم إضافة رابط السكربت الرئيسي الجديد
+-- ==================================================
 
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local CoreGui = game:GetService("CoreGui")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local HttpService = game:GetService("HttpService")
+local Lighting = game:GetService("Lighting")
 
-local Player = Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
+local player = Players.LocalPlayer
+local gui = player:WaitForChild("PlayerGui")
 
--- تكوين شاشة التحميل (الانترو)
-local LoadingConfig = {
-    Duration = 5, -- مدة التحميل (خمس ثوانٍ)
-    FadeOutTime = 1,
-    BarColor = Color3.fromRGB(255, 0, 0), -- أحمر
-    BarGlow = Color3.fromRGB(255, 255, 0), -- أصفر
-    BackgroundColor = Color3.fromRGB(0, 0, 0),
-    TextColor = Color3.fromRGB(255, 255, 255),
-    ParticleCount = 100,
-    ParticleSpeed = 2,
-    ParticleSize = 3
-}
+-- الرابط الجديد (تم التغيير)
+local MAIN_SCRIPT_URL = "https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D8%A7%D9%84%D8%A7%D8%AD%D9%85%D8%B1"
 
--- رسائل التحميل
-local LoadingElements = {
-    "⚡ يتم تجهيز الموارد...",
-    "🎮 بدء تحميل السكربت...",
-    "✨ تجهيز واجهة السكربت...",
-    "🔧 السكربت CLOCK7...",
-    "💖 اتمنا يعجبك...",
-    "🚀 تشغيل السكربت..."
-}
+-- ==================================================
+-- 1. إضاءة جحيمية سوداء وحمراء
+-- ==================================================
+local colorCorrection = Instance.new("ColorCorrectionEffect")
+colorCorrection.Parent = Lighting
+colorCorrection.TintColor = Color3.fromRGB(80, 0, 0)
+colorCorrection.Saturation = 0.4
+colorCorrection.Contrast = 0.15
 
--- متغيرات عامة
-local Particles = {}
-local AnimationConnections = {}
-local LoadingScreenGui = nil
+local bloom = Instance.new("BloomEffect")
+bloom.Parent = Lighting
+bloom.Intensity = 0.6
+bloom.Size = 28
+bloom.Threshold = 0.55
 
--- =============================================
--- دوال شاشة التحميل (الانترو)
--- =============================================
-local function CreateStarParticle(parent, x, y)
-    local star = Instance.new("Frame")
-    star.Name = "StarParticle"
-    star.Parent = parent
-    star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    star.BorderSizePixel = 0
-    star.Size = UDim2.new(0, math.random(2, LoadingConfig.ParticleSize), 0, math.random(2, LoadingConfig.ParticleSize))
-    star.Position = UDim2.new(0, x, 0, y)
-    star.ZIndex = 8
-    star.BackgroundTransparency = math.random(0, 50) / 100
+-- ==================================================
+-- 2. الشاشة الرئيسية
+-- ==================================================
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "BlackRedIntro"
+screenGui.Parent = gui
+screenGui.ResetOnSpawn = false
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Parent = screenGui
+mainFrame.Size = UDim2.new(1, 0, 1, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+mainFrame.BorderSizePixel = 0
+
+-- ==================================================
+-- 3. خطوط حمراء عصرية
+-- ==================================================
+for i = 1, 6 do
+    local line = Instance.new("Frame")
+    line.Parent = mainFrame
+    line.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    line.BorderSizePixel = 0
+    line.Size = UDim2.new(0, 1.5, 1, 0)
+    line.Position = UDim2.new(i / 7, 0, 0, 0)
+    line.BackgroundTransparency = 0.7
+    
+    TweenService:Create(
+        line,
+        TweenInfo.new(2.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+        {BackgroundTransparency = 0.2}
+    ):Play()
+end
+
+-- ==================================================
+-- 4. دوائر حمراء نابضة
+-- ==================================================
+for i = 1, 3 do
+    local ring = Instance.new("Frame")
+    ring.Parent = mainFrame
+    ring.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    ring.BorderSizePixel = 0
+    ring.Size = UDim2.new(0, 80 + (i * 30), 0, 80 + (i * 30))
+    ring.Position = UDim2.new(0.5, -(40 + (i * 15)), 0.5, -(40 + (i * 15)))
+    ring.BackgroundTransparency = 0.85
     
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(1, 0)
-    corner.Parent = star
+    corner.Parent = ring
     
-    local particle = {
-        frame = star,
-        speedX = (math.random(-100, 100) / 100) * LoadingConfig.ParticleSpeed,
-        speedY = (math.random(-100, 100) / 100) * LoadingConfig.ParticleSpeed,
-        rotationSpeed = math.random(-5, 5),
-        pulseSpeed = math.random(1, 3),
-        opacity = math.random(30, 100) / 100,
-        hue = math.random()
-    }
-    return particle
+    TweenService:Create(
+        ring,
+        TweenInfo.new(2 + (i * 0.3), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+        {
+            Size = UDim2.new(0, 150 + (i * 50), 0, 150 + (i * 50)),
+            Position = UDim2.new(0.5, -(75 + (i * 25)), 0.5, -(75 + (i * 25))),
+            BackgroundTransparency = 0.97
+        }
+    ):Play()
 end
 
-local function UpdateParticles(parentFrame)
-    local screenSize = workspace.CurrentCamera.ViewportSize
-    
-    for _, particle in pairs(Particles) do
-        if particle.frame and particle.frame.Parent then
-            local currentPos = particle.frame.Position
-            local newX = currentPos.X.Offset + particle.speedX
-            local newY = currentPos.Y.Offset + particle.speedY
-            
-            if newX < -10 then
-                newX = screenSize.X + 10
-            elseif newX > screenSize.X + 10 then
-                newX = -10
-            end
-            
-            if newY < -10 then
-                newY = screenSize.Y + 10
-            elseif newY > screenSize.Y + 10 then
-                newY = -10
-            end
-            
-            particle.frame.Position = UDim2.new(0, newX, 0, newY)
-            particle.frame.Rotation = particle.frame.Rotation + particle.rotationSpeed
-            
-            local pulseValue = math.sin(tick() * particle.pulseSpeed) * 0.3 + 0.7
-            particle.frame.BackgroundTransparency = 1 - (particle.opacity * pulseValue)
-            
-            local sizeMultiplier = 1 + (math.sin(tick() * particle.pulseSpeed * 0.5) * 0.2)
-            particle.frame.Size = UDim2.new(0, LoadingConfig.ParticleSize * sizeMultiplier, 0, LoadingConfig.ParticleSize * sizeMultiplier)
-            
-            -- تغيير الألوان
-            local hue = (tick() * 0.5 + particle.hue) % 1
-            particle.frame.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
-        end
-    end
-end
+-- ==================================================
+-- 5. عنوان CLOCK7
+-- ==================================================
+local title = Instance.new("TextLabel")
+title.Parent = mainFrame
+title.Size = UDim2.new(0, 550, 0, 110)
+title.Position = UDim2.new(0.5, -275, 0.27, -55)
+title.BackgroundTransparency = 1
+title.Text = "CLOCK7"
+title.TextScaled = true
+title.Font = Enum.Font.GothamBlack
+title.TextColor3 = Color3.fromRGB(255, 20, 0)
 
-local function CreateParticleSystem(parent)
-    local screenSize = workspace.CurrentCamera.ViewportSize
-    for i = 1, LoadingConfig.ParticleCount do
-        local x = math.random(0, screenSize.X)
-        local y = math.random(0, screenSize.Y)
-        local particle = CreateStarParticle(parent, x, y)
-        table.insert(Particles, particle)
-    end
-end
+local strokeOuter = Instance.new("UIStroke")
+strokeOuter.Parent = title
+strokeOuter.Color = Color3.fromRGB(255, 0, 0)
+strokeOuter.Thickness = 4
 
-local function CreateAdvancedBackground(parent)
-    local bgFrame = Instance.new("Frame")
-    bgFrame.Name = "AdvancedBackground"
-    bgFrame.Parent = parent
-    bgFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    bgFrame.BorderSizePixel = 0
-    bgFrame.Size = UDim2.new(1, 0, 1, 0)
-    bgFrame.ZIndex = 1
-    
-    local gradient = Instance.new("UIGradient")
-    gradient.Parent = bgFrame
-    gradient.Rotation = 45
-    
-    local rainbowBg = RunService.Heartbeat:Connect(function()
-        local hue = (tick() * 0.2) % 1
-        gradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromHSV(hue, 1, 1)),
-            ColorSequenceKeypoint.new(0.3, Color3.fromRGB(0, 0, 0)),
-            ColorSequenceKeypoint.new(0.7, Color3.fromHSV((hue + 0.5) % 1, 1, 1)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
-        })
-    end)
-    table.insert(AnimationConnections, rainbowBg)
-    
-    return bgFrame
-end
+local strokeInner = Instance.new("UIStroke")
+strokeInner.Parent = title
+strokeInner.Color = Color3.fromRGB(80, 0, 0)
+strokeInner.Thickness = 8
+strokeInner.Transparency = 0.5
 
-local function CreatePulsingCircles(parent)
-    for i = 1, 3 do
-        local circle = Instance.new("Frame")
-        circle.Name = "PulsingCircle" .. i
-        circle.Parent = parent
-        circle.BackgroundColor3 = Color3.fromHSV((i / 5), 1, 1)
-        circle.BorderSizePixel = 0
-        circle.Size = UDim2.new(0, 80 + (i * 40), 0, 80 + (i * 40))
-        circle.Position = UDim2.new(0.5, -(40 + (i * 20)), 0.5, -(40 + (i * 20)))
-        circle.ZIndex = 3
-        circle.BackgroundTransparency = 0.8
-        
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(1, 0)
-        corner.Parent = circle
-        
-        local pulseTween = TweenService:Create(
-            circle,
-            TweenInfo.new(2 + (i * 0.3), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-            {
-                Size = UDim2.new(0, 100 + (i * 50), 0, 100 + (i * 50)),
-                Position = UDim2.new(0.5, -(50 + (i * 25)), 0.5, -(50 + (i * 25))),
-                BackgroundTransparency = 0.95
-            }
-        )
-        pulseTween:Play()
-        table.insert(AnimationConnections, pulseTween)
-        
-        local rainbowCircle = RunService.Heartbeat:Connect(function()
-            local hue = (tick() * 0.3 + (i * 0.1)) % 1
-            circle.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
-        end)
-        table.insert(AnimationConnections, rainbowCircle)
-    end
-end
+-- نبض العنوان
+local titleAnim = RunService.Heartbeat:Connect(function()
+    local pulse = 0.4 + math.sin(tick() * 5) * 0.3
+    title.TextColor3 = Color3.fromRGB(255, math.floor(20 + pulse * 40), 0)
+    strokeOuter.Thickness = 3 + pulse * 2
+end)
 
--- دالة إنشاء شاشة التحميل
-local function CreateLoadingScreen()
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "LoadingScreen"
-    ScreenGui.Parent = PlayerGui
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ScreenGui.IgnoreGuiInset = true
+-- ==================================================
+-- 6. شريط التحميل
+-- ==================================================
+local barBg = Instance.new("Frame")
+barBg.Parent = mainFrame
+barBg.Size = UDim2.new(0, 480, 0, 36)
+barBg.Position = UDim2.new(0.5, -240, 0.5, 50)
+barBg.BackgroundColor3 = Color3.fromRGB(15, 0, 0)
+barBg.BorderSizePixel = 0
+
+local barCorner = Instance.new("UICorner")
+barCorner.CornerRadius = UDim.new(0, 18)
+barCorner.Parent = barBg
+
+local barBorder = Instance.new("UIStroke")
+barBorder.Parent = barBg
+barBorder.Color = Color3.fromRGB(255, 40, 0)
+barBorder.Thickness = 2
+
+local bar = Instance.new("Frame")
+bar.Parent = barBg
+bar.Size = UDim2.new(0, 0, 1, 0)
+bar.BackgroundColor3 = Color3.fromRGB(255, 40, 0)
+bar.BorderSizePixel = 0
+
+local gradient = Instance.new("UIGradient")
+gradient.Parent = bar
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 0, 0)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 60, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 0, 0))
+})
+
+-- ==================================================
+-- 7. نسبة التحميل
+-- ==================================================
+local percentLabel = Instance.new("TextLabel")
+percentLabel.Parent = mainFrame
+percentLabel.Size = UDim2.new(0, 200, 0, 70)
+percentLabel.Position = UDim2.new(0.5, -100, 0.5, 105)
+percentLabel.BackgroundTransparency = 1
+percentLabel.Text = "0%"
+percentLabel.TextScaled = true
+percentLabel.Font = Enum.Font.GothamBold
+percentLabel.TextColor3 = Color3.fromRGB(255, 60, 0)
+
+-- ==================================================
+-- 8. رسائل متحركة
+-- ==================================================
+local messages = {
+    "// سيدك DBLACK //",
+    "// تحديد جديد //",
+    "// BLACK FIRE //",
+    "// سكربت مطور ليبي //",
+    "// السكربت فعال //"
+}
+
+local msgLabel = Instance.new("TextLabel")
+msgLabel.Parent = mainFrame
+msgLabel.Size = UDim2.new(0, 450, 0, 50)
+msgLabel.Position = UDim2.new(0.5, -225, 0.5, 195)
+msgLabel.BackgroundTransparency = 1
+msgLabel.Text = messages[1]
+msgLabel.TextScaled = true
+msgLabel.Font = Enum.Font.Gotham
+msgLabel.TextColor3 = Color3.fromRGB(200, 30, 0)
+
+-- ==================================================
+-- 9. جسيمات حمراء
+-- ==================================================
+local particles = {}
+for i = 1, 150 do
+    local p = Instance.new("Frame")
+    p.Parent = mainFrame
+    p.Size = UDim2.new(0, math.random(2, 6), 0, math.random(2, 6))
+    p.Position = UDim2.new(0, math.random(0, 2000), 0, math.random(0, 2000))
+    p.BackgroundColor3 = Color3.fromRGB(255, math.random(20, 80), 0)
+    p.BorderSizePixel = 0
+    p.BackgroundTransparency = math.random(30, 70) / 100
     
-    local MainFrame = Instance.new("Frame")
-    MainFrame.Name = "MainFrame"
-    MainFrame.Parent = ScreenGui
-    MainFrame.BackgroundColor3 = LoadingConfig.BackgroundColor
-    MainFrame.BorderSizePixel = 0
-    MainFrame.Size = UDim2.new(1, 0, 1, 0)
-    MainFrame.ZIndex = 10
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(1, 0)
+    corner.Parent = p
     
-    CreateAdvancedBackground(MainFrame)
-    CreatePulsingCircles(MainFrame)
-    CreateParticleSystem(MainFrame)
-    
-    local CenterContainer = Instance.new("Frame")
-    CenterContainer.Name = "CenterContainer"
-    CenterContainer.Parent = MainFrame
-    CenterContainer.BackgroundTransparency = 1
-    CenterContainer.Size = UDim2.new(0, 500, 0, 350)
-    CenterContainer.Position = UDim2.new(0.5, -250, 0.5, -175)
-    CenterContainer.ZIndex = 11
-    
-    -- اسم CLOCK7 مع تأثيرات
-    local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Name = "TitleLabel"
-    TitleLabel.Parent = CenterContainer
-    TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Size = UDim2.new(1, 0, 0, 70)
-    TitleLabel.Position = UDim2.new(0, 0, 0, 0)
-    TitleLabel.Text = "CLOCK7"
-    TitleLabel.TextColor3 = LoadingConfig.TextColor
-    TitleLabel.TextScaled = true
-    TitleLabel.Font = Enum.Font.GothamBold
-    TitleLabel.ZIndex = 12
-    
-    local titleStroke = Instance.new("UIStroke")
-    titleStroke.Parent = TitleLabel
-    titleStroke.Color = Color3.fromRGB(255, 0, 0)
-    titleStroke.Thickness = 2
-    
-    local TitleGradient = Instance.new("UIGradient")
-    TitleGradient.Parent = TitleLabel
-    TitleGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 255))
+    table.insert(particles, {
+        frame = p,
+        vx = (math.random(-100, 100) / 50),
+        vy = (math.random(-100, 100) / 50),
+        rot = math.random(-8, 8)
     })
-    
-    local rainbowTitle = RunService.Heartbeat:Connect(function()
-        local hue = (tick() * 0.2) % 1
-        TitleGradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromHSV(hue, 1, 1)),
-            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(1, Color3.fromHSV((hue + 0.5) % 1, 1, 1))
-        })
-        titleStroke.Color = Color3.fromHSV(hue, 1, 1)
-    end)
-    table.insert(AnimationConnections, rainbowTitle)
-    
-    -- شريط التحميل
-    local ProgressContainer = Instance.new("Frame")
-    ProgressContainer.Name = "ProgressContainer"
-    ProgressContainer.Parent = CenterContainer
-    ProgressContainer.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    ProgressContainer.BorderSizePixel = 0
-    ProgressContainer.Size = UDim2.new(1, 0, 0, 20)
-    ProgressContainer.Position = UDim2.new(0, 0, 0, 90)
-    ProgressContainer.ZIndex = 12
-    
-    local ProgressCorner = Instance.new("UICorner")
-    ProgressCorner.CornerRadius = UDim.new(0, 10)
-    ProgressCorner.Parent = ProgressContainer
-    
-    local ProgressBar = Instance.new("Frame")
-    ProgressBar.Name = "ProgressBar"
-    ProgressBar.Parent = ProgressContainer
-    ProgressBar.BackgroundColor3 = LoadingConfig.BarColor
-    ProgressBar.BorderSizePixel = 0
-    ProgressBar.Size = UDim2.new(0, 0, 1, 0)
-    ProgressBar.ZIndex = 13
-    
-    local BarCorner = Instance.new("UICorner")
-    BarCorner.CornerRadius = UDim.new(0, 10)
-    BarCorner.Parent = ProgressBar
-    
-    local PercentageLabel = Instance.new("TextLabel")
-    PercentageLabel.Name = "PercentageLabel"
-    PercentageLabel.Parent = CenterContainer
-    PercentageLabel.BackgroundTransparency = 1
-    PercentageLabel.Size = UDim2.new(1, 0, 0, 40)
-    PercentageLabel.Position = UDim2.new(0, 0, 0, 130)
-    PercentageLabel.Text = "0%"
-    PercentageLabel.TextColor3 = LoadingConfig.BarColor
-    PercentageLabel.TextScaled = true
-    PercentageLabel.Font = Enum.Font.GothamBold
-    PercentageLabel.ZIndex = 12
-    
-    local StatusLabel = Instance.new("TextLabel")
-    StatusLabel.Name = "StatusLabel"
-    StatusLabel.Parent = CenterContainer
-    StatusLabel.BackgroundTransparency = 1
-    StatusLabel.Size = UDim2.new(1, 0, 0, 30)
-    StatusLabel.Position = UDim2.new(0, 0, 0, 180)
-    StatusLabel.Text = "جاري التحميل..."
-    StatusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-    StatusLabel.TextScaled = true
-    StatusLabel.Font = Enum.Font.Gotham
-    StatusLabel.ZIndex = 12
-    
-    return ScreenGui, ProgressBar, PercentageLabel, StatusLabel, MainFrame
 end
 
--- =============================================
--- تحميل وتشغيل السكربت الرئيسي
--- =============================================
-local function LoadMainScript()
-    print("بدء تحميل السكربت الرئيسي...")
-    
-    -- رابط السكربت الرئيسي (Clock7 RP)
-    local scriptUrl = "https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D8%A7%D9%84%D9%86%D8%B3%D8%AE%D9%87%20%D8%A7%D9%84%D8%A7%D8%AE%D9%8A%D8%B1%D9%87"
-    
-    -- تحميل وتشغيل السكربت
-    local success, result = pcall(function()
-        local scriptContent = game:HttpGet(scriptUrl)
-        local func = loadstring(scriptContent)
-        if func then
-            func()
-            print("تم تشغيل السكربت الرئيسي بنجاح!")
-        else
-            warn("فشل في تنفيذ السكربت")
-        end
-    end)
-    
-    if not success then
-        warn("خطأ في تحميل السكربت: " .. tostring(result))
-        -- عرض إشعار في حالة فشل التحميل
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "CLOCK7",
-            Text = "حدث خطأ في تحميل السكربت",
-            Duration = 5
-        })
+-- ==================================================
+-- 10. تحريك الجسيمات
+-- ==================================================
+RunService.Heartbeat:Connect(function()
+    local screenSize = workspace.CurrentCamera.ViewportSize
+    for _, p in pairs(particles) do
+        local x = p.frame.Position.X.Offset + p.vx
+        local y = p.frame.Position.Y.Offset + p.vy
+        if x < -50 then x = screenSize.X + 50 end
+        if x > screenSize.X + 50 then x = -50 end
+        if y < -50 then y = screenSize.Y + 50 end
+        if y > screenSize.Y + 50 then y = -50 end
+        p.frame.Position = UDim2.new(0, x, 0, y)
+        p.frame.Rotation = p.frame.Rotation + p.rot
+        
+        local flicker = math.sin(tick() * 12) * 0.3 + 0.5
+        p.frame.BackgroundColor3 = Color3.fromRGB(255, math.floor(flicker * 80), 0)
     end
-end
+end)
 
--- دالة تشغيل التحميل ثم إخفاء الشاشة
-local function StartLoadingAndShowUI()
-    local screenGui, progressBar, percentageLabel, statusLabel, mainFrame = CreateLoadingScreen()
-    LoadingScreenGui = screenGui
+-- ==================================================
+-- 11. نظام التحميل
+-- ==================================================
+local startTime = tick()
+local msgIndex = 2
+local lastMsg = startTime
+local msgDuration = 5 / #messages
+
+local function update()
+    local elapsed = tick() - startTime
+    local progress = math.min(elapsed / 5, 1)
+    local percent = math.floor(progress * 100)
     
-    -- تشغيل تحديث الجسيمات
-    local particleConnection = RunService.Heartbeat:Connect(function()
-        UpdateParticles(mainFrame)
-    end)
-    table.insert(AnimationConnections, particleConnection)
+    TweenService:Create(bar, TweenInfo.new(0.05), {Size = UDim2.new(progress, 0, 1, 0)}):Play()
+    percentLabel.Text = percent .. "%"
     
-    local startTime = tick()
-    local currentElementIndex = 1
-    local lastElementTime = startTime
-    local elementDuration = LoadingConfig.Duration / #LoadingElements
-    
-    -- تحديث شريط التحميل
-    local function updateLoading()
-        local elapsed = tick() - startTime
-        local progress = math.min(elapsed / LoadingConfig.Duration, 1)
-        local percentage = math.floor(progress * 100)
-        
-        -- تحديث شريط التحميل
-        local barTween = TweenService:Create(
-            progressBar,
-            TweenInfo.new(0.1, Enum.EasingStyle.Linear),
-            {Size = UDim2.new(progress, 0, 1, 0)}
-        )
-        barTween:Play()
-        
-        percentageLabel.Text = percentage .. "%"
-        
-        -- تحديث النص
-        if tick() - lastElementTime >= elementDuration and currentElementIndex <= #LoadingElements then
-            statusLabel.Text = LoadingElements[currentElementIndex]
-            currentElementIndex = currentElementIndex + 1
-            lastElementTime = tick()
-        end
-        
-        if progress >= 1 then
-            -- إنهاء التحميل وإخفاء الشاشة
-            for _, connection in pairs(AnimationConnections) do
-                if typeof(connection) == "RBXScriptConnection" then
-                    connection:Disconnect()
-                elseif typeof(connection) == "Tween" then
-                    connection:Cancel()
-                end
-            end
-            
-            -- إخفاء الجسيمات
-            for _, particle in pairs(Particles) do
-                if particle.frame then
-                    particle.frame:Destroy()
-                end
-            end
-            
-            -- تأثير الاختفاء
-            local fadeOutTween = TweenService:Create(
-                mainFrame,
-                TweenInfo.new(LoadingConfig.FadeOutTime, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-                {BackgroundTransparency = 1}
-            )
-            
-            local contentFadeTween = TweenService:Create(
-                mainFrame.CenterContainer,
-                TweenInfo.new(LoadingConfig.FadeOutTime * 0.7, Enum.EasingStyle.Back, Enum.EasingDirection.In),
-                {Size = UDim2.new(0, 0, 0, 0), Position = UDim2.new(0.5, 0, 0.5, 0)}
-            )
-            
-            fadeOutTween:Play()
-            contentFadeTween:Play()
-            
-            fadeOutTween.Completed:Connect(function()
-                screenGui:Destroy()
-                -- بعد إخفاء شاشة التحميل، يتم تشغيل الواجهة الرئيسية
-                LoadMainScript()
-            end)
-            return
-        end
-        
-        task.wait(0.03)
-        updateLoading()
+    if tick() - lastMsg >= msgDuration and msgIndex <= #messages then
+        msgLabel.Text = messages[msgIndex]
+        msgIndex = msgIndex + 1
+        lastMsg = tick()
     end
     
-    updateLoading()
+    if progress >= 1 then
+        -- تنظيف كل شيء
+        titleAnim:Disconnect()
+        for _, p in pairs(particles) do p.frame:Destroy() end
+        colorCorrection:Destroy()
+        bloom:Destroy()
+        
+        -- تأثير الاختفاء
+        local fade = TweenService:Create(mainFrame, TweenInfo.new(0.8), {BackgroundTransparency = 1})
+        fade:Play()
+        fade.Completed:Connect(function()
+            screenGui:Destroy()
+            -- تشغيل السكربت الرئيسي من الرابط الجديد
+            loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
+        end)
+        return
+    end
+    task.wait(0.01)
+    update()
 end
 
--- =============================================
--- بدء تشغيل السكربت
--- =============================================
--- تشغيل شاشة التحميل أولاً
-StartLoadingAndShowUI()
+update()
