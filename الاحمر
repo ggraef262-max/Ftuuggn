@@ -7142,7 +7142,7 @@ SkyBoxTab:AddDropdown({
  RigidTrack = nil
 
 SkyBoxTab:AddButton({
-   Name = "اختراق السماء يظهر🥶",
+   Name = "اختراق السماء يظهر",
    Callback = function()
 
         if SkyboxActive then
@@ -7214,7 +7214,7 @@ SkyBoxTab:AddButton({
 })
 
 SkyBoxTab:AddButton({
-    Name = "🌃الغاء اختراق السماء",
+    Name = "الغاء اختراق السماء",
     Callback = function()
         if CurrentTrack then
             CurrentTrack:Stop(0.1)
@@ -7285,7 +7285,7 @@ SkyBoxTab:AddToggle({
     end
 })
 
-SkyBoxTab:AddSection({ "فلاش يعمي السيرفر🚨" })
+SkyBoxTab:AddSection({ "فلاش يعمي السيرفر" })
 SkyBoxTab:AddToggle({
 	Name = "V2فلاش يغطي الماب",
 	Default = false,
@@ -7365,7 +7365,7 @@ SkyBoxTab:AddToggle({
 	end
 })
 SkyBoxTab:AddToggle({
-Name = "فلاش يرمش الماب[V3]",
+Name = "فلاش يرمش الماب[V7]",
 Default = false,
 Callback = function(v)
 
@@ -7449,7 +7449,7 @@ _G.NukeAnimSpeed = 0.01
 SkyBoxTab:AddSlider({
 	Name = "سرعة الفلاش",
 	Min = 1,
-	Max = 2000,
+	Max = 3000,
 	Default = 1,
 	Increment = 1,
 	ValueName = "Speed",
@@ -7473,10 +7473,10 @@ TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxasse
 
 TrollTab:AddSection({ "سكربتات الابواب" })
 TrollTab:AddButton({
-    Name = "[V3]هالة ابواب 🌪️",
+    Name = "[V3]هالة ابواب ",
     Description = "تدوير الاجزاء المتحركة",
     Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/kllooep/Fjjzxda6/main/Tahakom73"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D9%85%D8%AA%D8%B9%20%D8%A7%D8%A8%D9%88%D8%A7%D8%A8"))()
     end
 })
 
