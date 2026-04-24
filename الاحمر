@@ -6901,3 +6901,591 @@ BodiesTab:AddButton({
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("ChangeCharacterBody", 9e9):InvokeServer(unpack(args))
     end
 })
+
+SkyBoxTab = Window:MakeTab({ Title = "[SkyBox]فلاش ماب", Icon = "rbxassetid://13364900349" })
+
+local colors = { "Bright red", "Lime green", "Bright blue", "Bright yellow", "Bright cyan", "Hot pink", "Royal purple" }
+local rgbEnabled = false
+
+ function changeColor(color)
+    local args = { color }
+    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeBodyColor"):FireServer(unpack(args))
+end
+
+ function toggleRGBCharacter(enabled)
+    rgbEnabled = enabled
+    if rgbEnabled then
+        while rgbEnabled do
+            for _, color in ipairs(colors) do
+                if not rgbEnabled then return end
+                changeColor(color)
+                wait(0.5)
+            end
+        end
+    end
+end
+
+SkyBoxTab:AddToggle({
+    Name = "تلوين السكن والفلاش",
+    Description = "RGB",
+    Default = false,
+    Callback = function(value)
+        toggleRGBCharacter(value)
+    end
+})
+
+_G.HideNukePlayers = false
+_G.HiddenPlayers = {}
+
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+
+local NUKE_ANIM = "rbxassetid://70883871260184"
+
+local NUKE_BODY = {
+	["96655874457685"] = true,
+	["123402086843885"] = true,
+	["78300682916056"] = true,
+	["86276701020724"] = true,
+	["78409653958165"] = true,
+	["120668655481073"] = true
+}
+
+
+local function Notify(txt)
+	pcall(function()
+		StarterGui:SetCore("SendNotification",{
+			Title = "مضاد الفلاش والسماء",
+			Text = txt,
+			Duration = 4
+		})
+	end)
+end
+
+local function CheckAndHidePlayer(plr)
+	if not _G.HideNukePlayers then return end
+	if _G.HiddenPlayers[plr] then return end
+
+	local char = plr.Character
+	if not char then return end
+
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	if not hum then return end
+	local found = false
+	local tracks = hum:GetPlayingAnimationTracks()
+
+	for _,tr in pairs(tracks) do
+		if tr.Animation and tr.Animation.AnimationId == NUKE_ANIM then
+			found = true
+		end
+	end
+
+	local desc = hum:GetAppliedDescription()
+
+	if desc then
+		local ids = {
+			desc.Torso,
+			desc.RightArm,
+			desc.LeftArm,
+			desc.RightLeg,
+			desc.LeftLeg,
+			desc.Head
+		}
+
+		for _,id in pairs(ids) do
+			if NUKE_BODY[tostring(id)] then
+				found = true
+			end
+		end
+	end
+
+	if not found then return end
+
+	local saved = {
+		parts = {},
+		tracks = {}
+	}
+
+	for _,obj in pairs(char:GetDescendants()) do
+		if obj:IsA("BasePart") then
+			table.insert(saved.parts,obj)
+			obj.LocalTransparencyModifier = 1
+		end
+	end
+
+	for _,tr in pairs(tracks) do
+		if tr.Animation and tr.Animation.AnimationId == NUKE_ANIM then
+			table.insert(saved.tracks,tr)
+			tr:Stop()
+		end
+	end
+
+
+	_G.HiddenPlayers[plr] = saved
+
+	Notify("تم اخفاء سكاي اللاعب الكلب: "..plr.Name)
+end
+
+SkyBoxTab:AddToggle({
+	Name = "مضاد فلاش العمى او اختراق السماء",
+	Default = false,
+	Callback = function(v)
+
+		_G.HideNukePlayers = v
+
+		if v then
+
+			for _,plr in ipairs(Players:GetPlayers()) do
+				if plr ~= Players.LocalPlayer then
+
+					task.spawn(function()
+						repeat task.wait() until plr.Character
+						task.wait(1)
+
+						CheckAndHidePlayer(plr)
+					end)
+
+				end
+			end
+
+		else
+
+			for _,data in pairs(_G.HiddenPlayers) do
+
+				pcall(function()
+
+					for _,p in pairs(data.parts) do
+						p.LocalTransparencyModifier = 0
+					end
+
+
+					for _,t in pairs(data.tracks) do
+						t:Play()
+					end
+
+				end)
+			end
+
+
+			_G.HiddenPlayers = {}
+
+		end
+	end
+})
+
+Players.PlayerAdded:Connect(function(plr)
+
+	plr.CharacterAdded:Connect(function()
+
+		task.wait(2)
+		CheckAndHidePlayer(plr)
+
+	end)
+end)
+
+
+for _,plr in ipairs(Players:GetPlayers()) do
+
+	if plr ~= Players.LocalPlayer then
+
+		plr.CharacterAdded:Connect(function()
+
+			task.wait(2)
+			CheckAndHidePlayer(plr)
+
+		end)
+
+	end
+
+end
+
+
+local TshirtIDs = {
+    ["الافتراضي"] = nil,
+    ["colkid"] = 98679358331654,
+    ["T-Shirt 3"] = 100000000000003,
+    ["T-Shirt 4"] = 100000000000004,
+    ["T-Shirt 5"] = 100000000000005,
+    ["T-Shirt 6"] = 100000000000006,
+    ["T-Shirt 7"] = 100000000000007,
+    ["T-Shirt 8"] = 100000000000008,
+    ["T-Shirt 9"] = 100000000000009,
+    ["T-Shirt 10"] = 100000000000010
+}
+
+local SelectedTshirtID = nil
+
+local function notify(title, text)
+    StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = 4
+    })
+end
+
+SkyBoxTab:AddDropdown({
+    Name = "اختر التيشرت",
+    Description = "Skybox FE",
+    Options = {
+        "الافتراضي","colkid","T-Shirt 3","T-Shirt 4","T-Shirt 5",
+        "T-Shirt 6","T-Shirt 7","T-Shirt 8","T-Shirt 9","T-Shirt 10"
+    },
+    Default = "الافتراضي",
+    Callback = function(option)
+        SelectedTshirtID = TshirtIDs[option]
+        notify("T-Shirt", "تم اختيار: "..option)
+    end
+})
+
+ SkyboxActive = false
+ CurrentTrack = nil
+ RigidTrack = nil
+
+SkyBoxTab:AddButton({
+   Name = "اختراق السماء يظهر🥶",
+   Callback = function()
+
+        if SkyboxActive then
+            if CurrentTrack then
+                CurrentTrack:Stop(0.1)
+                CurrentTrack = nil
+            end
+            if RigidTrack then
+                RigidTrack:Stop(0.1)
+                RigidTrack = nil
+            end
+
+            ReplicatedStorage.Remotes.ResetCharacterAppearance:FireServer()
+            task.wait(0.3)
+
+             char = LocalPlayer.Character
+            if char then
+                 hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then hum.Health = 100 end
+            end
+
+            SkyboxActive = false
+            print("")
+            return
+        end
+
+         WearShirt = ReplicatedStorage.Remotes:FindFirstChild("WearShirt")
+        if SelectedTshirtID and WearShirt then
+            pcall(function()
+                WearShirt:InvokeServer(SelectedTshirtID)
+            end)
+        end
+        ReplicatedStorage.Remotes.ChangeCharacterBody:InvokeServer({100839513065432})
+
+         player = LocalPlayer
+         character = player.Character or player.CharacterAdded:Wait()
+         humanoid = character:WaitForChild("Humanoid")
+
+        local Settings = {
+            ["Fade In"] = 0.1,
+            ["Fade Out"] = 0.1,
+            ["Weight"] = 1,
+            ["Speed"] = 1,
+            ["Time Position"] = 0
+        }
+
+         function LoadTrack(id)
+             anim = Instance.new("Animation")
+            anim.AnimationId = "rbxassetid://"..id
+             track = humanoid:LoadAnimation(anim)
+            track.Priority = Enum.AnimationPriority.Action4
+            track:Play(Settings["Fade In"], Settings["Weight"], Settings["Speed"])
+            CurrentTrack = track
+            return track
+        end
+
+        LoadTrack(70883871260184)
+        task.wait(0.5)
+
+         plank = Instance.new("Animation")
+        plank.AnimationId = "rbxassetid://3695333486"
+        RigidTrack = humanoid:LoadAnimation(plank)
+        RigidTrack.Priority = Enum.AnimationPriority.Movement
+        RigidTrack:Play(0.1,1,0)
+
+        SkyboxActive = true
+        print("Skybox")
+   end
+})
+
+SkyBoxTab:AddButton({
+    Name = "🌃الغاء اختراق السماء",
+    Callback = function()
+        if CurrentTrack then
+            CurrentTrack:Stop(0.1)
+            CurrentTrack = nil
+        end
+        if RigidTrack then
+            RigidTrack:Stop(0.1)
+            RigidTrack = nil
+        end
+
+        SkyboxActive = false
+        ReplicatedStorage.Remotes.ResetCharacterAppearance:FireServer()
+        task.wait(0.3)
+
+         char = LocalPlayer.Character
+        if char then
+             hum = char:FindFirstChildOfClass("Humanoid")
+            if hum then hum.Health = 100 end
+        end
+
+        print("")
+    end
+})
+
+local SpinSpeed = 1
+local SpinEnabled = false
+local SpinConnection = nil
+
+SkyBoxTab:AddSlider({
+    Name = "اختار سرعة دوران",
+    Min = 1,
+    Max = 100,
+    Default = 1,
+    Increment = 1,
+    ValueName = "Speed",
+    Callback = function(Value)
+        SpinSpeed = Value
+    end
+})
+
+SkyBoxTab:AddToggle({
+    Name = "تشغيل الدوران",
+    Default = false,
+    Callback = function(Value)
+        SpinEnabled = Value
+
+        if SpinEnabled then
+            if SpinConnection then SpinConnection:Disconnect() end
+
+            SpinConnection = RunService.Heartbeat:Connect(function(dt)
+                local char = LocalPlayer.Character
+                if not char then return end
+
+                local root = char:FindFirstChild("HumanoidRootPart")
+                if not root then return end
+
+                local radiansPerSecond = SpinSpeed * math.pi
+                local rotation = radiansPerSecond * dt
+
+                root.CFrame = root.CFrame * CFrame.Angles(0, rotation, 0)
+            end)
+        else
+            if SpinConnection then
+                SpinConnection:Disconnect()
+                SpinConnection = nil
+            end
+        end
+    end
+})
+
+SkyBoxTab:AddSection({ "فلاش يعمي السيرفر🚨" })
+SkyBoxTab:AddToggle({
+	Name = "V2فلاش يغطي الماب",
+	Default = false,
+	Callback = function(v)
+
+		 Players = game:GetService("Players")
+		local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+		LocalPlayer = Players.LocalPlayer
+		 ChangeCharacterBody = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody")
+
+	 ANIM_ID = "rbxassetid://70883871260184"
+
+	 NUKE_BODY = {
+			96655874457685,
+			123402086843885,
+			78300682916056,
+			86276701020724,
+			78409653958165,
+			120668655481073
+		}
+
+		if not _G.NukeSkyboxV2 then
+			_G.NukeSkyboxV2 = {}
+		end
+	data = _G.NukeSkyboxV2
+
+		 function getHumanoid()
+			local char = LocalPlayer.Character
+			if not char then return end
+			return char:FindFirstChildOfClass("Humanoid")
+		end
+
+		if v then
+			 humanoid = getHumanoid()
+			if not humanoid then return end
+
+			 d = humanoid:GetAppliedDescription()
+			data.savedBody = {
+				d.Torso,
+				d.RightArm,
+				d.LeftArm,
+				d.RightLeg,
+				d.LeftLeg,
+				d.Head
+			}
+
+			pcall(function()
+				ChangeCharacterBody:InvokeServer(NUKE_BODY)
+			end)
+
+			task.wait(0.3)
+
+			 anim = Instance.new("Animation")
+			anim.AnimationId = ANIM_ID
+			data.track = humanoid:LoadAnimation(anim)
+			data.track.Priority = Enum.AnimationPriority.Action4
+			data.track:Play(0.1, 1, 1)
+			data.track:AdjustSpeed(0.0001)
+
+		else
+			if data.track then
+				pcall(function()
+					data.track:Stop()
+					data.track:Destroy()
+				end)
+				data.track = nil
+			end
+
+			if data.savedBody then
+				task.wait(0.2)
+				pcall(function()
+					ChangeCharacterBody:InvokeServer(data.savedBody)
+				end)
+			end
+		end
+	end
+})
+SkyBoxTab:AddToggle({
+Name = "فلاش يرمش الماب[V3]",
+Default = false,
+Callback = function(v)
+
+Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+LocalPlayer = Players.LocalPlayer
+ChangeCharacterBody = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody")
+
+ANIM_ID = "rbxassetid://70883871260184"
+
+NUKE_BODY = {
+	96655874457685,
+	123402086843885,
+	78300682916056,
+	86276701020724,
+	78409653958165,
+	120668655481073
+}
+
+if not _G.NukeSkyboxV2 then
+	_G.NukeSkyboxV2 = {}
+end
+data = _G.NukeSkyboxV2
+
+function getHumanoid()
+	local char = LocalPlayer.Character
+	if not char then return end
+	return char:FindFirstChildOfClass("Humanoid")
+end
+
+if v then
+	humanoid = getHumanoid()
+	if not humanoid then return end
+
+	d = humanoid:GetAppliedDescription()
+	data.savedBody = {
+		d.Torso,
+		d.RightArm,
+		d.LeftArm,
+		d.RightLeg,
+		d.LeftLeg,
+		d.Head
+	}
+
+	pcall(function()
+		ChangeCharacterBody:InvokeServer(NUKE_BODY)
+	end)
+
+	task.wait(0.3)
+
+	anim = Instance.new("Animation")
+	anim.AnimationId = ANIM_ID
+	data.track = humanoid:LoadAnimation(anim)
+	data.track.Priority = Enum.AnimationPriority.Action4
+	data.track:Play(0.1,1,1)
+
+	data.track:AdjustSpeed(_G.NukeAnimSpeed or 0.01)
+
+else
+	if data.track then
+		pcall(function()
+			data.track:Stop()
+			data.track:Destroy()
+		end)
+		data.track = nil
+	end
+
+	if data.savedBody then
+		task.wait(0.2)
+		pcall(function()
+			ChangeCharacterBody:InvokeServer(data.savedBody)
+		end)
+	end
+end
+end
+})
+
+_G.NukeAnimSpeed = 0.01
+
+SkyBoxTab:AddSlider({
+	Name = "سرعة الفلاش",
+	Min = 1,
+	Max = 2000,
+	Default = 1,
+	Increment = 1,
+	ValueName = "Speed",
+	Callback = function(Value)
+
+		local realSpeed = Value / 1000
+		_G.NukeAnimSpeed = realSpeed
+
+		if _G.NukeSkyboxV2 and _G.NukeSkyboxV2.track then
+			pcall(function()
+				_G.NukeSkyboxV2.track:AdjustSpeed(realSpeed)
+			end)
+		end
+
+	end
+})
+SkyBoxTab:AddSection({ " " })
+
+TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
+
+
+TrollTab:AddSection({ "سكربتات الابواب" })
+TrollTab:AddButton({
+    Name = "[V3]هالة ابواب 🌪️",
+    Description = "تدوير الاجزاء المتحركة",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/kllooep/Fjjzxda6/main/Tahakom73"))()
+    end
+})
+
+TrollTab:AddButton({
+    Name = " سكربت تخريب ابواب",
+    Description = "اكتب هنا اسم لاعب وشغل اذا نا صار شي فعل طيران وجمع ابواب ",
+Callback = function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/SuperTradei/Super/refs/heads/main/BringPart"))()
+
+    end
+})
