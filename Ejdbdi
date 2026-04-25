@@ -1,279 +1,508 @@
--- ==================================================
--- [ CLOCK7 | BLACK & RED MASTERPIECE ]
--- صنع بواسطة DBLACK | إصدار أسطوري
--- تم إضافة رابط السكربت الرئيسي الجديد
--- ==================================================
+-- [[ 🔥 CLOCK7 - الطيران الأسطوري (كل المؤثرات الحقيقية دفعة واحدة) 🔥 ]]
 
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Debris = game:GetService("Debris")
 
 local player = Players.LocalPlayer
-local gui = player:WaitForChild("PlayerGui")
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+local head = character:WaitForChild("Head")
 
--- الرابط الجديد (تم التغيير)
-local MAIN_SCRIPT_URL = "https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D8%A7%D9%84%D8%A7%D8%AD%D9%85%D8%B1"
+-- ========== 🎬 الكاميرا السينمائية ==========
+local camera = workspace.CurrentCamera
+local originalCameraType = camera.CameraType
+local originalCameraSubject = camera.CameraSubject
+camera.CameraType = Enum.CameraType.Scriptable
 
--- ==================================================
--- 1. إضاءة جحيمية سوداء وحمراء
--- ==================================================
-local colorCorrection = Instance.new("ColorCorrectionEffect")
-colorCorrection.Parent = Lighting
-colorCorrection.TintColor = Color3.fromRGB(80, 0, 0)
-colorCorrection.Saturation = 0.4
-colorCorrection.Contrast = 0.15
+local shakeIntensity = 0
+local function shakeCamera(intensity, duration)
+    shakeIntensity = intensity
+    task.wait(duration)
+    shakeIntensity = 0
+end
 
-local bloom = Instance.new("BloomEffect")
-bloom.Parent = Lighting
-bloom.Intensity = 0.6
-bloom.Size = 28
-bloom.Threshold = 0.55
-
--- ==================================================
--- 2. الشاشة الرئيسية
--- ==================================================
+-- ========== 🔮 شاشة بلورية ==========
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "BlackRedIntro"
-screenGui.Parent = gui
-screenGui.ResetOnSpawn = false
+screenGui.Name = "IntroGui"
+screenGui.Parent = player:WaitForChild("PlayerGui")
 
-local mainFrame = Instance.new("Frame")
-mainFrame.Parent = screenGui
-mainFrame.Size = UDim2.new(1, 0, 1, 0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-mainFrame.BorderSizePixel = 0
+local blur = Instance.new("BlurEffect")
+blur.Parent = game:GetService("Lighting")
+blur.Size = 0
 
--- ==================================================
--- 3. خطوط حمراء عصرية
--- ==================================================
-for i = 1, 6 do
-    local line = Instance.new("Frame")
-    line.Parent = mainFrame
-    line.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    line.BorderSizePixel = 0
-    line.Size = UDim2.new(0, 1.5, 1, 0)
-    line.Position = UDim2.new(i / 7, 0, 0, 0)
-    line.BackgroundTransparency = 0.7
+local transparentBg = Instance.new("Frame")
+transparentBg.Size = UDim2.new(1, 0, 1, 0)
+transparentBg.BackgroundTransparency = 1
+transparentBg.Parent = screenGui
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0.3, 0)
+titleLabel.Position = UDim2.new(0, 0, 0.35, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "CLOCK7"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextScaled = true
+titleLabel.Font = Enum.Font.GothamBlack
+titleLabel.TextStrokeTransparency = 0
+titleLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+titleLabel.Parent = screenGui
+
+TweenService:Create(blur, TweenInfo.new(0.5), {Size = 18}):Play()
+
+-- ========== 💥 انفجار قوي وآمن ==========
+local function createHeavyExplosion(position, radius, isFinal)
+    local explosion = Instance.new("Explosion")
+    explosion.BlastRadius = radius
+    explosion.BlastPressure = isFinal and 150000 or 80000
+    explosion.Position = position
+    explosion.Parent = workspace
     
-    TweenService:Create(
-        line,
-        TweenInfo.new(2.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-        {BackgroundTransparency = 0.2}
-    ):Play()
+    -- ضوء قوي
+    local light = Instance.new("PointLight")
+    light.Brightness = 12
+    light.Range = radius * 2
+    light.Color = Color3.fromRGB(255, 50, 0)
+    light.Parent = explosion
+    Debris:AddItem(light, 0.5)
+    
+    -- حلقة نارية (موجة صدمة)
+    local shockwave = Instance.new("Part")
+    shockwave.Size = Vector3.new(radius * 1.5, 0.3, radius * 1.5)
+    shockwave.Shape = Enum.PartType.Cylinder
+    shockwave.BrickColor = BrickColor.new("Bright orange")
+    shockwave.Material = Enum.Material.Neon
+    shockwave.CanCollide = false
+    shockwave.CFrame = CFrame.new(position.x, position.y - 1, position.z)
+    shockwave.Parent = workspace
+    
+    TweenService:Create(shockwave, TweenInfo.new(0.6), {Size = Vector3.new(radius * 3, 0.3, radius * 3), Transparency = 1}):Play()
+    Debris:AddItem(shockwave, 0.6)
+    
+    -- تطاير أجزاء نارية
+    for i = 1, 10 do
+        local fragment = Instance.new("Part")
+        fragment.Size = Vector3.new(0.4, 0.4, 0.4)
+        fragment.Shape = Enum.PartType.Ball
+        fragment.BrickColor = BrickColor.new("Bright orange")
+        fragment.Material = Enum.Material.Neon
+        fragment.CanCollide = false
+        fragment.CFrame = CFrame.new(position) * CFrame.new(math.random(-2, 2), math.random(-1, 1), math.random(-2, 2))
+        fragment.Parent = workspace
+        
+        local vel = Instance.new("BodyVelocity", fragment)
+        vel.Velocity = Vector3.new(math.random(-30, 30), math.random(15, 40), math.random(-30, 30))
+        vel.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+        
+        local fire = Instance.new("Fire", fragment)
+        fire.Size = 1
+        fire.Heat = 8
+        
+        Debris:AddItem(fragment, 1.5)
+    end
+    
+    return explosion
 end
 
--- ==================================================
--- 4. دوائر حمراء نابضة
--- ==================================================
+-- ========== 👑 التاج الملكي ==========
+local function createCrown()
+    local crownGroup = Instance.new("Model")
+    crownGroup.Name = "Crown"
+    crownGroup.Parent = character
+    
+    for i = 1, 3 do
+        local crownPart = Instance.new("Part")
+        crownPart.Size = Vector3.new(2.5 - (i-1)*0.5, 0.6, 2.5 - (i-1)*0.5)
+        crownPart.Shape = Enum.PartType.Cylinder
+        crownPart.BrickColor = BrickColor.new("Really red")
+        crownPart.Material = Enum.Material.Neon
+        crownPart.CanCollide = false
+        crownPart.CFrame = head.CFrame * CFrame.new(0, 1.2 + (i-1)*0.3, 0)
+        crownPart.Parent = crownGroup
+        
+        local fire = Instance.new("Fire", crownPart)
+        fire.Size = 4 - i
+        fire.Heat = 20 + i*5
+        fire.Color = Color3.fromRGB(255, 100 - i*20, 0)
+        fire.SecondaryColor = Color3.fromRGB(255, 200 - i*30, 0)
+        
+        local light = Instance.new("PointLight", crownPart)
+        light.Brightness = 5 + i*2
+        light.Range = 15
+        light.Color = Color3.fromRGB(255, 80 + i*10, 0)
+    end
+    
+    return crownGroup
+end
+
+-- ========== 🦅 الأجنحة النارية ==========
+local function createWings()
+    local wingsGroup = Instance.new("Model")
+    wingsGroup.Name = "Wings"
+    wingsGroup.Parent = character
+    
+    local wingParts = {}
+    
+    for i = 1, 6 do
+        local wing = Instance.new("Part")
+        wing.Size = Vector3.new(0.6, 0.6, 2.5)
+        wing.BrickColor = BrickColor.new("Bright orange")
+        wing.Material = Enum.Material.Neon
+        wing.CanCollide = false
+        wing.CFrame = rootPart.CFrame * CFrame.new(1.5 + i*0.4, 0.5 + math.sin(i)*0.3, -1 - i*0.5) * CFrame.Angles(0, math.rad(50 - i*6), math.rad(35 - i*3))
+        wing.Parent = wingsGroup
+        
+        local fire = Instance.new("Fire", wing)
+        fire.Size = 2.5
+        fire.Heat = 12
+        fire.Color = Color3.fromRGB(255, 100, 0)
+        
+        -- ParticleEmitter على الأجنحة
+        local emitter = Instance.new("ParticleEmitter", wing)
+        emitter.Texture = "rbxassetid://1266170131"
+        emitter.Rate = 15
+        emitter.Lifetime = NumberRange.new(0.5, 0.8)
+        emitter.Speed = NumberRange.new(3, 8)
+        emitter.Drag = 2
+        emitter.Color = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(255, 200, 0))
+        emitter.Size = NumberSequence.new(0.3, 0.8)
+        emitter.Transparency = NumberSequence.new(0.5, 1)
+        emitter.LightEmission = 0.3
+        
+        table.insert(wingParts, wing)
+    end
+    
+    for i = 1, 6 do
+        local wing = Instance.new("Part")
+        wing.Size = Vector3.new(0.6, 0.6, 2.5)
+        wing.BrickColor = BrickColor.new("Bright orange")
+        wing.Material = Enum.Material.Neon
+        wing.CanCollide = false
+        wing.CFrame = rootPart.CFrame * CFrame.new(-1.5 - i*0.4, 0.5 + math.sin(i)*0.3, -1 - i*0.5) * CFrame.Angles(0, math.rad(-50 + i*6), math.rad(-35 + i*3))
+        wing.Parent = wingsGroup
+        
+        local fire = Instance.new("Fire", wing)
+        fire.Size = 2.5
+        fire.Heat = 12
+        fire.Color = Color3.fromRGB(255, 100, 0)
+        
+        local emitter = Instance.new("ParticleEmitter", wing)
+        emitter.Texture = "rbxassetid://1266170131"
+        emitter.Rate = 15
+        emitter.Lifetime = NumberRange.new(0.5, 0.8)
+        emitter.Speed = NumberRange.new(3, 8)
+        emitter.Drag = 2
+        emitter.Color = ColorSequence.new(Color3.fromRGB(255, 100, 0), Color3.fromRGB(255, 200, 0))
+        emitter.Size = NumberSequence.new(0.3, 0.8)
+        emitter.Transparency = NumberSequence.new(0.5, 1)
+        emitter.LightEmission = 0.3
+        
+        table.insert(wingParts, wing)
+    end
+    
+    return wingsGroup, wingParts
+end
+
+-- ========== 🔥 كرات نارية تدور مع ParticleEmitter ==========
+local function createFireBalls()
+    local fireBalls = {}
+    
+    for i = 1, 10 do
+        local fireBall = Instance.new("Part")
+        fireBall.Size = Vector3.new(1.5, 1.5, 1.5)
+        fireBall.Shape = Enum.PartType.Ball
+        fireBall.BrickColor = BrickColor.new("Bright orange")
+        fireBall.Material = Enum.Material.Neon
+        fireBall.CanCollide = false
+        fireBall.Parent = workspace
+        
+        -- نار حقيقية داخل الكرة
+        local fireEffect = Instance.new("Fire", fireBall)
+        fireEffect.Size = 2.5
+        fireEffect.Heat = 15
+        fireEffect.Color = Color3.fromRGB(255, 80, 0)
+        fireEffect.SecondaryColor = Color3.fromRGB(255, 200, 0)
+        
+        -- ParticleEmitter للشرر المتطاير من الكرة
+        local sparkEmitter = Instance.new("ParticleEmitter", fireBall)
+        sparkEmitter.Texture = "rbxassetid://1358543887"  -- شرر
+        sparkEmitter.Rate = 20
+        sparkEmitter.Lifetime = NumberRange.new(0.3, 0.6)
+        sparkEmitter.Speed = NumberRange.new(5, 12)
+        sparkEmitter.Drag = 1
+        sparkEmitter.Color = ColorSequence.new(Color3.fromRGB(255, 50, 0), Color3.fromRGB(255, 150, 0))
+        sparkEmitter.Size = NumberSequence.new(0.2, 0.5)
+        sparkEmitter.Transparency = NumberSequence.new(0.2, 1)
+        sparkEmitter.Rotation = NumberRange.new(0, 360)
+        
+        -- ضوء
+        local light = Instance.new("PointLight", fireBall)
+        light.Brightness = 6
+        light.Range = 12
+        light.Color = Color3.fromRGB(255, 80, 0)
+        
+        table.insert(fireBalls, {
+            part = fireBall,
+            angle = (i / 10) * math.pi * 2,
+            radius = 4.5,
+            height = 0,
+            speed = 3.5
+        })
+    end
+    
+    return fireBalls
+end
+
+-- ========== 🔊 الصوتيات القوية ==========
+local function createSoundSystem()
+    local engineSound = Instance.new("Sound")
+    engineSound.SoundId = "rbxassetid://183667268"
+    engineSound.Volume = 0.9
+    engineSound.Looped = true
+    engineSound.Parent = rootPart
+    
+    local whooshSound = Instance.new("Sound")
+    whooshSound.SoundId = "rbxassetid://9120018695"
+    whooshSound.Volume = 0.7
+    whooshSound.Looped = true
+    whooshSound.Parent = rootPart
+    
+    local explosionSound = Instance.new("Sound")
+    explosionSound.SoundId = "rbxassetid://9120023215"
+    explosionSound.Volume = 1
+    explosionSound.Parent = rootPart
+    
+    return {engine = engineSound, whoosh = whooshSound, explosion = explosionSound}
+end
+
+-- ========== 🚀 نظام الطيران ==========
+local function setupFlightPhysics()
+    humanoid.AutoRotate = false
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+    humanoid.PlatformStand = true
+    
+    local bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(1e8, 1e8, 1e8)
+    bodyVelocity.P = 1e5
+    bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+    bodyVelocity.Parent = rootPart
+    
+    local bodyGyro = Instance.new("BodyGyro")
+    bodyGyro.MaxTorque = Vector3.new(1e8, 1e8, 1e8)
+    bodyGyro.P = 1e6
+    bodyGyro.CFrame = rootPart.CFrame
+    bodyGyro.Parent = rootPart
+    
+    return bodyVelocity, bodyGyro
+end
+
+-- ========== 🎬 تنفيذ المشهد الأسطوري ==========
+print("🔥 تشغيل Clock7 - النسخة الأسطورية الكاملة")
+
+-- إخفاء الأسلحة
+for _, v in pairs(character:GetChildren()) do
+    if v:IsA("Tool") then v:Destroy() end
+end
+
+-- إنشاء كل العناصر
+local crownGroup = createCrown()
+local wingsGroup, wingParts = createWings()
+local fireBalls = createFireBalls()
+local sounds = createSoundSystem()
+
+-- تشغيل الصوت
+sounds.engine:Play()
+task.wait(0.3)
+sounds.whoosh:Play()
+
+-- فيزياء الطيران
+local bodyVelocity, bodyGyro = setupFlightPhysics()
+
+-- حلقات نارية مع ParticleEmitter
+local rings = {}
 for i = 1, 3 do
-    local ring = Instance.new("Frame")
-    ring.Parent = mainFrame
-    ring.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    ring.BorderSizePixel = 0
-    ring.Size = UDim2.new(0, 80 + (i * 30), 0, 80 + (i * 30))
-    ring.Position = UDim2.new(0.5, -(40 + (i * 15)), 0.5, -(40 + (i * 15)))
-    ring.BackgroundTransparency = 0.85
+    local ring = Instance.new("Part")
+    ring.Size = Vector3.new(4 + i*1.5, 0.2, 4 + i*1.5)
+    ring.Shape = Enum.PartType.Cylinder
+    ring.BrickColor = BrickColor.new("Bright orange")
+    ring.Material = Enum.Material.Neon
+    ring.CanCollide = false
+    ring.CFrame = rootPart.CFrame
+    ring.Parent = workspace
     
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(1, 0)
-    corner.Parent = ring
+    local ringFire = Instance.new("Fire", ring)
+    ringFire.Size = 3 + i
+    ringFire.Heat = 15 + i*5
     
-    TweenService:Create(
-        ring,
-        TweenInfo.new(2 + (i * 0.3), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-        {
-            Size = UDim2.new(0, 150 + (i * 50), 0, 150 + (i * 50)),
-            Position = UDim2.new(0.5, -(75 + (i * 25)), 0.5, -(75 + (i * 25))),
-            BackgroundTransparency = 0.97
-        }
-    ):Play()
+    local ringEmitter = Instance.new("ParticleEmitter", ring)
+    ringEmitter.Texture = "rbxassetid://1266170131"
+    ringEmitter.Rate = 10
+    ringEmitter.Lifetime = NumberRange.new(0.4, 0.7)
+    ringEmitter.Speed = NumberRange.new(2, 5)
+    ringEmitter.Color = ColorSequence.new(Color3.fromRGB(255, 80, 0), Color3.fromRGB(255, 180, 0))
+    ringEmitter.Size = NumberSequence.new(0.3, 0.6)
+    ringEmitter.Transparency = NumberSequence.new(0.3, 1)
+    
+    table.insert(rings, ring)
 end
 
--- ==================================================
--- 5. عنوان CLOCK7
--- ==================================================
-local title = Instance.new("TextLabel")
-title.Parent = mainFrame
-title.Size = UDim2.new(0, 550, 0, 110)
-title.Position = UDim2.new(0.5, -275, 0.27, -55)
-title.BackgroundTransparency = 1
-title.Text = "CLOCK7"
-title.TextScaled = true
-title.Font = Enum.Font.GothamBlack
-title.TextColor3 = Color3.fromRGB(255, 20, 0)
+-- وضعية الجسم البطولية
+local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")
+local leftArm = character:FindFirstChild("LeftArm")
+local rightArm = character:FindFirstChild("RightArm")
+local leftLeg = character:FindFirstChild("LeftLeg")
+local rightLeg = character:FindFirstChild("RightLeg")
 
-local strokeOuter = Instance.new("UIStroke")
-strokeOuter.Parent = title
-strokeOuter.Color = Color3.fromRGB(255, 0, 0)
-strokeOuter.Thickness = 4
+if torso then TweenService:Create(torso, TweenInfo.new(0.3), {CFrame = rootPart.CFrame}):Play() end
+if leftArm then TweenService:Create(leftArm, TweenInfo.new(0.4), {CFrame = torso.CFrame * CFrame.new(-2, 0.8, 0) * CFrame.Angles(0, 0, math.rad(-30))}):Play() end
+if rightArm then TweenService:Create(rightArm, TweenInfo.new(0.4), {CFrame = torso.CFrame * CFrame.new(2, 0.8, 0) * CFrame.Angles(0, 0, math.rad(30))}):Play() end
+if leftLeg then TweenService:Create(leftLeg, TweenInfo.new(0.3), {CFrame = torso.CFrame * CFrame.new(-1, -1.5, -0.8)}):Play() end
+if rightLeg then TweenService:Create(rightLeg, TweenInfo.new(0.3), {CFrame = torso.CFrame * CFrame.new(1, -1.5, -0.8)}):Play() end
 
-local strokeInner = Instance.new("UIStroke")
-strokeInner.Parent = title
-strokeInner.Color = Color3.fromRGB(80, 0, 0)
-strokeInner.Thickness = 8
-strokeInner.Transparency = 0.5
-
--- نبض العنوان
-local titleAnim = RunService.Heartbeat:Connect(function()
-    local pulse = 0.4 + math.sin(tick() * 5) * 0.3
-    title.TextColor3 = Color3.fromRGB(255, math.floor(20 + pulse * 40), 0)
-    strokeOuter.Thickness = 3 + pulse * 2
+-- كاميرا قريبة درامية
+local cameraConnection = RunService.RenderStepped:Connect(function()
+    local angle = tick() * 0.8
+    local radius = 6.5
+    local camX = rootPart.Position.X + math.sin(angle) * radius
+    local camZ = rootPart.Position.Z + math.cos(angle) * radius
+    local camY = rootPart.Position.Y + 2 + math.sin(angle * 2) * 0.8
+    local shakeX = (math.random() - 0.5) * shakeIntensity * 0.4
+    local shakeY = (math.random() - 0.5) * shakeIntensity * 0.3
+    camera.CFrame = CFrame.new(Vector3.new(camX + shakeX, camY + shakeY, camZ), rootPart.Position + Vector3.new(0, 1.5, 0))
 end)
 
--- ==================================================
--- 6. شريط التحميل
--- ==================================================
-local barBg = Instance.new("Frame")
-barBg.Parent = mainFrame
-barBg.Size = UDim2.new(0, 480, 0, 36)
-barBg.Position = UDim2.new(0.5, -240, 0.5, 50)
-barBg.BackgroundColor3 = Color3.fromRGB(15, 0, 0)
-barBg.BorderSizePixel = 0
-
-local barCorner = Instance.new("UICorner")
-barCorner.CornerRadius = UDim.new(0, 18)
-barCorner.Parent = barBg
-
-local barBorder = Instance.new("UIStroke")
-barBorder.Parent = barBg
-barBorder.Color = Color3.fromRGB(255, 40, 0)
-barBorder.Thickness = 2
-
-local bar = Instance.new("Frame")
-bar.Parent = barBg
-bar.Size = UDim2.new(0, 0, 1, 0)
-bar.BackgroundColor3 = Color3.fromRGB(255, 40, 0)
-bar.BorderSizePixel = 0
-
-local gradient = Instance.new("UIGradient")
-gradient.Parent = bar
-gradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 0, 0)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 60, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 0, 0))
-})
-
--- ==================================================
--- 7. نسبة التحميل
--- ==================================================
-local percentLabel = Instance.new("TextLabel")
-percentLabel.Parent = mainFrame
-percentLabel.Size = UDim2.new(0, 200, 0, 70)
-percentLabel.Position = UDim2.new(0.5, -100, 0.5, 105)
-percentLabel.BackgroundTransparency = 1
-percentLabel.Text = "0%"
-percentLabel.TextScaled = true
-percentLabel.Font = Enum.Font.GothamBold
-percentLabel.TextColor3 = Color3.fromRGB(255, 60, 0)
-
--- ==================================================
--- 8. رسائل متحركة
--- ==================================================
-local messages = {
-    "// سيدك DBLACK //",
-    "// تحديد جديد //",
-    "// BLACK FIRE //",
-    "// سكربت مطور ليبي //",
-    "// السكربت فعال //"
-}
-
-local msgLabel = Instance.new("TextLabel")
-msgLabel.Parent = mainFrame
-msgLabel.Size = UDim2.new(0, 450, 0, 50)
-msgLabel.Position = UDim2.new(0.5, -225, 0.5, 195)
-msgLabel.BackgroundTransparency = 1
-msgLabel.Text = messages[1]
-msgLabel.TextScaled = true
-msgLabel.Font = Enum.Font.Gotham
-msgLabel.TextColor3 = Color3.fromRGB(200, 30, 0)
-
--- ==================================================
--- 9. جسيمات حمراء
--- ==================================================
-local particles = {}
-for i = 1, 150 do
-    local p = Instance.new("Frame")
-    p.Parent = mainFrame
-    p.Size = UDim2.new(0, math.random(2, 6), 0, math.random(2, 6))
-    p.Position = UDim2.new(0, math.random(0, 2000), 0, math.random(0, 2000))
-    p.BackgroundColor3 = Color3.fromRGB(255, math.random(20, 80), 0)
-    p.BorderSizePixel = 0
-    p.BackgroundTransparency = math.random(30, 70) / 100
-    
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(1, 0)
-    corner.Parent = p
-    
-    table.insert(particles, {
-        frame = p,
-        vx = (math.random(-100, 100) / 50),
-        vy = (math.random(-100, 100) / 50),
-        rot = math.random(-8, 8)
-    })
-end
-
--- ==================================================
--- 10. تحريك الجسيمات
--- ==================================================
-RunService.Heartbeat:Connect(function()
-    local screenSize = workspace.CurrentCamera.ViewportSize
-    for _, p in pairs(particles) do
-        local x = p.frame.Position.X.Offset + p.vx
-        local y = p.frame.Position.Y.Offset + p.vy
-        if x < -50 then x = screenSize.X + 50 end
-        if x > screenSize.X + 50 then x = -50 end
-        if y < -50 then y = screenSize.Y + 50 end
-        if y > screenSize.Y + 50 then y = -50 end
-        p.frame.Position = UDim2.new(0, x, 0, y)
-        p.frame.Rotation = p.frame.Rotation + p.rot
-        
-        local flicker = math.sin(tick() * 12) * 0.3 + 0.5
-        p.frame.BackgroundColor3 = Color3.fromRGB(255, math.floor(flicker * 80), 0)
-    end
-end)
-
--- ==================================================
--- 11. نظام التحميل
--- ==================================================
+-- الطيران للأعلى
+local startY = rootPart.Position.Y
+local targetY = startY + 100
 local startTime = tick()
-local msgIndex = 2
-local lastMsg = startTime
-local msgDuration = 5 / #messages
 
-local function update()
-    local elapsed = tick() - startTime
-    local progress = math.min(elapsed / 5, 1)
-    local percent = math.floor(progress * 100)
+while tick() - startTime < 2.5 do
+    bodyVelocity.Velocity = Vector3.new(0, 75 + math.sin(tick() * 20) * 10, 0)
+    bodyGyro.CFrame = rootPart.CFrame
     
-    TweenService:Create(bar, TweenInfo.new(0.05), {Size = UDim2.new(progress, 0, 1, 0)}):Play()
-    percentLabel.Text = percent .. "%"
-    
-    if tick() - lastMsg >= msgDuration and msgIndex <= #messages then
-        msgLabel.Text = messages[msgIndex]
-        msgIndex = msgIndex + 1
-        lastMsg = tick()
+    -- تحديث التاج
+    for _, child in pairs(crownGroup:GetChildren()) do
+        if child:IsA("Part") then
+            child.CFrame = head.CFrame * CFrame.new(0, 1.2 + (tonumber(child.Name) or 0) * 0.3, 0)
+        end
     end
     
-    if progress >= 1 then
-        -- تنظيف كل شيء
-        titleAnim:Disconnect()
-        for _, p in pairs(particles) do p.frame:Destroy() end
-        colorCorrection:Destroy()
-        bloom:Destroy()
+    -- تحديث الأجنحة
+    for i, wing in pairs(wingParts) do
+        local flapping = math.sin(tick() * 15 + i) * 0.25
+        wing.CFrame = rootPart.CFrame * CFrame.new(wing.CFrame.Position.X - rootPart.Position.X, 0.5 + flapping, wing.CFrame.Position.Z - rootPart.Position.Z)
+    end
+    
+    -- تحديث الكرات النارية
+    for _, ball in pairs(fireBalls) do
+        ball.angle = ball.angle + 0.12
+        local x = math.cos(ball.angle) * ball.radius
+        local z = math.sin(ball.angle) * ball.radius
+        local y = math.sin(ball.angle * 2) * 1.8
+        ball.part.CFrame = rootPart.CFrame * CFrame.new(x, y + 1, z)
+    end
+    
+    -- تحديث الحلقات
+    for i, ring in pairs(rings) do
+        ring.CFrame = rootPart.CFrame * CFrame.new(0, -1, 0)
+        ring.Size = Vector3.new(4 + i*1.5 + math.sin(tick() * 12) * 0.8, 0.2, 4 + i*1.5 + math.sin(tick() * 12) * 0.8)
+    end
+    
+    -- شرر عشوائي إضافي
+    if math.random() < 0.25 then
+        local spark = Instance.new("Part")
+        spark.Size = Vector3.new(0.3, 0.3, 0.3)
+        spark.Shape = Enum.PartType.Ball
+        spark.BrickColor = BrickColor.new("Bright orange")
+        spark.Material = Enum.Material.Neon
+        spark.CanCollide = false
+        spark.CFrame = rootPart.CFrame * CFrame.new(math.random(-4, 4), math.random(-2, 2), math.random(-5, -2))
+        spark.Parent = workspace
         
-        -- تأثير الاختفاء
-        local fade = TweenService:Create(mainFrame, TweenInfo.new(0.8), {BackgroundTransparency = 1})
-        fade:Play()
-        fade.Completed:Connect(function()
-            screenGui:Destroy()
-            -- تشغيل السكربت الرئيسي من الرابط الجديد
-            loadstring(game:HttpGet(MAIN_SCRIPT_URL))()
-        end)
-        return
+        local sparkVel = Instance.new("BodyVelocity", spark)
+        sparkVel.Velocity = Vector3.new(math.random(-15, 15), math.random(-20, -5), math.random(-15, 15))
+        
+        local sparkFire = Instance.new("Fire", spark)
+        sparkFire.Size = 1
+        sparkFire.Heat = 6
+        
+        Debris:AddItem(spark, 0.8)
     end
-    task.wait(0.01)
-    update()
+    
+    RunService.RenderStepped:Wait()
 end
 
-update()
+-- ========== الهبوط الأسطوري مع انفجارات متتالية ==========
+sounds.whoosh:Stop()
+bodyVelocity.Velocity = Vector3.new(0, -60, 0)
+task.wait(0.4)
+
+-- انفجار أول
+createHeavyExplosion(rootPart.Position - Vector3.new(0, 2, 0), 10, false)
+sounds.explosion:Play()
+shakeCamera(4, 0.3)
+
+task.wait(0.1)
+
+-- انفجار ثاني أقوى
+createHeavyExplosion(rootPart.Position - Vector3.new(0, 1.5, 0), 14, true)
+shakeCamera(5, 0.4)
+
+task.wait(0.15)
+
+-- انفجار ثالث أخير
+createHeavyExplosion(rootPart.Position - Vector3.new(0, 1, 0), 12, false)
+
+-- دخان كثيف بعد الانفجارات
+for i = 1, 8 do
+    local smokePart = Instance.new("Part")
+    smokePart.Size = Vector3.new(2, 2, 2)
+    smokePart.Transparency = 0.4
+    smokePart.BrickColor = BrickColor.new("Dark grey")
+    smokePart.Material = Enum.Material.Foil
+    smokePart.CanCollide = false
+    smokePart.CFrame = rootPart.CFrame * CFrame.new(math.random(-6, 6), -2, math.random(-6, 6))
+    smokePart.Parent = workspace
+    
+    local smokeEffect = Instance.new("Smoke", smokePart)
+    smokeEffect.Color = Color3.fromRGB(60, 60, 60)
+    smokeEffect.Opacity = 0.9
+    smokeEffect.RiseVelocity = 6
+    smokeEffect.Size = 5
+    
+    Debris:AddItem(smokePart, 2)
+end
+
+-- تنظيف كل شيء
+bodyVelocity:Destroy()
+bodyGyro:Destroy()
+cameraConnection:Disconnect()
+camera.CameraType = originalCameraType
+camera.CameraSubject = originalCameraSubject
+
+humanoid.AutoRotate = true
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+humanoid.PlatformStand = false
+
+-- إخفاء الشاشة البلورية
+TweenService:Create(blur, TweenInfo.new(0.5), {Size = 0}):Play()
+TweenService:Create(titleLabel, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+task.wait(0.5)
+screenGui:Destroy()
+blur:Destroy()
+
+-- تنظيف البقايا
+Debris:AddItem(crownGroup, 0)
+Debris:AddItem(wingsGroup, 0)
+for _, ball in pairs(fireBalls) do Debris:AddItem(ball.part, 0) end
+for _, ring in pairs(rings) do Debris:AddItem(ring, 0) end
+
+print("✨ جاري تشغيل السكربت الرئيسي...")
+task.wait(0.2)
+
+-- تشغيل السكربت الرئيسي
+pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D8%A7%D9%84%D8%A7%D8%AD%D9%85%D8%B1"))()
+end)
