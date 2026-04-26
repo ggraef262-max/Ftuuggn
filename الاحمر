@@ -7841,12 +7841,12 @@ TabSk:AddButton({
     end
 })
 
-TrollTab = Window:MakeTab({ Title = "ميزه تغير محل الايسكريم", Icon = "rbxassetid://13364900349" })
+TrollTab = Window:MakeTab({ Title = "ميزه تغير محل الايسكريم تطوير الاخ شادو وبروتون", Icon = "rbxassetid://13364900349" })
 
 
 TrollTab:AddSection({ "الميزه Beta" })
 TrollTab:AddButton({
-    Name = "BETA",
+    Name = "روح جنب محل الايسكريم واضغط",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%E2%80%94%E2%80%94%E2%80%94%E2%80%94-"))()
     end
