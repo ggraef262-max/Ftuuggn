@@ -103,9 +103,9 @@ local function setRPBioColor(color)
 end
 
 setRPName("Clock7")
-setRPNameColor(Color3.fromRGB(0, 0, 139))
+setRPNameColor(Color3.fromRGB(255, 0, 255))
 wait(0.1)
-setRPBio("البحت:CLOCK7")
+setRPBio("by Raef_black1")
 setRPBioColor(Color3.new(0, 0, 0))
 
 -- ======================
