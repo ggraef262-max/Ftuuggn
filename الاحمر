@@ -5871,7 +5871,7 @@ UniversalTab:AddButton({
   end,
 })
 
-BangTab = Window:MakeTab({"بانق","rbxassetid://90798133906684"})
+BangTab = Window:MakeTab({"بانق","rbxassetid://112765062204708"})
 Players = game:GetService("Players")
 RunService = game:GetService("RunService")
 LocalPlayer = Players.LocalPlayer
@@ -6048,7 +6048,7 @@ rpTab:AddButton({
 rpTab:AddButton({
     Name = "اسم مميز M",
     Callback = function()
-        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", "MҷҿҡҺҶҶҷҷҡҺҷҺҸҡҸҡҶҺ")
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", "haker_skript")
         sendNotification("اسم", "تم تغيير الاسم", nil, 2)
     end
 })
@@ -6056,7 +6056,7 @@ rpTab:AddButton({
 rpTab:AddButton({
     Name = "اسم مميز A",
     Callback = function()
-        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", "AҷҺҸҡҸҡҶҺ")
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayName", "black")
         sendNotification("اسم", "تم تغيير الاسم", nil, 2)
     end
 })
@@ -6066,7 +6066,7 @@ rpTab:AddSection({ "البايو" })
 rpTab:AddButton({
     Name = "بايو مميز 1",
     Callback = function()
-        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "♡♡♡")
+        fireRemote({"RE", "1RPNam1eTex1t"}, "RolePlayBio", "shadow")
         sendNotification("بايو", "تم تغيير البايو", nil, 2)
     end
 })
