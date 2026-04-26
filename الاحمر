@@ -7840,3 +7840,14 @@ TabSk:AddButton({
         end
     end
 })
+
+TrollTab = Window:MakeTab({ Title = "ميزه تغير محل الايسكريم", Icon = "rbxassetid://13364900349" })
+
+
+TrollTab:AddSection({ "الميزه Beta" })
+TrollTab:AddButton({
+    Name = "BETA",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/%D9%85%D8%AA%D8%B9%20%D8%A7%D8%A8%D9%88%D8%A7%D8%A8"))()
+    end
+})
