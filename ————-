@@ -1,0 +1,115 @@
+-----تطوير اخوي شادو-----
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local mouse = LocalPlayer:GetMouse()
+
+local running = false
+local currentTask = nil
+
+local function getCDs()
+    return 
+        workspace.__DEV.SwapablePOIs.PastryAndIceCream.PlotButtons.PastryShop.ClickDetector,
+        workspace.__DEV.SwapablePOIs.PastryAndIceCream.PlotButtons.IceCreamShop.ClickDetector
+end
+
+local function startSpamming()
+    if currentTask then return end
+    running = true
+    currentTask = task.spawn(function()
+        while running do
+            local p, i = getCDs()
+            pcall(function() fireclickdetector(p) end)
+            pcall(function() fireclickdetector(i) end)
+            task.wait(0.05)
+        end
+        currentTask = nil
+    end)
+end
+
+local function stopSpamming()
+    running = false
+end
+
+-- إنشاء الزر
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "SpamButton"
+screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 150, 0, 50)
+button.Position = UDim2.new(0.5, -75, 0.8, 0)
+button.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+button.Text = "onتشغيل"
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 20
+button.Parent = screenGui
+button.AutoButtonColor = false
+
+-- زوايا دائرية
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 10)
+uiCorner.Parent = button
+
+-- ظل
+local shadow = Instance.new("UIStroke")
+shadow.Thickness = 2
+shadow.Color = Color3.fromRGB(255, 255, 255)
+shadow.Transparency = 0.5
+shadow.Parent = button
+
+-- ========== كود السحب البسيط والشغال ==========
+local dragging = false
+local dragStartX, dragStartY
+local buttonStartX, buttonStartY
+
+button.MouseButton1Down:Connect(function()
+    dragging = true
+    dragStartX = mouse.X
+    dragStartY = mouse.Y
+    buttonStartX = button.Position.X.Offset
+    buttonStartY = button.Position.Y.Offset
+end)
+
+mouse.Move:Connect(function()
+    if dragging then
+        local deltaX = mouse.X - dragStartX
+        local deltaY = mouse.Y - dragStartY
+        
+        button.Position = UDim2.new(
+            button.Position.X.Scale,
+            buttonStartX + deltaX,
+            button.Position.Y.Scale,
+            buttonStartY + deltaY
+        )
+    end
+end)
+
+button.MouseButton1Up:Connect(function()
+    dragging = false
+end)
+
+-- منع تنفيذ التبديل عند السحب
+local isActive = false
+local clickTime = 0
+
+button.MouseButton1Click:Connect(function()
+    -- إذا كان السحب نشط، نمنع التبديل
+    if dragging then
+        return
+    end
+    
+    isActive = not isActive
+    
+    if isActive then
+        startSpamming()
+        button.Text = "offإيقاف"
+        button.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+    else
+        stopSpamming()
+        button.Text = "on تشغيل"
+        button.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+    end
+end)
