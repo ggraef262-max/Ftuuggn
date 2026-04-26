@@ -7869,9 +7869,9 @@ if not allowedAdmins[LocalPlayer.Name] then return end
 
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 local Window = WindUI:CreateWindow({
-    Title =  "👾Y2 HUB  - Admins/Developers 👾 ",
+    Title =  "ADMIN-CLOCK7💿 ",
     Icon = "shield",
-    Author = "by Shadow · v1.1.6",
+    Author = "by DBLACK · v1.1.6",
     Size = UDim2.fromOffset(600, 480),
     Transparent = true,
     Theme = "Dark",
@@ -7886,7 +7886,7 @@ Window:Tag({
 })
 
 local AdminTab = Window:Tab({
-    Title = "Admin",
+    Title = "ادمن",
     Icon = "shield",
     Locked = false
 })
@@ -8012,7 +8012,7 @@ TextChatService.OnIncomingMessage = function(message)
             local JailSize = Vector3.new(10, 8, 10)
             local WallThickness = 1
             local Material = Enum.Material.Ice
-            local Color = Color3.fromRGB(80, 180, 255)
+            local Color = Color3.fromRGB(255, 0, 255)
             local Transparency = 0.5
 
             hum.WalkSpeed = 0
