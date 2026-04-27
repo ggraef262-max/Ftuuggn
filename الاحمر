@@ -182,7 +182,7 @@ infoTab:AddParagraph({ ":", "CLOCK7" }) -- تغيير الاسم
 infoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
 infoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
 infoTab:AddParagraph({ "شكر خاص لي / شادو اخي هوا لي ساعدني في كل شي:", "Shadow❤️" }) -- تغيير اسم المطور
-nfoTab:AddParagraph({"اضافات:", "اضافه جديده تبع تغير محل الايسكريم"})
+
 -- تصحيح: إضافة اسم للزر
 infoTab:AddButton({
     Name = "Sky Box القديم النادر",
