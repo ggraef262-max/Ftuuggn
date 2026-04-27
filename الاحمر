@@ -153,12 +153,12 @@ local houseRGBActive = false
 -- ======================
 local infoTab = Window:MakeTab({
     Title = "معلومات السكربت",
-    Icon = "rbxassetid://" .. IMAGE_ID,
+    Icon = "rbxassetid://" .. IMAGE_ID
 })
 
 infoTab:AddDiscordInvite({
-    Name = "cllock7 الاسطوره",
-    Description = " صوره المطور في اللعبه ",
+    Name = "قناة التليجرام",
+    Description = "انضم لقناتنا على التليجرام",
     Logo = "rbxassetid://" .. IMAGE_ID,
     Invite = ""
 })
