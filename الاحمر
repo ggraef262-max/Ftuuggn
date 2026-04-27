@@ -113,7 +113,7 @@ setRPBioColor(Color3.new(0, 0, 0))
 -- ======================
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ggraef262-max/Ftuuggn/refs/heads/main/Waghashab"))()
 local Window = Library:MakeWindow({
-    Title = "Clock7 v2.0",
+    Title = "Clock7 V2.5",
     SubTitle = "by DBLACK",
 })
 
